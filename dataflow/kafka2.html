@@ -1,0 +1,2101 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Creación de clúster de Kafka, integración de Kafka desde un servicios REST a MongoDB y S3, y uso de Kafka Connect.">
+      
+      
+      
+        <link rel="canonical" href="https://aitor-medrano.github.io/iabd/dataflow/kafka2.html">
+      
+      
+      
+      
+      <link rel="icon" href="../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.2.8">
+    
+    
+      
+        <title>Apache Kafka Avanzado. - Inteligencia Artificial y Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.046329b4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.85d0ee34.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Apache Kafka Avanzado. - Inteligencia Artificial y Big Data" >
+      
+        <meta  property="og:description"  content="Creación de clúster de Kafka, integración de Kafka desde un servicios REST a MongoDB y S3, y uso de Kafka Connect." >
+      
+        <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/dataflow/kafka2.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://aitor-medrano.github.io/iabd/dataflow/kafka2.html" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Apache Kafka Avanzado. - Inteligencia Artificial y Big Data" >
+      
+        <meta  name="twitter:description"  content="Creación de clúster de Kafka, integración de Kafka desde un servicios REST a MongoDB y S3, y uso de Kafka Connect." >
+      
+        <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/dataflow/kafka2.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#apache-kafka-avanzado" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-header__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Inteligencia Artificial y Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Apache Kafka Avanzado.
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo noche"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo noche" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo día"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo día" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-nav__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    Inteligencia Artificial y Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inicio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2324.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Planning 23/24
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Sistemas de almacenamiento
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Sistemas de almacenamiento
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/nosql.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Almacenamiento de datos. NoSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/mongo.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MongoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/agregaciones.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Agregaciones en MongoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/modelado.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modelado documental
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/rendimiento.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rendimiento
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/replicacion.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Replicación y particionado
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/pymongo.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MongoDB y Python
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Datos en el cloud
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Datos en el cloud
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/cloud.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/aws.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AWS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/s3.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    S3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/computacion.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EC2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/emr.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EMR
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/datos.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDS y DynamoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/athena.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Athena
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ecosistema Hadoop
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Ecosistema Hadoop
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/arq.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Arquitecturas Big Data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/etl.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ingesta de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hadoop.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hadoop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hdfs.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HDFS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/formatos.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Formatos de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/sqoop.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sqoop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/flume.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flume
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hive.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Analítica de negocio
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Analítica de negocio
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ba/business-analytics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Analítica de negocio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ba/data-warehouse.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Almacenes de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ingeniería de datos
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Ingeniería de datos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/de.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ingeniería de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../blog/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Blog
+  </span>
+  
+
+            </a>
+            
+              <label class="md-nav__link " for="__nav_8">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Archivo
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archivo
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/archive/2023.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2023
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3" >
+        
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Categorías
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categorías
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/noticias.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Noticias
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/septiembre.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Septiembre
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#caso-2-cluster-de-kafka" class="md-nav__link">
+    Caso 2: Clúster de Kafka
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso 2: Clúster de Kafka">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creando-brokers" class="md-nav__link">
+    Creando brokers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creando-topics" class="md-nav__link">
+    Creando topics
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#produciendo-y-consumiendo" class="md-nav__link">
+    Produciendo y consumiendo
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisiones-de-rendimiento" class="md-nav__link">
+    Decisiones de rendimiento
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-3-de-aemet-a-s3-y-mongodb" class="md-nav__link">
+    Caso 3: De AEMET a S3 y MongoDB
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso 3: De AEMET a S3 y MongoDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#productor-de-aemet" class="md-nav__link">
+    Productor de AEMET
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consumidor-bronze" class="md-nav__link">
+    Consumidor Bronze
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consumidor-silver-y-productor-gold" class="md-nav__link">
+    Consumidor Silver y Productor Gold
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-4-ahora-con-nifi" class="md-nav__link">
+    Caso 4: Ahora con Nifi
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso 4: Ahora con Nifi">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#de-rest-a-kafka" class="md-nav__link">
+    De REST a Kafka
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#de-kafka-a-s3" class="md-nav__link">
+    De Kafka a S3
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kafka-connect" class="md-nav__link">
+    Kafka Connect
+  </a>
+  
+    <nav class="md-nav" aria-label="Kafka Connect">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hola-kafka-connect" class="md-nav__link">
+    Hola Kafka Connect
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-api" class="md-nav__link">
+    REST API
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kafka-y-el-big-data" class="md-nav__link">
+    Kafka y el Big Data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    Referencias
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    Actividades
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="apache-kafka-avanzado">Apache Kafka Avanzado<a class="headerlink" href="#apache-kafka-avanzado" title="Permanent link">&para;</a></h1>
+<p>En esta sesión estudiaremos cómo crear un <em>cluster</em> de Kafka, realizamos una integración desde un servicio REST hasta su persistencia en S3 y <em>MongoDB</em> haciendo uso de <em>Kafka</em> como <em>middleware</em> de integración, y finalmente veremos como utilizar <em>Kafka Connect</em> para integrar sistemas.</p>
+<h2 id="caso-2-cluster-de-kafka">Caso 2: Clúster de Kafka<a class="headerlink" href="#caso-2-cluster-de-kafka" title="Permanent link">&para;</a></h2>
+<p>En <em>Kafka</em> hay tres tipos de clústers:</p>
+<ul>
+<li>Un nodo con un <em>broker</em></li>
+<li>Un nodo con muchos <em>brokers</em></li>
+<li>Muchos nodos con múltiples <em>brokers</em></li>
+</ul>
+<p>Para nuestro ejemplo, como sólo disponemos de una máquina, crearemos 3 <em>brokers</em> en un nodo.</p>
+<h3 id="creando-brokers">Creando brokers<a class="headerlink" href="#creando-brokers" title="Permanent link">&para;</a></h3>
+<p>Para ello, vamos a crear diferentes archivos de configuración a partir del fichero <code>config/server.properties</code> que utilizábamos para arrancar el servidor.</p>
+<p>Así pues, crearemos 3 copias del archivo modificando las propiedades <code>broker.id</code> (identificador del broker), <code>listeners</code> (URL y puerto de escucha del broker) y <code>log.dirs</code> (carpeta donde se guardaran los logs del broker):</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Broker 101</label><label for="__tabbed_1_2">Broker 102</label><label for="__tabbed_1_3">Broker 103</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><span class="filename">server101.properties</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">broker.id</span><span class="o">=</span><span class="s">101</span>
+<span class="linenos" data-linenos="2 "></span><span class="na">listeners</span><span class="o">=</span><span class="s">PLAINTEXT://:9092  </span>
+<span class="linenos" data-linenos="3 "></span><span class="na">log.dirs</span><span class="o">=</span><span class="s">/opt/kafka_2.13-3.3.1/logs/broker_101</span>
+<span class="linenos" data-linenos="4 "></span><span class="na">zookeeper.connect</span><span class="o">=</span><span class="s">localhost:2181</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><span class="filename">server102.properties</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">broker.id</span><span class="o">=</span><span class="s">102</span>
+<span class="linenos" data-linenos="2 "></span><span class="na">listeners</span><span class="o">=</span><span class="s">PLAINTEXT://:9093  </span>
+<span class="linenos" data-linenos="3 "></span><span class="na">log.dirs</span><span class="o">=</span><span class="s">/opt/kafka_2.13-3.3.1/logs/broker_102</span>
+<span class="linenos" data-linenos="4 "></span><span class="na">zookeeper.connect</span><span class="o">=</span><span class="s">localhost:2181</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><span class="filename">server103.properties</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">broker.id</span><span class="o">=</span><span class="s">103</span>
+<span class="linenos" data-linenos="2 "></span><span class="na">listeners</span><span class="o">=</span><span class="s">PLAINTEXT://:9094</span>
+<span class="linenos" data-linenos="3 "></span><span class="na">log.dirs</span><span class="o">=</span><span class="s">/opt/kafka_2.13-3.3.1/logs/broker_103 </span>
+<span class="linenos" data-linenos="4 "></span><span class="na">zookeeper.connect</span><span class="o">=</span><span class="s">localhost:2181</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Una vez creados los tres archivos, ejecutaremos los siguientes comandos (cada uno en un terminal diferente) para arrancar <em>Zookeeper</em> y cada uno de los <em>brokers</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>zookeeper-server-start.sh<span class="w"> </span>./config/zookeeper.properties
+<span class="linenos" data-linenos="2 "></span>kafka-server-start.sh<span class="w"> </span>./config/server101.properties
+<span class="linenos" data-linenos="3 "></span>kafka-server-start.sh<span class="w"> </span>./config/server102.properties
+<span class="linenos" data-linenos="4 "></span>kafka-server-start.sh<span class="w"> </span>./config/server103.properties
+</code></pre></div>
+<h3 id="creando-topics">Creando topics<a class="headerlink" href="#creando-topics" title="Permanent link">&para;</a></h3>
+<p>Con cada comando que vayamos a interactuar con <em>Kafka</em>, le vamos a pasar como parámetro <code>--bootstrap-server iabd-virtualbox:9092</code> para indicarle donde se encuentra uno de los brokers (en versiones antiguas de <em>Kafka</em> se indicaba donde estaba <em>Zookeeper</em> mediante <code>--zookeeper iabd-virtualbox:9092</code>).</p>
+<p>A la hora de crear un <em>topic</em>, además de indicarle donde está <em>Zookeeper</em> y el nombre del <em>topic</em>, indicaremos:</p>
+<ul>
+<li>la cantidad de particiones con el parámetro <code>--partitions</code></li>
+<li>el factor de replicación con el parámetro <code>--replication-factor</code></li>
+</ul>
+<p>Así pues, vamos a crear un <em>topic</em> con tres particiones y factor de replicación 2:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-3p2r<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--partitions<span class="w"> </span><span class="m">3</span><span class="w"> </span>--replication-factor<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
+<p>Si ahora obtenemos la información del topic</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--describe<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-3p2r<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+<p>Podemos observar como cada partición tiene la partición líder en un broker distinto y en qué brokers se encuentran las réplicas:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Topic: iabd-topic-3p2r  TopicId: lyrv4qXkS1-c09XAXnIj7w PartitionCount: 3       ReplicationFactor: 2    Configs: segment.bytes=1073741824 
+<span class="linenos" data-linenos="2 "></span>        Topic: iabd-topic-3p2r  Partition: 0    Leader: 103     Replicas: 103,102       Isr: 103,102 
+<span class="linenos" data-linenos="3 "></span>        Topic: iabd-topic-3p2r  Partition: 1    Leader: 102     Replicas: 102,101       Isr: 102,101 
+<span class="linenos" data-linenos="4 "></span>        Topic: iabd-topic-3p2r  Partition: 2    Leader: 101     Replicas: 101,103       Isr: 101,103 
+</code></pre></div>
+<h3 id="produciendo-y-consumiendo">Produciendo y consumiendo<a class="headerlink" href="#produciendo-y-consumiendo" title="Permanent link">&para;</a></h3>
+<p>Respecto al código Python, va a ser el mismo que hemos visto antes pero modificando:</p>
+<ul>
+<li>el nombre del <em>topic</em></li>
+<li>la lista de <em>boostrap_servers</em> (aunque podríamos haber dejado únicamente el nodo principal, ya que <em>Kafka</em> le comunica al cliente el resto de nodos del clúster, es una buena práctica por si el nodo al que nos conectamos de manera explícita está caído).</li>
+</ul>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Productor</label><label for="__tabbed_2_2">Consumidor</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><span class="filename">producer-cluster.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">kafka</span> <span class="kn">import</span> <span class="n">KafkaProducer</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">dumps</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="linenos" data-linenos=" 4 "></span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">producer</span> <span class="o">=</span> <span class="n">KafkaProducer</span><span class="p">(</span>
+<span class="linenos" data-linenos=" 6 "></span>    <span class="n">value_serializer</span><span class="o">=</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">dumps</span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 7 "></span>    <span class="n">bootstrap_servers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;iabd-virtualbox:9092&#39;</span><span class="p">,</span><span class="s1">&#39;iabd-virtualbox:9093&#39;</span><span class="p">,</span><span class="s1">&#39;iabd-virtualbox:9094&#39;</span><span class="p">])</span>
+<span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+<span class="linenos" data-linenos="10 "></span>    <span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;iabd-topic-3p2r&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="s2">&quot;producer &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)},</span> <span class="n">key</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;iabd&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># Como el envío es asíncrono, para que no se salga del programa antes de enviar el mensaje, esperamos 1 seg</span>
+<span class="linenos" data-linenos="12 "></span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>En el consumidor, además hemos modificado la forma de mostrar los mensajes para visualizar más información: </p>
+<div class="highlight"><span class="filename">consumer-cluster.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">kafka</span> <span class="kn">import</span> <span class="n">KafkaConsumer</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">loads</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">consumer</span> <span class="o">=</span> <span class="n">KafkaConsumer</span><span class="p">(</span>
+<span class="linenos" data-linenos=" 5 "></span>    <span class="s1">&#39;iabd-topic-3p2r&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span>    <span class="n">auto_offset_reset</span><span class="o">=</span><span class="s1">&#39;earliest&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span>    <span class="n">enable_auto_commit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="n">group_id</span><span class="o">=</span><span class="s1">&#39;iabd-grupo-1&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span>    <span class="n">value_deserializer</span><span class="o">=</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">loads</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)),</span>
+<span class="linenos" data-linenos="10 "></span>    <span class="n">bootstrap_servers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;iabd-virtualbox:9092&#39;</span><span class="p">,</span><span class="s1">&#39;iabd-virtualbox:9093&#39;</span><span class="p">,</span><span class="s1">&#39;iabd-virtualbox:9094&#39;</span><span class="p">])</span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span><span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">consumer</span><span class="p">:</span>
+<span class="linenos" data-linenos="13 "></span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P:</span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">partition</span><span class="si">}</span><span class="s2"> O:</span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">offset</span><span class="si">}</span><span class="s2"> K:</span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2"> V:</span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Como ahora tenemos los datos repartidos en dos brokers (por el factor de replicación) y tres particiones, los datos consumidos no tienen por qué llegar en orden (como es el caso), ya que los productores han enviado los datos de manera aleatoria para repartir la carga:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>P:1 O:0 K:None V:{&#39;nombre&#39;: &#39;producer 0&#39;}
+<span class="linenos" data-linenos=" 2 "></span>P:1 O:1 K:None V:{&#39;nombre&#39;: &#39;producer 3&#39;}
+<span class="linenos" data-linenos=" 3 "></span>P:2 O:0 K:None V:{&#39;nombre&#39;: &#39;producer 1&#39;}
+<span class="linenos" data-linenos=" 4 "></span>P:2 O:1 K:None V:{&#39;nombre&#39;: &#39;producer 5&#39;}
+<span class="linenos" data-linenos=" 5 "></span>P:2 O:2 K:None V:{&#39;nombre&#39;: &#39;producer 6&#39;}
+<span class="linenos" data-linenos=" 6 "></span>P:2 O:3 K:None V:{&#39;nombre&#39;: &#39;producer 7&#39;}
+<span class="linenos" data-linenos=" 7 "></span>P:2 O:4 K:None V:{&#39;nombre&#39;: &#39;producer 8&#39;}
+<span class="linenos" data-linenos=" 8 "></span>P:0 O:0 K:None V:{&#39;nombre&#39;: &#39;producer 2&#39;}
+<span class="linenos" data-linenos=" 9 "></span>P:0 O:1 K:None V:{&#39;nombre&#39;: &#39;producer 4&#39;}
+<span class="linenos" data-linenos="10 "></span>P:0 O:2 K:None V:{&#39;nombre&#39;: &#39;producer 9&#39;}
+</code></pre></div>
+<p>Para asegurarnos el orden, debemos enviar los mensajes con una clave de partición con el atributo <code>key</code> del método <code>send</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;iabd-topic-3p2r&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="2 "></span>    <span class="n">value</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="s2">&quot;producer &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)},</span>
+<span class="linenos" data-linenos="3 "></span>    <span class="n">key</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;iabd&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Si volvemos a ejecutar el productor con esa clave, el resultado sí que sale ordenado:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>P:0 O:3 K:b&#39;iabd&#39; V:{&#39;nombre&#39;: &#39;producer 0&#39;}
+<span class="linenos" data-linenos=" 2 "></span>P:0 O:4 K:b&#39;iabd&#39; V:{&#39;nombre&#39;: &#39;producer 1&#39;}
+<span class="linenos" data-linenos=" 3 "></span>P:0 O:5 K:b&#39;iabd&#39; V:{&#39;nombre&#39;: &#39;producer 2&#39;}
+<span class="linenos" data-linenos=" 4 "></span>P:0 O:6 K:b&#39;iabd&#39; V:{&#39;nombre&#39;: &#39;producer 3&#39;}
+<span class="linenos" data-linenos=" 5 "></span>P:0 O:7 K:b&#39;iabd&#39; V:{&#39;nombre&#39;: &#39;producer 4&#39;}
+<span class="linenos" data-linenos=" 6 "></span>P:0 O:8 K:b&#39;iabd&#39; V:{&#39;nombre&#39;: &#39;producer 5&#39;}
+<span class="linenos" data-linenos=" 7 "></span>P:0 O:9 K:b&#39;iabd&#39; V:{&#39;nombre&#39;: &#39;producer 6&#39;}
+<span class="linenos" data-linenos=" 8 "></span>P:0 O:10 K:b&#39;iabd&#39; V:{&#39;nombre&#39;: &#39;producer 7&#39;}
+<span class="linenos" data-linenos=" 9 "></span>P:0 O:11 K:b&#39;iabd&#39; V:{&#39;nombre&#39;: &#39;producer 8&#39;}
+<span class="linenos" data-linenos="10 "></span>P:0 O:12 K:b&#39;iabd&#39; V:{&#39;nombre&#39;: &#39;producer 9&#39;}
+</code></pre></div>
+<h3 id="decisiones-de-rendimiento">Decisiones de rendimiento<a class="headerlink" href="#decisiones-de-rendimiento" title="Permanent link">&para;</a></h3>
+<p>Aunque podemos modificar la cantidad de particiones y el factor de replicación una vez creado el clúster, es mejor hacerlo de la manera correcta durante la creación ya que tienen un impacto directo en el rendimiento y durabilidad del sistema:</p>
+<ul>
+<li>si el número de particiones crece con el clúster ya creado, el orden de las claves no está garantizado.</li>
+<li>si se incrementa el factor de replicación durante el ciclo de vida de un <em>topic</em>, estaremos metiendo presión al clúster, que provocará un decremento inesperado del rendimiento.</li>
+</ul>
+<p>Cada partición puede manejar un rendimiento de unos pocos MB/s. Al añadir más particiones, obtendremos mejor paralelización y por tanto, mejor rendimiento. Además, podremos ejecutar más consumidores en un grupo. Pero el hecho de añadir más brokers al clúster para que las particiones los aprovechen, provocará que <em>Zookeeper</em> tenga que realizar más elecciones y que <em>Kafka</em> tenga más ficheros abiertos.</p>
+<div class="admonition tip">
+<p class="admonition-title">Guía de rendimiento</p>
+<p>Una propuesta es:</p>
+<ul>
+<li>Si nuestro clúster es pequeño (menos de 6 <em>brokers</em>), crear el doble de particiones que <em>brokers</em>.</li>
+<li>Si tenemos un clúster grande (más de 12 <em>brokers</em>), crear la misma cantidad de particiones que <em>brokers</em>.</li>
+<li>Ajustar el número de consumidores necesarios que necesitamos que se ejecuten en paralelo en los picos de rendimiento.</li>
+</ul>
+<p>Independientemente de la decisión que tomemos, hay que realizar pruebas de rendimiento con diferentes configuraciones.</p>
+</div>
+<p>Respecto al factor de replicación, debería ser, al menos 2, siendo 3 la cantidad recomendada (es necesario tener al menos 3 <em>brokers</em>) y no sobrepasar de 4. Cuanto mayor sea el factor de replicación (RF):</p>
+<ul>
+<li>El sistema tendrá mejor tolerancia a fallos (se pueden caer RF-1 <em>brokers</em>)</li>
+<li>Pero tendremos mayor replicación (lo que implicará una mayor latencia si <code>acks=all</code>)</li>
+<li>Y también ocupará más espacio en disco (50% más si RF es 3 en vez de 2).</li>
+</ul>
+<p>Respecto al clúster, se recomienda que un <em>broker</em> no contenga más de 2000-4000 particiones (entre todos los <em>topics</em> de ese broker). Además, un clúster de <em>Kafka</em> debería tener un máximo de 20.000 particiones entre todos los brokers, ya que si se cayese algún nodo, <em>Zookeeper</em> necesitaría realizar muchas elecciones de líder.</p>
+<h2 id="caso-3-de-aemet-a-s3-y-mongodb">Caso 3: De AEMET a S3 y MongoDB<a class="headerlink" href="#caso-3-de-aemet-a-s3-y-mongodb" title="Permanent link">&para;</a></h2>
+<p>En este caso de uso vamos a repetir el que hicimos en la <a href="nifi2.html#caso-7-de-aemet-a-mongodb-y-s3">sesión de Nifi</a> pero utilizando <em>Kafka</em> como elemento de integración, desacoplando los productores de los consumidores.</p>
+<h3 id="productor-de-aemet">Productor de AEMET<a class="headerlink" href="#productor-de-aemet" title="Permanent link">&para;</a></h3>
+<p>Tras recuperar la petición REST que realizamos a AEMET vamos a:</p>
+<ul>
+<li>enviar su resultado a un <em>topic</em> que llamaremos <code>iabd-aemet-bronze</code>.</li>
+<li>generar un nuevo mensaje JSON más pequeño con la información que nos interesa, y enviar este nuevo mensaje a un topic que llamaremos <code>iabd-aemet-silver</code>.</li>
+</ul>
+<p>Así pues, primero creamos los <em>topics</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>iabd-aemet-bronze<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+<span class="linenos" data-linenos="2 "></span>kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>iabd-aemet-silver<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+<p>Y a continuación desarrollamos el productor, que hará uso de la librería <a href="https://requests.readthedocs.io/en/latest/">request</a>:</p>
+<div class="highlight"><span class="filename">productorBronze.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">kafka</span> <span class="kn">import</span> <span class="n">KafkaProducer</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">dumps</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># Creamos el productor de Kafka</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">producer</span> <span class="o">=</span> <span class="n">KafkaProducer</span><span class="p">(</span>
+<span class="linenos" data-linenos=" 9 "></span>    <span class="n">bootstrap_servers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;iabd-virtualbox:9092&#39;</span><span class="p">])</span>
+<span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># Realizamos la petición REST</span>
+<span class="linenos" data-linenos="12 "></span><span class="n">url_aemet</span> <span class="o">=</span> <span class="s2">&quot;https://www.el-tiempo.net/api/json/v2/provincias/03/municipios/03065&quot;</span>
+<span class="linenos" data-linenos="13 "></span>
+<span class="linenos" data-linenos="14 "></span><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos" data-linenos="15 "></span>    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_aemet</span><span class="p">)</span>
+<span class="linenos" data-linenos="16 "></span>    <span class="n">resp_json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="linenos" data-linenos="17 "></span>    <span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;iabd-aemet-bronze&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">dumps</span><span class="p">(</span><span class="n">resp_json</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+<span class="linenos" data-linenos="18 "></span>
+<span class="linenos" data-linenos="19 "></span>    <span class="c1"># Creamos el nuevo mensaje JSON con los datos</span>
+<span class="linenos" data-linenos="20 "></span>    <span class="n">temp</span> <span class="o">=</span> <span class="n">resp_json</span><span class="p">[</span><span class="s2">&quot;temperatura_actual&quot;</span><span class="p">]</span>
+<span class="linenos" data-linenos="21 "></span>    <span class="n">humedad</span> <span class="o">=</span> <span class="n">resp_json</span><span class="p">[</span><span class="s2">&quot;humedad&quot;</span><span class="p">]</span>
+<span class="linenos" data-linenos="22 "></span>    <span class="n">ciudad</span> <span class="o">=</span> <span class="n">resp_json</span><span class="p">[</span><span class="s2">&quot;municipio&quot;</span><span class="p">][</span><span class="s2">&quot;NOMBRE&quot;</span><span class="p">]</span>
+<span class="linenos" data-linenos="23 "></span>    <span class="n">fecha</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="linenos" data-linenos="24 "></span>    <span class="n">fecha_str</span> <span class="o">=</span> <span class="n">dumps</span><span class="p">(</span><span class="n">fecha</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="linenos" data-linenos="25 "></span>
+<span class="linenos" data-linenos="26 "></span>    <span class="n">datos_json</span> <span class="o">=</span> <span class="p">{</span>
+<span class="linenos" data-linenos="27 "></span>        <span class="s2">&quot;fecha&quot;</span><span class="p">:</span> <span class="n">fecha</span><span class="p">,</span>
+<span class="linenos" data-linenos="28 "></span>        <span class="s2">&quot;ciudad&quot;</span><span class="p">:</span> <span class="n">ciudad</span><span class="p">,</span>
+<span class="linenos" data-linenos="29 "></span>        <span class="s2">&quot;temp&quot;</span><span class="p">:</span> <span class="n">temp</span><span class="p">,</span>
+<span class="linenos" data-linenos="30 "></span>        <span class="s2">&quot;humedad&quot;</span><span class="p">:</span> <span class="n">humedad</span>
+<span class="linenos" data-linenos="31 "></span>    <span class="p">}</span>
+<span class="linenos" data-linenos="32 "></span>    <span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;iabd-aemet-silver&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">dumps</span><span class="p">(</span><span class="n">datos_json</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+<span class="linenos" data-linenos="33 "></span>
+<span class="linenos" data-linenos="34 "></span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="consumidor-bronze">Consumidor Bronze<a class="headerlink" href="#consumidor-bronze" title="Permanent link">&para;</a></h3>
+<p>En el consumidor del <em>topic</em> <code>iabd-aemet-bronze</code> vamos a recuperar las peticiones REST almacenadas en JSON y las persistiremos en S3, en el mismo <em>bucket</em> que <a href="nifi2.html#creando-el-bucket">creamos en la sesión de Nifi</a>.</p>
+<p>En este caso, como el mensaje ya está en formato JSON y no queremos tratarlo, no hace falta deserializarlo ni volverlo a serializar.</p>
+<p>El código <em>Python</em> será similar a:</p>
+<div class="highlight"><span class="filename">consumidorBronze.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">kafka</span> <span class="kn">import</span> <span class="n">KafkaConsumer</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="linenos" data-linenos=" 4 "></span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1"># Consumidor Kafka</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">consumer</span> <span class="o">=</span> <span class="n">KafkaConsumer</span><span class="p">(</span>
+<span class="linenos" data-linenos=" 7 "></span>    <span class="s1">&#39;iabd-aemet-bronze&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="n">enable_auto_commit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span>    <span class="n">group_id</span><span class="o">=</span><span class="s1">&#39;iabd-caso3&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="10 "></span>    <span class="n">bootstrap_servers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;iabd-virtualbox:9092&#39;</span><span class="p">])</span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span><span class="c1"># Conexión con S3</span>
+<span class="linenos" data-linenos="13 "></span><span class="n">s3r</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-east-1&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos="14 "></span><span class="n">bucket</span> <span class="o">=</span> <span class="n">s3r</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="s1">&#39;iabd-nifi&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos="15 "></span>
+<span class="linenos" data-linenos="16 "></span><span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">consumer</span><span class="p">:</span>
+<span class="linenos" data-linenos="17 "></span>    <span class="n">resp_json</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">value</span>
+<span class="linenos" data-linenos="18 "></span>    <span class="c1"># Creamos el nombre del fichero con la fecha y lo metemos en la carpeta bronze</span>
+<span class="linenos" data-linenos="19 "></span>    <span class="n">nom_fichero</span> <span class="o">=</span> <span class="s2">&quot;bronze/&quot;</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
+<span class="linenos" data-linenos="20 "></span>    <span class="n">bucket</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">Key</span><span class="o">=</span><span class="n">nom_fichero</span><span class="p">,</span> <span class="n">Body</span><span class="o">=</span><span class="n">resp_json</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="consumidor-silver-y-productor-gold">Consumidor Silver y Productor Gold<a class="headerlink" href="#consumidor-silver-y-productor-gold" title="Permanent link">&para;</a></h3>
+<p>El siguiente paso es bastante más complejo. Ahora realizaremos los siguientes pasos:</p>
+<ol>
+<li>crearemos un consumidor con los mensajes de la cola <em>silver</em></li>
+<li>y almacenamos los mensajes en S3</li>
+<li>además, el mismo mensaje lo insertaremos en MongoDB en la colección <code>caso3</code></li>
+<li>y cuando tengamos 10 mensajes crearemos uno nuevo con el cálculo de la temperaturas y humedades medias</li>
+<li>para finalmente producir dicho mensaje al topic <code>iabd-aemet-gold</code>.</li>
+</ol>
+<p>Así pues, primero creamos el <em>topic</em> <em>gold</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>iabd-aemet-gold<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+<p>Así pues, antes de empezar, colocamos las dependencias y la función para transformar un diccionario JSON con todo el contenido en <em>String</em> a diferentes tipos (<em>float</em>, <em>ISODate</em>, ...):</p>
+<div class="highlight"><span class="filename">consumidorSilverProductorGold.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">kafka</span> <span class="kn">import</span> <span class="n">KafkaConsumer</span><span class="p">,</span> <span class="n">KafkaProducer</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">loads</span><span class="p">,</span> <span class="n">dumps</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># Convierte un diccionario JSON con todo el contenido en String a diferentes tipos (float, ISODate, ...)</span>
+<span class="linenos" data-linenos="11 "></span><span class="k">def</span> <span class="nf">esquema_json</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
+<span class="linenos" data-linenos="12 "></span>    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="linenos" data-linenos="13 "></span>
+<span class="linenos" data-linenos="14 "></span>    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;fecha&#39;</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">):</span>
+<span class="linenos" data-linenos="15 "></span>        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;fecha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">dct</span><span class="p">[</span><span class="s2">&quot;fecha&quot;</span><span class="p">])</span>
+<span class="linenos" data-linenos="16 "></span>    <span class="k">if</span> <span class="s1">&#39;temp&#39;</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
+<span class="linenos" data-linenos="17 "></span>        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;temp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dct</span><span class="p">[</span><span class="s2">&quot;temp&quot;</span><span class="p">])</span>
+<span class="linenos" data-linenos="18 "></span>    <span class="k">if</span> <span class="s1">&#39;humedad&#39;</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
+<span class="linenos" data-linenos="19 "></span>        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;humedad&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dct</span><span class="p">[</span><span class="s2">&quot;humedad&quot;</span><span class="p">])</span>
+<span class="linenos" data-linenos="20 "></span>    <span class="k">if</span> <span class="s1">&#39;ciudad&#39;</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
+<span class="linenos" data-linenos="21 "></span>        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;ciudad&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dct</span><span class="p">[</span><span class="s2">&quot;ciudad&quot;</span><span class="p">]</span>
+<span class="linenos" data-linenos="22 "></span>
+<span class="linenos" data-linenos="23 "></span>    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<p>A continuación definimos las conexiones necesarios para los pasos 1 (consumir <em>Kafka</em> en el topic <em>silver</em>), 2 (enviar a <em>S3</em>), 3 (persistir en <em>MongoDB</em>) y 5 (producir <em>Kafka</em> en el topic <em>gold</em>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="24 "></span><span class="c1"># Paso 1 - Consumir Silver</span>
+<span class="linenos" data-linenos="25 "></span><span class="n">consumer</span> <span class="o">=</span> <span class="n">KafkaConsumer</span><span class="p">(</span>
+<span class="linenos" data-linenos="26 "></span>    <span class="s1">&#39;iabd-aemet-silver&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="27 "></span>    <span class="n">enable_auto_commit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos" data-linenos="28 "></span>    <span class="n">group_id</span><span class="o">=</span><span class="s1">&#39;iabd-caso3&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="29 "></span>    <span class="n">bootstrap_servers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;iabd-virtualbox:9092&#39;</span><span class="p">])</span>
+<span class="linenos" data-linenos="30 "></span>
+<span class="linenos" data-linenos="31 "></span><span class="c1"># Paso 2 - Conexión con S3</span>
+<span class="linenos" data-linenos="32 "></span><span class="n">s3r</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-east-1&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos="33 "></span><span class="n">bucket</span> <span class="o">=</span> <span class="n">s3r</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="s1">&#39;iabd-nifi&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos="34 "></span>
+<span class="linenos" data-linenos="35 "></span><span class="c1"># Paso 3 - Conexión con MongoDB</span>
+<span class="linenos" data-linenos="36 "></span><span class="n">clienteMongo</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s1">&#39;mongodb://localhost:27017&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos="37 "></span>
+<span class="linenos" data-linenos="38 "></span><span class="c1"># Paso 5 - Producir Gold</span>
+<span class="linenos" data-linenos="39 "></span><span class="n">producer</span> <span class="o">=</span> <span class="n">KafkaProducer</span><span class="p">(</span>
+<span class="linenos" data-linenos="40 "></span>    <span class="n">bootstrap_servers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;iabd-virtualbox:9092&#39;</span><span class="p">])</span>
+</code></pre></div>
+<p>Y para cada mensaje que consumimos, realizamos los pasos 2 (enviar a <em>S3</em>), 3 (persistir en <em>MongoDB</em>), 4 (calcular los datos agregados) y 5 (producir en <em>Kafka</em> en <em>gold</em>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="40 "></span><span class="n">cantidad</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos" data-linenos="41 "></span><span class="n">mensajes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos" data-linenos="42 "></span><span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">consumer</span><span class="p">:</span>
+<span class="linenos" data-linenos="43 "></span>    <span class="n">resp_json</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">value</span>
+<span class="linenos" data-linenos="44 "></span>    <span class="n">doc_json</span> <span class="o">=</span> <span class="n">loads</span><span class="p">(</span><span class="n">resp_json</span><span class="p">,</span> <span class="n">object_hook</span><span class="o">=</span><span class="n">esquema_json</span><span class="p">)</span>
+<span class="linenos" data-linenos="45 "></span>    <span class="n">mensajes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_json</span><span class="p">)</span>
+<span class="linenos" data-linenos="46 "></span>
+<span class="linenos" data-linenos="47 "></span>    <span class="c1"># Paso 2 - Metemos en S3 cada mensaje</span>
+<span class="linenos" data-linenos="48 "></span>    <span class="n">nom_fichero</span> <span class="o">=</span> <span class="s2">&quot;silver/&quot;</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
+<span class="linenos" data-linenos="49 "></span>    <span class="n">bucket</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">Key</span><span class="o">=</span><span class="n">nom_fichero</span><span class="p">,</span> <span class="n">Body</span><span class="o">=</span><span class="n">resp_json</span><span class="p">)</span>
+<span class="linenos" data-linenos="50 "></span>
+<span class="linenos" data-linenos="51 "></span>    <span class="c1"># Paso 3 - Lo insertamos en MongoDB</span>
+<span class="linenos" data-linenos="52 "></span>    <span class="n">colcaso3</span> <span class="o">=</span> <span class="n">clienteMongo</span><span class="o">.</span><span class="n">iabd</span><span class="o">.</span><span class="n">caso3</span>
+<span class="linenos" data-linenos="53 "></span>    <span class="n">resultado</span> <span class="o">=</span> <span class="n">colcaso3</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">doc_json</span><span class="p">)</span>
+<span class="linenos" data-linenos="54 "></span>
+<span class="linenos" data-linenos="55 "></span>    <span class="c1"># Guardamos 10 mensajes</span>
+<span class="linenos" data-linenos="56 "></span>    <span class="n">cantidad</span> <span class="o">=</span> <span class="n">cantidad</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="linenos" data-linenos="57 "></span>
+<span class="linenos" data-linenos="58 "></span>    <span class="k">if</span> <span class="n">cantidad</span> <span class="o">==</span> <span class="mi">11</span><span class="p">:</span>
+<span class="linenos" data-linenos="59 "></span>        <span class="nb">print</span><span class="p">(</span><span class="n">mensajes</span><span class="p">)</span>
+<span class="linenos" data-linenos="60 "></span>        <span class="c1"># Paso 4 - realizamos el cálculo</span>
+<span class="linenos" data-linenos="61 "></span>        <span class="c1"># Usamos pandas</span>
+<span class="linenos" data-linenos="62 "></span>        <span class="n">pd_mensajes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">mensajes</span><span class="p">)</span>
+<span class="linenos" data-linenos="63 "></span>        <span class="n">pd_mensajes</span><span class="o">.</span><span class="n">temp</span> <span class="o">=</span> <span class="n">pd_mensajes</span><span class="p">[</span><span class="s1">&#39;temp&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos="64 "></span>        <span class="n">pd_mensajes</span><span class="o">.</span><span class="n">humedad</span> <span class="o">=</span> <span class="n">pd_mensajes</span><span class="p">[</span><span class="s1">&#39;humedad&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos="65 "></span>        <span class="n">pd_agg</span> <span class="o">=</span> <span class="n">pd_mensajes</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ciudad&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;fecha&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="s2">&quot;temp&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="s2">&quot;humedad&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">})</span>
+<span class="linenos" data-linenos="66 "></span>        <span class="n">pd_agg</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos" data-linenos="67 "></span>        <span class="n">json_gold</span> <span class="o">=</span> <span class="n">pd_agg</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="68 "></span>
+<span class="linenos" data-linenos="69 "></span>        <span class="nb">print</span><span class="p">(</span><span class="n">json_gold</span><span class="p">)</span>
+<span class="linenos" data-linenos="70 "></span>
+<span class="linenos" data-linenos="71 "></span>        <span class="c1"># Paso 5 - producimos el mensaje a Kafka</span>
+<span class="linenos" data-linenos="72 "></span>        <span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;iabd-aemet-gold&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">dumps</span><span class="p">(</span><span class="n">json_gold</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+<span class="linenos" data-linenos="73 "></span>
+<span class="linenos" data-linenos="74 "></span>        <span class="c1"># vaciamos la lista e inicializamos el contador</span>
+<span class="linenos" data-linenos="75 "></span>        <span class="n">mensajes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos" data-linenos="76 "></span>        <span class="n">cantidad</span> <span class="o">=</span> <span class="mi">1</span>
+</code></pre></div>
+<p>Si en un terminal creamos un consumidor del topic <code>iabd-aemet-gold</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-console-consumer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-aemet-gold<span class="w"> </span>--from-beginning<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+<p>Veremos que los mensajes que llegan son similares a:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span><span class="nt">&quot;ciudad&quot;</span><span class="p">:</span><span class="s2">&quot;Elche\/Elx&quot;</span><span class="p">,</span><span class="nt">&quot;fecha&quot;</span><span class="p">:</span><span class="mi">1679416092670</span><span class="p">,</span><span class="nt">&quot;temp&quot;</span><span class="p">:</span><span class="mf">20.8</span><span class="p">,</span><span class="nt">&quot;humedad&quot;</span><span class="p">:</span><span class="mf">50.0</span><span class="p">}</span>
+</code></pre></div>
+<h2 id="caso-4-ahora-con-nifi">Caso 4: Ahora con Nifi<a class="headerlink" href="#caso-4-ahora-con-nifi" title="Permanent link">&para;</a></h2>
+<p>Vamos a repetir el flujo de datos que acabamos de crear en el caso anterior, pero implementandolos mediante <em>Nifi</em> de forma similar al <a href="nifi2.html#caso-7-de-aemet-a-mongodb-y-s3">caso 7 de la segunda sesión de Nifi</a>.</p>
+<div class="admonition info">
+<p class="admonition-title">Configuración de procesadores de Nifi</p>
+<p>En este apartado hemos obviado la configuración de todos los procesadores vistos en el <a href="nifi2.html#caso-7-de-aemet-a-mongodb-y-s3">caso 7 de Nifi</a>, ya que podemos copiar y pegarlos dentro de nuevos grupos de procesadores y evitarnos tener que volver a configurarlos.</p>
+</div>
+<h3 id="de-rest-a-kafka">De REST a Kafka<a class="headerlink" href="#de-rest-a-kafka" title="Permanent link">&para;</a></h3>
+<p>Sobre un grupo de procesadores que hemos llamado <code>caso4kafka_producer_bronze_silver</code>, vamos a utilizar el procesador <a href="https://nifi.apache.org/docs/nifi-docs/components/org.apache.nifi/nifi-standard-nar/latest/org.apache.nifi.processors.standard.InvokeHTTP/index.html">InvokeHTTP</a>, mediante el cual hacemos la petición GET a la URL <a href="https://www.el-tiempo.net/api/json/v2/provincias/03/municipios/03065">https://www.el-tiempo.net/api/json/v2/provincias/03/municipios/03065</a>.</p>
+<p>De este procesador, por un lado vamos a conectar directamente con <a href="https://nifi.apache.org/docs/nifi-docs/components/org.apache.nifi/nifi-kafka-2-6-nar/latest/org.apache.nifi.processors.kafka.pubsub.PublishKafka_2_6/index.html">PublishKafka_2_6</a> para enviar directamente los datos a <em>Kafka</em> al <em>topic</em>, donde además del topic <code>iabd-aemet-bronce</code>, indicaremos que no utilizaremos transacciones (Use Transactions: <code>false</code>), así como que intente garantizar la entrega (<em>Delivery Guarantee: Best Effort</em>):</p>
+<figure style="align: center;">
+    <img alt="Publicando en el topic iabd-aemet-bronze en Nifi" src="images/03caso4publishBronze.png">
+    <figcaption>Publicando en el topic iabd-aemet-bronze</figcaption>
+</figure>
+
+<p>Para el resto de lógica, igual que en la sesión de <em>Nifi</em>, utilizamos <a href="https://nifi.apache.org/docs/nifi-docs/components/org.apache.nifi/nifi-standard-nar/latest/org.apache.nifi.processors.standard.EvaluateJSONPath/index.html">EvaluateJSONPath</a> para recoger la ciudad, la temperatura y la humedad, y por último conectamos con <a href="https://nifi.apache.org/docs/nifi-docs/components/org.apache.nifi/nifi-standard-nar/latest/org.apache.nifi.processors.standard.AttributesToJSON/index.html">AttributesToJSON</a> para generar el JSON que finalmente enviaremos a Kafka.</p>
+<p>Ahora, como sí que tenemos un formato más concreto, vamos a utilizar <a href="https://nifi.apache.org/docs/nifi-docs/components/org.apache.nifi/nifi-kafka-2-6-nar/latest/org.apache.nifi.processors.kafka.pubsub.PublishKafkaRecord_2_6/index.html">PublishKafkaRecord_2_6</a> para utilizar un conjunto de registros.</p>
+<p>Primero, conectamos todos los procesadores:</p>
+<figure style="align: center;">
+    <img alt="Flujo de la capa bronce/silver en Nifi" src="images/03caso4flujoBronzeSilver.png">
+    <figcaption>Flujo de la capa bronce/silver</figcaption>
+</figure>
+
+<p>Y configuramos el último procesador con el topic <code>iabd-aemet-silver</code>, pero indicando que vamos a leer tanto como escribir en formato JSON:</p>
+<figure style="align: center;">
+    <img alt="Publicando en el topic iabd-aemet-silver en Nifi" src="images/03caso4publishSilver.png">
+    <figcaption>Publicando en el topic iabd-aemet-silver</figcaption>
+</figure>
+
+<h3 id="de-kafka-a-s3">De Kafka a S3<a class="headerlink" href="#de-kafka-a-s3" title="Permanent link">&para;</a></h3>
+<p>Nos vamos a centrar en recuperar los mensajes del <em>topic</em> <code>iabd-aemet-silver</code> y colocarlos en S3, mediante un grupo de procesadores que llamaremos <code>caso4kafka_consumer_bronze</code> que contendrá un flujo similar a:</p>
+<figure style="align: center;">
+    <img alt="Flujo de la capa bronce en Nifi" src="images/03caso4flujoBronze.png">
+    <figcaption>Flujo de la capa bronce</figcaption>
+</figure>
+
+<p>Y en concreto en el consumidor, hemos de indicar tanto el <em>topic</em> como el grupo de consumidores (<em>Group ID</em>) a <code>iabd-caso4</code>:</p>
+<figure style="align: center;">
+    <img alt="Consumidor del del topic iabd-aemet-bronce en Nifi" src="images/03caso4consumeBronze.png">
+    <figcaption>Consumiendo del topic iabd-aemet-bronce</figcaption>
+</figure>
+
+<!--
+### De Kafka a S3 y MongoDB
+-->
+
+<h2 id="kafka-connect">Kafka Connect<a class="headerlink" href="#kafka-connect" title="Permanent link">&para;</a></h2>
+<p>Si hacerlo con <em>Nifi</em> ya es un avance respecto a tener que codificarlo con <em>Python</em>, ¿qué dirías si <em>Kafka</em> ofreciera una serie de conectores para las operaciones más comunes?</p>
+<p>Así pues, <em>Kafka Connect</em> permite importar/exportar datos desde/hacia <em>Kafka</em>, facilitando la integración en sistemas existentes mediante alguno del <a href="https://www.confluent.io/hub/">centenar de conectores disponibles</a>.</p>
+<figure style="align: center;">
+    <img src="images/03kafka-connect.png">
+    <figcaption>Arquitectura Kafka Connect</figcaption>
+</figure>
+
+<p>Los elementos que forman <em>Kafka Connect</em> son:</p>
+<ul>
+<li>Conectores fuente (<em>source</em>), para obtener datos desde las fuentes de datos (E en ETL)</li>
+<li>Conectores destino (<em>sink</em>) para publicar los datos en los almacenes de datos (L en ETL).</li>
+</ul>
+<p>Estos conectores facilitan que desarrolladores no expertos puedan trabajar con sus datos en <em>Kafka</em> de forma rápida y fiable, de manera que podamos introducir <em>Kafka</em> dentro de nuestros procesos ETL.</p>
+<h3 id="hola-kafka-connect">Hola Kafka Connect<a class="headerlink" href="#hola-kafka-connect" title="Permanent link">&para;</a></h3>
+<p>Vamos a realizar un ejemplo muy sencillo leyendo datos de una base de datos para meterlos en Kafka.</p>
+<p>Para ello, utilizaremos la base de datos de <em>retail_db</em> que ya hemos empleado en <a href="../hadoop/flume.html#actividades">otras sesiones</a> y vamos a cargar en <em>Kafka</em> los datos de la tabla <code>categories</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">MariaDB</span><span class="w"> </span><span class="err">[</span><span class="n">retail_db</span><span class="err">]</span><span class="o">&gt;</span><span class="w"> </span><span class="k">describe</span><span class="w"> </span><span class="n">categories</span><span class="p">;</span>
+<span class="linenos" data-linenos="2 "></span><span class="o">+------------------------+-------------+------+-----+---------+----------------+</span>
+<span class="linenos" data-linenos="3 "></span><span class="o">|</span><span class="w"> </span><span class="n">Field</span><span class="w">                  </span><span class="o">|</span><span class="w"> </span><span class="k">Type</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="no">Null</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">Key</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">Default</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Extra</span><span class="w">          </span><span class="o">|</span>
+<span class="linenos" data-linenos="4 "></span><span class="o">+------------------------+-------------+------+-----+---------+----------------+</span>
+<span class="linenos" data-linenos="5 "></span><span class="o">|</span><span class="w"> </span><span class="n">category_id</span><span class="w">            </span><span class="o">|</span><span class="w"> </span><span class="kt">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="k">NO</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="n">PRI</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">NULL</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">auto_increment</span><span class="w"> </span><span class="o">|</span>
+<span class="linenos" data-linenos="6 "></span><span class="o">|</span><span class="w"> </span><span class="n">category_department_id</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kt">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="k">NO</span><span class="w">   </span><span class="o">|</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="no">NULL</span><span class="w">    </span><span class="o">|</span><span class="w">                </span><span class="o">|</span>
+<span class="linenos" data-linenos="7 "></span><span class="o">|</span><span class="w"> </span><span class="n">category_name</span><span class="w">          </span><span class="o">|</span><span class="w"> </span><span class="kt">varchar</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">NO</span><span class="w">   </span><span class="o">|</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="no">NULL</span><span class="w">    </span><span class="o">|</span><span class="w">                </span><span class="o">|</span>
+<span class="linenos" data-linenos="8 "></span><span class="o">+------------------------+-------------+------+-----+---------+----------------</span>
+</code></pre></div>
+<h4 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">&para;</a></h4>
+<p>Cuando ejecutemos <em>Kafka Connect</em>, le debemos pasar un archivo de configuración. Para empezar, tenemos <code>config/connect-standalone.properties</code> el cual ya viene rellenado e indica los formatos que utilizarán los conversores (en nuestro caso ya están configurados para utiliza JSON) y otros aspectos:</p>
+<div class="highlight"><span class="filename">config/connect-standalone.properties</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">bootstrap.servers</span><span class="o">=</span><span class="s">localhost:9092</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="na">key.converter</span><span class="o">=</span><span class="s">org.apache.kafka.connect.json.JsonConverter</span>
+<span class="linenos" data-linenos="4 "></span><span class="na">value.converter</span><span class="o">=</span><span class="s">org.apache.kafka.connect.json.JsonConverter</span>
+<span class="linenos" data-linenos="5 "></span><span class="na">key.converter.schemas.enable</span><span class="o">=</span><span class="s">true</span>
+<span class="linenos" data-linenos="6 "></span><span class="na">value.converter.schemas.enable</span><span class="o">=</span><span class="s">true</span>
+<span class="linenos" data-linenos="7 "></span>
+<span class="linenos" data-linenos="8 "></span><span class="na">offset.storage.file.filename</span><span class="o">=</span><span class="s">/tmp/connect.offsets</span>
+</code></pre></div>
+<p>Los conectores se incluyen en <em>Kafka</em> como <em>plugins</em>. Para ello, primero hemos de indicarle a <em>Kafka</em> donde se encuentran, indicando en el archivo de configuración la ruta donde los almacenaremos (este cambio debemos realizarlo sobre la instalación de nuestra máquina virtual):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">plugin.path</span><span class="o">=</span><span class="s">/opt/kafka_2.13-3.3.1/plugins</span>
+</code></pre></div>
+<h4 id="extrayendo-datos-mediante-kafka-connect">Extrayendo datos mediante Kafka Connect<a class="headerlink" href="#extrayendo-datos-mediante-kafka-connect" title="Permanent link">&para;</a></h4>
+<p>Así pues, el primer paso es crear el archivo de configuración de <em>Kafka Connect</em> con los datos (en nuestro caso lo colocamos en la carpeta <code>config</code>  de la instalación de <em>Kafka</em>) utilizando un <a href="https://docs.confluent.io/kafka-connect-jdbc/current/source-connector/source_config_options.html#jdbc-source-configs">conector fuente de JDBC</a>:</p>
+<div class="highlight"><span class="filename">config/mysql-source-connector.properties</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="na">name</span><span class="o">=</span><span class="s">mysql-source</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="na">connector.class</span><span class="o">=</span><span class="s">io.confluent.connect.jdbc.JdbcSourceConnector</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="na">tasks.max</span><span class="o">=</span><span class="s">1</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="na">connection.url</span><span class="o">=</span><span class="s">jdbc:mysql://localhost/retail_db</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="na">connection.user</span><span class="o">=</span><span class="s">iabd</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="na">connection.password</span><span class="o">=</span><span class="s">iabd</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="na">table.whitelist</span><span class="o">=</span><span class="s">categories</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="na">mode</span><span class="o">=</span><span class="s">incrementing</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="na">incrementing.column.name</span><span class="o">=</span><span class="s">category_id</span>
+<span class="linenos" data-linenos="10 "></span><span class="na">topic.prefix</span><span class="o">=</span><span class="s">iabd-retail_db-</span>
+</code></pre></div>
+<p>Antes de ponerlo en marcha, debemos <a href="https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc">descargar el conector</a> y colocar la carpeta descomprimida dentro de nuestra carpeta de plugins <code>/opt/kafka_2.13-3.3.1/plugins</code> y descargar el <a href="resources/mysql-connector-j-8.0.31.jar">driver de MySQL</a> y colocarlo en la carpeta <code>/opt/kafka_2.13-3.3.1/lib</code>.</p>
+<p>Y a continuación ya podemos ejecutar <em>Kafka Connect</em> mediante el comando <a href="https://kafka.apache.org/documentation/#connect_running"><code>connect-standalone.sh</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>connect-standalone.sh<span class="w"> </span>config/connect-standalone.properties<span class="w"> </span>config/mysql-source-connector.properties
+</code></pre></div>
+<p>Si tuviéramos más conectores los añadiríamos como parámetros extra:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>connect-standalone.sh<span class="w"> </span>config/connect-standalone.properties<span class="w"> </span>config/conector1.properties<span class="w"> </span><span class="o">[</span>config/conector2.properties<span class="w"> </span>config/conector3.properties<span class="w"> </span>...<span class="o">]</span>
+</code></pre></div>
+<div class="admonition caution">
+<p class="admonition-title">Guava</p>
+<p>Es posible que salte un error de ejecución indicando que falta la librería <a href="https://github.com/google/guava">Guava</a> la cual podéis descargar <a href="https://repo1.maven.org/maven2/com/google/guava/guava/31.0.1-jre/guava-31.0.1-jre.jar">desde aquí</a> y colocar en la carpeta <code>/opt/kafka_2.13-3.3.1/lib</code></p>
+</div>
+<p>Si ahora arrancamos un consumidor sobre el topic <code>iabd-retail_db-categories</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-console-consumer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-retail_db-categories<span class="w"> </span>--from-beginning<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+<p>Veremos que aparecen todos los datos que teníamos en la tabla en formato JSON (es lo que hemos indicado en el archivo de configuración de <em>Kafka Connect</em>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span><span class="nt">&quot;schema&quot;</span><span class="p">:{</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;struct&quot;</span><span class="p">,</span><span class="nt">&quot;fields&quot;</span><span class="p">:[</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">            </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;int32&quot;</span><span class="p">,</span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;category_id&quot;</span><span class="p">},</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">            </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;int32&quot;</span><span class="p">,</span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;category_department_id&quot;</span><span class="p">},</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">            </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;category_name&quot;</span><span class="p">}],</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">        </span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;categories&quot;</span><span class="p">},</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">        </span><span class="nt">&quot;payload&quot;</span><span class="p">:{</span><span class="nt">&quot;category_id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;category_department_id&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;category_name&quot;</span><span class="p">:</span><span class="s2">&quot;Football&quot;</span><span class="p">}}</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="p">{</span><span class="nt">&quot;schema&quot;</span><span class="p">:{</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;struct&quot;</span><span class="p">,</span><span class="nt">&quot;fields&quot;</span><span class="p">:[</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">            </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;int32&quot;</span><span class="p">,</span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;category_id&quot;</span><span class="p">},</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">            </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;int32&quot;</span><span class="p">,</span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;category_department_id&quot;</span><span class="p">},</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">            </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;category_name&quot;</span><span class="p">}],</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">        </span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;categories&quot;</span><span class="p">},</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">        </span><span class="nt">&quot;payload&quot;</span><span class="p">:{</span><span class="nt">&quot;category_id&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;category_department_id&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;category_name&quot;</span><span class="p">:</span><span class="s2">&quot;Soccer&quot;</span><span class="p">}}</span>
+<span class="linenos" data-linenos="15 "></span><span class="err">...</span>
+</code></pre></div>
+<div class="admonition question">
+<p class="admonition-title">Autoevaluación</p>
+<p>Vamos a dejar el consumidor y <em>Kafka Connect</em> corriendo.
+¿Qué sucederá si inserto un nuevo registro en la base de datos en la tabla <code>categories</code>?
+Que automáticamente aparecerá en nuestro consumidor.</p>
+</div>
+<h3 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h3>
+<p>Como <em>Kafka Connect</em> está diseñado como un servicio que debería correr continuamente, ofrece un API REST para gestionar los conectores. Por defecto está a la escucha el puerto 8083, de manera que si accedemos a <a href="http://iabd-virtualbox:8083/">http://iabd-virtualbox:8083/</a> obtendremos información sobre la versión que se está ejecutando:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;3.3.1&quot;</span><span class="p">,</span><span class="nt">&quot;commit&quot;</span><span class="p">:</span><span class="s2">&quot;839b886f9b732b15&quot;</span><span class="p">,</span><span class="nt">&quot;kafka_cluster_id&quot;</span><span class="p">:</span><span class="s2">&quot;iHa0JUnTSfm85fvFadsylA&quot;</span><span class="p">}</span>
+</code></pre></div>
+<p>Por ejemplo, si queremos obtener un listado de los conectores realizaremos una petición GET a <code>/connectors</code> mediante <code>http://iabd-virtualbox:8083/connectors</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">[</span><span class="s2">&quot;mysql-source-connector&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>Más información en <a href="https://kafka.apache.org/documentation/#connect_rest">https://kafka.apache.org/documentation/#connect_rest</a></p>
+<div class="admonition info">
+<p class="admonition-title">Más Kafka Connect</p>
+<p>En este apartado sólo hemos visto una pequeña introducción a Kafka Connect, dejando de lado aspectos como la ejecución en modo distribuido (por supuesto, podemos montar un clúster de <em>Kafka Connect</em>), la realización de pequeñas transformaciones sobre los datos o practicar con otro tipo de conectores.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Kafka Streams</p>
+<p><a href="https://kafka.apache.org/documentation/streams/">Kafka Streams</a> es la tercera pata del ecosistema de <em>Kafka</em>, y permite procesar y transformar datos dentro de Kafka.
+Una vez que los datos se almacenan en <em>Kafka</em> como eventos, podemos procesar los datos en nuestras aplicaciones cliente mediante <em>Kafka Streams</em> y sus librerías desarrolladas en Java y/o Scala, ya que requiere una JVM.</p>
+<p>En nuestro caso, realizaremos en posteriores sesiones un procesamiento similar de los datos mediante <em>Spark Streaming</em>, permitiendo operaciones con estado y agregaciones, funciones ventana, <em>joins</em>, procesamiento de eventos basados en el tiempo, etc...</p>
+</div>
+<h2 id="kafka-y-el-big-data">Kafka y el Big Data<a class="headerlink" href="#kafka-y-el-big-data" title="Permanent link">&para;</a></h2>
+<p>El siguiente gráfico muestra cómo <em>Kafka</em> está enfocado principalmente para el tratamiento en <em>streaming</em>, aunque con los conectores de <em>Kafka Connect</em> da soporte para el procesamiento <em>batch</em>:</p>
+<figure style="align: center;">
+    <img src="images/03kafka-bigdata.png">
+    <figcaption>Kafka y Big Data</figcaption>
+</figure>
+
+<p>Si echamos la vista atrás y repasamos la <a href="../hadoop/arq.html#arquitectura-kappa">arquitectura <em>Kappa</em> de Big Data</a> podemos identificar que las diferentes fuentes de los datos se sustituyen por colas de <em>Kafka</em> permitiendo unir tanto la ingesta <em>batch</em> como en <em>streaming</em>, lo que facilita añadir tanto nuevas fuentes de datos como destinos, pudiendo realizar transformaciones en tiempo real o lanzar procesos más pesados para almacenar el histórico de los datos.</p>
+<div class="admonition info">
+<p class="admonition-title">Elasticsearch y Twitter</p>
+<p>En la edición de 21/22, en estas sesiones, realizamos diferentes casos de uso con <em>Elasticsearch</em> y <em>Twitter</em>. </p>
+<p>Este curso no hemos visto <em>Elasticsearch</em>, y además, el API de <em>Twitter</em> ha dejado de ser gratuita. Si tienes curiosidad, puedes consultar dichos casos de uso en los <a href="https://aitor-medrano.github.io/bigdata2122/apuntes/bdaplicado05kafka.html#caso-3-de-twitter-a-elasticsearch-con-python">apuntes del curso pasado</a>.</p>
+</div>
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://www.packtpub.com/product/apache-kafka-series-learn-apache-kafka-for-beginners-video/9781789342604">Apache Kafka Series - Learn Apache Kafka for Beginners</a></li>
+<li>Serie de artículos de <em>Víctor Madrid</em> sobre <a href="https://enmilocalfunciona.io/tag/kafka/">Kafka</a> en <a href="https://enmilocalfunciona.io">enmilocalfunciona.io</a>.</li>
+<li><a href="https://mikeldeltio.com/2020/05/20/distributed-databases-kafka/">Distributed Databases: Kafka</a> por <em>Mikel del Tio</em>.</li>
+<li><a href="https://www.baeldung.com/kafka-connectors-guide">Introduction to Kafka Connectors</a></li>
+<li><a href="https://github.com/lensesio/kafka-cheat-sheet">Kafka Cheatsheet</a></li>
+</ul>
+<h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<ol>
+<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RA5075.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CE5.1b</abbr> y <abbr title="Se han procesado los datos almacenados.">CE5.1d</abbr> / 1p) A partir del caso 2, crea un clúster de Kafka con 4 particiones y 3 nodos. A continuación, en el productor utiliza <em>Faker</em> para crear 10 personas (almacénalas como un diccionario). En el consumidor, muestra los datos de las personas (no es necesario recibirlos ordenados, sólo necesitamos que se aproveche al máximo la infraestructura de <em>Kafka</em>).</li>
+<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RA5075.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CE5.1b</abbr> y <abbr title="Se han procesado los datos almacenados.">CE5.1d</abbr> / 1.5p) Realiza el caso de uso 3 mediante <em>Python</em>, pero separando el <code>consumidorSilverProductorGold</code> en tres consumidores diferentes, uno que consuma y guarde en S3 (<code>consumidorSilverS3.py</code>), otro que consuma y guarde en <em>MongoDB</em> (<code>consumidorSilverMongoDB.py</code>) y el tercero que consuma, agrupe mensajes y produzca el mensaje al topic <em>gold</em> (<code>consumidorSilverGroupProducerGold.py</code>).</li>
+<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RA5075.1</abbr> / <abbr title="Se han procesado los datos almacenados.">CE5.1d</abbr> / 1p) Realiza el caso de uso 4 mediante <em>Nifi</em>, pero modificando el primer flujo para que un grupo de procesadores únicamente realice la petición REST y coloque el contenido en <em>topic</em> <code>iabd-aemet-bronze</code> y en un segundo grupo, se consuman los mensajes de ese <em>topic</em> y se realice la transformación de la petición REST y su posterior producción al <em>topic</em> <code>iabd-aemet-silver</code>.</li>
+<li>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RA5075.1</abbr> / <abbr title="Se han procesado los datos almacenados.">CE5.1d</abbr> / 1p) A partir del ejemplo realizado en el apartado de <em>Kafka Connect</em>, añade otro conector para que consuma los mensajes de la cola y los inserte en <em>MongoDB</em> de forma automática. Para ello, puedes utilizar el <a href="https://www.confluent.io/hub/mongodb/kafka-connect-mongodb">MongoDB Connector (Source and Sink)</a> y consultar su <a href="https://www.mongodb.com/docs/kafka-connector/current/">documentación</a> y un ejemplo de <a href="https://github.com/mongodb/mongo-kafka/blob/master/config/MongoSinkConnector.properties">fichero de configuración</a>.</p>
+<p>Ten en cuenta que para lanzar los dos conectores a la ver deberás lanzar <em>Kafka Connect</em> y pasarle todos los conectores como parámetros:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>connect-standalone.sh<span class="w"> </span>config/connect-standalone.properties<span class="w"> </span>config/mysql-source-connector.properties<span class="w"> </span>config/mongodb-sink-connector.properties
+</code></pre></div>
+</li>
+<li>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RA5075.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos">CE5.1a</abbr> / 0.5p) Investiga en qué consiste el patrón CDC (<em>Change Data Capture</em>) y cómo se realiza CDC con <em>Kafka</em>/<em>Kafka Connect</em>, el procesador <a href="https://nifi.apache.org/docs/nifi-docs/components/org.apache.nifi/nifi-cdc-mysql-nar/latest/org.apache.nifi.cdc.mysql.processors.CaptureChangeMySQL/index.html">CaptureChangeMySQL</a> de <em>Nifi</em> y el producto <a href="https://debezium.io/">Debezium</a>. ¿Qué ventajas aportan las soluciones CDC?</p>
+</li>
+</ol>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Volver al principio
+          </button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2023-2024 Aitor Medrano - Licencia CC BY-NC-SA
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/aitormedrano" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:<a.medrano@edu.gva.es>" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l217.6 163.2c11.4 8.5 27 8.5 38.4 0l217.6-163.2c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48H48zM0 176v208c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V176L294.4 339.2a63.9 63.9 0 0 1-76.8 0L0 176z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+
+
+  
+
+
+<h4>Consentimiento de cookie</h4>
+<p>Esta página de apuntes utiliza cookies para reconocer las visitas, medir la efectividad de la documentación y averiguar si encuentras aquello que buscas o cómo has llegado a estos apuntes. Con tu consentimiento, me ayudas a mejorar estos materiales.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Aceptar</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Gestionar cookies</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.dfff1995.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.dff1b7c8.min.js"></script>
+      
+    
+  </body>
+</html>

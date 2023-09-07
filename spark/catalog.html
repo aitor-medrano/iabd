@@ -1,0 +1,2449 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Apuntes y ejercicios sobre el acceso a bases de datos relacionales mediante JDBC en Spark. Uso del catálogo de Spark SQL, creación de tablas a partir de un dataframe, consulta del catálogo almacenado en el Hive Metastore. Uso de Delta Lake, creación de tablas y operaciones DML sobre los datos.">
+      
+      
+      
+        <link rel="canonical" href="https://aitor-medrano.github.io/iabd/spark/catalog.html">
+      
+      
+      
+      
+      <link rel="icon" href="../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.2.8">
+    
+    
+      
+        <title>Spark JDBC, Spark Catalog y Delta Lake. - Inteligencia Artificial y Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.046329b4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.85d0ee34.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Spark JDBC, Spark Catalog y Delta Lake. - Inteligencia Artificial y Big Data" >
+      
+        <meta  property="og:description"  content="Apuntes y ejercicios sobre el acceso a bases de datos relacionales mediante JDBC en Spark. Uso del catálogo de Spark SQL, creación de tablas a partir de un dataframe, consulta del catálogo almacenado en el Hive Metastore. Uso de Delta Lake, creación de tablas y operaciones DML sobre los datos." >
+      
+        <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/spark/catalog.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://aitor-medrano.github.io/iabd/spark/catalog.html" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Spark JDBC, Spark Catalog y Delta Lake. - Inteligencia Artificial y Big Data" >
+      
+        <meta  name="twitter:description"  content="Apuntes y ejercicios sobre el acceso a bases de datos relacionales mediante JDBC en Spark. Uso del catálogo de Spark SQL, creación de tablas a partir de un dataframe, consulta del catálogo almacenado en el Hive Metastore. Uso de Delta Lake, creación de tablas y operaciones DML sobre los datos." >
+      
+        <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/spark/catalog.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#spark-jdbc-y-uso-del-catalogo-delta-lake" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-header__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Inteligencia Artificial y Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Spark JDBC, Spark Catalog y Delta Lake.
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo noche"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo noche" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo día"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo día" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-nav__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    Inteligencia Artificial y Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inicio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2324.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Planning 23/24
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Sistemas de almacenamiento
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Sistemas de almacenamiento
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/nosql.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Almacenamiento de datos. NoSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/mongo.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MongoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/agregaciones.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Agregaciones en MongoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/modelado.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modelado documental
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/rendimiento.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rendimiento
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/replicacion.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Replicación y particionado
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/pymongo.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MongoDB y Python
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Datos en el cloud
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Datos en el cloud
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/cloud.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/aws.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AWS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/s3.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    S3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/computacion.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EC2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/emr.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EMR
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/datos.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDS y DynamoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/athena.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Athena
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ecosistema Hadoop
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Ecosistema Hadoop
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/arq.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Arquitecturas Big Data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/etl.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ingesta de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hadoop.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hadoop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hdfs.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HDFS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/formatos.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Formatos de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/sqoop.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sqoop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/flume.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flume
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hive.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Analítica de negocio
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Analítica de negocio
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ba/business-analytics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Analítica de negocio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ba/data-warehouse.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Almacenes de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ingeniería de datos
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Ingeniería de datos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/de.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ingeniería de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../blog/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Blog
+  </span>
+  
+
+            </a>
+            
+              <label class="md-nav__link " for="__nav_8">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Archivo
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archivo
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/archive/2023.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2023
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3" >
+        
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Categorías
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categorías
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/noticias.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Noticias
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/septiembre.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Septiembre
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#spark-jdbc" class="md-nav__link">
+    Spark JDBC
+  </a>
+  
+    <nav class="md-nav" aria-label="Spark JDBC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leyendo-datos" class="md-nav__link">
+    Leyendo datos
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#escribiendo-datos" class="md-nav__link">
+    Escribiendo datos
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#utilizando-databricks" class="md-nav__link">
+    Utilizando Databricks
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-mongodb" class="md-nav__link">
+    Spark MongoDB
+  </a>
+  
+    <nav class="md-nav" aria-label="Spark MongoDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mongo-spark-connector" class="md-nav__link">
+    Mongo Spark Connector
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-sql-catalog" class="md-nav__link">
+    Spark SQL Catalog
+  </a>
+  
+    <nav class="md-nav" aria-label="Spark SQL Catalog">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bases-de-datos" class="md-nav__link">
+    Bases de datos
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trabajando-con-tablas" class="md-nav__link">
+    Trabajando con tablas
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-y-el-metastore" class="md-nav__link">
+    Spark y el Metastore
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#facilitando-el-descubrimiento-de-datos" class="md-nav__link">
+    Facilitando el descubrimiento de datos
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delta-lake" class="md-nav__link">
+    Delta Lake
+  </a>
+  
+    <nav class="md-nav" aria-label="Delta Lake">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#caracteristicas" class="md-nav__link">
+    Características
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arquitectura-medallion" class="md-nav__link">
+    Arquitectura Medallion
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arquitectura-de-un-lakehouse" class="md-nav__link">
+    Arquitectura de un Lakehouse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-ecosistema-delta" class="md-nav__link">
+    El ecosistema Delta
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hola-delta" class="md-nav__link">
+    Hola Delta
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#por-dentro" class="md-nav__link">
+    Por dentro
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trabajando-con-tablas-delta" class="md-nav__link">
+    Trabajando con tablas Delta
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viajando-en-el-tiempo" class="md-nav__link">
+    Viajando en el tiempo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    Referencias
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    Actividades
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="spark-jdbc-y-uso-del-catalogo-delta-lake">Spark JDBC y uso del catálogo. Delta Lake<a class="headerlink" href="#spark-jdbc-y-uso-del-catalogo-delta-lake" title="Permanent link">&para;</a></h1>
+<h2 id="spark-jdbc">Spark JDBC<a class="headerlink" href="#spark-jdbc" title="Permanent link">&para;</a></h2>
+<p>Para conectar desde <a href="https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html">Spark con una base de datos relacional</a> (<em>RDBMS</em>) necesitamos:</p>
+<ul>
+<li>un driver JDBC compatible</li>
+<li>las <a href="https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html#data-source-option">propiedades de conexión</a> a la base de datos.</li>
+</ul>
+<p>En <em>PySpark</em>, el <em>driver</em> lo podemos añadir directamente a la carpeta <code>jars</code> disponible en <code>$SPARK_HOME</code>, o a la hora de lanzar <em>Spark</em> utilizando la opción <code>--jars &lt;fichero1.jar&gt;,&lt;fichero2.jar&gt;</code> o <code>--packages &lt;groupId:artifactId:version&gt;</code>.</p>
+<p>Así pues, para conectar con nuestra base de datos <code>retail_db</code> que tenemos configurada en la máquina virtual, primero copiaremos el <a href="resources/mysql-connector-j-8.0.31.jar">driver de MySQL</a> en la carpeta <code>$SPARK_HOME/jars</code>.</p>
+<p>Si tuviéramos problemas a la hora de crear la conexión con la base de datos, indicaremos en la configuración qué archivos añadimos al <em>classpath</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;s8a-dataframes-jdbc&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="2 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;spark.driver.extraClassPath&#39;</span><span class="p">,</span> <span class="s1">&#39;mysql-connector-j-8.0.31.jar&#39;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+</code></pre></div>
+<p>El siguiente paso es configurar la conexión a la base de datos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://localhost/retail_db&quot;</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">propiedades</span> <span class="o">=</span> <span class="p">{</span>
+<span class="linenos" data-linenos="3 "></span>    <span class="s2">&quot;driver&quot;</span><span class="p">:</span> <span class="s2">&quot;com.mysql.cj.jdbc.Driver&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;iabd&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="5 "></span>    <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;iabd&quot;</span>
+<span class="linenos" data-linenos="6 "></span><span class="p">}</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Spark y MySQL con Docker</p>
+<p>Para poder acceder a MySQL desde la imagen de Spark, necesitamos que formen parte de la misma red. Para ello, lo más cómodo es utilizar <em>Docker Compose</em> y definir las dependencias:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nt">services</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">spark</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jupyter/pyspark-notebook</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">        </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd-spark</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8888:8888&quot;</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;4040:4040&quot;</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;4041:4041&quot;</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">        </span><span class="nt">links</span><span class="p">:</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">        </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./:/home/jovyan/work</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./mysql-connector-j-8.0.31.jar:/usr/local/spark/jars/mysql-connector-j-8.0.31.jar</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="nt">mysql</span><span class="p">:</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql:latest</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">        </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd-mysql</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">        </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--default-authentication-plugin=mysql_native_password</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;3306:3306&quot;</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">        </span><span class="nt">environment</span><span class="p">:</span>
+<span class="linenos" data-linenos="21 "></span><span class="w">          </span><span class="nt">TZ</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Europe/Madrid</span>
+<span class="linenos" data-linenos="22 "></span><span class="w">          </span><span class="nt">MYSQL_ROOT_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd</span>
+<span class="linenos" data-linenos="23 "></span><span class="w">          </span><span class="nt">MYSQL_DATABASE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">retail_db</span>
+<span class="linenos" data-linenos="24 "></span><span class="w">          </span><span class="nt">MYSQL_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd</span>
+<span class="linenos" data-linenos="25 "></span><span class="w">          </span><span class="nt">MYSQL_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd</span>
+</code></pre></div>
+<p>Una vez colocado el <a href="resources/mysql-connector-j-8.0.31.jar">driver de MySQL</a> en la misma carpeta, lanzamos <em>docker-compose</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker-compose<span class="w"> </span>-p<span class="w"> </span>iabd-spark-mysql<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Tras arrancar los contenedores, la primera vez, deberemos cargar la <a href="resources/create_db.sql">base de datos</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>iabd-mysql<span class="w"> </span>mysql<span class="w"> </span>-h<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>-P<span class="w"> </span><span class="m">3306</span><span class="w"> </span>-uiabd<span class="w"> </span>-piabd<span class="w"> </span>retail_db<span class="w"> </span>&lt;<span class="w"> </span>create_db.sql
+</code></pre></div>
+<p>A partir de aquí, es importante destacar que la <em>url</em> de conexión a la base de datos, en vez de acceder a <code>localhost</code>, lo hace al nombre del contenedor <code>iabd-mysql</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://iabd-mysql/retail_db&quot;</span>
+</code></pre></div>
+</div>
+<h3 id="leyendo-datos">Leyendo datos<a class="headerlink" href="#leyendo-datos" title="Permanent link">&para;</a></h3>
+<p>Para finalmente cargar los datos mediante el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameReader.jdbc.html"><code>read.jdbc</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">jdbc</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>\
+<span class="linenos" data-linenos="2 "></span>    <span class="n">table</span><span class="o">=</span><span class="s2">&quot;customers&quot;</span><span class="p">,</span>\
+<span class="linenos" data-linenos="3 "></span>    <span class="n">properties</span><span class="o">=</span><span class="n">propiedades</span><span class="p">)</span> 
+</code></pre></div>
+<p>Y sobre el <em>dataframe</em>, ya podemos obtener su esquema y realizar las transformaciones que necesitemos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">df</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="c1"># root</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1">#  |-- customer_id: integer (nullable = true)</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1">#  |-- customer_fname: string (nullable = true)</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1">#  |-- customer_lname: string (nullable = true)</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1">#  |-- customer_email: string (nullable = true)</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1">#  |-- customer_password: string (nullable = true)</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1">#  |-- customer_street: string (nullable = true)</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1">#  |-- customer_city: string (nullable = true)</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1">#  |-- customer_state: string (nullable = true)</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1">#  |-- customer_zipcode: string (nullable = true)</span>
+<span class="linenos" data-linenos="12 "></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos" data-linenos="13 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+--------------------+-------------+--------------+----------------+</span>
+<span class="linenos" data-linenos="14 "></span><span class="c1"># |customer_id|customer_fname|customer_lname|customer_email|customer_password|     customer_street|customer_city|customer_state|customer_zipcode|</span>
+<span class="linenos" data-linenos="15 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+--------------------+-------------+--------------+----------------+</span>
+<span class="linenos" data-linenos="16 "></span><span class="c1"># |          1|       Richard|     Hernandez|     XXXXXXXXX|        XXXXXXXXX|  6303 Heather Plaza|  Brownsville|            TX|           78521|</span>
+<span class="linenos" data-linenos="17 "></span><span class="c1"># |          2|          Mary|       Barrett|     XXXXXXXXX|        XXXXXXXXX|9526 Noble Embers...|    Littleton|            CO|           80126|</span>
+<span class="linenos" data-linenos="18 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+--------------------+-------------+--------------+----------------+</span>
+<span class="linenos" data-linenos="19 "></span><span class="c1"># only showing top 2 rows</span>
+</code></pre></div>
+<p>Si necesitamos configurar en más detalle la forma de recoger los datos, es mejor acceder mediante el método <code>format</code> (cuidado con el nombre de la tabla que ahora utiliza el atributo <code>dbtable</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df_format</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jdbc&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="2 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">url_iabd</span><span class="p">)</span> \
+<span class="hll"><span class="linenos" data-linenos="3 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="s2">&quot;customers&quot;</span><span class="p">)</span> \
+</span><span class="linenos" data-linenos="4 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="5 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="6 "></span>  <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</code></pre></div>
+<p>Un caso particular es cuando queremos asignarle a un <em>dataframe</em> el resultado de una consulta. Para ello, podemos indicarle en el parámetro <code>query</code> la consulta SQL con la información a recoger:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">df_query</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jdbc&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos=" 2 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">url_iabd</span><span class="p">)</span> \
+<span class="hll"><span class="linenos" data-linenos=" 3 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="s2">&quot;(select customer_id, customer_fname, customer_lname from customers where customer_city=&#39;Las Vegas&#39;)&quot;</span><span class="p">)</span> \
+</span><span class="linenos" data-linenos=" 4 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos=" 5 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos=" 6 "></span>  <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">df_query</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># root</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1">#  |-- customer_id: integer (nullable = true)</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1">#  |-- customer_fname: string (nullable = true)</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1">#  |-- customer_lname: string (nullable = true)</span>
+<span class="linenos" data-linenos="13 "></span><span class="n">df_query</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos" data-linenos="14 "></span><span class="c1"># +-----------+--------------+--------------+</span>
+<span class="linenos" data-linenos="15 "></span><span class="c1"># |customer_id|customer_fname|customer_lname|</span>
+<span class="linenos" data-linenos="16 "></span><span class="c1"># +-----------+--------------+--------------+</span>
+<span class="linenos" data-linenos="17 "></span><span class="c1"># |         99|         Betty|         Munoz|</span>
+<span class="linenos" data-linenos="18 "></span><span class="c1"># |        204|          Mary|         Smith|</span>
+<span class="linenos" data-linenos="19 "></span><span class="c1"># |        384|       Mildred|    Cunningham|</span>
+<span class="linenos" data-linenos="20 "></span><span class="c1"># +-----------+--------------+--------------+</span>
+<span class="linenos" data-linenos="21 "></span><span class="c1"># only showing top 3 rows</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Más opciones</p>
+<p>Más información sobre todas las opciones disponibles en la <a href="https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html#data-source-option">documentación oficial</a>.</p>
+</div>
+<h3 id="escribiendo-datos">Escribiendo datos<a class="headerlink" href="#escribiendo-datos" title="Permanent link">&para;</a></h3>
+<p>Si lo que queremos es almacenar el resultado en una base de datos, utilizaremos el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.jdbc.html">write.jdbc</a> o <code>write.format('jdbc')</code> finalizando con <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.save.html"><code>save</code></a>:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">write.jdbc()</label><label for="__tabbed_1_2">write.format('jdbc')</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">jdbc</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> \
+<span class="linenos" data-linenos="2 "></span>        <span class="n">table</span><span class="o">=</span><span class="s2">&quot;&lt;nueva_tabla&gt;&quot;</span><span class="p">,</span> \
+<span class="linenos" data-linenos="3 "></span>        <span class="n">properties</span><span class="o">=</span><span class="n">propiedades</span><span class="p">)</span> 
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jdbc&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="2 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;jdbc_url&gt;&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="3 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;nueva_tabla&gt;&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="4 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;usuario&gt;&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="5 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;contraseña&gt;&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="6 "></span>  <span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Por ejemplo, vamos a crear una copia del <em>DataFrame</em> de clientes con sólo tres columnas, y almacenaremos este <em>DataFrame</em> en una nueva tabla:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">jdbcSelectDF</span> <span class="o">=</span> <span class="n">jdbcDF</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;customer_id&quot;</span><span class="p">,</span> <span class="s2">&quot;customer_fname&quot;</span><span class="p">,</span> <span class="s2">&quot;customer_lname&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="n">jdbcSelectDF</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1"># +-----------+--------------+--------------+</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1"># |customer_id|customer_fname|customer_lname|</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1"># +-----------+--------------+--------------+</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># |          1|       Richard|     Hernandez|</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># |          2|          Mary|       Barrett|</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1"># |          3|           Ann|         Smith|</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># +-----------+--------------+--------------+</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># only showing top 3 rows</span>
+<span class="linenos" data-linenos="11 "></span><span class="n">jdbcSelectDF</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1"># 12435</span>
+<span class="hll"><span class="linenos" data-linenos="13 "></span><span class="n">jdbcSelectDF</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jdbc&quot;</span><span class="p">)</span> \
+</span><span class="linenos" data-linenos="14 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;driver&quot;</span><span class="p">,</span> <span class="s2">&quot;com.mysql.cj.jdbc.Driver&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="15 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;jdbc:mysql://iabd-mysql&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="16 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="s2">&quot;retail_db.clientes&quot;</span><span class="p">)</span> \
+<span class="hll"><span class="linenos" data-linenos="17 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
+</span><span class="linenos" data-linenos="18 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="19 "></span>    <span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</code></pre></div>
+<p>Si accedemos a <em>MySQL</em>, podremos comprobar cómo se han insertado 12435 registros.</p>
+<p>Si volvemos a realizar la persistencia de los datos, obtendremos un error porque la tabla ya existe. Para evitar este error, podemos añadir los datos a una tabla existente mediante el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.mode.html"><code>mode</code></a> con valor <code>append</code>, o para machacarlos con el valor <code>overwrite</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">jdbcSelectDF</span><span class="o">.</span><span class="n">write</span> \
+<span class="linenos" data-linenos="2 "></span>    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jdbc&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;driver&quot;</span><span class="p">,</span> <span class="s2">&quot;com.mysql.cj.jdbc.Driver&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="4 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;jdbc:mysql://localhost/retail_db&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="5 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="s2">&quot;clientes2&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="6 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="7 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
+<span class="hll"><span class="linenos" data-linenos="8 "></span>    <span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span> \
+</span><span class="linenos" data-linenos="9 "></span>    <span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">overwrite borra la tabla</p>
+<p>Mediante <code>mode("overwrite")</code>, la tabla se elimina y se vuelven a cargar los datos desde cero.
+Si queremos que se vuelvan a cargar los datos pero no se cree de nuevo la tabla (por que no queremos que se borren las claves ni los índices existentes), hemos de añadirle la opción <code>option("truncate", "true")</code> para que limpie la tabla pero sin eliminarla ni volver a crearla.</p>
+</div>
+<h3 id="utilizando-databricks">Utilizando Databricks<a class="headerlink" href="#utilizando-databricks" title="Permanent link">&para;</a></h3>
+<p>Si trabajamos con <em>Databricks</em> y queremos <a href="https://docs.databricks.com/external-data/jdbc.html">recuperar o almacenar datos via JDBC</a>, ya tenemos parte del trabajo hecho porque tiene los <em>drivers</em> instalados (pero utiliza los <em>drivers</em> de <em>MariaDB</em> en vez de <em>MySQL</em>).</p>
+<p>Así pues, por ejemplo, para recuperar los datos de una base de datos remota (por ejemplo, la base de datos que creamos en la sesión de <a href="../cloud/datos.html">cloud con RDS</a>) haríamos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">driver</span> <span class="o">=</span> <span class="s2">&quot;org.mariadb.jdbc.Driver&quot;</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">database_host</span> <span class="o">=</span> <span class="s2">&quot;iabd-retail.cdexqeikfdkr.us-east-1.rds.amazonaws.com&quot;</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">database_port</span> <span class="o">=</span> <span class="s2">&quot;3306&quot;</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">database_name</span> <span class="o">=</span> <span class="s2">&quot;retail_db&quot;</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">table</span> <span class="o">=</span> <span class="s2">&quot;customers&quot;</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">user</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;adminadmin&quot;</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span><span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;jdbc:mysql://</span><span class="si">{</span><span class="n">database_host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">database_port</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">database_name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span><span class="n">df_remoto</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">read</span>
+<span class="linenos" data-linenos="13 "></span>  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jdbc&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="14 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;driver&quot;</span><span class="p">,</span> <span class="n">driver</span><span class="p">)</span>
+<span class="linenos" data-linenos="15 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+<span class="linenos" data-linenos="16 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+<span class="linenos" data-linenos="17 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+<span class="linenos" data-linenos="18 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+<span class="linenos" data-linenos="19 "></span>  <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="linenos" data-linenos="20 "></span><span class="p">)</span>
+</code></pre></div>
+<p>Desde la versión 12 de <em>Databricks</em>, podemos utilizar directamente el formato <code>mysql</code> (o <code>postgresql</code> si fuera el caso):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df_remoto_mysql</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;mysql&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="n">database_host</span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;port&quot;</span><span class="p">,</span> <span class="mi">3306</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;database&quot;</span><span class="p">,</span> <span class="n">database_name</span><span class="p">)</span>
+<span class="linenos" data-linenos="6 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+<span class="linenos" data-linenos="7 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+<span class="linenos" data-linenos="8 "></span>  <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="linenos" data-linenos="9 "></span><span class="p">)</span>
+</code></pre></div>
+<h2 id="spark-mongodb">Spark MongoDB<a class="headerlink" href="#spark-mongodb" title="Permanent link">&para;</a></h2>
+<p>Para conectar desde <em>Spark</em> con <em>MongoDB</em> debemos utilizar el <a href="https://www.mongodb.com/docs/spark-connector/current/">conector oficial</a> y a la hora de leer o escribir datos indicar que el formato es <code>mongodb</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;mongodb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;mongodb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="mongo-spark-connector">Mongo Spark Connector<a class="headerlink" href="#mongo-spark-connector" title="Permanent link">&para;</a></h3>
+<p>Si nos centramos en nuestra instalación de la máquina virtual, cuando lanzamos <code>pyspark</code> tenemos que indicarle que vamos a conectarnos a <em>MongoDB</em> mediante la opción <code>packages</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pyspark<span class="w"> </span>--packages<span class="w"> </span>org.mongodb.spark:mongo-spark-connector_2.12:10.1.1
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Instalación driver Java</p>
+<p>Para que funcione correctamente, en nuestro caso, tenemos que descargar el <a href="resources/mongo-java-driver-3.12.12.jar">driver <em>Java</em> de <em>MongoDB</em></a> y colocarlo en la carpeta <code>/opt/spark-3.3.1/jars</code></p>
+</div>
+<p>Una vez recuperada la sesión de <em>Spark</em>, a la hora de leer datos le debemos indicar que el formato es <code>mongodb</code> y a continuación configurar tanto la <code>connection.uri</code>, como los parámetros <code>database</code>y <code>collection</code> con la URL, base de datos y colección a la que queremos acceder:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="n">mongo_spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="hll"><span class="linenos" data-linenos=" 4 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">mongo_spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;mongodb&quot;</span><span class="p">)</span> \
+</span><span class="linenos" data-linenos=" 5 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;connection.uri&quot;</span><span class="p">,</span><span class="s2">&quot;mongodb+srv://&lt;usuario&gt;:&lt;contraseña&gt;@cluster0.dfaz5er.mongodb.net&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos=" 6 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;database&quot;</span><span class="p">,</span><span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos=" 7 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;collection&quot;</span><span class="p">,</span><span class="s2">&quot;espias&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">df</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># root</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1">#  |-- _id: string (nullable = true)</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1">#  |-- edad: integer (nullable = true)</span>
+<span class="linenos" data-linenos="13 "></span><span class="c1">#  |-- nombre: string (nullable = true)</span>
+<span class="linenos" data-linenos="14 "></span>
+<span class="linenos" data-linenos="15 "></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos" data-linenos="16 "></span><span class="c1"># +--------------------+----+---------------+</span>
+<span class="linenos" data-linenos="17 "></span><span class="c1"># |                 _id|edad|         nombre|</span>
+<span class="linenos" data-linenos="18 "></span><span class="c1"># +--------------------+----+---------------+</span>
+<span class="linenos" data-linenos="19 "></span><span class="c1"># |63629b950e8c3f48d...|   0| James Bond 000|</span>
+<span class="linenos" data-linenos="20 "></span><span class="c1"># |63629b950e8c3f48d...|   1| James Bond 001|</span>
+<span class="linenos" data-linenos="21 "></span><span class="c1"># |63629b950e8c3f48d...|   2| James Bond 002|</span>
+<span class="linenos" data-linenos="22 "></span><span class="c1"># |63629b950e8c3f48d...|   3| James Bond 003|</span>
+<span class="linenos" data-linenos="23 "></span><span class="c1"># ...</span>
+</code></pre></div>
+<p>Del mismo modo, para escribir utilizamos el método <code>write</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># Añadimos un atributo nuevo</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">col</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;edad_doble&quot;</span><span class="p">,</span> <span class="n">col</span><span class="p">(</span><span class="s2">&quot;edad&quot;</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span>
+<span class="hll"><span class="linenos" data-linenos="5 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;mongodb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span> \
+</span><span class="linenos" data-linenos="6 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;connection.uri&quot;</span><span class="p">,</span><span class="s2">&quot;mongodb+srv://&lt;usuario&gt;:&lt;contraseña&gt;@cluster0.dfaz5er.mongodb.net&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="7 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;database&quot;</span><span class="p">,</span><span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="8 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;collection&quot;</span><span class="p">,</span><span class="s2">&quot;espias_nuevo&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="9 "></span>    <span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">MongoDB y Databricks</p>
+<p>Para conectar con <em>MongoDB</em> desde <em>Databricks</em> se recomienda leer el siguiente artículo: <a href="https://docs.databricks.com/external-data/mongodb.html">Interact with MongoDB on Databricks</a></p>
+</div>
+<p>Más información en la documentación oficial en <a href="https://www.mongodb.com/docs/spark-connector/current/">https://www.mongodb.com/docs/spark-connector/current/</a></p>
+<h2 id="spark-sql-catalog">Spark SQL Catalog<a class="headerlink" href="#spark-sql-catalog" title="Permanent link">&para;</a></h2>
+<p>Los catálogos de datos son un elemento esencial dentro de una organización, al ofrecer una vista de los datos disponibles, los cuales se pueden extender para describir su creación (persona, equipo u organización). Este catálogo lo gestionan los <strong><em>data stewards</em></strong>, un rol muy específico de los equipos <em>big data</em> que no solo se encargan de administrar el uso y los enfoques de los datos en la empresa, sino que tratan de asegurar la calidad de la información, el cumplimiento de las políticas de privacidad, la correcta comunicación entre los diferentes departamentos y la educación informática y tecnológica de los empleados relacionada con el mundo del dato.</p>
+<p>Volviendo al catálogo de datos, el cual al final es un conjunto de metadatos, actúa como un contrato público que se establece durante la vida del dato, definiendo el cómo, cuándo y el porqué se consume un determinado dato, por ejemplo, indicando la disponibilidad de cada campo (por ejemplo, si tendrá un valor por defecto o nulo), así como reglas sobre la gobernanza y acceso de cada campo, etc...</p>
+<p>El catálogo de datos por excelencia es el que forma parte de <em>Apache Hive</em>, y se conoce como el <strong><em>Hive Metastore</em></strong>, el cual ofrece una fuente veraz para describir la localización, codificación de los datos (texto, Parquet, ORC, ...), el esquema de las columnas, y estadísticas de las tablas almacenadas para facilitar su uso a todos los roles que interactúan con los datos (ingenieros de datos, analistas, ingenieros de ML, ...)</p>
+<h3 id="bases-de-datos">Bases de datos<a class="headerlink" href="#bases-de-datos" title="Permanent link">&para;</a></h3>
+<p>El catálogo se organiza, en su primer nivel, en <strong>bases de datos</strong>, la cuales agrupan y categorizan las tablas que utiliza nuestro equipo de trabajo, permitiendo identificar su propietario y restringir el acceso. Dentro del <em>Hive Metastore</em>, una base de datos funciona como un prefijo dentro de una ruta física de nuestro <em>data warehouse</em>, evitando colisiones entre nombres de tablas.</p>
+<div class="admonition tip">
+<p class="admonition-title">Una base de datos por equipo</p>
+<p>Es conveniente que cada equipo de trabajo o unidad de negocio utilice sus propias bases de datos en Spark.</p>
+</div>
+<h4 id="configurando-spark-con-hive">Configurando Spark con Hive<a class="headerlink" href="#configurando-spark-con-hive" title="Permanent link">&para;</a></h4>
+<p>En nuestra máquina virtual ya tenemos configurado el uso del <em>Hive Metastore</em> como catálogo de <em>Spark</em>. Para ello, hemos colocado dentro de <code>$SPARK_HOME/conf</code> una copia del archivo <code>hive-site.xml</code> con la información de acceso:</p>
+<div class="highlight"><span class="filename">hive-site.xml</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nt">&lt;configuration&gt;</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">   </span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>javax.jdo.option.ConnectionURL<span class="nt">&lt;/name&gt;</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="nt">&lt;value&gt;</span>jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true<span class="nt">&lt;/value&gt;</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="nt">&lt;/property&gt;</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>javax.jdo.option.ConnectionDriverName<span class="nt">&lt;/name&gt;</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="nt">&lt;value&gt;</span>com.mysql.cj.jdbc.Driver<span class="nt">&lt;/value&gt;</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">  </span><span class="nt">&lt;/property&gt;</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">  </span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>javax.jdo.option.ConnectionUserName<span class="nt">&lt;/name&gt;</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="nt">&lt;value&gt;</span>iabd<span class="nt">&lt;/value&gt;</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">  </span><span class="nt">&lt;/property&gt;</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">  </span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>javax.jdo.option.ConnectionPassword<span class="nt">&lt;/name&gt;</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">    </span><span class="nt">&lt;value&gt;</span>iabd<span class="nt">&lt;/value&gt;</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">  </span><span class="nt">&lt;/property&gt;</span>
+<span class="linenos" data-linenos="18 "></span><span class="nt">&lt;/configuration&gt;</span>
+</code></pre></div>
+<p>Y en el archivo de configuración de <em>Spark</em>, en <code>$SPARK_HOME/conf/spark-defaults.conf</code> hemos añadido dos propiedades para indicarle que vamos a utilizar la implementación del catálogo de <em>Hive</em> y que queremos que almacene las bases de datos que creemos en <code>/opt/spark-3.3.1/warehouse/</code>:</p>
+<div class="highlight"><span class="filename">spark-defaults.conf</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># The default location to read and write distributed SQL tables.</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># This location can be located on the local file system and on any HDFS compatible file system.</span>
+<span class="hll"><span class="linenos" data-linenos="3 "></span><span class="na">spark.sql.warehouse.dir</span><span class="w"> </span><span class="s">/opt/spark-3.3.1/warehouse/</span>
+</span><span class="linenos" data-linenos="4 "></span>
+<span class="linenos" data-linenos="5 "></span><span class="c1"># Defines the backing SQL catalog for the Spark session.</span>
+<span class="hll"><span class="linenos" data-linenos="6 "></span><span class="na">spark.sql.catalogImplementation</span><span class="w"> </span><span class="s">hive</span>
+</span></code></pre></div>
+<p>Si hubiésemos querido que las bases de datos que creemos desde Spark también lo hicieran dentro de HDFS (que sería lo recomendable), deberíamos indicar la ruta:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">spark.sql.warehouse.dir</span><span class="w"> </span><span class="s">hdfs://iabd-virtualbox:9000/user/hive/warehouse/</span>
+</code></pre></div>
+<h4 id="accediendo-al-catalogo">Accediendo al catálogo<a class="headerlink" href="#accediendo-al-catalogo" title="Permanent link">&para;</a></h4>
+<p>A partir de la sesión de <em>Spark</em>, podemos acceder al objeto <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/catalog.html"><code>catalog</code></a> que contiene un conjunto de métodos para interactuar con él.</p>
+<p>Podemos comprobar su uso mediante una consulta a <code>show databases</code> o accediendo al método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.listDatabases.html"><code>listDatabases()</code></a> del <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/catalog.html"><code>catalog</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;show databases&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="c1"># +---------+</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1"># |namespace|</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1"># +---------+</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1"># |  default|</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># |     iabd|</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># +---------+</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listDatabases</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># [Database(name=&#39;default&#39;, description=&#39;Default Hive database&#39;, locationUri=&#39;hdfs://iabd-virtualbox:9000/user/hive/warehouse&#39;),</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1">#  Database(name=&#39;iabd&#39;, description=&#39;&#39;, locationUri=&#39;hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db&#39;)]</span>
+</code></pre></div>
+<p>De manera que obtenemos las bases de datos que está utilizando actualmente (como puedes observar, son las bases de datos que hemos creado previamente en la sesión de <a href="../hadoop/hive.html">Hive</a>).</p>
+<p>Si queremos ver cual es nuestra base de datos activa, utilizaremos el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.currentDatabase.html"><code>currentDatabase</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">currentDatabase</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># &#39;default&#39;</span>
+</code></pre></div>
+<h4 id="creando-una-base-de-datos">Creando una base de datos<a class="headerlink" href="#creando-una-base-de-datos" title="Permanent link">&para;</a></h4>
+<p>De la misma manera que hemos creado sentencias SQL en Spark, podemos generar sentencias DDL y DML. Así pues, para crear una base de datos, hemos de hacer uso del API SQL y utilizar la sentencia DDL de <a href="https://spark.apache.org/docs/latest/sql-ref-syntax-ddl-create-database.html"><code>CREATE DATABASE</code></a>. Por ejemplo, vamos a crear una base de datos <code>s8a</code> donde colocaremos las tablas que crearemos en esta sesión:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;create database if not exists s8a&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Una vez creada, la activamos mediante <code>use</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;use s8a&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Si comprobamos la ruta, podemos ver cómo la ha creado en el almacén de Spark que hemos indicado previamente en la configuración:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listDatabases</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># [Database(name=&#39;default&#39;, description=&#39;Default Hive database&#39;, locationUri=&#39;hdfs://iabd-virtualbox:9000/user/hive/warehouse&#39;),</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1">#  Database(name=&#39;iabd&#39;, description=&#39;&#39;, locationUri=&#39;hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db&#39;),</span>
+<span class="hll"><span class="linenos" data-linenos="4 "></span><span class="c1">#  Database(name=&#39;s8a&#39;, description=&#39;&#39;, locationUri=&#39;file:/opt/spark-3.3.1/warehouse/s8a.db&#39;)]</span>
+</span></code></pre></div>
+<!--
+FIXME: continuar https://learning.oreilly.com/library/view/modern-data-engineering/9781484274521/html/505711_1_En_6_Chapter.xhtml#PC17
+
+https://towardsdatascience.com/3-ways-to-create-tables-with-apache-spark-32aed0f355ab
+
+https://cca175.itversity.com/spark-python/08_spark_metastore.html
+https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connecting-spark-sql-to-hive-metastore.html
+-->
+
+<h3 id="trabajando-con-tablas">Trabajando con tablas<a class="headerlink" href="#trabajando-con-tablas" title="Permanent link">&para;</a></h3>
+<p>Vamos a suponer que tenemos el <em>DataFrame</em> de clientes que hemos cargado previamente desde JDBC, y creamos una vista sobre él:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">jdbcDF</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span> \
+<span class="linenos" data-linenos=" 2 "></span>    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jdbc&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos=" 3 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;driver&quot;</span><span class="p">,</span> <span class="s2">&quot;com.mysql.cj.jdbc.Driver&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos=" 4 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;jdbc:mysql://localhost&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos=" 5 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="s2">&quot;retail_db.customers&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos=" 6 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;port&quot;</span><span class="p">,</span> <span class="s2">&quot;3306&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos=" 7 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos=" 8 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos=" 9 "></span>    <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="linenos" data-linenos="10 "></span><span class="n">jdbcDF</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">&quot;clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Si comprobamos las tablas de nuestra base de datos mediante el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.listTables.html"><code>listTables</code></a>, aparecerá la vista como una tabla temporal (<code>TEMPORARY</code>), lo que significa que sólo está disponible en memoria:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listTables</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># [Table(name=&#39;clientes&#39;, database=None, description=None, tableType=&#39;TEMPORARY&#39;, isTemporary=True)]</span>
+</code></pre></div>
+<p>Al ser temporal, al detener <em>Spark</em>, dicha tabla desaparecerá. Si queremos que la tabla esté disponible en nuestro <em>data lake</em> y que podamos consultarla desde el catálogo del <em>Hive Metastore</em>, necesitamos persistirla.</p>
+<h4 id="persistiendo-tablas">Persistiendo tablas<a class="headerlink" href="#persistiendo-tablas" title="Permanent link">&para;</a></h4>
+<p>Cuando tenemos un <em>DataFrame</em> lo podemos persistir como una tabla, lo que en terminología de <em>Hive</em> sería una tabla interna o gestionada, mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.saveAsTable.html"><code>saveAsTable</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">jdbcDF</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;errorIfExists&quot;</span><span class="p">)</span> \  <span class="c1"># (1)!</span>
+<span class="linenos" data-linenos="2 "></span>      <span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>Hemos configurado el modo de escritura a <code>errorIfExists</code> para asegurarnos que no borramos ningún datos de nuestro <em>datalake</em>.</li>
+</ol>
+<p>Si volvemos a comprobar las tablas, podemos ver como la nueva tabla ahora forma parte de la base de datos <code>s8a</code> y que tu tipo es <code>MANAGED</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listTables</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># [Table(name=&#39;clientes&#39;, database=&#39;s8a&#39;, description=None, tableType=&#39;MANAGED&#39;, isTemporary=False),</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1">#  Table(name=&#39;clientes&#39;, database=None, description=None, tableType=&#39;TEMPORARY&#39;, isTemporary=True)]</span>
+</code></pre></div>
+<p>Podemos configurar diferentes opciones a la hora de persistir las tablas. Por ejemplo, si queremos persistir la tabla en formato JSON sobrescribiendo los datos hemos de indicarlo con <code>format('json')</code> y <code>mode('overwrite')</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">jdbcDF</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;clientesj&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Por defecto en formato Parquet</p>
+<p>Por defecto, al persistir una tabla, se realiza en formato <em>Parquet</em> y comprimido mediante <em>Snappy</em>.</p>
+</div>
+<h4 id="tablas-externas">Tablas externas<a class="headerlink" href="#tablas-externas" title="Permanent link">&para;</a></h4>
+<p>Si queremos crear una tabla no gestionada, también conocida como tabla externa, la cual se almacena como <a href="https://spark.apache.org/docs/latest/sql-data-sources-hive-tables.html">tablas en Hive</a>, necesitamos indicar la ruta de los datos en el momento de la creación mediante la clausula <code>LOCATION</code>.</p>
+<p>Vamos a crear una tabla de clientes con los datos que tenemos almacenados en HDFS que <a href="../hadoop/hive.html#caso-de-uso-1-creación-y-borrado-de-tablas">cargamos mediante Sqoop en la sesión de Hive</a> en la ruta <code>/user/iabd/hive/customer</code>.</p>
+<p>Así pues, nuestra sentencia DDL sería:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="s2">CREATE EXTERNAL TABLE IF NOT EXISTS clientese</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="s2">(</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="s2">  custId INT,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="s2">  fName STRING,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="s2">  lName STRING,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="s2">  city STRING</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="s2">)</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="s2">ROW FORMAT DELIMITED</span>
+<span class="linenos" data-linenos="10 "></span><span class="s2">FIELDS TERMINATED BY &#39;|&#39;</span>
+<span class="linenos" data-linenos="11 "></span><span class="s2">STORED AS TEXTFILE</span>
+<span class="linenos" data-linenos="12 "></span><span class="s2">LOCATION &#39;hdfs://iabd-virtualbox:9000/user/iabd/hive/customer&#39;&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Si volvemos a comprobar las tablas, veremos que que la ha marcado <code>EXTERNAL</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listTables</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># [Table(name=&#39;clientes&#39;, database=&#39;s8a&#39;, description=&#39;Datos de clientes obtenidos desde retail_db.customers&#39;, tableType=&#39;MANAGED&#39;, isTemporary=False),</span>
+<span class="hll"><span class="linenos" data-linenos="3 "></span><span class="c1">#  Table(name=&#39;clientese&#39;, database=&#39;s8a&#39;, description=None, tableType=&#39;EXTERNAL&#39;, isTemporary=False),</span>
+</span><span class="linenos" data-linenos="4 "></span><span class="c1">#  Table(name=&#39;clientesj&#39;, database=&#39;s8a&#39;, description=None, tableType=&#39;MANAGED&#39;, isTemporary=False)]</span>
+</code></pre></div>
+<p>Y si realizamos una consulta, obtenemos los mismos datos que hay almacenados en HDFS:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;select * from clientese limit 3&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># +------+-------+---------+-----------+</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1"># |custId|  fName|    lName|       city|</span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># +------+-------+---------+-----------+</span>
+<span class="linenos" data-linenos="5 "></span><span class="c1"># |     1|Richard|Hernandez|Brownsville|</span>
+<span class="linenos" data-linenos="6 "></span><span class="c1"># |     2|   Mary|  Barrett|  Littleton|</span>
+<span class="linenos" data-linenos="7 "></span><span class="c1"># |     3|    Ann|    Smith|     Caguas|</span>
+<span class="linenos" data-linenos="8 "></span><span class="c1"># +------+-------+---------+-----------+</span>
+</code></pre></div>
+<p>También podemos crear una tabla externa indicando la <a href="https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#saving-to-persistent-tables">opción <code>path</code></a>, de manera que nos creará los datos en HDFS (recuerda que por defecto almacena los datos en formato <em>Parquet</em>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">jdbcDF</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/spark/customer&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;clienteses&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="cargando-tablas">Cargando tablas<a class="headerlink" href="#cargando-tablas" title="Permanent link">&para;</a></h4>
+<p>Una vez las tablas ya están persistidas, en cualquier momento podemos recuperarlas y asociarlas a un nuevo <em>DataFrame</em> mediante el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameReader.table.html"><code>table</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">df_clientes</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;clientes&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="n">df_clientes</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1"># root</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1">#  |-- customer_id: integer (nullable = true)</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1">#  |-- customer_fname: string (nullable = true)</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1">#  |-- customer_lname: string (nullable = true)</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1">#  |-- customer_email: string (nullable = true)</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1">#  |-- customer_password: string (nullable = true)</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1">#  |-- customer_street: string (nullable = true)</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1">#  |-- customer_city: string (nullable = true)</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1">#  |-- customer_state: string (nullable = true)</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1">#  |-- customer_zipcode: string (nullable = true)</span>
+</code></pre></div>
+<h4 id="cacheando-tablas">Cacheando tablas<a class="headerlink" href="#cacheando-tablas" title="Permanent link">&para;</a></h4>
+<p>En la <a href="agregaciones.html#persistencia">sesión anterior</a> estudiamos cómo persistir los <em>DataFrames</em> y vimos como también podemos persistir una vista, incluso cómo comprobar su estado en el Spark UI.</p>
+<p>Para cachear tablas, usaremos el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.cacheTable.html"><code>cacheTable</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">cacheTable</span><span class="p">(</span><span class="s2">&quot;clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Si por el contrario, queremos liberar la memoria de una tabla que ha sido cacheada, usaremos el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.uncacheTable.html"><code>uncacheTable</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">uncacheTable</span><span class="p">(</span><span class="s2">&quot;clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Si queremos limpiar toda la caché, disponemos del método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.clearCache.html"><code>clearCache</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">clearCache</span><span class="p">()</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Refrescando la caché</p>
+<p>Un caso muy común al trabajar con datos cacheados es que desde una aplicación externa se actualicen los datos y la caché contenga una copia obsoleta.</p>
+<p>Para refrescar los datos, podemos utilizar el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.refreshTable.html"><code>refreshTable</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">refreshTable</span><span class="p">(</span><span class="s2">&quot;clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Un punto a destacar es que si una aplicación Spark sobrescribe una tabla que habíamos cacheado, Spark directamente invalidará la caché local, de manera que no será necesario que en nuestra lógica de aplicación refresquemos las tablas de forma explícita.</p>
+<p>Sólo lo haremos si la sobrescritura de los datos la realiza una aplicación ajena a Spark sobre una tabla externa.</p>
+</div>
+<h4 id="borrando-tablas">Borrando tablas<a class="headerlink" href="#borrando-tablas" title="Permanent link">&para;</a></h4>
+<p>Si dejamos de utilizar una tabla y la queremos eliminar del <em>Metastore</em>, podemos realizarlo directamente mediante su sentencia de DDL <a href="https://spark.apache.org/docs/latest/sql-ref-syntax-ddl-drop-table.html#drop-table"><code>DROP TABLE</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;DROP TABLE IF EXISTS cliente&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="spark-y-el-metastore">Spark y el Metastore<a class="headerlink" href="#spark-y-el-metastore" title="Permanent link">&para;</a></h3>
+<p>Para comprender cómo se almacenan los metadatos de las bases de datos y las tablas gestionadas es importante conocer donde se almacenan los metadatos.</p>
+<p>Si abrimos un terminal y accedemos al MySQL de nuestra máquina virtual, podemos ver todas las tablas que utiliza el Hive Metastore:</p>
+<div class="highlight"><pre><span></span><code><span class="hll"><span class="linenos" data-linenos=" 1 "></span>$<span class="w"> </span>mysql<span class="w"> </span>-uiabd<span class="w"> </span>-piabd
+</span><span class="linenos" data-linenos=" 2 "></span>Welcome<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>MariaDB<span class="w"> </span>monitor.<span class="w">  </span>Commands<span class="w"> </span>end<span class="w"> </span>with<span class="w"> </span><span class="p">;</span><span class="w"> </span>or<span class="w"> </span><span class="se">\g</span>.
+<span class="linenos" data-linenos=" 3 "></span>Your<span class="w"> </span>MariaDB<span class="w"> </span>connection<span class="w"> </span>id<span class="w"> </span>is<span class="w"> </span><span class="m">143</span>
+<span class="linenos" data-linenos=" 4 "></span>Server<span class="w"> </span>version:<span class="w"> </span><span class="m">10</span>.3.37-MariaDB-0ubuntu0.20.04.1<span class="w"> </span>Ubuntu<span class="w"> </span><span class="m">20</span>.04
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span>Copyright<span class="w"> </span><span class="o">(</span>c<span class="o">)</span><span class="w"> </span><span class="m">2000</span>,<span class="w"> </span><span class="m">2018</span>,<span class="w"> </span>Oracle,<span class="w"> </span>MariaDB<span class="w"> </span>Corporation<span class="w"> </span>Ab<span class="w"> </span>and<span class="w"> </span>others.
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span>Type<span class="w"> </span><span class="s1">&#39;help;&#39;</span><span class="w"> </span>or<span class="w"> </span><span class="s1">&#39;\h&#39;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>help.<span class="w"> </span>Type<span class="w"> </span><span class="s1">&#39;\c&#39;</span><span class="w"> </span>to<span class="w"> </span>clear<span class="w"> </span>the<span class="w"> </span>current<span class="w"> </span>input<span class="w"> </span>statement.
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="hll"><span class="linenos" data-linenos="10 "></span>MariaDB<span class="w"> </span><span class="o">[(</span>none<span class="o">)]</span>&gt;<span class="w"> </span>use<span class="w"> </span>hive
+</span><span class="linenos" data-linenos="11 "></span>Database<span class="w"> </span>changed
+<span class="linenos" data-linenos="12 "></span>
+<span class="hll"><span class="linenos" data-linenos="13 "></span>MariaDB<span class="w"> </span><span class="o">[</span>hive<span class="o">]</span>&gt;<span class="w"> </span>show<span class="w"> </span>tables<span class="p">;</span>
+</span><span class="linenos" data-linenos="14 "></span>+-------------------------------+
+<span class="linenos" data-linenos="15 "></span><span class="p">|</span><span class="w"> </span>Tables_in_hive<span class="w">                </span><span class="p">|</span>
+<span class="linenos" data-linenos="16 "></span>+-------------------------------+
+<span class="linenos" data-linenos="17 "></span><span class="p">|</span><span class="w"> </span>AUX_TABLE<span class="w">                     </span><span class="p">|</span>
+<span class="linenos" data-linenos="18 "></span><span class="p">|</span><span class="w"> </span>BUCKETING_COLS<span class="w">                </span><span class="p">|</span>
+<span class="linenos" data-linenos="19 "></span><span class="p">|</span><span class="w"> </span>CDS<span class="w">                           </span><span class="p">|</span>
+<span class="linenos" data-linenos="20 "></span><span class="p">|</span><span class="w"> </span>COLUMNS_V2<span class="w">                    </span><span class="p">|</span>
+<span class="linenos" data-linenos="21 "></span><span class="p">|</span><span class="w"> </span>COMPACTION_QUEUE<span class="w">              </span><span class="p">|</span>
+<span class="linenos" data-linenos="22 "></span><span class="p">|</span><span class="w"> </span>COMPLETED_COMPACTIONS<span class="w">         </span><span class="p">|</span>
+<span class="linenos" data-linenos="23 "></span><span class="p">|</span><span class="w"> </span>COMPLETED_TXN_COMPONENTS<span class="w">      </span><span class="p">|</span>
+<span class="linenos" data-linenos="24 "></span><span class="p">|</span><span class="w"> </span>CTLGS<span class="w">                         </span><span class="p">|</span>
+<span class="linenos" data-linenos="25 "></span><span class="p">|</span><span class="w"> </span>DATABASE_PARAMS<span class="w">               </span><span class="p">|</span>
+<span class="linenos" data-linenos="26 "></span><span class="p">|</span><span class="w"> </span>DBS<span class="w">                           </span><span class="p">|</span>
+<span class="linenos" data-linenos="27 "></span>...
+<span class="linenos" data-linenos="28 "></span><span class="p">|</span><span class="w"> </span>WRITE_SET<span class="w">                     </span><span class="p">|</span>
+<span class="linenos" data-linenos="29 "></span>+-------------------------------+
+<span class="linenos" data-linenos="30 "></span><span class="m">74</span><span class="w"> </span>rows<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="o">(</span><span class="m">0</span>,000<span class="w"> </span>sec<span class="o">)</span>
+<span class="linenos" data-linenos="31 "></span>
+<span class="linenos" data-linenos="32 "></span>MariaDB<span class="w"> </span><span class="o">[</span>hive<span class="o">]</span>&gt;<span class="w"> </span>
+</code></pre></div>
+<p>De todas las tablas, nos vamos a centrar en la tabla DBS, que almacena las bases de datos creadas, donde podemos observar, además de su nombre, la localización de cada base de datos y su propietario:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>MariaDB<span class="w"> </span><span class="o">[</span>hive<span class="o">]</span>&gt;<span class="w"> </span><span class="k">select</span><span class="w"> </span>*<span class="w"> </span>from<span class="w"> </span>DBS<span class="p">;</span>
+<span class="linenos" data-linenos="2 "></span>+-------+-----------------------+---------------------------------------------------------+---------+------------+------------+-----------+
+<span class="linenos" data-linenos="3 "></span><span class="p">|</span><span class="w"> </span>DB_ID<span class="w"> </span><span class="p">|</span><span class="w"> </span>DESC<span class="w">                  </span><span class="p">|</span><span class="w"> </span>DB_LOCATION_URI<span class="w">                                         </span><span class="p">|</span><span class="w"> </span>NAME<span class="w">    </span><span class="p">|</span><span class="w"> </span>OWNER_NAME<span class="w"> </span><span class="p">|</span><span class="w"> </span>OWNER_TYPE<span class="w"> </span><span class="p">|</span><span class="w"> </span>CTLG_NAME<span class="w"> </span><span class="p">|</span>
+<span class="linenos" data-linenos="4 "></span>+-------+-----------------------+---------------------------------------------------------+---------+------------+------------+-----------+
+<span class="linenos" data-linenos="5 "></span><span class="p">|</span><span class="w">     </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Default<span class="w"> </span>Hive<span class="w"> </span>database<span class="w"> </span><span class="p">|</span><span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse<span class="w">         </span><span class="p">|</span><span class="w"> </span>default<span class="w"> </span><span class="p">|</span><span class="w"> </span>public<span class="w">     </span><span class="p">|</span><span class="w"> </span>ROLE<span class="w">       </span><span class="p">|</span><span class="w"> </span>hive<span class="w">      </span><span class="p">|</span>
+<span class="linenos" data-linenos="6 "></span><span class="p">|</span><span class="w">    </span><span class="m">21</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>NULL<span class="w">                  </span><span class="p">|</span><span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db<span class="w"> </span><span class="p">|</span><span class="w"> </span>iabd<span class="w">    </span><span class="p">|</span><span class="w"> </span>iabd<span class="w">       </span><span class="p">|</span><span class="w"> </span>USER<span class="w">       </span><span class="p">|</span><span class="w"> </span>hive<span class="w">      </span><span class="p">|</span>
+<span class="linenos" data-linenos="7 "></span><span class="p">|</span><span class="w">    </span><span class="m">31</span><span class="w"> </span><span class="p">|</span><span class="w">                       </span><span class="p">|</span><span class="w"> </span>file:/opt/spark-3.3.1/warehouse/s8a.db<span class="w">                  </span><span class="p">|</span><span class="w"> </span>s8a<span class="w">     </span><span class="p">|</span><span class="w"> </span>iabd<span class="w">       </span><span class="p">|</span><span class="w"> </span>USER<span class="w">       </span><span class="p">|</span><span class="w"> </span>hive<span class="w">      </span><span class="p">|</span>
+<span class="linenos" data-linenos="8 "></span>+-------+-----------------------+---------------------------------------------------------+---------+------------+------------+-----------+
+<span class="linenos" data-linenos="9 "></span><span class="m">3</span><span class="w"> </span>rows<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="o">(</span><span class="m">0</span>,001<span class="w"> </span>sec<span class="o">)</span>
+</code></pre></div>
+<p>Si nos quedamos con el identificador de cada base de datos (<code>DB_ID</code>), el cual actúa como clave primaria, vamos a poder consultar las tablas de una determinada base de datos consultando la tabla <code>TBLS</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>MariaDB<span class="w"> </span><span class="o">[</span>hive<span class="o">]</span>&gt;<span class="w"> </span><span class="k">select</span><span class="w"> </span>*<span class="w"> </span>from<span class="w"> </span>TBLS<span class="w"> </span>where<span class="w"> </span><span class="nv">DB_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">31</span><span class="p">;</span>
+<span class="linenos" data-linenos="2 "></span>+--------+-------------+-------+------------------+-------+------------+-----------+-------+-----------+---------------+--------------------+--------------------+--------------------+
+<span class="linenos" data-linenos="3 "></span><span class="p">|</span><span class="w"> </span>TBL_ID<span class="w"> </span><span class="p">|</span><span class="w"> </span>CREATE_TIME<span class="w"> </span><span class="p">|</span><span class="w"> </span>DB_ID<span class="w"> </span><span class="p">|</span><span class="w"> </span>LAST_ACCESS_TIME<span class="w"> </span><span class="p">|</span><span class="w"> </span>OWNER<span class="w"> </span><span class="p">|</span><span class="w"> </span>OWNER_TYPE<span class="w"> </span><span class="p">|</span><span class="w"> </span>RETENTION<span class="w"> </span><span class="p">|</span><span class="w"> </span>SD_ID<span class="w"> </span><span class="p">|</span><span class="w"> </span>TBL_NAME<span class="w">  </span><span class="p">|</span><span class="w"> </span>TBL_TYPE<span class="w">      </span><span class="p">|</span><span class="w"> </span>VIEW_EXPANDED_TEXT<span class="w"> </span><span class="p">|</span><span class="w"> </span>VIEW_ORIGINAL_TEXT<span class="w"> </span><span class="p">|</span><span class="w"> </span>IS_REWRITE_ENABLED<span class="w"> </span><span class="p">|</span>
+<span class="linenos" data-linenos="4 "></span>+--------+-------------+-------+------------------+-------+------------+-----------+-------+-----------+---------------+--------------------+--------------------+--------------------+
+<span class="linenos" data-linenos="5 "></span><span class="p">|</span><span class="w">     </span><span class="m">61</span><span class="w"> </span><span class="p">|</span><span class="w">  </span><span class="m">1673256646</span><span class="w"> </span><span class="p">|</span><span class="w">    </span><span class="m">31</span><span class="w"> </span><span class="p">|</span><span class="w">                </span><span class="m">0</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>iabd<span class="w">  </span><span class="p">|</span><span class="w"> </span>NULL<span class="w">       </span><span class="p">|</span><span class="w">         </span><span class="m">0</span><span class="w"> </span><span class="p">|</span><span class="w">   </span><span class="m">111</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>clientes<span class="w">  </span><span class="p">|</span><span class="w"> </span>MANAGED_TABLE<span class="w"> </span><span class="p">|</span><span class="w"> </span>NULL<span class="w">               </span><span class="p">|</span><span class="w"> </span>NULL<span class="w">               </span><span class="p">|</span><span class="w">                    </span><span class="p">|</span>
+<span class="linenos" data-linenos="6 "></span><span class="p">|</span><span class="w">     </span><span class="m">62</span><span class="w"> </span><span class="p">|</span><span class="w">  </span><span class="m">1673256649</span><span class="w"> </span><span class="p">|</span><span class="w">    </span><span class="m">31</span><span class="w"> </span><span class="p">|</span><span class="w">                </span><span class="m">0</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>iabd<span class="w">  </span><span class="p">|</span><span class="w"> </span>NULL<span class="w">       </span><span class="p">|</span><span class="w">         </span><span class="m">0</span><span class="w"> </span><span class="p">|</span><span class="w">   </span><span class="m">112</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>clientesj<span class="w"> </span><span class="p">|</span><span class="w"> </span>MANAGED_TABLE<span class="w"> </span><span class="p">|</span><span class="w"> </span>NULL<span class="w">               </span><span class="p">|</span><span class="w"> </span>NULL<span class="w">               </span><span class="p">|</span><span class="w">                    </span><span class="p">|</span>
+<span class="linenos" data-linenos="7 "></span>+--------+-------------+-------+------------------+-------+------------+-----------+-------+-----------+---------------+--------------------+--------------------+--------------------+
+</code></pre></div>
+<p>Y repetimos el proceso, ahora nos quedamos con el identificador de la tabla, y consultamos la tabla <code>TABLE_PARAMS</code>, donde podemos ver donde se almacena toda la información que utiliza Spark para leer las tablas de forma automática:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>MariaDB<span class="w"> </span><span class="o">[</span>hive<span class="o">]</span>&gt;<span class="w"> </span><span class="k">select</span><span class="w"> </span>*<span class="w"> </span>from<span class="w"> </span>TABLE_PARAMS<span class="w"> </span>where<span class="w"> </span><span class="nv">TBL_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">61</span><span class="p">;</span>
+<span class="linenos" data-linenos=" 2 "></span>+--------+----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+<span class="linenos" data-linenos=" 3 "></span><span class="p">|</span><span class="w"> </span>TBL_ID<span class="w"> </span><span class="p">|</span><span class="w"> </span>PARAM_KEY<span class="w">                  </span><span class="p">|</span><span class="w"> </span>PARAM_VALUE<span class="w">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </span><span class="p">|</span>
+<span class="linenos" data-linenos=" 4 "></span>+--------+----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+<span class="linenos" data-linenos=" 5 "></span><span class="p">|</span><span class="w">     </span><span class="m">61</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>numFiles<span class="w">                   </span><span class="p">|</span><span class="w"> </span><span class="m">1</span><span class="w">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </span><span class="p">|</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="p">|</span><span class="w">     </span><span class="m">61</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>spark.sql.create.version<span class="w">   </span><span class="p">|</span><span class="w"> </span><span class="m">3</span>.3.1<span class="w">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </span><span class="p">|</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="p">|</span><span class="w">     </span><span class="m">61</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>spark.sql.sources.provider<span class="w"> </span><span class="p">|</span><span class="w"> </span>parquet<span class="w">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </span><span class="p">|</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="p">|</span><span class="w">     </span><span class="m">61</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>spark.sql.sources.schema<span class="w">   </span><span class="p">|</span><span class="w"> </span><span class="o">{</span><span class="s2">&quot;type&quot;</span>:<span class="s2">&quot;struct&quot;</span>,<span class="s2">&quot;fields&quot;</span>:<span class="o">[{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;customer_id&quot;</span>,<span class="s2">&quot;type&quot;</span>:<span class="s2">&quot;integer&quot;</span>,<span class="s2">&quot;nullable&quot;</span>:true,<span class="s2">&quot;metadata&quot;</span>:<span class="o">{</span><span class="s2">&quot;scale&quot;</span>:0<span class="o">}}</span>,<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;customer_fname&quot;</span>,<span class="s2">&quot;type&quot;</span>:<span class="s2">&quot;string&quot;</span>,<span class="s2">&quot;nullable&quot;</span>:true,<span class="s2">&quot;metadata&quot;</span>:<span class="o">{</span><span class="s2">&quot;scale&quot;</span>:0<span class="o">}}</span>,<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;customer_lname&quot;</span>,<span class="s2">&quot;type&quot;</span>:<span class="s2">&quot;string&quot;</span>,<span class="s2">&quot;nullable&quot;</span>:true,<span class="s2">&quot;metadata&quot;</span>:<span class="o">{</span><span class="s2">&quot;scale&quot;</span>:0<span class="o">}}</span>,<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;customer_email&quot;</span>,<span class="s2">&quot;type&quot;</span>:<span class="s2">&quot;string&quot;</span>,<span class="s2">&quot;nullable&quot;</span>:true,<span class="s2">&quot;metadata&quot;</span>:<span class="o">{</span><span class="s2">&quot;scale&quot;</span>:0<span class="o">}}</span>,<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;customer_password&quot;</span>,<span class="s2">&quot;type&quot;</span>:<span class="s2">&quot;string&quot;</span>,<span class="s2">&quot;nullable&quot;</span>:true,<span class="s2">&quot;metadata&quot;</span>:<span class="o">{</span><span class="s2">&quot;scale&quot;</span>:0<span class="o">}}</span>,<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;customer_street&quot;</span>,<span class="s2">&quot;type&quot;</span>:<span class="s2">&quot;string&quot;</span>,<span class="s2">&quot;nullable&quot;</span>:true,<span class="s2">&quot;metadata&quot;</span>:<span class="o">{</span><span class="s2">&quot;scale&quot;</span>:0<span class="o">}}</span>,<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;customer_city&quot;</span>,<span class="s2">&quot;type&quot;</span>:<span class="s2">&quot;string&quot;</span>,<span class="s2">&quot;nullable&quot;</span>:true,<span class="s2">&quot;metadata&quot;</span>:<span class="o">{</span><span class="s2">&quot;scale&quot;</span>:0<span class="o">}}</span>,<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;customer_state&quot;</span>,<span class="s2">&quot;type&quot;</span>:<span class="s2">&quot;string&quot;</span>,<span class="s2">&quot;nullable&quot;</span>:true,<span class="s2">&quot;metadata&quot;</span>:<span class="o">{</span><span class="s2">&quot;scale&quot;</span>:0<span class="o">}}</span>,<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;customer_zipcode&quot;</span>,<span class="s2">&quot;type&quot;</span>:<span class="s2">&quot;string&quot;</span>,<span class="s2">&quot;nullable&quot;</span>:true,<span class="s2">&quot;metadata&quot;</span>:<span class="o">{</span><span class="s2">&quot;scale&quot;</span>:0<span class="o">}}]}</span><span class="w"> </span><span class="p">|</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="p">|</span><span class="w">     </span><span class="m">61</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>totalSize<span class="w">                  </span><span class="p">|</span><span class="w"> </span><span class="m">251792</span><span class="w">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   </span><span class="p">|</span>
+<span class="linenos" data-linenos="10 "></span><span class="p">|</span><span class="w">     </span><span class="m">61</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>transient_lastDdlTime<span class="w">      </span><span class="p">|</span><span class="w"> </span><span class="m">1673256646</span><span class="w">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </span><span class="p">|</span>
+<span class="linenos" data-linenos="11 "></span>+--------+----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+<span class="linenos" data-linenos="12 "></span><span class="m">6</span><span class="w"> </span>rows<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="o">(</span><span class="m">0</span>,001<span class="w"> </span>sec<span class="o">)</span>
+</code></pre></div>
+<h3 id="facilitando-el-descubrimiento-de-datos">Facilitando el descubrimiento de datos<a class="headerlink" href="#facilitando-el-descubrimiento-de-datos" title="Permanent link">&para;</a></h3>
+<p>Una vez sabemos cómo se almacenan los metadatos, podemos consultarlos para descubrir los datos, proceso que se conoce como <em>data discovery</em>.</p>
+<p>Volviendo a nuestros cuadernos Jupyter, si nos centramos en la base de datos <code>s8a</code> y consultamos sus tablas mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.listTables.html"><code>listTables</code></a>, observamos que no tienen descripción, lo cual a la hora de poder descubrir datos no es nada positivo:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;use s8a&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listTables</span><span class="p">()</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1"># [Table(name=&#39;clientes&#39;, database=&#39;s8a&#39;, description=None, tableType=&#39;MANAGED&#39;, isTemporary=False),</span>
+<span class="linenos" data-linenos="4 "></span><span class="c1">#  Table(name=&#39;clientesj&#39;, database=&#39;s8a&#39;, description=None, tableType=&#39;MANAGED&#39;, isTemporary=False)]</span>
+</code></pre></div>
+<p>Para poder añadirle la descripción a las tablas, mediante DML modificamos las propiedades de la tabla, en concreto la propiedad <code>comment</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="p">.</span><span class="k">sql</span><span class="p">(</span>
+<span class="linenos" data-linenos="2 "></span><span class="ss">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="3 "></span><span class="ss">ALTER TABLE clientes</span>
+<span class="linenos" data-linenos="4 "></span><span class="ss">SET TBLPROPERTIES (</span>
+<span class="linenos" data-linenos="5 "></span><span class="ss">  &#39;comment&#39; = &#39;Datos de clientes obtenidos desde retail_db.customers&#39;,</span>
+<span class="linenos" data-linenos="6 "></span><span class="ss">  &#39;active&#39; = &#39;true&#39;</span>
+<span class="linenos" data-linenos="7 "></span><span class="ss">)</span>
+<span class="linenos" data-linenos="8 "></span><span class="ss">&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Si volvemos a consultar las tablas, ya podemos ver su descripción:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listTables</span><span class="p">()</span>
+<span class="hll"><span class="linenos" data-linenos="2 "></span><span class="c1"># [Table(name=&#39;clientes&#39;, database=&#39;s8a&#39;, description=&#39;Datos de clientes obtenidos desde retail_db.customers&#39;, tableType=&#39;MANAGED&#39;, isTemporary=False),</span>
+</span><span class="linenos" data-linenos="3 "></span><span class="c1">#  Table(name=&#39;clientesj&#39;, database=&#39;s8a&#39;, description=None, tableType=&#39;MANAGED&#39;, isTemporary=False)]</span>
+</code></pre></div>
+<p>Vamos a comprobar ahora las columnas de las tablas mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.listColumns.html"><code>listColumns</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listColumns</span><span class="p">(</span><span class="s2">&quot;clientes&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="c1"># [Column(name=&#39;customer_id&#39;, description=None, dataType=&#39;int&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1">#  Column(name=&#39;customer_fname&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1">#  Column(name=&#39;customer_lname&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1">#  Column(name=&#39;customer_email&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1">#  Column(name=&#39;customer_password&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1">#  Column(name=&#39;customer_street&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1">#  Column(name=&#39;customer_city&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1">#  Column(name=&#39;customer_state&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1">#  Column(name=&#39;customer_zipcode&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False)]</span>
+</code></pre></div>
+<p>Igual que antes, tenemos la descripción en blanco (valor <code>None</code>), por lo que mediante DML modificamos el comentario de cada columna:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;ALTER TABLE clientes ALTER COLUMN customer_id COMMENT &#39;Identificador unívoco (PK) del cliente&#39;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;ALTER TABLE clientes ALTER COLUMN customer_fname COMMENT &#39;Nombre del cliente&#39;&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p>Y comprobamos como han cambiado ambos campos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listColumns</span><span class="p">(</span><span class="s2">&quot;clientes&quot;</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos=" 2 "></span><span class="c1"># [Column(name=&#39;customer_id&#39;, description=&#39;Identificador unívoco (PK) del cliente&#39;, dataType=&#39;int&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+</span><span class="hll"><span class="linenos" data-linenos=" 3 "></span><span class="c1">#  Column(name=&#39;customer_fname&#39;, description=&#39;Nombre del cliente&#39;, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+</span><span class="linenos" data-linenos=" 4 "></span><span class="c1">#  Column(name=&#39;customer_lname&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1">#  Column(name=&#39;customer_email&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1">#  Column(name=&#39;customer_password&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1">#  Column(name=&#39;customer_street&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1">#  Column(name=&#39;customer_city&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1">#  Column(name=&#39;customer_state&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1">#  Column(name=&#39;customer_zipcode&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False)]</span>
+</code></pre></div>
+<h2 id="delta-lake">Delta Lake<a class="headerlink" href="#delta-lake" title="Permanent link">&para;</a></h2>
+<figure style="float: right">
+    <img src="images/02delta-lake-logo.png">
+    <figcaption>Logo de Delta Lake</figcaption>
+</figure>
+
+<p>En la sesión de <a href="https://manoli-iborra.github.io/bigdata2122/apuntes16.html">Data Lakes</a> ya estudiamos qué ofrece un <em>data lake</em> y sus diferencias respecto a los <em>data warehouses</em>, así como una pequeña introducción al concepto de <a href="https://manoli-iborra.github.io/bigdata2122/apuntes16.html#data-lakehouse"><em>data lakehouse</em></a>.</p>
+<p><a href="https://delta.io/"><em>Delta Lake</em></a> es un producto que ofrece transaccionalidad y soporte para <em>upserts</em> y <em>merges</em> en <em>data lakes</em> manteniendo una escalabilidad horizontal y ofreciendo la separación del almacenamiento y la computación que necesita el <em>big data</em>. Así pues, podemos considerar a <em>Delta Lake</em> como una implementación del concepto de <em>data lakehouse</em>, el cual combina lo mejor de los <em>data warehouses</em> y <em>data lakes</em>, ofreciendo transacciones ACID, gestión escalable de los metadatos, un modelo unificado para procesar datos tanto por lotes como en <em>streaming</em>, histórico auditable y soporte para sentencias DML sobre los datos.</p>
+<p>Podemos ejecutarlo sobre <em>data lakes</em> ya existentes y es completamente compatibles con varios motores de procesamiento como es el caso de <em>Apache Spark</em>, y de ahí, el motivo de estudiarlo en esta sesión.</p>
+<div class="admonition info">
+<p class="admonition-title">Data Lakehouse por dentro</p>
+<p>El almacenamiento de un <em>data lakehouse</em> se cede a servicios de almacenamiento de objetos, los cuales son muy económicos, como son Amazon S3 o Azure ADLs, almacenando los dato en formatos abiertos como Apache Parquet.</p>
+<p>Sin embargo, para ser un <em>data lakehouse</em>, necesitamos soporte para transacciones ACID. Para ello, debemos tener una capa de metadatos transaccionales sobre el almacenamiento cloud, que defina que objetos forman parte de que versión de tabla.</p>
+<p>Para conseguir un gran rendimiento en las consultas SQL es necesario ofrecer servicios de caché, estructuras de datos auxiliares como índices y estadísticas para poder optimizar la capa de datos.</p>
+<p>La herramienta final es el desarrollo de un API estándar, como es la DataFrame API, la cual soportan herramientas como <em>TensorFlow</em> o <em>Spark MLlib</em>, la cual permite, de forma declarativa, la construcción de un grafo DAG con su ejecución. </p>
+<p>Otros productos alternativos como implementación del concepto de <em>data lakehouse</em> son <a href="https://iceberg.apache.org/">Apache Iceberg</a> y <a href="https://hudi.apache.org/">Apache Hudi</a>.</p>
+</div>
+<p>Formalmente, podemos decir que <em>Delta Lake</em> ofrece una capa de metadatos, caché e indexación sobre el almacenamiento de un <em>data lake</em>, de manera que ofrece un nivel de abstracción con soporte para transacciones ACID y versionado de los datos.</p>
+<p>Se trata de un proyecto <em>open-source</em> desde que en 2019 <em>Databricks</em> lo liberó. Por supuesto, <em>Databricks</em> ofrece soporte completo de <em>Delta Lake</em> como capa de persistencia de datos.</p>
+<h3 id="caracteristicas">Características<a class="headerlink" href="#caracteristicas" title="Permanent link">&para;</a></h3>
+<p><em>Delta Lake</em> ofrece las siguientes características:</p>
+<ul>
+<li><ins>Transacciones ACID</ins>. Todas las transacciones realizadas con Spark se realizan de manera durable y se exponen a otros consumidores de forma atómica, gracias al <em>Delta Transaction Log</em>.</li>
+<li><ins>Soporte completo de DML</ins>, pudiendo realizar borrados y modificados, pero también fusiones complejas de datos o escenarios <em>upserts</em>, lo que simplifica la creación de dimensiones y tablas de hechos al construir un MDW (<em>modern data warehouse</em>), así como cumplir la GDPR respecto a la modificación y/o borrado de datos.</li>
+<li><ins>Time travel</ins>. El fichero de log de transacciones de Delta Lake guarda cada cambio realizado sobre los datos en el orden en el que se han realizado. Este log se convierte en un herramienta de auditoria completa, lo que facilita que administradores y desarrolladores puedan revertir a una versión anterior de los datos, y asea para auditorías, <em>rollbacks</em> o la realización de pruebas. Esta característica se conoce como <em>Time Travel</em>.</li>
+<li><ins>Unificación del procesamiento batch y streaming</ins> en un único modelo, ya que puede realizar <em>merges</em> de los flujos de datos (requisito muy común al trabajar con IoT).</li>
+<li><ins>Evolución y aplicación de esquemas</ins>, al provocar el cumplimiento de un esquema a la hora de leer o escribir datos desde el lago, permitiendo una evolución segura del esquema para casos de uso donde los datos necesitan evolucionar.</li>
+<li><ins>Soporte de metadatos ricos y escalables</ins>, ya que los metadatos pueden crecer y convertirse en <em>big data</em> y no escalar correctamente, de manera que <em>Delta Lake</em> facilita el escalado y procesamiento eficiente mediante Spark pudiendo manejar petabytes de datos.</li>
+</ul>
+<h3 id="arquitectura-medallion">Arquitectura Medallion<a class="headerlink" href="#arquitectura-medallion" title="Permanent link">&para;</a></h3>
+<p>La <a href="https://www.databricks.com/glossary/medallion-architecture">arquitectura <em>Medallion</em></a> es un patrón de diseño de datos que se utiliza para organizar los datos en un <em>lakehouse</em>, con el objetivo de mejorar progresivamente la estructura y calidad de los datos conforme fluyen a través de las diferentes capas de la arquitectura (de la capa <em>raw</em>/bronce a la plata, y de ahí a la oro.)</p>
+<figure style="align: center">
+    <img src="images/02delta-lake-medallion-architecture.jpeg">
+    <figcaption>Arquitectura Medallion de un lago de datos - databricks.com</figcaption>
+</figure>
+
+<p>Conforme los datos transicionan de la capa bronce y plata a la de oro (conforme evolución los datos valen más, y de ahí su material) obtenemos datos más precisos. Cuando realizamos la ingesta de datos mediante procesos <em>batch</em> o en <em>streaming</em> los almacenamos en la capa de bronce en su formato crudo (<em>raw</em>), tras limpiarlos, normalizarlos y realizar el procesado necesario para realizar nuestras consultas, los volvemos a almacenar en la capa de plata (<em>curated</em>). Finalmente, en la capa de oro almacenamos los datos agregados, con las tablas de sumario que contienen los KPI o las tablas necesarias para la visualización de los datos por parte de las herramientas de negocio como <em>PowerBI</em> o <em>Tableau</em>.</p>
+<!--
+FIXME: https://learn.microsoft.com/es-es/azure/databricks/lakehouse/medallion
+-->
+
+<p>Para este flujo de datos entre capas, <em>Databricks</em> ofrece las tablas <em>Delta Live</em> y el uso de <em>pipelines</em> (esta opción no está habilitada en la versión educativa y no la vamos a poder probar). Tenéis un ejemplo completo en <a href="https://www.databricks.com/discover/pages/getting-started-with-delta-live-tables">Getting Started with Delta Live Tables</a>.</p>
+<h3 id="arquitectura-de-un-lakehouse">Arquitectura de un Lakehouse<a class="headerlink" href="#arquitectura-de-un-lakehouse" title="Permanent link">&para;</a></h3>
+<p>El uso de la arquitectura que propone <em>Delta Lake</em> permite el procesamiento simultáneos de los datos <em>batch</em> y en <em>streaming</em>, de manera que podemos tener escribir los datos <em>batch</em> y los flujos en <em>streaming</em> en la misma tabla, y a su vez, se escriben de manera progresiva en otras tablas más limpias y refinadas.</p>
+<p>La arquitectura de un <em>lakehouse</em> se compone de tres capas, y en nuestro caso, se concreta en:</p>
+<ul>
+<li>la capa de almacenamiento, por ejemplo, sobre S3.</li>
+<li>la capa transaccional, que la implementa <em>Delta Lake</em>.</li>
+<li>la capa de procesamiento, que la aporta <em>Spark</em>.</li>
+</ul>
+<figure style="align: center">
+    <img src="images/02delta-lake-arch.png">
+    <figcaption>Arquitectura de un lakehouse con Delta Lake</figcaption>
+</figure>
+
+<h3 id="el-ecosistema-delta">El ecosistema Delta<a class="headerlink" href="#el-ecosistema-delta" title="Permanent link">&para;</a></h3>
+<p><em>Delta Lake</em> se utiliza en su mayor medida como <em>lakehouse</em> por más de 7000 empresas, procesando exabytes de datos por día.</p>
+<p>Sin embargo, los <em>data warehouses</em> y las aplicaciones de <em>machine learning</em> no son el único objetivo de <em>Delta Lake</em>, ya que el soporte transaccional ACID aporta confiabilidad al <em>data lake</em> y permite ingestar y consumir datos tanto en <em>streaming</em> como por lotes.</p>
+<p>El ecosistema de <em>DeltaLake</em> se compone de una conjunto de componentes individuales entre los que destacan <em>Delta Lake Storage</em>, <em>Delta Sharing</em>, y <em>Delta Connectors</em>.</p>
+<h4 id="delta-lake-storage">Delta Lake Storage<a class="headerlink" href="#delta-lake-storage" title="Permanent link">&para;</a></h4>
+<p>Se trata de una capa de almacenamiento que corre sobre los lagos de datos basados en el cloud, como son <em>Azure Data Lake Storage</em> (ADLS), <em>AWS S3</em> o <em>Google Cloud Storage</em> (GCS), añadiendo transaccionalidad al lago de datos y las tablas, y por tanto, ofreciendo características de un <em>data warehouse</em> a un <em>data lake</em>.</p>
+<p>Se trata del componente principal, ya que el resto de elementos del ecosistema dependen de él.</p>
+<h4 id="delta-sharing">Delta Sharing<a class="headerlink" href="#delta-sharing" title="Permanent link">&para;</a></h4>
+<p>Todo lago de datos va a tener que compartir sus datos en algún momento, lo que requiere una solución segura y confiable que nos asegure la privacidad deseada en los datos.</p>
+<p><em>Delta Sharing</em> es un protocolo para compartir datos seguros para grandes conjuntos de datos almacenados en el <em>data lake</em>, de manera que podemos compartir los datos almacenados en S3 o <em>ADLS</em> y acceder mediante <em>Spark</em> o <em>PowerBI</em> sin necesidad de desplegar ningún componente adicional, facilitando compartir los datos incluso entre diferentes proveedores cloud sin necesidad de ningún desarrollo.</p>
+<figure style="align: center">
+    <img src="images/02delta-sharing.png">
+    <figcaption>Delta Sharing</figcaption>
+</figure>
+
+<p>Por ejemplo, podemos:</p>
+<ul>
+<li>Procesar en AWS mediante Spark datos que están almacenados en Azure ADLS.</li>
+<li>Procesar en Google mediante Rust datos que están almacenados en S3.</li>
+</ul>
+<p>Más información sobre el ecosistema de <em>Delta Sharing</em> en la página de <a href="https://delta.io/sharing"><em>Sharing</em></a> de <em>Delta Lake</em>.</p>
+<h4 id="delta-connectors">Delta Connectors<a class="headerlink" href="#delta-connectors" title="Permanent link">&para;</a></h4>
+<p>El principal objetivo de los conectores <em>Delta</em> es llevar <em>Delta Lake</em> a otros motores de procesamiento ajenos a <em>Spark</em>. Para ello, ofrece conectores open source que realizan la conexión directa a <em>DeltaLake</em> sin necesidad de pasar por <em>Spark</em>.</p>
+<p>Los conectores más destacados son:</p>
+<ul>
+<li><em>Delta Standalone</em>: librerías Java/Python/Rust/etc... para desarrollar aplicaciones que leen y escriben en Delta Lake.</li>
+<li><em>Hive</em>. Lectura de datos desde <em>Apache Hive</em>.</li>
+<li><em>Flink</em>. Lectura y escritura de datos desde <em>Apache Flink</em>.</li>
+<li><em>Sql-delta-import</em>. Permite importar datos desde cualquier fuente de datos JDBC.</li>
+<li><em>Power BI</em>. Función de Power Query que permite la lectura  de una tabla Delta desde cualquier fuente de datos soportado por Power BI.</li>
+</ul>
+<p>Más información sobre los conectores existentes, donde cada día hay más, en la página de <a href="https://delta.io/integrations">Integrations</a> de <em>Delta Lake</em>.</p>
+<h3 id="hola-delta">Hola Delta<a class="headerlink" href="#hola-delta" title="Permanent link">&para;</a></h3>
+<div class="admonition info">
+<p class="admonition-title">Probando Delta Lake</p>
+<p>Para poder realizar los ejemplos y practicar <em>DeltaLake</em>, en esta sesión nos vamos a centrar en la máquina virtual o mediante <em>DataBricks</em>, ya que no existe (de momento) una imagen de <em>DeltaLake</em> para <em>Docker</em>.</p>
+</div>
+<p>Si nos centramos en nuestra instalación de la máquina virtual, cuando lanzamos <code>pyspark</code> tenemos que indicarle que vamos a utilizar <code>delta</code> mediante la opción <code>packages</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pyspark<span class="w"> </span>--packages<span class="w"> </span>io.delta:delta-core_2.12:2.1.0<span class="w"> </span>--conf<span class="w"> </span><span class="s2">&quot;spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension&quot;</span><span class="w"> </span>--conf<span class="w"> </span><span class="s2">&quot;spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog&quot;</span>
+</code></pre></div>
+<p>Para facilitar su uso, en nuestro máquina virtual hemos creado un alias:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pysparkdl
+</code></pre></div>
+<p>Si partimos de los datos que teníamos en el <em>DataFrame</em> de clientes, podemos persistirlos en Delta indicando su formato mediante <code>format("delta")</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;use s8a&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;clientes&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1"># DeltaLake el Local</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;/tmp/raw/clientes&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="c1"># DeltaLake el DataBricks</span>
+<span class="linenos" data-linenos="6 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;/delta/raw/clientes&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="7 "></span><span class="c1"># DeltaLake el HDFS</span>
+<span class="linenos" data-linenos="8 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Si intentamos volver a escribir los datos en la misma ruta, obtendremos un error. Si queremos sobrescribir los datos, necesitamos indicarle el modo <code>overwrite</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;/tmp/raw/clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Para recuperar los datos, realizamos una lectura indicando siempre el formato <code>delta'</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># DeltaLake el Local</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">dfdeltal</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;/tmp/raw/clientes&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">dfdeltahdfs</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="por-dentro">Por dentro<a class="headerlink" href="#por-dentro" title="Permanent link">&para;</a></h3>
+<p>Si accedemos al sistema de archivos local, HDFS o Databricks DBFS, podemos analizar la estructura de archivos que ha utilizado para almacenar la información.</p>
+<p><em>Delta Lake</em> almacena los datos en formato <em>Parquet</em> en la ruta indicada (y si hubiéramos indicando particiones, en sus subcarpetas), y luego crea una carpeta denominada <code>_delta_log</code> donde almacena el <em>DeltaLog</em> o log transaccional en formato JSON, en el cual va registrando los cambios <em>delta</em> que se realizan sobre los datos.</p>
+<p>Vamos a comprobar qué datos se han almacenado en HDFS:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd@iabd-virtualbox:~/datos$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>-R<span class="w"> </span>/user/iabd/delta/raw/clientes
+<span class="linenos" data-linenos="2 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log
+<span class="linenos" data-linenos="3 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">2605</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000000.json
+<span class="linenos" data-linenos="4 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-05cb7b9c-c529-4f5e-83ab-0dc79d0422bf-c000.snappy.parquet
+</code></pre></div>
+<p>Si realizamos otra operación, por ejemplo, sobrescribimos la tabla, generará nuevos datos y otro fichero de log:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Lo comprobamos volviendo a listar los archivos almacenados:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd@iabd-virtualbox:~/datos$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>-R<span class="w"> </span>/user/iabd/delta/raw/clientes
+<span class="linenos" data-linenos="2 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log
+<span class="linenos" data-linenos="3 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">2605</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000000.json
+<span class="hll"><span class="linenos" data-linenos="4 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1592</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000001.json
+</span><span class="linenos" data-linenos="5 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-05cb7b9c-c529-4f5e-83ab-0dc79d0422bf-c000.snappy.parquet
+<span class="hll"><span class="linenos" data-linenos="6 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-1f226209-881f-4ff7-af04-6eedd64e1581-c000.snappy.parquet
+</span></code></pre></div>
+<p>Ahora vamos a añadir nuevos datos, utilizando un nuevo <em>dataframe</em> e indicando el modo de escritura con <code>append</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;customer_id&#39;</span><span class="p">,</span> <span class="s1">&#39;customer_fname&#39;</span><span class="p">,</span> <span class="s1">&#39;customer_lname&#39;</span><span class="p">]</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="n">datos</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="p">(</span><span class="mi">88888</span><span class="p">,</span> <span class="s2">&quot;Aitor&quot;</span><span class="p">,</span> <span class="s2">&quot;Medrano&quot;</span><span class="p">),</span> 
+<span class="linenos" data-linenos=" 4 "></span><span class="p">(</span><span class="mi">99999</span><span class="p">,</span> <span class="s2">&quot;Pedro&quot;</span><span class="p">,</span> <span class="s2">&quot;Casas&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="p">]</span>
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">nuevosClientes</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">datos</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1"># cambiamos el tipo a int pq por defecto le asigna long</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">nuevosClientes</span> <span class="o">=</span> <span class="n">nuevosClientes</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;customer_id&quot;</span><span class="p">,</span> <span class="n">nuevosClientes</span><span class="o">.</span><span class="n">customer_id</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">))</span>
+<span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span><span class="n">nuevosClientes</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Fusionando el esquema</p>
+<p>Si los tipos de los datos no cuadran con el esquema almacenado en DeltaLake, tendremos un error. Para habilitar que fusione los esquemas podemos indicarlo con <code>.option("mergeSchema", "true")</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">nuevosClientes</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;mergeSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<p>Ahora podemos ver como ha creado un nuevo archivo de log pero dos archivos de datos. En concreto, el archivo de log ha registrado las dos inserciones, y cada archivo de <em>Parquet</em> contiene únicamente cada uno de los registros:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd@iabd-virtualbox:~/datos$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>-R<span class="w"> </span>/user/iabd/delta/raw/clientes
+<span class="linenos" data-linenos="2 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:39<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log
+<span class="linenos" data-linenos="3 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">2605</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000000.json
+<span class="linenos" data-linenos="4 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1592</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000001.json
+<span class="hll"><span class="linenos" data-linenos="5 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1309</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:39<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000002.json
+</span><span class="linenos" data-linenos="6 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-05cb7b9c-c529-4f5e-83ab-0dc79d0422bf-c000.snappy.parquet
+<span class="linenos" data-linenos="7 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-1f226209-881f-4ff7-af04-6eedd64e1581-c000.snappy.parquet
+<span class="hll"><span class="linenos" data-linenos="8 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1035</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:39<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-b7124036-ce26-4b95-a759-080e829b8de6-c000.snappy.parquet
+</span><span class="hll"><span class="linenos" data-linenos="9 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1020</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:39<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00001-6164f53a-ca34-4b73-96ef-8d2f2cfbbb47-c000.snappy.parquet
+</span></code></pre></div>
+<p>Por ejemplo, si descargamos y visualizamos uno de los archivos de Parquet veremos sus datos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd@iabd-virtualbox:~/Descargas$<span class="w"> </span>parquet-tools<span class="w"> </span>show<span class="w"> </span>part-00000-b7124036-ce26-4b95-a759-080e829b8de6-c000.snappy.parquet<span class="w"> </span>
+<span class="linenos" data-linenos="2 "></span>+---------------+------------------+------------------+
+<span class="linenos" data-linenos="3 "></span><span class="p">|</span><span class="w">   </span>customer_id<span class="w"> </span><span class="p">|</span><span class="w"> </span>customer_fname<span class="w">   </span><span class="p">|</span><span class="w"> </span>customer_lname<span class="w">   </span><span class="p">|</span>
+<span class="linenos" data-linenos="4 "></span><span class="p">|</span>---------------+------------------+------------------<span class="p">|</span>
+<span class="linenos" data-linenos="5 "></span><span class="p">|</span><span class="w">         </span><span class="m">88888</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Aitor<span class="w">            </span><span class="p">|</span><span class="w"> </span>Medrano<span class="w">          </span><span class="p">|</span>
+<span class="linenos" data-linenos="6 "></span>+---------------+------------------+------------------+
+</code></pre></div>
+<p>Finalmente, si queremos comprobar los datos, a partir del <em>dataframe</em> que habíamos leído desde <em>HDFS</em>, podemos comprobar como los datos ya aparecen:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">dfdeltahdfs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;customer_id&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+----------------+-------------+--------------+----------------+</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1"># |customer_id|customer_fname|customer_lname|customer_email|customer_password| customer_street|customer_city|customer_state|customer_zipcode|</span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+----------------+-------------+--------------+----------------+</span>
+<span class="linenos" data-linenos="5 "></span><span class="c1"># |      99999|         Pedro|         Casas|          null|             null|            null|         null|          null|            null|</span>
+<span class="linenos" data-linenos="6 "></span><span class="c1"># |      88888|         Aitor|       Medrano|          null|             null|            null|         null|          null|            null|</span>
+<span class="linenos" data-linenos="7 "></span><span class="c1"># |      12435|         Laura|        Horton|     XXXXXXXXX|        XXXXXXXXX|5736 Honey Downs|  Summerville|            SC|           29483|</span>
+<span class="linenos" data-linenos="8 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+----------------+-------------+--------------+----------------+</span>
+<span class="linenos" data-linenos="9 "></span><span class="c1"># only showing top 3 rows</span>
+</code></pre></div>
+<h3 id="trabajando-con-tablas-delta">Trabajando con tablas Delta<a class="headerlink" href="#trabajando-con-tablas-delta" title="Permanent link">&para;</a></h3>
+<p>Para trabajar con tablas <em>Delta</em>, aunque podemos realizar todas las operaciones mediante <em>SQL</em>, <em>Delta Lake</em> ofrece un API para realizar modificaciones condicionales, borrados o <em>upserts</em> de datos en las tablas.</p>
+<p>Para ello, el primer paso obtener una tabla <em>delta</em> mediante el método <a href="https://docs.delta.io/latest/api/python/index.html#module-delta.tables"><code>DeltaTable.forPath</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">delta.tables</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">dtabla</span> <span class="o">=</span> <span class="n">DeltaTable</span><span class="o">.</span><span class="n">forPath</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Una vez tenemos la tabla, ya podemos, por ejemplo, modificar las ciudades haciendo uso del método <a href="https://docs.delta.io/latest/api/python/index.html#delta.tables.DeltaTable.update"><code>update(condición, valor)</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">dtabla</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">&quot;customer_city = &#39;Bruklyn&#39;&quot;</span><span class="p">,</span>  <span class="p">{</span><span class="s2">&quot;customer_city&quot;</span><span class="p">:</span> <span class="s2">&quot;&#39;Brooklyn&#39;&quot;</span><span class="p">})</span>
+</code></pre></div>
+<p>O borrar los clientes de <code>Brownsville</code>, mediante el método <a href="https://docs.delta.io/latest/api/python/index.html#delta.tables.DeltaTable.delete"><code>delete(condición)</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">dtabla</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;customer_city = &#39;Brownsville&#39;&quot;</span><span class="p">})</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># borramos los últimos clientes insertados</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">dtabla</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;customer_id &gt; 33333&quot;</span><span class="p">)</span>
+</code></pre></div>
+<!--
+FIXME: continuar 
+https://docs.delta.io/latest/delta-update.html#language-python
+https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.html#:-:text=Upserting%20change%20data%20to%20a%20table%20using%20merge()
+-->
+
+<h3 id="viajando-en-el-tiempo">Viajando en el tiempo<a class="headerlink" href="#viajando-en-el-tiempo" title="Permanent link">&para;</a></h3>
+<p>Podemos realizar consultas sobre <em>snapshots</em> de nuestras tablas delta mediante el <a href="https://docs.delta.io/latest/delta-batch.html#-deltatimetravel"><em>time travel</em></a>.</p>
+<p>Si queremos acceder a datos que hemos sobrescrito, podemos viajar al pasado de la tabla antes de que se sobrescribieran los datos mediante la opción <code>versionAsOf</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;versionAsOf&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p>Si comprobamos los datos, veremos que tenemos los datos iniciales tras realizar la carga de los datos.</p>
+<!--
+FIXME: continuar 
+https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.html#auditing_data_changes_with_operation_his
+-->
+
+<!--
+!!! info "vacuum"
+
+    Si comprobamos cuando hemos sobrescrito los datos, cada vez se guarda una copia de lo que había y lo nuevo. Esto puede provocar que se llene el disco de los *workers*. Para ello, Delta Lake utiliza  .... para eso está el vacuum, por ejemplo, 7 días, y significa que va a guardar el histórico de los últimos 7 días.
+
+    Por cada 10 operaciones que aparezca en los logs con json, se crea un archivo Parquet.
+-->
+
+<!--
+Spark DeltaLake:
+https://towardsdatascience.com/from-data-lakes-to-data-reservoirs-aa2efebb4f25
+
+https://delta.io/learn/getting-started
+
+https://www.datio.com/bbdd/potenciando-los-datos-con-delta-lake/
+https://learn.microsoft.com/es-es/azure/databricks/delta/
+
+Spark - Minio
+https://rhuanca.medium.com/on-premise-delta-lake-con-minio-da87f5f2b331
+
+https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.html#loading_data_into_a_delta_lake_table
+-->
+
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://learning.oreilly.com/library/view/modern-data-engineering/9781484274521/">Modern Data Engineering with Apache Spark - Scott Haines - Apress</a></li>
+<li><a href="https://www.youtube.com/watch?v=_pCUra3_BGA">Construir data lakes fiables con Delta Lake - Carlos del Cacho</a></li>
+<li><a href="https://learning.oreilly.com/library/view/delta-lake-up/9781098139711/">Delta Lake: Up and Running - Bennie Haelen - O'Reilly</a></li>
+<li><a href="https://www.databricks.com/wp-content/uploads/2020/08/p975-armbrust.pdf">Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores</a></li>
+</ul>
+<h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<p>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RA5074.1</abbr> / <abbr title="Se ha extraído de forma automática información y conocimiento a partir de grandes volúmenes de datos.">CE4.1b</abbr> y <abbr title="Se ha construido un conjunto de datos complejos y se han relacionado entre sí.">CE4.1d</abbr>) En las siguientes actividades vamos a familiarizarnos con el uso del API de <em>Spark JDBC</em>, el acceso al catálogo y <em>DeltaLake</em>.</p>
+<ol>
+<li>(1p) Vamos a repetir una actividad que realizamos durante la sesión de Hive. Para ello, se pide recuperar desde la base de datos <code>retail_db</code> las tablas <code>customers</code> y <code>orders</code> en dos dataframes tal como hemos hecho en <a href="#leyendo-datos">el apartado Leyendo Datos</a>, y a continuación, realizar un <em>join</em> de manera que contenga la información de cada pedido y la ciudad del cliente.</li>
+<li>(1p) Sobre el <em>dataframe</em> anterior, en la base de datos <code>iabd</code>, crea una tabla gestionada en el catálogo cuyo nombre sea <code>pedidos_ciudad</code>, y añade comentarios tanto a a la tabla como a sus columnas.</li>
+<li>(1p) A partir de los <a href="agregaciones.html#actividades">ejercicios 3 y 4 de la sesión anterior</a> donde tras consumir unos datos de ventas, realizábamos una limpieza de los datos, renombrábamos columnas y posteriormente una serie de agregaciones para visualizar en gráficos el resultado, se pide crear tantas tablas en <em>Delta Lake</em> como consideres, siguiendo la arquitectura <em>Medallion</em>, utilizando una nomenclatura adecuada.</li>
+<li>(1p) Tras una auditoria, hemos descubierto que había un libro oculto de contabilidad con ciertas ventas que no habían sido registradas en el sistema. Así pues, crea datos ficticios extra de ventas para el año 2019, colócalo en la capa <em>raw</em>, y a continuación, actualiza los datos del resto de tablas.</li>
+</ol>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Volver al principio
+          </button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2023-2024 Aitor Medrano - Licencia CC BY-NC-SA
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/aitormedrano" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:<a.medrano@edu.gva.es>" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l217.6 163.2c11.4 8.5 27 8.5 38.4 0l217.6-163.2c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48H48zM0 176v208c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V176L294.4 339.2a63.9 63.9 0 0 1-76.8 0L0 176z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+
+
+  
+
+
+<h4>Consentimiento de cookie</h4>
+<p>Esta página de apuntes utiliza cookies para reconocer las visitas, medir la efectividad de la documentación y averiguar si encuentras aquello que buscas o cómo has llegado a estos apuntes. Con tu consentimiento, me ayudas a mejorar estos materiales.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Aceptar</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Gestionar cookies</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.dfff1995.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.dff1b7c8.min.js"></script>
+      
+    
+  </body>
+</html>

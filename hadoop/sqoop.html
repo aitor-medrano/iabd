@@ -1,0 +1,2132 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Apuntes sobre el uso de Sqoop para leer y escribir datos en HDFS y MariaDB, con formatos de datos tanto Avro como Parquet. Mediante Flume estudiamos el uso de agentes, sources y sinks para conectar diferentes agentes y realizar un proceso de ingesta de datos en streaming.">
+      
+      
+      
+        <link rel="canonical" href="https://aitor-medrano.github.io/iabd/hadoop/sqoop.html">
+      
+      
+        <link rel="prev" href="formatos.html">
+      
+      
+        <link rel="next" href="flume.html">
+      
+      
+      <link rel="icon" href="../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.2.8">
+    
+    
+      
+        <title>Sqoop y Flume. Herramientas de ingesta de datos en y desde Hadoop. - Inteligencia Artificial y Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.046329b4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.85d0ee34.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Sqoop y Flume. Herramientas de ingesta de datos en y desde Hadoop. - Inteligencia Artificial y Big Data" >
+      
+        <meta  property="og:description"  content="Apuntes sobre el uso de Sqoop para leer y escribir datos en HDFS y MariaDB, con formatos de datos tanto Avro como Parquet. Mediante Flume estudiamos el uso de agentes, sources y sinks para conectar diferentes agentes y realizar un proceso de ingesta de datos en streaming." >
+      
+        <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/hadoop/sqoop.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://aitor-medrano.github.io/iabd/hadoop/sqoop.html" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Sqoop y Flume. Herramientas de ingesta de datos en y desde Hadoop. - Inteligencia Artificial y Big Data" >
+      
+        <meta  name="twitter:description"  content="Apuntes sobre el uso de Sqoop para leer y escribir datos en HDFS y MariaDB, con formatos de datos tanto Avro como Parquet. Mediante Flume estudiamos el uso de agentes, sources y sinks para conectar diferentes agentes y realizar un proceso de ingesta de datos en streaming." >
+      
+        <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/hadoop/sqoop.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sqoop" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-header__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Inteligencia Artificial y Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sqoop y Flume. Herramientas de ingesta de datos en y desde Hadoop.
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo noche"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo noche" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo día"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo día" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-nav__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    Inteligencia Artificial y Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inicio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2324.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Planning 23/24
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Sistemas de almacenamiento
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Sistemas de almacenamiento
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/nosql.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Almacenamiento de datos. NoSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/mongo.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MongoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/agregaciones.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Agregaciones en MongoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/modelado.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modelado documental
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/rendimiento.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rendimiento
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/replicacion.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Replicación y particionado
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/pymongo.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MongoDB y Python
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Datos en el cloud
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Datos en el cloud
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/cloud.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/aws.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AWS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/s3.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    S3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/computacion.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EC2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/emr.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EMR
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/datos.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDS y DynamoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/athena.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Athena
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ecosistema Hadoop
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Ecosistema Hadoop
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arq.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Arquitecturas Big Data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="etl.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ingesta de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="hadoop.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hadoop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="hdfs.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HDFS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="formatos.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Formatos de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Sqoop
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="sqoop.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Sqoop
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#importando-datos" class="md-nav__link">
+    Importando datos
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-1-importando-datos-desde-mariadb" class="md-nav__link">
+    Caso 1 - Importando datos desde MariaDB
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso 1 - Importando datos desde MariaDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#monitorizando-sqoop" class="md-nav__link">
+    Monitorizando Sqoop
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-2-exportando-datos-a-mariadb" class="md-nav__link">
+    Caso 2 - Exportando datos a MariaDB
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formatos-avro-y-parquet" class="md-nav__link">
+    Formatos Avro y Parquet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trabajando-con-datos-comprimidos" class="md-nav__link">
+    Trabajando con datos comprimidos
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#importando-con-filtros" class="md-nav__link">
+    Importando con filtros
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#importacion-incremental" class="md-nav__link">
+    Importación incremental
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trabajando-con-hive" class="md-nav__link">
+    Trabajando con Hive
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    Referencias
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    Actividades
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="flume.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flume
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="hive.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Analítica de negocio
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Analítica de negocio
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ba/business-analytics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Analítica de negocio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ba/data-warehouse.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Almacenes de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ingeniería de datos
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Ingeniería de datos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/de.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ingeniería de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../blog/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Blog
+  </span>
+  
+
+            </a>
+            
+              <label class="md-nav__link " for="__nav_8">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Archivo
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archivo
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/archive/2023.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2023
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3" >
+        
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Categorías
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categorías
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/noticias.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Noticias
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/septiembre.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Septiembre
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#importando-datos" class="md-nav__link">
+    Importando datos
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-1-importando-datos-desde-mariadb" class="md-nav__link">
+    Caso 1 - Importando datos desde MariaDB
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso 1 - Importando datos desde MariaDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#monitorizando-sqoop" class="md-nav__link">
+    Monitorizando Sqoop
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-2-exportando-datos-a-mariadb" class="md-nav__link">
+    Caso 2 - Exportando datos a MariaDB
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formatos-avro-y-parquet" class="md-nav__link">
+    Formatos Avro y Parquet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trabajando-con-datos-comprimidos" class="md-nav__link">
+    Trabajando con datos comprimidos
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#importando-con-filtros" class="md-nav__link">
+    Importando con filtros
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#importacion-incremental" class="md-nav__link">
+    Importación incremental
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trabajando-con-hive" class="md-nav__link">
+    Trabajando con Hive
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    Referencias
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    Actividades
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="sqoop">Sqoop<a class="headerlink" href="#sqoop" title="Permanent link">&para;</a></h1>
+<p>Las dos herramientas principales utilizadas para importar/exportar datos en <em>HDFS</em> son <em>Sqoop</em> y <em>Flume</em>, las cuales vamos a estudiar a continuación.</p>
+<figure style="float: right;">
+    <img src="images/05sqoop-logo.png">
+    <figcaption>Logo de Apache Sqoop</figcaption>
+</figure>
+
+<p><em>Apache Sqoop</em> (<a href="https://sqoop.apache.org">https://sqoop.apache.org</a>) es una herramienta diseñada para transferir de forma eficiente datos crudos entre un cluster de Hadoop y un almacenamiento estructurado, como una base de datos relacional.</p>
+<div class="admonition caution">
+<p class="admonition-title">Sin continuidad</p>
+<p>Desde Junio de 2021, el proyecto <em>Sqoop</em> ha dejado de mantenerse como proyecto de Apache y forma parte del <em>ático</em>. Aún así, creemos conveniente conocer su uso en el estado actual. Gran parte de las funcionalidad que ofrece <em>Sqoop</em> se pueden realizar mediante <em>Nifi</em> o <em>Spark</em>.</p>
+</div>
+<p>Un caso típico de uso es el de cargar los datos en un <em>data lake</em>  (ya sea en HDFS o en S3) con datos que importaremos desde una base de datos relacional, como <em>MariaDB</em> o <em>PostgreSQL</em>.</p>
+<p><em>Sqoop</em> utiliza una arquitectura basada en conectores, con soporte para <em>plugins</em> que ofrecen la conectividad a los sistemas externos, como pueden ser <em>Oracle</em> o <em>SqlServer</em>. Internamente, <em>Sqoop</em> utiliza los algoritmos <em>MapReduce</em> para importar y exportar los datos.</p>
+<p>Por defecto, todos los trabajos <em>Sqoop</em> ejecutan cuatro mapas de trabajo, de manera que los datos se dividen en cuatro nodos de <em>Hadoop</em>.</p>
+<div class="admonition info">
+<p class="admonition-title">Instalación</p>
+<p>Aunque en la máquina virtual con la que trabajamos ya tenemos tanto <em>Hadoop</em> como <em>Sqoop</em> instalados, podemos descargar la última versión desde <a href="http://archive.apache.org/dist/sqoop/1.4.7/sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz">http://archive.apache.org/dist/sqoop/1.4.7/sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz</a>.</p>
+<p>Se recomienda seguir las instrucciones resumidas que tenemos en <a href="https://www.tutorialspoint.com/sqoop/sqoop_installation.htm">https://www.tutorialspoint.com/sqoop/sqoop_installation.htm</a> o las de <a href="https://riptutorial.com/sqoop">https://riptutorial.com/sqoop</a>.</p>
+<p>Un par de aspectos que hemos tenido que modificar en nuestra máquina virtual son:</p>
+<ul>
+<li>Copiar el <a href="resources/mysql-connector-java-5.1.49-bin.jar">driver de MySQL</a> en <code>$SQOOP_HOME/lib</code></li>
+<li>Copiar la librería <a href="https://repo1.maven.org/maven2/commons-lang/commons-lang/2.6/commons-lang-2.6.jar">commons-langs-2.6</a> en <code>$SQOOP_HOME/lib</code></li>
+</ul>
+<p>Una vez configurado, podemos comprobar que funciona, por ejemplo, consultando las bases de datos que tenemos en <em>MariaDB</em> (aparecen mensajes de <em>warning</em> por no tener instalados/configurados algunos productos) mediante <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_list_databases_literal"><code>sqoop list-databases</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop list-databases --connect jdbc:mysql://localhost --username=iabd --password=iabd
+</code></pre></div>
+</div>
+<h2 id="importando-datos">Importando datos<a class="headerlink" href="#importando-datos" title="Permanent link">&para;</a></h2>
+<p>La sintaxis básica de <em>Sqoop</em> para importar datos en <em>HDFS</em> es mediante el comando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_import_literal"><code>sqoop import</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://host/nombredb<span class="w"> </span>--table<span class="w"> </span>&lt;nombreTabla&gt;<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="w"> </span>&lt;usuarioMariaDB&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;passwordMariaDB&gt;<span class="w"> </span>-m<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
+<p>El único parámetro que conviene explicar es <code>-m 2</code>, el cual está indicando que utilice dos <em>mappers</em> en paralelo para importar los datos. Si no le indicamos este parámetro, como hemos comentado antes, <em>Sqoop</em> siempre utilizará cuatro <em>mappers</em>.</p>
+<p>La importación se realiza en dos pasos:</p>
+<ol>
+<li><em>Sqoop</em> escanea la base de datos y colecta los metadatos de la tabla a importar. Con esos datos, envía un <em>job</em> y transfiere los datos reales utilizando los metadatos necesarios.</li>
+<li>De forma paralela, cada uno de los <em>mappers</em> se encarga de cargar en <em>HDFS</em> una parte proporcional de los datos.</li>
+</ol>
+<figure style="align: center;">
+    <img src="images/05sqoop-arq.png">
+    <figcaption>Arquitectura de trabajo de Sqoop</figcaption>
+</figure>
+
+<p>Los datos importados se almacenan en carpetas de <em>HDFS</em>, pudiendo especificar otras carpetas, así como los caracteres separadores o de terminación de registro. Además, podemos utilizar diferentes formatos, como son <em>Avro</em>, <em>ORC</em>, <em>Parquet</em>, ficheros secuenciales o de tipo texto, para almacenar los datos en <em>HDFS</em>.</p>
+<h2 id="caso-1-importando-datos-desde-mariadb">Caso 1 - Importando datos desde MariaDB<a class="headerlink" href="#caso-1-importando-datos-desde-mariadb" title="Permanent link">&para;</a></h2>
+<p>En el siguiente caso de uso vamos a importar datos que tenemos en una base de datos de MariaDB a HDFS.</p>
+<div class="admonition caution">
+<p class="admonition-title">Sqoop y las zonas horarias</p>
+<p>Cuando se lanza Sqoop captura los <em>timestamps</em> de nuestra base de datos origen y las convierte a la hora del sistema servidor por lo que tenemos que especificar en nuestra base de datos la zona horaria.</p>
+<p>Para realizar estos ajustes simplemente editamos el fichero <code>mysqld.cnf</code> que se encuentra en <code>/etc/mysql/my.cnf/</code> y añadimos la siguiente propiedad para asignarle nuestra zona horaria:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>[mariabd]
+<span class="linenos" data-linenos="2 "></span>default_time_zone = &#39;Europe/Madrid&#39;
+</code></pre></div>
+</div>
+<p>Primero, vamos a preparar nuestro entorno. Una vez conectados a <em>MariaDB</em>, creamos una base de datos que contenga una tabla con información sobre profesores:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">create</span><span class="w"> </span><span class="k">database</span><span class="w"> </span><span class="n">sqoopCaso1</span><span class="p">;</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">use</span><span class="w"> </span><span class="n">sqoopCaso1</span><span class="p">;</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">profesores</span><span class="p">(</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">MEDIUMINT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="p">,</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="n">nombre</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="linenos" data-linenos="6 "></span><span class="w">    </span><span class="n">edad</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+<span class="linenos" data-linenos="7 "></span><span class="w">    </span><span class="n">materia</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+<span class="linenos" data-linenos="8 "></span><span class="w">    </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">);</span>
+</code></pre></div>
+<p>Insertamos datos en la tabla <code>profesores:</code></p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">profesores</span><span class="w"> </span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">edad</span><span class="p">,</span><span class="w"> </span><span class="n">materia</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="ss">&quot;Carlos&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Matemáticas&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos="2 "></span><span class="p">(</span><span class="ss">&quot;Pedro&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Inglés&quot;</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="ss">&quot;Juan&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">35</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Tecnología&quot;</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="ss">&quot;Jose&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">48</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Matemáticas&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos="3 "></span><span class="p">(</span><span class="ss">&quot;Paula&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Informática&quot;</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="ss">&quot;Susana&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Informática&quot;</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="ss">&quot;Lorena&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">54</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Informática&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p>A continuación, arrancamos <em>HDFS</em> y <em>YARN</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>start-dfs.sh
+<span class="linenos" data-linenos="2 "></span>start-yarn.sh
+</code></pre></div>
+<p>Con el comando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_list_tables_literal"><code>sqoop list-tables</code></a> listamos todas las tablas de la base de datos <code>sqoopCaso1</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>list-tables<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd
+</code></pre></div>
+<p>Y finalmente importamos los datos mediante el comando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_import_literal"><code>sqoop import</code></a>:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Comando con explicaciones</label><label for="__tabbed_1_2">Comando copiable</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\ </span><span class="c1"># (1)!</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\ </span><span class="c1"># (2)!</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\ </span><span class="c1"># (3)!</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span>--target-dir<span class="o">=</span>/user/iabd/sqoop/profesores_hdfs<span class="w"> </span><span class="se">\ </span><span class="c1"># (4)!</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span>--fields-terminated-by<span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="w"> </span>--lines-terminated-by<span class="w"> </span><span class="s1">&#39;\n&#39;</span><span class="w"> </span><span class="c1"># (5)!</span>
+</code></pre></div>
+<ol>
+<li>Indicamos que vamos a importar datos desde un conexión JDBC, donde se indica el SGBD (<code>mysql</code>), el host (<code>localhost</code>) y el nombre de la base de datos (<code>sqoopCaso1</code>).</li>
+<li>Se configura tanto el usuario como la contraseña del usuario (<code>iabd</code> / <code>iabd</code>) que se conecta a la base de datos.</li>
+<li>Indicamos la tabla que vamos a leer (<code>profesores</code>) y el driver que utilizamos.</li>
+<li>Configuramos el destino HDFS donde se van a importar los datos.</li>
+<li>Indicamos el separador de los campos y el carácter para separar las líneas.</li>
+</ol>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span>--target-dir<span class="o">=</span>/user/iabd/sqoop/profesores_hdfs<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span>--fields-terminated-by<span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="w"> </span>--lines-terminated-by<span class="w"> </span><span class="s1">&#39;\n&#39;</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Si queremos que en el caso de que ya exista la carpeta de destino la borre previamente, añadiremos la opción <code>--delete-target-dir</code>.</p>
+<div class="admonition danger">
+<p class="admonition-title">Unhealthy node</p>
+<p>Nuestra máquina virtual tiene el espacio limitado, y es probable que en algún momento se llene el disco. Además de eliminar archivos no necesarios, una opción es configurar YARN mediante el archivo <code>yarn-site.xml</code> y configurar las siguientes propiedades para ser más permisivos con la falta de espacio:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>yarn.nodemanager.disk-health-checker.min-healthy-disks<span class="nt">&lt;/name&gt;</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">&lt;value&gt;</span>0.0<span class="nt">&lt;/value&gt;</span>
+<span class="linenos" data-linenos="4 "></span><span class="nt">&lt;/property&gt;</span>
+<span class="linenos" data-linenos="5 "></span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos="6 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage<span class="nt">&lt;/name&gt;</span>
+<span class="linenos" data-linenos="7 "></span><span class="w">    </span><span class="nt">&lt;value&gt;</span>100.0<span class="nt">&lt;/value&gt;</span>
+<span class="linenos" data-linenos="8 "></span><span class="nt">&lt;/property&gt;</span>
+</code></pre></div>
+</div>
+<p>El resultado que aparece en consola es:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>2021-12-14 17:19:04,684 INFO sqoop.Sqoop: Running Sqoop version: 1.4.7
+<span class="linenos" data-linenos=" 2 "></span>2021-12-14 17:19:04,806 WARN tool.BaseSqoopTool: Setting your password on the command-line is insecure. Consider using -P instead.
+<span class="linenos" data-linenos=" 3 "></span>2021-12-14 17:19:05,057 WARN sqoop.ConnFactory: Parameter --driver is set to an explicit driver however appropriate connection manager is not being set (via --connection-manager). Sqoop is going to fall back to org.apache.sqoop.manager.GenericJdbcManager. Please specify explicitly which connection manager should be used next time.
+<span class="linenos" data-linenos=" 4 "></span>2021-12-14 17:19:05,087 INFO manager.SqlManager: Using default fetchSize of 1000
+<span class="hll"><span class="linenos" data-linenos=" 5 "></span>2021-12-14 17:19:05,087 INFO tool.CodeGenTool: Beginning code generation
+</span><span class="hll"><span class="linenos" data-linenos=" 6 "></span>2021-12-14 17:19:05,793 INFO manager.SqlManager: Executing SQL statement: SELECT t.* FROM profesores AS t WHERE 1=0
+</span><span class="hll"><span class="linenos" data-linenos=" 7 "></span>2021-12-14 17:19:05,798 INFO manager.SqlManager: Executing SQL statement: SELECT t.* FROM profesores AS t WHERE 1=0
+</span><span class="linenos" data-linenos=" 8 "></span>2021-12-14 17:19:05,877 INFO orm.CompilationManager: HADOOP_MAPRED_HOME is /opt/hadoop-3.3.1
+<span class="linenos" data-linenos=" 9 "></span>Note: /tmp/sqoop-iabd/compile/585dc8a5a92b80ebbd22c9f597dd1928/profesores.java uses or overrides a deprecated API.
+<span class="linenos" data-linenos="10 "></span>Note: Recompile with -Xlint:deprecation for details.
+<span class="linenos" data-linenos="11 "></span>2021-12-14 17:19:12,153 INFO orm.CompilationManager: Writing jar file: /tmp/sqoop-iabd/compile/585dc8a5a92b80ebbd22c9f597dd1928/profesores.jar
+<span class="linenos" data-linenos="12 "></span>2021-12-14 17:19:12,235 INFO mapreduce.ImportJobBase: Beginning import of profesores
+<span class="linenos" data-linenos="13 "></span>2021-12-14 17:19:12,240 INFO Configuration.deprecation: mapred.job.tracker is deprecated. Instead, use mapreduce.jobtracker.address
+<span class="linenos" data-linenos="14 "></span>2021-12-14 17:19:12,706 INFO Configuration.deprecation: mapred.jar is deprecated. Instead, use mapreduce.job.jar
+<span class="hll"><span class="linenos" data-linenos="15 "></span>2021-12-14 17:19:12,714 INFO manager.SqlManager: Executing SQL statement: SELECT t.* FROM profesores AS t WHERE 1=0
+</span><span class="linenos" data-linenos="16 "></span>2021-12-14 17:19:14,330 INFO Configuration.deprecation: mapred.map.tasks is deprecated. Instead, use mapreduce.job.maps
+<span class="linenos" data-linenos="17 "></span>2021-12-14 17:19:14,608 INFO client.DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at iabd-virtualbox/127.0.1.1:8032
+<span class="linenos" data-linenos="18 "></span>2021-12-14 17:19:16,112 INFO mapreduce.JobResourceUploader: Disabling Erasure Coding for path: /tmp/hadoop-yarn/staging/iabd/.staging/job_1639498733738_0001
+<span class="linenos" data-linenos="19 "></span>2021-12-14 17:19:22,016 INFO db.DBInputFormat: Using read commited transaction isolation
+<span class="hll"><span class="linenos" data-linenos="20 "></span>2021-12-14 17:19:22,018 INFO db.DataDrivenDBInputFormat: BoundingValsQuery: SELECT MIN(id), MAX(id) FROM profesores
+</span><span class="linenos" data-linenos="21 "></span>2021-12-14 17:19:22,022 INFO db.IntegerSplitter: Split size: 1; Num splits: 4 from: 1 to: 7
+<span class="linenos" data-linenos="22 "></span>2021-12-14 17:19:22,214 INFO mapreduce.JobSubmitter: number of splits:4
+<span class="linenos" data-linenos="23 "></span>2021-12-14 17:19:22,707 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1639498733738_0001
+<span class="linenos" data-linenos="24 "></span>2021-12-14 17:19:22,707 INFO mapreduce.JobSubmitter: Executing with tokens: []
+<span class="linenos" data-linenos="25 "></span>2021-12-14 17:19:23,390 INFO conf.Configuration: resource-types.xml not found
+<span class="linenos" data-linenos="26 "></span>2021-12-14 17:19:23,391 INFO resource.ResourceUtils: Unable to find &#39;resource-types.xml&#39;.
+<span class="linenos" data-linenos="27 "></span>2021-12-14 17:19:24,073 INFO impl.YarnClientImpl: Submitted application application_1639498733738_0001
+<span class="linenos" data-linenos="28 "></span>2021-12-14 17:19:24,300 INFO mapreduce.Job: The url to track the job: http://iabd-virtualbox:8088/proxy/application_1639498733738_0001/
+<span class="hll"><span class="linenos" data-linenos="29 "></span>2021-12-14 17:19:24,303 INFO mapreduce.Job: Running job: job_1639498733738_0001
+</span><span class="hll"><span class="linenos" data-linenos="30 "></span>2021-12-14 17:19:44,015 INFO mapreduce.Job: Job job_1639498733738_0001 running in uber mode : false
+</span><span class="hll"><span class="linenos" data-linenos="31 "></span>2021-12-14 17:19:44,017 INFO mapreduce.Job:  map 0% reduce 0%
+</span><span class="hll"><span class="linenos" data-linenos="32 "></span>2021-12-14 17:20:21,680 INFO mapreduce.Job:  map 50% reduce 0%
+</span><span class="hll"><span class="linenos" data-linenos="33 "></span>2021-12-14 17:20:23,707 INFO mapreduce.Job:  map 100% reduce 0%
+</span><span class="hll"><span class="linenos" data-linenos="34 "></span>2021-12-14 17:20:24,736 INFO mapreduce.Job: Job job_1639498733738_0001 completed successfully
+</span><span class="linenos" data-linenos="35 "></span>2021-12-14 17:20:24,960 INFO mapreduce.Job: Counters: 34
+<span class="linenos" data-linenos="36 "></span>        File System Counters
+<span class="linenos" data-linenos="37 "></span>                FILE: Number of bytes read=0
+<span class="linenos" data-linenos="38 "></span>                FILE: Number of bytes written=1125124
+<span class="linenos" data-linenos="39 "></span>                FILE: Number of read operations=0
+<span class="linenos" data-linenos="40 "></span>                FILE: Number of large read operations=0
+<span class="linenos" data-linenos="41 "></span>                FILE: Number of write operations=0
+<span class="linenos" data-linenos="42 "></span>                HDFS: Number of bytes read=377
+<span class="linenos" data-linenos="43 "></span>                HDFS: Number of bytes written=163
+<span class="linenos" data-linenos="44 "></span>                HDFS: Number of read operations=24
+<span class="linenos" data-linenos="45 "></span>                HDFS: Number of large read operations=0
+<span class="linenos" data-linenos="46 "></span>                HDFS: Number of write operations=8
+<span class="linenos" data-linenos="47 "></span>                HDFS: Number of bytes read erasure-coded=0
+<span class="linenos" data-linenos="48 "></span>        Job Counters 
+<span class="linenos" data-linenos="49 "></span>                Killed map tasks=1
+<span class="linenos" data-linenos="50 "></span>                Launched map tasks=4
+<span class="linenos" data-linenos="51 "></span>                Other local map tasks=4
+<span class="linenos" data-linenos="52 "></span>                Total time spent by all maps in occupied slots (ms)=139377
+<span class="linenos" data-linenos="53 "></span>                Total time spent by all reduces in occupied slots (ms)=0
+<span class="linenos" data-linenos="54 "></span>                Total time spent by all map tasks (ms)=139377
+<span class="linenos" data-linenos="55 "></span>                Total vcore-milliseconds taken by all map tasks=139377
+<span class="linenos" data-linenos="56 "></span>                Total megabyte-milliseconds taken by all map tasks=142722048
+<span class="linenos" data-linenos="57 "></span>        Map-Reduce Framework
+<span class="linenos" data-linenos="58 "></span>                Map input records=7
+<span class="linenos" data-linenos="59 "></span>                Map output records=7
+<span class="linenos" data-linenos="60 "></span>                Input split bytes=377
+<span class="linenos" data-linenos="61 "></span>                Spilled Records=0
+<span class="linenos" data-linenos="62 "></span>                Failed Shuffles=0
+<span class="linenos" data-linenos="63 "></span>                Merged Map outputs=0
+<span class="linenos" data-linenos="64 "></span>                GC time elapsed (ms)=1218
+<span class="linenos" data-linenos="65 "></span>                CPU time spent (ms)=5350
+<span class="linenos" data-linenos="66 "></span>                Physical memory (bytes) snapshot=560439296
+<span class="linenos" data-linenos="67 "></span>                Virtual memory (bytes) snapshot=10029588480
+<span class="linenos" data-linenos="68 "></span>                Total committed heap usage (bytes)=349175808
+<span class="linenos" data-linenos="69 "></span>                Peak Map Physical memory (bytes)=142544896
+<span class="linenos" data-linenos="70 "></span>                Peak Map Virtual memory (bytes)=2507415552
+<span class="linenos" data-linenos="71 "></span>        File Input Format Counters 
+<span class="linenos" data-linenos="72 "></span>                Bytes Read=0
+<span class="linenos" data-linenos="73 "></span>        File Output Format Counters 
+<span class="linenos" data-linenos="74 "></span>                Bytes Written=163
+<span class="linenos" data-linenos="75 "></span>2021-12-14 17:20:24,979 INFO mapreduce.ImportJobBase: Transferred 163 bytes in 70,589 seconds (2,3091 bytes/sec)
+<span class="linenos" data-linenos="76 "></span>2021-12-14 17:20:24,986 INFO mapreduce.ImportJobBase: Retrieved 7 records.
+</code></pre></div>
+<p>Vamos a repasar la salida del log para entender el proceso:</p>
+<ul>
+<li>En la línea 5 vemos como se lanza el generador de código.</li>
+<li>En las líneas 6, 7 y 15 vemos como ejecuta la consulta para obtener todos los metadatos de la tabla de profesores.</li>
+<li>En la línea 20 obtiene los valores mínimo y máximo para calcular como dividir los datos.</li>
+<li>De las líneas 29 a la 34 se ejecuta el proceso <em>MapReduce</em>, donde realmente recupera los datos.</li>
+<li>En el resto se puede observar un resumen estadístico.</li>
+</ul>
+<h3 id="monitorizando-sqoop">Monitorizando Sqoop<a class="headerlink" href="#monitorizando-sqoop" title="Permanent link">&para;</a></h3>
+<p>Si accedemos al interfaz gráfico de YARN (en <code>http://iabd-virtualbox:8088/cluster</code>) podemos ver cómo aparece el proceso como realizado:</p>
+<figure style="align: center;">
+    <img src="images/05sqoop-caso1yarn.png">
+    <figcaption>Estado de YARN tras la importación</figcaption>
+</figure>
+
+<p>Si accedemos al interfaz gráfico de <em>Hadoop</em> (recuerda que puedes acceder a él mediante <code>http://iabd-virtualbox:9870</code>) podremos comprobar en el directorio <code>/user/iabd/sqoop</code> que ha creado el directorio que hemos especificado junto con los siguientes archivos:</p>
+<figure style="align: center;">
+    <img src="images/05sqoop-caso1a.png">
+    <figcaption>Contenido de /user/iabd/sqoop/profesores_hdfs</figcaption>
+</figure>
+
+<p>Si entramos a ver los datos, podemos visualizar el contenido del primer fragmento que contiene los primeros datos de la tabla:</p>
+<figure style="align: center;">
+    <img src="images/05sqoop-caso1b.png">
+    <figcaption>Contenido de part-m-0000</figcaption>
+</figure>
+
+<div class="admonition tip">
+<p class="admonition-title">Importándolo todo</p>
+<p>Si queremos importar todas las tablas de una base de datos, podemos emplear el comando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_import_all_tables_literal"><code>sqoop import-all-tables</code></a>, en el cual ya no indicamos la tabla a importar, sino la carpeta (<code>warehouse-dir</code>) donde creará una carpeta por cada tabla que encuentra en la base de datos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import-all-tables<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/mi_bd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span>--warehouse-dir<span class="o">=</span>/user/iabd/sqoop<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span>--fields-terminated-by<span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="w"> </span>--lines-terminated-by<span class="w"> </span><span class="s1">&#39;\n&#39;</span>
+</code></pre></div>
+</div>
+<h2 id="caso-2-exportando-datos-a-mariadb">Caso 2 - Exportando datos a MariaDB<a class="headerlink" href="#caso-2-exportando-datos-a-mariadb" title="Permanent link">&para;</a></h2>
+<div class="admonition inline end failure">
+<p class="admonition-title">Tabla no existente</p>
+<p>Si la tabla no existe previamente, recibiremos un error.</p>
+</div>
+<p>Ahora vamos a hacer el paso contrario, desde HDFS vamos a exportar los ficheros a otra tabla mediante el comando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_export_literal"><code>sqoop export</code></a>. Así pues, primero vamos a crear la nueva tabla en una nueva base de datos (aunque podíamos haber reutilizado la base de datos):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">create</span><span class="w"> </span><span class="k">database</span><span class="w"> </span><span class="n">sqoopCaso2</span><span class="p">;</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">use</span><span class="w"> </span><span class="n">sqoopCaso2</span><span class="p">;</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">profesores2</span><span class="p">(</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">MEDIUMINT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="p">,</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="n">nombre</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="linenos" data-linenos="6 "></span><span class="w">    </span><span class="n">edad</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+<span class="linenos" data-linenos="7 "></span><span class="w">    </span><span class="n">materia</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+<span class="linenos" data-linenos="8 "></span><span class="w">    </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">);</span>
+</code></pre></div>
+<p>Para exportar los datos de HDFS y cargarlos en esta nueva tabla lanzamos la siguiente orden:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso2<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores2<span class="w"> </span>--export-dir<span class="o">=</span>/user/iabd/sqoop/profesores_hdfs
+</code></pre></div>
+<p>Si quisiéramos exportar los datos sobre la misma tabla del caso de uso anterior, nos daría error ya que tendríamos registros duplicados por la clave primaria. Para evitar el error, podemos indicarle una clave de actualización mediante <code>--update-key</code>, de manera que en el caso de que el registro ya existiese, modificara sus datos, realizando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_inserts_vs_updates">actualizaciones de datos en vez de inserciones</a>. Si queremos que su comportamiento sea el de un <em>upsert</em>, le añadiremos la opción <code>--update-mode allowinsert</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--export-dir<span class="o">=</span>/user/iabd/sqoop/profesores_hdfs<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="4 "></span><span class="w">    </span>--update-key<span class="w"> </span>id<span class="w"> </span>--update-mode<span class="w"> </span>allowinsert
+</span></code></pre></div>
+<h2 id="formatos-avro-y-parquet">Formatos Avro y Parquet<a class="headerlink" href="#formatos-avro-y-parquet" title="Permanent link">&para;</a></h2>
+<p>Sqoop permite trabajar con diferentes formatos, tanto <em>Avro</em> como <em>Parquet</em>.</p>
+<p><em>Avro</em> es un formato de almacenamiento basado en filas para <em>Hadoop</em> que se usa ampliamente como formato de serialización. Recuerda que <em>Avro</em> almacena la estructura en formato JSON y los datos en binario.</p>
+<p><em>Parquet</em> a su vez es un formato de almacenamiento binario basado en columnas que puede almacenar estructuras de datos anidados.</p>
+<div class="admonition bug">
+<p class="admonition-title">Avro y Hadoop</p>
+<p>Para que funcione la serialización con <em>Avro</em> hay que copiar el fichero <code>.jar</code> que viene en el directorio de <code>Sqoop</code> para <em>Avro</em> como librería de <em>Hadoop</em>, mediante el siguiente comando:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>cp<span class="w"> </span><span class="nv">$SQOOP_HOME</span>/lib/avro-1.8.1.jar<span class="w"> </span><span class="nv">$HADOOP_HOME</span>/share/hadoop/common/lib/
+<span class="linenos" data-linenos="2 "></span>rm<span class="w"> </span><span class="nv">$HADOOP_HOME</span>/share/hadoop/common/lib/avro-1.7.7.jar
+</code></pre></div>
+<p>En nuestra máquina virtual este paso ya está realizado.</p>
+</div>
+<p>Para importar los datos en formato <strong>Avro</strong>, añadiremos la opción <code>--as-avrodatafile</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w">    </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w">   </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="4 "></span><span class="w">    </span>--target-dir<span class="o">=</span>/user/iabd/sqoop/profesores_avro<span class="w"> </span>--as-avrodatafile
+</span></code></pre></div>
+<p>Si en vez de <em>Avro</em>, queremos importar los datos en formato <strong>Parquet</strong> cambiamos el último parámetro por <code>--as-parquetfile</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w">    </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w">   </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="4 "></span><span class="w">    </span>--target-dir<span class="o">=</span>/user/iabd/sqoop/profesores_parquet<span class="w"> </span>--as-parquetfile
+</span></code></pre></div>
+<p>Si queremos comprobar los archivos, podemos acceder via HDFS y la opción <code>-ls</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>/user/iabd/sqoop/profesores_avro
+</code></pre></div>
+<p>Obteniendo:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="go">Found 5 items</span>
+<span class="linenos" data-linenos="2 "></span><span class="go">-rw-r--r--   1 iabd supergroup          0 2021-12-14 17:56 /user/iabd/sqoop/profesores_avro/_SUCCESS</span>
+<span class="linenos" data-linenos="3 "></span><span class="go">-rw-r--r--   1 iabd supergroup        568 2021-12-14 17:56 /user/iabd/sqoop/profesores_avro/part-m-00000.avro</span>
+<span class="linenos" data-linenos="4 "></span><span class="go">-rw-r--r--   1 iabd supergroup        569 2021-12-14 17:56 /user/iabd/sqoop/profesores_avro/part-m-00001.avro</span>
+<span class="linenos" data-linenos="5 "></span><span class="go">-rw-r--r--   1 iabd supergroup        547 2021-12-14 17:56 /user/iabd/sqoop/profesores_avro/part-m-00002.avro</span>
+<span class="linenos" data-linenos="6 "></span><span class="go">-rw-r--r--   1 iabd supergroup        574 2021-12-14 17:56 /user/iabd/sqoop/profesores_avro/part-m-00003.avro</span>
+</code></pre></div>
+<p>Si queremos ver el contenido de una de las partes, utilizamos la opción <code>-text</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-text<span class="w"> </span>/user/iabd/sqoop/profesores_avro/part-m-00000.avro
+</code></pre></div>
+<p>Obteniendo el esquema y los datos en formato <em>Avro</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{&quot;id&quot;:{&quot;int&quot;:1},&quot;nombre&quot;:{&quot;string&quot;:&quot;Carlos&quot;},&quot;edad&quot;:{&quot;int&quot;:24},&quot;materia&quot;:{&quot;string&quot;:&quot;Matemáticas&quot;}}
+<span class="linenos" data-linenos="2 "></span>{&quot;id&quot;:{&quot;int&quot;:2},&quot;nombre&quot;:{&quot;string&quot;:&quot;Pedro&quot;},&quot;edad&quot;:{&quot;int&quot;:32},&quot;materia&quot;:{&quot;string&quot;:&quot;Inglés&quot;}}
+</code></pre></div>
+<div class="admonition question">
+<p class="admonition-title">Autoevaluación</p>
+<p>¿Qué sucede si ejecutamos el comando <code>hdfs dfs -tail /user/iabd/sqoop/profesores_avro/part-m-00000.avro</code>? ¿Por qué aparece contenido en binario?</p>
+</div>
+<p>En el caso de ficheros <em>Parquet</em>, primero listamos los archivos generados:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>/user/iabd/sqoop/profesores_parquet
+</code></pre></div>
+<p>Obteniendo:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="go">Found 6 items</span>
+<span class="linenos" data-linenos="2 "></span><span class="go">drwxr-xr-x   - iabd supergroup          0 2021-12-15 16:13 /user/iabd/sqoop/profesores_parquet/.metadata</span>
+<span class="linenos" data-linenos="3 "></span><span class="go">drwxr-xr-x   - iabd supergroup          0 2021-12-15 16:14 /user/iabd/sqoop/profesores_parquet/.signals</span>
+<span class="linenos" data-linenos="4 "></span><span class="go">-rw-r--r--   1 iabd supergroup       1094 2021-12-15 16:14 /user/iabd/sqoop/profesores_parquet/12205ee4-6e63-4c0d-8e64-751882d60179.parquet</span>
+<span class="linenos" data-linenos="5 "></span><span class="go">-rw-r--r--   1 iabd supergroup       1114 2021-12-15 16:14 /user/iabd/sqoop/profesores_parquet/1e12aaad-98c6-4508-9c41-e1599e698385.parquet</span>
+<span class="linenos" data-linenos="6 "></span><span class="go">-rw-r--r--   1 iabd supergroup       1097 2021-12-15 16:14 /user/iabd/sqoop/profesores_parquet/6a803503-f3e0-4f2a-8546-a337f7f90e73.parquet</span>
+<span class="linenos" data-linenos="7 "></span><span class="go">-rw-r--r--   1 iabd supergroup       1073 2021-12-15 16:14 /user/iabd/sqoop/profesores_parquet/eda459b2-1da4-4790-b649-0f2f8b83ab06.parquet</span>
+</code></pre></div>
+<p>Podemos usar las <code>parquet-tools</code> para ver su contenido. Si la instalamos mediante <code>pip3 install parquet-tools</code> podremos acceder a ficheros locales y almacenados en S3. Si queremos acceder de forma remota via <em>HDFS</em>, podemos descargar la <a href="https://repo1.maven.org/maven2/org/apache/parquet/parquet-tools/1.11.2/parquet-tools-1.11.2.jar">versión Java</a> y utilizarla mediante <code>hadoop</code> (aunque da problemas entre las versiones de Sqoop y Parquet):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hadoop<span class="w"> </span>jar<span class="w"> </span>parquet-tools-1.11.2.jar<span class="w"> </span>head<span class="w"> </span>-n5<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/iabd/sqoop/profesores_parquet/12205ee4-6e63-4c0d-8e64-751882d60179.parquet
+</code></pre></div>
+<p>Si queremos obtener información sobre los documentos, usaremos la opción <code>meta</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hadoop<span class="w"> </span>jar<span class="w"> </span>parquet-tools-1.11.2.jar<span class="w"> </span>meta<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/iabd/sqoop/profesores_parquet/12205ee4-6e63-4c0d-8e64-751882d60179.parquet
+</code></pre></div>
+<p>Más información sobre <em>parquet-tools</em> en <a href="https://pypi.org/project/parquet-tools/">https://pypi.org/project/parquet-tools/</a>.</p>
+<h2 id="trabajando-con-datos-comprimidos">Trabajando con datos comprimidos<a class="headerlink" href="#trabajando-con-datos-comprimidos" title="Permanent link">&para;</a></h2>
+<p>En un principio, vamos a trabajar siempre con los datos sin comprimir. Cuando tengamos datos que vamos a utilizar durante mucho tiempo (del orden de varios años) es cuando nos plantearemos comprimir los datos.</p>
+<p>Por defecto, podemos comprimir mediante el formato <strong>gzip</strong> utilizando el parámetro <code>--compress</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span>--target-dir<span class="o">=</span>/user/iabd/sqoop/profesores_gzip<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="5 "></span><span class="w">    </span>--compress
+</span></code></pre></div>
+<p>Si en cambio queremos comprimirlo con formato <strong>bzip2</strong>, hemos de añadir también el parámetro <code>--compression-codec bzip2</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span>--target-dir<span class="o">=</span>/user/iabd/sqoop/profesores_bzip<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="5 "></span><span class="w">    </span>--compress<span class="w"> </span>--compression-codec<span class="w"> </span>bzip2
+</span></code></pre></div>
+<!--
+    --compression-codec org.apache.hadoop.io.compress.BZip2Codec --as-sequencefile 
+-->
+
+<p><strong>Snappy</strong> es una biblioteca de compresión y descompresión de datos de gran rendimiento que se utiliza con frecuencia en proyectos Big Data. Así pues, para utilizarlo lo indicaremos mediante el codec <code>snappy</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span>--target-dir<span class="o">=</span>/user/iabd/sqoop/profesores_snappy<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="5 "></span><span class="w">    </span>--compress<span class="w"> </span>--compression-codec<span class="w"> </span>snappy
+</span></code></pre></div>
+<!--
+--compression-codec org.apache.hadoop.io.compress.SnappyCodec
+-->
+
+<h2 id="importando-con-filtros">Importando con filtros<a class="headerlink" href="#importando-con-filtros" title="Permanent link">&para;</a></h2>
+<p>Además de poder importar todos los datos de una tabla, podemos filtrar los datos. Por ejemplo, podemos indicar mediante la opción <code>--where</code> el filtro a ejecutar en la consulta:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span>--target-dir<span class="o">=</span>/user/iabd/sqoop/profesores_materia_info<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="5 "></span><span class="w">    </span>--where<span class="w"> </span><span class="s2">&quot;materia=&#39;Informática&#39;&quot;</span>
+</span></code></pre></div>
+<p>También podemos restringir las columnas que queremos recuperar mediante la opción <code>--columns</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span>--target-dir<span class="o">=</span>/user/iabd/sqoop/profesores_cols<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="5 "></span><span class="w">    </span>--columns<span class="w"> </span><span class="s2">&quot;nombre,materia&quot;</span>
+</span></code></pre></div>
+<p>Finalmente, podemos especificar una consulta con clave de particionado (en este caso, ya no indicamos el nombre de la tabla):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span>--target-dir<span class="o">=</span>/user/iabd/sqoop/profesores_query<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="5 "></span><span class="w">    </span>--query<span class="w"> </span><span class="s2">&quot;select * from profesores where edad &gt; 40 AND \$CONDITIONS&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span class="hll"><span class="linenos" data-linenos="6 "></span><span class="w">    </span>--split-by<span class="w"> </span><span class="s2">&quot;id&quot;</span>
+</span></code></pre></div>
+<p>En la consulta, hemos de añadir el token <code>\$CONDITIONS</code>, el cual <em>Sqoop</em> sustituirá por la columna por la que los <em>mappers</em> realizan el particionado.</p>
+<h2 id="importacion-incremental">Importación incremental<a class="headerlink" href="#importacion-incremental" title="Permanent link">&para;</a></h2>
+<p>Si utilizamos procesos <em>batch</em>, es muy común realizar importaciones incrementales tras una carga de datos. Para ello, utilizaremos las opciones <code>--incremental append</code> junto con la columna a comprobar mediante <code>--check-column</code> y el último registro cargado mediante <code>--last-value</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span>--target-dir<span class="o">=</span>/user/iabd/sqoop/profesores_inc<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="5 "></span><span class="w">    </span>--incremental<span class="w"> </span>append<span class="w"> </span><span class="se">\</span>
+</span><span class="hll"><span class="linenos" data-linenos="6 "></span><span class="w">    </span>--check-column<span class="w"> </span>id<span class="w"> </span><span class="se">\</span>
+</span><span class="hll"><span class="linenos" data-linenos="7 "></span><span class="w">    </span>--last-value<span class="w"> </span><span class="m">4</span>
+</span></code></pre></div>
+<p>Después de ejecutarlo, si vemos la información que nos devuelve, en las últimas líneas, podemos copiar los parámetros que tenemos que utilizar para posteriores importaciones.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="go">...</span>
+<span class="linenos" data-linenos="2 "></span><span class="go">2021-12-15 19:10:59,348 INFO tool.ImportTool: Incremental import complete! To run another incremental import of all data following this import, supply the following arguments:</span>
+<span class="linenos" data-linenos="3 "></span><span class="go">2021-12-15 19:10:59,348 INFO tool.ImportTool:  --incremental append</span>
+<span class="linenos" data-linenos="4 "></span><span class="go">2021-12-15 19:10:59,348 INFO tool.ImportTool:   --check-column id</span>
+<span class="linenos" data-linenos="5 "></span><span class="go">2021-12-15 19:10:59,348 INFO tool.ImportTool:   --last-value 7</span>
+<span class="linenos" data-linenos="6 "></span><span class="go">2021-12-15 19:10:59,349 INFO tool.ImportTool: (Consider saving this with &#39;sqoop job --create&#39;)</span>
+</code></pre></div>
+<h2 id="trabajando-con-hive">Trabajando con Hive<a class="headerlink" href="#trabajando-con-hive" title="Permanent link">&para;</a></h2>
+<p>Podemos importar los datos en HDFS para que luego puedan ser consultables desde <em>Hive</em>. Para ello hemos de utilizar el parámetro <code>--hive-import</code> e indicar el nombre de la base de datos mediante <code>--hive-database</code> así como la opción de <code>--create-hive-table</code> para que cree la tabla indicada en el parámetro <code>hive-table</code>.</p>
+<p>Es importante destacar que ya no ponemos destino con <code>target-dir</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="4 "></span><span class="w">    </span>--hive-import<span class="w"> </span>--hive-database<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
+</span><span class="hll"><span class="linenos" data-linenos="5 "></span><span class="w">    </span>--create-hive-table<span class="w"> </span>--hive-table<span class="w"> </span>profesores_mariadb
+</span></code></pre></div>
+<p>Para comprobar el resultado, dentro de <em>Hive</em> ejecutaremos el comando:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">describe</span><span class="w"> </span><span class="n">formatted</span><span class="w"> </span><span class="n">profesores_mariadb</span>
+</code></pre></div>
+<p>Para exportar los datos, de forma similar haremos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso2<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores2<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="4 "></span><span class="w">    </span>--h-catalog-table<span class="w"> </span>profesores_mariadb
+</span></code></pre></div>
+<!--
+TODO: exportar datos a una tabla stage
+Exportar datos con updates
+-->
+
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Página oficial de <a href="https://sqoop.apache.org">Sqoop</a></li>
+<li><a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html">Sqoop User Guide</a></li>
+<li><a href="https://www.tutorialspoint.com/sqoop/index.htm">Sqoop Tutorial</a> en <em>Tutorialspoint</em></li>
+<li><a href="https://www.oreilly.com/library/view/apache-sqoop-cookbook/9781449364618/">Apache Sqoop Cookbook</a>, de Kathleen Ting, Jarek Jarcec Cecho</li>
+</ul>
+<h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Preparación MariaBD</p>
+<p>Para estos actividades y futuras sesiones, vamos a utilizar una base de datos (<em>retail_db</em>) que contiene información sobre un comercio (clientes, productos, pedidos, etc...).</p>
+<p>Para ello, descargaremos el archivo <a href="resources/create_db.sql">create_db.sql</a> con las sentencias para crear la base de datos y los datos como instrucciones SQL.</p>
+<p>Tras ello, si nos conectamos a <em>MariaDB</em> (<code>mariadb -u iabd -p</code>) desde la misma carpeta que hemos descargado el archivo, ejecutaremos los siguientes comando:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">create</span><span class="w"> </span><span class="k">database</span><span class="w"> </span><span class="n">retail_db</span><span class="p">;</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">use</span><span class="w"> </span><span class="n">retail_db</span><span class="p">;</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">source</span><span class="w"> </span><span class="n">create_db</span><span class="p">.</span><span class="k">sql</span><span class="p">;</span>
+<span class="linenos" data-linenos="4 "></span><span class="k">show</span><span class="w"> </span><span class="n">tables</span><span class="p">;</span>
+</code></pre></div>
+</div>
+<ol>
+<li>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RA5074.3</abbr> / <abbr title="Se han extraído y almacenado datos de diversas fuentes, para ser tratados en distintos escenarios.">CE4.3a</abbr> y <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CE4.3b</abbr> / 1p) Haciendo uso de <em>Sqoop</em> y la base de datos <em>retail_db</em>, importa:</p>
+<ol>
+<li>
+<p>Todos los pedidos de la tabla <code>orders</code> cuyo campo <code>order_status</code> sea <code>COMPLETE</code>.</p>
+<p>Coloca los datos en <code>user/iabd/sqoop/orders/datos_parquet</code> en formato Parquet, utilizando el tabulador como delimitador de campos y utilizando la compresión Snappy. Deberás recuperar 22.899 (¿o 22.902?) registros.</p>
+</li>
+<li>
+<p>Todos los clientes de la tabla <code>customers</code> cuyo campo <code>state</code> sea <code>CA</code>.</p>
+<p>Coloca los datos en <code>user/iabd/sqoop/customers/datos_avro</code> en formato Avro,  utilizando la compresión bzip2. Deberás recuperar las columnas <code>customer_id, customer_fname, customer_lname, customer_state</code>. El resultado contendrá 2012 registros.</p>
+</li>
+</ol>
+</li>
+</ol>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Volver al principio
+          </button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="formatos.html" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Formatos de datos" rel="prev">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Formatos de datos
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="flume.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Flume" rel="next">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Flume
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2023-2024 Aitor Medrano - Licencia CC BY-NC-SA
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/aitormedrano" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:<a.medrano@edu.gva.es>" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l217.6 163.2c11.4 8.5 27 8.5 38.4 0l217.6-163.2c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48H48zM0 176v208c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V176L294.4 339.2a63.9 63.9 0 0 1-76.8 0L0 176z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+
+
+  
+
+
+<h4>Consentimiento de cookie</h4>
+<p>Esta página de apuntes utiliza cookies para reconocer las visitas, medir la efectividad de la documentación y averiguar si encuentras aquello que buscas o cómo has llegado a estos apuntes. Con tu consentimiento, me ayudas a mejorar estos materiales.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Aceptar</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Gestionar cookies</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.dfff1995.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.dff1b7c8.min.js"></script>
+      
+    
+  </body>
+</html>

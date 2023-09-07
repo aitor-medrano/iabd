@@ -1,0 +1,2200 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Apuntes sobre el uso de Sqoop para leer y escribir datos en HDFS y MariaDB, con formatos de datos tanto Avro como Parquet. Mediante Flume estudiamos el uso de agentes, sources y sinks para conectar diferentes agentes y realizar un proceso de ingesta de datos en streaming.">
+      
+      
+      
+        <link rel="canonical" href="https://aitor-medrano.github.io/iabd/hadoop/flume.html">
+      
+      
+        <link rel="prev" href="sqoop.html">
+      
+      
+        <link rel="next" href="hive.html">
+      
+      
+      <link rel="icon" href="../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.2.8">
+    
+    
+      
+        <title>Sqoop y Flume. Herramientas de ingesta de datos en y desde Hadoop. - Inteligencia Artificial y Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.046329b4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.85d0ee34.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Sqoop y Flume. Herramientas de ingesta de datos en y desde Hadoop. - Inteligencia Artificial y Big Data" >
+      
+        <meta  property="og:description"  content="Apuntes sobre el uso de Sqoop para leer y escribir datos en HDFS y MariaDB, con formatos de datos tanto Avro como Parquet. Mediante Flume estudiamos el uso de agentes, sources y sinks para conectar diferentes agentes y realizar un proceso de ingesta de datos en streaming." >
+      
+        <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/hadoop/flume.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://aitor-medrano.github.io/iabd/hadoop/flume.html" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Sqoop y Flume. Herramientas de ingesta de datos en y desde Hadoop. - Inteligencia Artificial y Big Data" >
+      
+        <meta  name="twitter:description"  content="Apuntes sobre el uso de Sqoop para leer y escribir datos en HDFS y MariaDB, con formatos de datos tanto Avro como Parquet. Mediante Flume estudiamos el uso de agentes, sources y sinks para conectar diferentes agentes y realizar un proceso de ingesta de datos en streaming." >
+      
+        <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/hadoop/flume.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#flume" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-header__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Inteligencia Artificial y Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sqoop y Flume. Herramientas de ingesta de datos en y desde Hadoop.
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo noche"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo noche" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo día"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo día" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-nav__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    Inteligencia Artificial y Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inicio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2324.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Planning 23/24
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Sistemas de almacenamiento
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Sistemas de almacenamiento
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/nosql.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Almacenamiento de datos. NoSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/mongo.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MongoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/agregaciones.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Agregaciones en MongoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/modelado.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modelado documental
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/rendimiento.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rendimiento
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/replicacion.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Replicación y particionado
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/pymongo.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MongoDB y Python
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Datos en el cloud
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Datos en el cloud
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/cloud.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/aws.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AWS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/s3.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    S3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/computacion.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EC2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/emr.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EMR
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/datos.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDS y DynamoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/athena.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Athena
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ecosistema Hadoop
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Ecosistema Hadoop
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arq.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Arquitecturas Big Data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="etl.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ingesta de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="hadoop.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hadoop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="hdfs.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HDFS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="formatos.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Formatos de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sqoop.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sqoop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Flume
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="flume.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Flume
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#arquitectura" class="md-nav__link">
+    Arquitectura
+  </a>
+  
+    <nav class="md-nav" aria-label="Arquitectura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes" class="md-nav__link">
+    Agentes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evento" class="md-nav__link">
+    Evento
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probando-flume" class="md-nav__link">
+    Probando Flume
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurando-un-agente" class="md-nav__link">
+    Configurando un agente
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-3a-almacenando-en-hdfs" class="md-nav__link">
+    Caso 3a - Almacenando en HDFS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-3b-de-netcat-a-hdfs" class="md-nav__link">
+    Caso 3b - De Netcat a HDFS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-4-flujos-encadenados" class="md-nav__link">
+    Caso 4 - Flujos encadenados
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-5-flujo-multi-agente" class="md-nav__link">
+    Caso 5 - Flujo multi-agente
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    Referencias
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    Actividades
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="hive.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Analítica de negocio
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Analítica de negocio
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ba/business-analytics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Analítica de negocio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ba/data-warehouse.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Almacenes de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ingeniería de datos
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Ingeniería de datos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/de.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ingeniería de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../blog/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Blog
+  </span>
+  
+
+            </a>
+            
+              <label class="md-nav__link " for="__nav_8">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Archivo
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archivo
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/archive/2023.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2023
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3" >
+        
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Categorías
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categorías
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/noticias.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Noticias
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/septiembre.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Septiembre
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#arquitectura" class="md-nav__link">
+    Arquitectura
+  </a>
+  
+    <nav class="md-nav" aria-label="Arquitectura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agentes" class="md-nav__link">
+    Agentes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evento" class="md-nav__link">
+    Evento
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probando-flume" class="md-nav__link">
+    Probando Flume
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurando-un-agente" class="md-nav__link">
+    Configurando un agente
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-3a-almacenando-en-hdfs" class="md-nav__link">
+    Caso 3a - Almacenando en HDFS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-3b-de-netcat-a-hdfs" class="md-nav__link">
+    Caso 3b - De Netcat a HDFS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-4-flujos-encadenados" class="md-nav__link">
+    Caso 4 - Flujos encadenados
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-5-flujo-multi-agente" class="md-nav__link">
+    Caso 5 - Flujo multi-agente
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    Referencias
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    Actividades
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="flume">Flume<a class="headerlink" href="#flume" title="Permanent link">&para;</a></h1>
+<p>Las dos herramientas principales utilizadas para importar/exportar datos en <em>HDFS</em> son <em>Sqoop</em> y <em>Flume</em>, las cuales vamos a estudiar a continuación.</p>
+<figure style="float: right;">
+    <img src="images/05flume-logo.png">
+    <figcaption>Logo de Apache Flume</figcaption>
+</figure>
+
+<p>Allá por el año 2010 <em>Cloudera</em> presentó <strong><em>Flume</em></strong> que posteriormente pasó a formar parte de Apache (<a href="https://flume.apache.org/">https://flume.apache.org/</a>) como un software para tratamiento e ingesta de datos masivo, facilitando crear desarrollos complejos que permiten el tratamiento de datos en <em>streaming</em>. Inicialmente se diseñó para recolectar ficheros de log de una granja de servidores web y mover los eventos almacenados en esos ficheros a HDFS para su posterior procesamiento.</p>
+<p><em>Flume</em> funciona como un <em>buffer</em> entre los productores de datos y el destino final. Al utilizar un buffer, evitamos que un productor sature a un consumidor, sin necesidad de preocuparnos de que algún destino esté inalcanzable o inoperable (por ejemplo, en el caso de que haya caído HDFS), etc...</p>
+<div class="admonition info">
+<p class="admonition-title">Instalación</p>
+<p>Aunque en la máquina virtual con la que trabajamos también tenemos instalado <em>Flume</em>, podemos descargar la última versión desde <a href="https://dlcdn.apache.org/flume/1.11.0/apache-flume-1.11.0-bin.tar.gz">https://dlcdn.apache.org/flume/1.11.0/apache-flume-1.11.0-bin.tar.gz</a>.</p>
+<p>A nivel de configuración sólo hemos definido la variable de entorno <code>$FLUME_HOME</code> que apunta a <code>/opt/flume-1.11.0</code>.</p>
+</div>
+<p>Algunas de sus características son:</p>
+<ul>
+<li>Diseño flexible basado en flujos de datos de transmisión.</li>
+<li>Resistente a fallos y robusto con múltiples conmutaciones por error y  mecanismos de recuperación.</li>
+<li>Lleva datos desde origen a destino: incluidos HDFS y <em>HBase</em>.</li>
+</ul>
+<h2 id="arquitectura">Arquitectura<a class="headerlink" href="#arquitectura" title="Permanent link">&para;</a></h2>
+<p>Su arquitectura es sencilla, y se basa en el uso de agentes que se dividen en tres componentes, los cuales podemos configurar:</p>
+<ul>
+<li><em>Source</em> (fuente): Fuente de origen de los datos, ya sea <em>Twitter</em>, <em>Kafka</em>, una petición <em>Http</em>, etc...<br />
+Las fuentes son un componente activo que recibe datos desde otra aplicación que produce datos (aunque también existen fuentes que pueden producir datos por sí mismos, cuyo objetivo es poder probar ciertos flujos de datos). Las fuentes puedes escuchar uno o más puertos de red para recibir o leer datos del sistema de archivos. Cada fuente debe conectar a al menos un canal. Una fuente puede escribir en varios canales, replicando los eventos a todos o algunos canales en base a algún criterio.</li>
+<li><em>Channel</em> (canal): la vía por donde se tratarán los datos.<br />
+Un canal es un componente pasivo que almacena los datos como un buffer. Se comportan como colas, donde las fuentes publican y los sumideros consumen los datos. Múltiples fuentes pueden escribir de forma segura en el mismo canal, y múltiples sumideros pueden leer desde el mismo canal. Sin embargo, cada sumidero sólo puede leer de un único canal. Si múltiples sumideros leen del mismo canal, sólo uno de ellos leerá el dato.</li>
+<li><em>Sink</em> (sumidero): persistencia/movimiento de los datos, a ficheros / base de datos.<br />
+Toma eventos del canal de manera continua leyendo y eliminando los eventos. A continuación, los transmite hacia el siguiente componente, ya sea a HDFS, Hive, etc... Una vez los datos han llegado al siguiente destino, el sumidero informa al canal mediante un <em>commit transaccional</em> para que elimine dichos eventos del canal.</li>
+</ul>
+<figure style="align: center">
+    <img src="images/05flume-arq2.png">
+    <figcaption>Arquitectura Flume - imagen extraída de https://www.diegocalvo.es/flume/</figcaption>
+</figure>
+
+<p>Es muy recomendable acceder a la <a href="https://flume.apache.org/FlumeUserGuide.html">guía de usuario</a> oficial para consultar todas las fuentes de datos, canales y sumideros disponibles en la actualidad. A continuación se nombran algunos de los más destacados:</p>
+<table>
+<thead>
+<tr>
+<th>Sources</th>
+<th>Channels</th>
+<th>Sinks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Avro Source</td>
+<td>Memory Channel</td>
+<td>HDFS Sink</td>
+</tr>
+<tr>
+<td>Thrift Source</td>
+<td>JDBC Channel</td>
+<td>Hive Sink</td>
+</tr>
+<tr>
+<td>Exec Source</td>
+<td>Kafka Channel</td>
+<td>Logger Sink</td>
+</tr>
+<tr>
+<td>JMS Source</td>
+<td>File Channel</td>
+<td>Avro Sink</td>
+</tr>
+<tr>
+<td>Spooling Directory Source</td>
+<td>Spillable Memory Channel</td>
+<td>Thrift Sink</td>
+</tr>
+<tr>
+<td>Twitter 1% firehose Source</td>
+<td>Pseudo Transaction Channel</td>
+<td>Kafka Sink</td>
+</tr>
+<tr>
+<td>Kafka Source</td>
+<td></td>
+<td>File Roll Sink</td>
+</tr>
+<tr>
+<td>NetCat Source</td>
+<td></td>
+<td>Null Sink</td>
+</tr>
+<tr>
+<td>Sequence Generator Source</td>
+<td></td>
+<td>HBaseSink</td>
+</tr>
+<tr>
+<td>Syslog Sources</td>
+<td></td>
+<td>AsyncHBaseSink</td>
+</tr>
+<tr>
+<td>HTTP Source</td>
+<td></td>
+<td>MorphlineSolrSink</td>
+</tr>
+<tr>
+<td>Multiport Syslog TCP Source</td>
+<td></td>
+<td>ElasticSearchSink</td>
+</tr>
+<tr>
+<td>Syslog UDP Source</td>
+<td></td>
+<td>Kite Dataset Sink</td>
+</tr>
+</tbody>
+</table>
+<p>Una instalación de <em>Flume</em> consiste en una colección de agentes conectados los cuales se ejecutan en una arquitectura distribuida. Los agentes del borde del sistema (situados, por ejemplo, en los mismos servidores web que generan los datos) recogen los datos y los reenvían a los agentes responsables de agregar y ordenar los datos en el destino final.</p>
+<p><em>Flume</em> se complica cuando queremos utilizarlo para obtener datos de manera paralela (o multiplexada) y/o necesitamos crear nuestros propios sumideros o interceptores. Pero por lo general, su uso es sencillo y se trata de una herramienta muy recomendada como ayuda/alternativa a herramientas como <em>Pentaho</em>.</p>
+<h3 id="agentes">Agentes<a class="headerlink" href="#agentes" title="Permanent link">&para;</a></h3>
+<p>Un agente es la unidad más sencilla con la que trabaja <em>Flume</em>, permitiendo conectar un agente <em>Flume</em> a uno o más agentes, encandenándolos. Además, un agente puede recibir datos de uno o más agentes. Conectando múltiples agentes entre sí podemos crear un flujo de datos para mover datos de un lugar a otro, de aplicaciones que producen datos a HDFS, HBase o donde necesitemos.</p>
+<p>Para lanzar un tarea en <em>Flume</em>, debemos definir un agente, el cual funciona como un contenedor para alojar subcomponentes que permiten mover los datos.</p>
+<p>Estos agentes tienen cuatro partes bien diferenciadas asociadas a la arquitectura de Flume. En la primera parte, definiremos los componente del agente (<em>sources</em>, <em>channels</em> y <em>sinks</em>), y luego, para cada uno de ellos, configuraremos sus propiedades:</p>
+<ul>
+<li><strong><code>sources</code></strong>: responsables de colocar los eventos/datos en el agente</li>
+<li><strong><code>channels</code></strong>: <em>buffer</em> que almacena los eventos/datos recibidos por los <em>sources</em> hasta que un <em>sink</em> lo saca para enviarlo al siguiente destino.</li>
+<li><strong><code>sinks</code></strong>: responsable de sacar los eventos/datos del agente y reenviarlo al siguiente agente (HDFS, HBase, etc...)</li>
+</ul>
+<h3 id="evento">Evento<a class="headerlink" href="#evento" title="Permanent link">&para;</a></h3>
+<p>El evento es la unidad más pequeña del procesamiento de eventos de <em>Flume</em>. Cuando <em>Flume</em> lee una fuente de datos, envuelve una fila de datos (es decir, encuentra los saltos de línea) en un evento.</p>
+<p>Un evento es una estructura de datos que se compone de dos partes:</p>
+<ul>
+<li>Encabezado (<em>header</em>), se utiliza principalmente para registrar información mediante un mapa en forma de clave y valor. No transfieren datos, pero contienen información util para el enrutado y gestión de la prioridad o importancia de los mensajes.</li>
+<li>Cuerpo (<em>payload</em>): array de bytes que almacena los datos reales.</li>
+</ul>
+<h2 id="probando-flume">Probando Flume<a class="headerlink" href="#probando-flume" title="Permanent link">&para;</a></h2>
+<p>Por ejemplo, vamos a crear un agente el cual llamaremos <code>ExecLoggerAgent</code> el cual va a ejecutar un comando y mostrará el resultado por el log de <em>Flume</em>, utilizando como canal la memoria.</p>
+<p>Para ello, creamos la configuración del agente en el fichero <code>agente.conf</code> (todas las propiedades comenzarán con el nombre del agente):</p>
+<div class="highlight"><span class="filename">agente.conf</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Nombramos los componentes del agente</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="na">ExecLoggerAgent.sources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Exec</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="na">ExecLoggerAgent.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="na">ExecLoggerAgent.sinks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">LoggerSink</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># Describimos el tipo de origen</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="na">ExecLoggerAgent.sources.Exec.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">exec</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="na">ExecLoggerAgent.sources.Exec.command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ls /home/iabd/</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># Describimos el destino</span>
+<span class="linenos" data-linenos="11 "></span><span class="na">ExecLoggerAgent.sinks.LoggerSink.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">logger</span>
+<span class="linenos" data-linenos="12 "></span>
+<span class="linenos" data-linenos="13 "></span><span class="c1"># Describimos la configuración del canal</span>
+<span class="linenos" data-linenos="14 "></span><span class="na">ExecLoggerAgent.channels.MemChannel.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">memory</span>
+<span class="linenos" data-linenos="15 "></span><span class="na">ExecLoggerAgent.channels.MemChannel.capacity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+<span class="linenos" data-linenos="16 "></span><span class="na">ExecLoggerAgent.channels.MemChannel.transactionCapacity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100</span>
+<span class="linenos" data-linenos="17 "></span>
+<span class="linenos" data-linenos="18 "></span><span class="c1"># Unimos el origen y el destino a través del canal</span>
+<span class="linenos" data-linenos="19 "></span><span class="na">ExecLoggerAgent.sources.Exec.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel</span>
+<span class="linenos" data-linenos="20 "></span><span class="na">ExecLoggerAgent.sinks.LoggerSink.channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel</span>
+</code></pre></div>
+<p>A continuación ya podemos lanzar <em>Flume</em> con el agente mediante el comando (la opción <code>-n</code> sirve para indicar el nombre del agente, y con <code>-f</code> indicamos el nombre del archivo de configuración):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>flume-ng<span class="w"> </span>agent<span class="w"> </span>--name<span class="w"> </span>ExecLoggerAgent<span class="w"> </span>--conf<span class="w"> </span>./conf/<span class="w"> </span>--conf-file<span class="w"> </span>conf/agente.conf<span class="w"> </span>
+</code></pre></div>
+<p>Tras su ejecución, si consultamos el fichero <code>flume.log</code> podremos ver cómo ha creado primero el canal del agente <code>MemChannel</code>, así como la instancia de la fuente <code>Exec</code> y el sumidero <code>LoggerSink</code> y los conecta:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>21 ene 2023 19:28:25,006 INFO  [main] (org.apache.flume.conf.FlumeConfiguration$AgentConfiguration.addComponentConfig:1203)  - Processing:LoggerSink
+<span class="linenos" data-linenos="2 "></span>21 ene 2023 19:28:25,014 INFO  [main] (org.apache.flume.conf.FlumeConfiguration$AgentConfiguration.addComponentConfig:1203)  - Processing:MemChannel
+<span class="linenos" data-linenos="3 "></span>...
+<span class="linenos" data-linenos="4 "></span>21 ene 2023 19:28:25,041 INFO  [main] (org.apache.flume.node.AbstractConfigurationProvider.loadChannels:154)  - Creating channels
+<span class="linenos" data-linenos="5 "></span>21 ene 2023 19:28:25,049 INFO  [main] (org.apache.flume.channel.DefaultChannelFactory.create:42)  - Creating instance of channel MemChannel type memory
+<span class="hll"><span class="linenos" data-linenos="6 "></span>21 ene 2023 19:28:25,054 INFO  [main] (org.apache.flume.node.AbstractConfigurationProvider.loadChannels:208)  - Created channel MemChannel
+</span><span class="hll"><span class="linenos" data-linenos="7 "></span>21 ene 2023 19:28:25,055 INFO  [main] (org.apache.flume.source.DefaultSourceFactory.create:41)  - Creating instance of source Exec, type exec
+</span><span class="hll"><span class="linenos" data-linenos="8 "></span>21 ene 2023 19:28:25,113 INFO  [main] (org.apache.flume.sink.DefaultSinkFactory.create:42)  - Creating instance of sink: LoggerSink, type: logger
+</span><span class="linenos" data-linenos="9 "></span>21 ene 2023 19:28:25,127 INFO  [main] (org.apache.flume.node.AbstractConfigurationProvider.getConfiguration:123)  - Channel MemChannel connected to [Exec, LoggerSink]
+</code></pre></div>
+<p>A continuación, inicializa los componentes y los arranca:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>21 ene 2023 19:28:25,128 INFO  [main] (org.apache.flume.node.Application.initializeAllComponents:177)  - Initializing components
+<span class="linenos" data-linenos=" 2 "></span>21 ene 2023 19:28:25,173 INFO  [main] (org.apache.flume.node.Application.startAllComponents:207)  -
+<span class="hll"><span class="linenos" data-linenos=" 3 "></span>    Starting new configuration:{
+</span><span class="hll"><span class="linenos" data-linenos=" 4 "></span>        sourceRunners:{Exec=EventDrivenSourceRunner: { source:org.apache.flume.source.ExecSource{name:Exec,state:IDLE} }}
+</span><span class="hll"><span class="linenos" data-linenos=" 5 "></span>        sinkRunners:{LoggerSink=SinkRunner: { policy:org.apache.flume.sink.DefaultSinkProcessor@4b7dc788 counterGroup:{ name:null counters:{} } }}
+</span><span class="hll"><span class="linenos" data-linenos=" 6 "></span>        channels:{MemChannel=org.apache.flume.channel.MemoryChannel{name: MemChannel}} }
+</span><span class="linenos" data-linenos=" 7 "></span>21 ene 2023 19:28:25,174 INFO  [main] (org.apache.flume.node.Application.startAllComponents:214)  - Starting Channel MemChannel
+<span class="linenos" data-linenos=" 8 "></span>21 ene 2023 19:28:25,188 INFO  [main] (org.apache.flume.node.Application.startAllComponents:229)  - Waiting for channel: MemChannel to start. Sleeping for 500 ms
+<span class="linenos" data-linenos=" 9 "></span>21 ene 2023 19:28:25,190 INFO  [lifecycleSupervisor-1-0] (org.apache.flume.instrumentation.MonitoredCounterGroup.register:119)  - Monitored counter group for type: CHANNEL, name: MemChannel: Successfully registered new MBean.
+<span class="linenos" data-linenos="10 "></span>21 ene 2023 19:28:25,190 INFO  [lifecycleSupervisor-1-0] (org.apache.flume.instrumentation.MonitoredCounterGroup.start:95)  - Component type: CHANNEL, name: MemChannel started
+<span class="linenos" data-linenos="11 "></span>21 ene 2023 19:28:25,692 INFO  [main] (org.apache.flume.node.Application.startAllComponents:241)  - Starting Sink LoggerSink
+<span class="linenos" data-linenos="12 "></span>21 ene 2023 19:28:25,714 INFO  [main] (org.apache.flume.node.Application.startAllComponents:252)  - Starting Source Exec
+</code></pre></div>
+<p>Una vez arrancados, podemos ver cómo ha ejecutado el comando <code>ls /home/iabd/</code> y mediante el <code>LoggerSink</code>, muestra cada uno de los archivos de la carpeta en un evento, donde podemos ver que tiene la cabecera vacía <code>headers:{}</code>, luego los datos en una representación en hexadecimal y por último el nombre del archivo/carpeta:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>21 ene 2023 19:28:25,716 INFO  [lifecycleSupervisor-1-2] (org.apache.flume.source.ExecSource.start:170)  -
+<span class="linenos" data-linenos=" 2 "></span>    Exec source starting with command: ls /home/iabd/
+<span class="linenos" data-linenos=" 3 "></span>21 ene 2023 19:28:25,722 INFO  [lifecycleSupervisor-1-2] (org.apache.flume.instrumentation.MonitoredCounterGroup.register:119)  -
+<span class="linenos" data-linenos=" 4 "></span>    Monitored counter group for type: SOURCE, name: Exec: Successfully registered new MBean.
+<span class="linenos" data-linenos=" 5 "></span>21 ene 2023 19:28:25,729 INFO  [lifecycleSupervisor-1-2] (org.apache.flume.instrumentation.MonitoredCounterGroup.start:95)  -
+<span class="linenos" data-linenos=" 6 "></span>    Component type: SOURCE, name: Exec started
+<span class="hll"><span class="linenos" data-linenos=" 7 "></span>21 ene 2023 19:28:25,892 INFO  [SinkRunner-PollingRunner-DefaultSinkProcessor] (org.apache.flume.sink.LoggerSink.process:95)  -
+</span><span class="hll"><span class="linenos" data-linenos=" 8 "></span>    Event: { headers:{} body: 64 61 74 6F 73                                  datos }
+</span><span class="linenos" data-linenos=" 9 "></span>21 ene 2023 19:28:25,893 INFO  [SinkRunner-PollingRunner-DefaultSinkProcessor] (org.apache.flume.sink.LoggerSink.process:95)  -
+<span class="linenos" data-linenos="10 "></span>    Event: { headers:{} body: 44 65 73 63 61 72 67 61 73                      Descargas }
+<span class="linenos" data-linenos="11 "></span>21 ene 2023 19:28:25,893 INFO  [pool-3-thread-1] (org.apache.flume.source.ExecSource$ExecRunnable.run:379)  - 
+<span class="linenos" data-linenos="12 "></span>    Command [ls /home/iabd/] exited with 0
+<span class="linenos" data-linenos="13 "></span>21 ene 2023 19:28:25,900 INFO  [SinkRunner-PollingRunner-DefaultSinkProcessor] (org.apache.flume.sink.LoggerSink.process:95)  - 
+<span class="linenos" data-linenos="14 "></span>    Event: { headers:{} body: 44 65 73 6B 74 6F 70                            Desktop }
+<span class="linenos" data-linenos="15 "></span>21 ene 2023 19:28:25,905 INFO  [SinkRunner-PollingRunner-DefaultSinkProcessor] (org.apache.flume.sink.LoggerSink.process:95)  - 
+<span class="linenos" data-linenos="16 "></span>    Event: { headers:{} body: 44 6F 63 75 6D 65 6E 74 6F 73                   Documentos }
+<span class="linenos" data-linenos="17 "></span>21 ene 2023 19:28:25,906 INFO  [SinkRunner-PollingRunner-DefaultSinkProcessor] (org.apache.flume.sink.LoggerSink.process:95)  - 
+<span class="linenos" data-linenos="18 "></span>    Event: { headers:{} body: 66 6C 75 6D 65                                  flume }
+<span class="linenos" data-linenos="19 "></span>21 ene 2023 19:28:25,908 INFO  [SinkRunner-PollingRunner-DefaultSinkProcessor] (org.apache.flume.sink.LoggerSink.process:95)  - 
+<span class="linenos" data-linenos="20 "></span>    Event: { headers:{} body: 49 6D C3 A1 67 65 6E 65 73                      Im..genes }
+<span class="linenos" data-linenos="21 "></span>...
+</code></pre></div>
+<h2 id="configurando-un-agente">Configurando un agente<a class="headerlink" href="#configurando-un-agente" title="Permanent link">&para;</a></h2>
+<p>Si te has fijado en el ejemplo anterior, los ficheros de configuración de los agentes siguen el mismo formato.
+Para definir un flujo dentro de un agente, necesitamos enlazar las fuentes y los sumideros con un canal. Para ello, listaremos las fuentes, sumideros y canales del agente, y entonces apuntaremos la fuente y el sumidero a un canal.</p>
+<p>Así pues, el formato será similar al siguiente archivo:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Listamos las fuentes, sumideros y canales</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="na">&lt;Agent&gt;.sources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;Source&gt;</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="na">&lt;Agent&gt;.sinks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;Sink&gt;</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="na">&lt;Agent&gt;.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;Channel1&gt; &lt;Channel2&gt;</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># Configuramos los canales de la fuente</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="na">&lt;Agent&gt;.sources.&lt;Source&gt;.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;Channel1&gt; &lt;Channel2&gt; ...</span>
+<span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># Configuramos el canal para el sumidero</span>
+<span class="linenos" data-linenos="10 "></span><span class="na">&lt;Agent&gt;.sinks.&lt;Sink&gt;.channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;Channel1&gt;</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">channel y channels</p>
+<p>Destacar que una fuente tiene una propiedad <code>channels</code>(en plural), pero un sumidero tiene la propiedad <code>channel</code> (en singular). Esto se debe a que una fuente puede alimentar más de un canal (<em>fan out</em>), pero un sumidero sólo puede obtener datos de un único canal.
+También es posible que un canal alimente a varios sumideros.</p>
+<p>En resumen, siguen una relación 1 - N - 1, de manera que una fuente puede indicar múltiples canales, pero un sumidero sólo puede indicar un único canal.</p>
+</div>
+<p>Además de definir el flujo, es necesario configurar las propiedades de cada fuente, sumidero y canal. Para elo se sigue la misma nomenclatura donde fijamos el tipo de componente (mediante la propiedad <code>type</code>) y el resto de propiedades específicas de cada componente:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># Propiedades de las fuentes</span>
+<span class="linenos" data-linenos="2 "></span><span class="na">&lt;Agent&gt;.sources.&lt;Source&gt;.&lt;someProperty&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;someValue&gt;</span>
+<span class="linenos" data-linenos="3 "></span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># Propiedades de los canales</span>
+<span class="linenos" data-linenos="5 "></span><span class="na">&lt;Agent&gt;.channel.&lt;Channel&gt;.&lt;someProperty&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;someValue&gt;</span>
+<span class="linenos" data-linenos="6 "></span>
+<span class="linenos" data-linenos="7 "></span><span class="c1"># Propiedades de los sumideros</span>
+<span class="linenos" data-linenos="8 "></span><span class="na">&lt;Agent&gt;.sources.&lt;Sink&gt;.&lt;someProperty&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;someValue&gt;</span>
+</code></pre></div>
+<p>Para cada tipo de <a href="https://flume.apache.org/FlumeUserGuide.html#flume-sources">fuente</a>, <a href="https://flume.apache.org/FlumeUserGuide.html#flume-channels">canal</a> y <a href="https://flume.apache.org/FlumeUserGuide.html#flume-sinks">sumidero</a> es recomendable revisar la documentación para validar todas las propiedades disponibles.</p>
+<h2 id="caso-3a-almacenando-en-hdfs">Caso 3a - Almacenando en HDFS<a class="headerlink" href="#caso-3a-almacenando-en-hdfs" title="Permanent link">&para;</a></h2>
+<p>En este caso de uso vamos <a href="https://flume.apache.org/FlumeUserGuide.html#sequence-generator-source">generar datos de forma secuencial</a> y los vamos a ingestar en <a href="https://flume.apache.org/FlumeUserGuide.html#hdfs-sink">HDFS</a>.</p>
+<p>Una buena práctica es colocar los archivos de configuración dentro de <code>$FLUME_HOME/conf</code>. Así pues, vamos a crear el agente <code>SeqGenAgent</code> y almacenar la configuración en el fichero <code>seqgen.conf</code>:</p>
+<div class="highlight"><span class="filename">seqgen.conf</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Nombramos a los componentes del agente</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="na">SeqGenAgent.sources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">SeqSource</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="na">SeqGenAgent.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="na">SeqGenAgent.sinks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">HDFS</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># Describimos el tipo de origen</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="na">SeqGenAgent.sources.SeqSource.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">seq</span>
+<span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># Describimos el destino</span>
+<span class="linenos" data-linenos="10 "></span><span class="na">SeqGenAgent.sinks.HDFS.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hdfs</span>
+<span class="linenos" data-linenos="11 "></span><span class="na">SeqGenAgent.sinks.HDFS.hdfs.path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hdfs://iabd-virtualbox:9000/user/iabd/flume/seqgen_data/</span>
+<span class="linenos" data-linenos="12 "></span><span class="na">SeqGenAgent.sinks.HDFS.hdfs.filePrefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">flume-caso3-seqgen</span>
+<span class="linenos" data-linenos="13 "></span><span class="na">SeqGenAgent.sinks.HDFS.hdfs.rollInterval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<span class="linenos" data-linenos="14 "></span><span class="na">SeqGenAgent.sinks.HDFS.hdfs.rollCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+<span class="linenos" data-linenos="15 "></span><span class="na">SeqGenAgent.sinks.HDFS.hdfs.fileType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">DataStream</span>
+<span class="linenos" data-linenos="16 "></span>
+<span class="linenos" data-linenos="17 "></span><span class="c1"># Describimos la configuración del canal</span>
+<span class="linenos" data-linenos="18 "></span><span class="na">SeqGenAgent.channels.MemChannel.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">memory</span>
+<span class="linenos" data-linenos="19 "></span><span class="na">SeqGenAgent.channels.MemChannel.capacity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+<span class="linenos" data-linenos="20 "></span><span class="na">SeqGenAgent.channels.MemChannel.transactionCapacity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100</span>
+<span class="linenos" data-linenos="21 "></span>
+<span class="linenos" data-linenos="22 "></span><span class="c1"># Unimos el origen y el destino a través del canal</span>
+<span class="linenos" data-linenos="23 "></span><span class="na">SeqGenAgent.sources.SeqSource.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel</span>
+<span class="linenos" data-linenos="24 "></span><span class="na">SeqGenAgent.sinks.HDFS.channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel</span>
+</code></pre></div>
+<div class="admonition caution">
+<p class="admonition-title">Arrancamos Hadoop</p>
+<p>Antes de lanzar el agente <em>Flume</em>, recuerda que debes arrancar tanto <em>Hadoop</em> como <em>YARN</em>, por ejemplo, mediante el comando <code>start-all.sh</code>.</p>
+</div>
+<p>Ejecutamos el siguiente comando desde <code>$FLUME_HOME</code> y a los pocos segundo lo paramos mediante <code>CTRL + C</code> para que detenga la generación de números, ya que si no seguirá generando archivos en HDFS:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./bin/flume-ng<span class="w"> </span>agent<span class="w"> </span>--conf<span class="w"> </span>./conf/<span class="w"> </span>--conf-file<span class="w"> </span>conf/seqgen.conf<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--name<span class="w"> </span>SeqGenAgent<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>-Dflume.root.logger<span class="o">=</span>INFO,console
+</code></pre></div>
+<div class="admonition caution">
+<p class="admonition-title">Vaciando HDFS</p>
+<p>Si queremos eliminar los ficheros generados en HDFS, recuerda que puedes realizar un borrado recursivo mediante el comando:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-rm<span class="w"> </span>-r<span class="w"> </span>/user/iabd/flume
+</code></pre></div>
+</div>
+<p>Si comprobamos por ejemplo el contenido de la carpeta (<code>hdfs dfs -ls /user/iabd/flume/seqgen_data</code>) veremos que se han generado múltiples archivos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>Found 10 items
+<span class="linenos" data-linenos=" 2 "></span>-rw-r--r--   1 iabd supergroup       1402 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740933
+<span class="linenos" data-linenos=" 3 "></span>-rw-r--r--   1 iabd supergroup       1368 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740934
+<span class="linenos" data-linenos=" 4 "></span>-rw-r--r--   1 iabd supergroup       1350 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740935
+<span class="linenos" data-linenos=" 5 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740936
+<span class="linenos" data-linenos=" 6 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740937
+<span class="linenos" data-linenos=" 7 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740938
+<span class="linenos" data-linenos=" 8 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740939
+<span class="linenos" data-linenos=" 9 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740940
+<span class="linenos" data-linenos="10 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740941
+<span class="linenos" data-linenos="11 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740942
+</code></pre></div>
+<p>Y si comprobamos el contenido del primero (<code>hdfs dfs -cat /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740933</code>) veremos como contiene la secuencia generada:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>0
+<span class="linenos" data-linenos="2 "></span>1
+<span class="linenos" data-linenos="3 "></span>2
+<span class="linenos" data-linenos="4 "></span>3
+<span class="linenos" data-linenos="5 "></span>...
+</code></pre></div>
+<h2 id="caso-3b-de-netcat-a-hdfs">Caso 3b - De Netcat a HDFS<a class="headerlink" href="#caso-3b-de-netcat-a-hdfs" title="Permanent link">&para;</a></h2>
+<p>Ahora vamos a crear otro ejemplo de generación de información, pero esta vez, en vez de utilizar la memoria del servidor como canal, vamos a utilizar el sistema de archivos. Además, para generar la información nos basamos en una fuente <a href="https://flume.apache.org/FlumeUserGuide.html#netcat-tcp-source">Netcat</a>, en la cual debemos especificar un puerto de escucha. Mediante esta fuente, <em>Flume</em> quedará a la escucha en dicho puerto y recibirá cada línea introducida como un evento individual que transferirá al canal especificado.</p>
+<p>En este caso, vamos a utilizar un canal de tipo fichero para hacer los eventos durables, de manera que si se cayese <em>Flume</em> a mitad de una operación, no se perderían los datos, y al volver a funcionar, el agente finalizará la ingesta.</p>
+<p>En el mismo directorio <code>$FLUME_HOME\conf</code>, creamos un nuevo fichero con el nombre <code>netcat.conf</code> y creamos otro agente que se va a encargar de generar información:</p>
+<div class="highlight"><span class="filename">netcat.conf</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Nombramos a los componentes del agente</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="na">NetcatAgent.sources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Netcat</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="na">NetcatAgent.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">FileChannel</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="na">NetcatAgent.sinks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">HdfsSink</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># Describimos el origen netcat en localhost:44444</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="na">NetcatAgent.sources.Netcat.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">netcat</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="na">NetcatAgent.sources.Netcat.bind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="na">NetcatAgent.sources.Netcat.port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">44444</span>
+<span class="linenos" data-linenos="10 "></span><span class="na">NetcatAgent.sources.Netcat.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">FileChannel</span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span><span class="c1"># Describimos el destino en HDFS</span>
+<span class="linenos" data-linenos="13 "></span><span class="na">NetcatAgent.sinks.HdfsSink.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hdfs</span>
+<span class="linenos" data-linenos="14 "></span><span class="na">NetcatAgent.sinks.HdfsSink.hdfs.path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hdfs://iabd-virtualbox:9000/user/iabd/flume/net_data/</span>
+<span class="linenos" data-linenos="15 "></span><span class="na">NetcatAgent.sinks.HdfsSink.hdfs.writeFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Text</span>
+<span class="linenos" data-linenos="16 "></span><span class="na">NetcatAgent.sinks.HdfsSink.hdfs.fileType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">DataStream</span>
+<span class="linenos" data-linenos="17 "></span><span class="na">NetcatAgent.sinks.HdfsSink.channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">FileChannel</span>
+<span class="linenos" data-linenos="18 "></span>
+<span class="linenos" data-linenos="19 "></span><span class="c1"># Unimos el origen y el destino a través del canal de fichero</span>
+<span class="linenos" data-linenos="20 "></span><span class="na">NetcatAgent.channels.FileChannel.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">file</span>
+<span class="linenos" data-linenos="21 "></span><span class="na">NetcatAgent.channels.FileChannel.dataDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/iabd/flume/data</span>
+<span class="linenos" data-linenos="22 "></span><span class="na">NetcatAgent.channels.FileChannel.checkpointDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/iabd/flume/checkpoint</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Eventos, ficheros y HDFS</p>
+<p>Al trabajar con HDFS, el fichero se mantendrá abierto durante un tiempo (normalmente 30 segundos, lo podemos configurar mediante la propiedad <code>hdfs.rollInterval</code>), hasta que llegue a un determinado tamaño (por defecto 1024b, configurado <code>hdfs.rollSize</code>) o que haya escrito un determinado número de eventos (por defecto 10, configurado mediante <code>hdfs.rollCount</code>).</p>
+<p>Mientras está abierto, se renombrará con el prefijo <code>_</code> y el sufijo <code>.tmp</code>. Al finalizar alguno de los criterios, volverá a su nombre original y se cierra el fichero. </p>
+</div>
+<p>Los nuevos eventos se escribirán en un nuevo fichero.</p>
+<p>Lanzamos al agente:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./bin/flume-ng<span class="w"> </span>agent<span class="w"> </span>--conf<span class="w"> </span>./conf/<span class="w"> </span>--conf-file<span class="w"> </span>./conf/netcat.conf<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--name<span class="w"> </span>NetcatAgent<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>-Dflume.root.logger<span class="o">=</span>INFO,console
+</code></pre></div>
+<p>En una nueva pestaña introducimos el siguiente comando y escribimos</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl<span class="w"> </span>telnet://localhost:44444
+</code></pre></div>
+<p>Una vez conectados, escribimos varias frases con saltos de línea. Por cada vez que pulsamos <em>Enter</em>, nos aparecerá un <code>OK</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Probando Netcat
+<span class="linenos" data-linenos="2 "></span>OK
+<span class="linenos" data-linenos="3 "></span>Esto parece que funciona más o menos
+<span class="linenos" data-linenos="4 "></span>OK
+</code></pre></div>
+<p>A continuación, nos vamos al navegador web de HDFS (<a href="http://iabd-virtualbox:9870/explorer.html#/user/iabd/flume/net_data">http://iabd-virtualbox:9870/explorer.html#/user/iabd/flume/net_data</a>) y comprobamos que se ha creado el fichero:</p>
+<figure style="align: center">
+    <img src="images/05flume-netcat.png">
+    <figcaption>Resultado del flujo Netcat-HDFS</figcaption>
+</figure>
+
+<h2 id="caso-4-flujos-encadenados">Caso 4 - Flujos encadenados<a class="headerlink" href="#caso-4-flujos-encadenados" title="Permanent link">&para;</a></h2>
+<p>Es muy común definir un pipeline de flujos encadenados, uniendo la salida de un agente a la entrada de otro. Para ello, utilizaremos como enlace un <a href="https://flume.apache.org/FlumeUserGuide.html#avro-sink">sink</a>-<a href="https://flume.apache.org/FlumeUserGuide.html#avro-source">source</a> de tipo <em>Avro</em>. Este diseño también se conoce como flujo <em>Multi-hop</em>:</p>
+<figure style="align: center">
+    <img src="images/05flume-multi-agent.png">
+    <figcaption>Encadenando flujos</figcaption>
+</figure>
+
+<p>En este caso, vamos a crear un primer agente (<code>NetcatAvroAgent</code>) que ingeste datos desde <em>Netcat</em> y los coloque en un <em>sink</em> de tipo <em>Avro</em>. Para ello, creamos el agente <code>netcat-avro.conf</code>:</p>
+<div class="highlight"><span class="filename">netcat-avro.conf</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Nombramos a los componentes del agente</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="na">NetcatAvroAgent.sources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Netcat</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="na">NetcatAvroAgent.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">FileChannel</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="na">NetcatAvroAgent.sinks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">AvroSink</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># Describimos el origen netcat en localhost:44444</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="na">NetcatAvroAgent.sources.Netcat.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">netcat</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="na">NetcatAvroAgent.sources.Netcat.bind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="na">NetcatAvroAgent.sources.Netcat.port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">44444</span>
+<span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># Describimos el destino como Avro en localhost:10003</span>
+<span class="hll"><span class="linenos" data-linenos="12 "></span><span class="na">NetcatAvroAgent.sinks.AvroSink.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">avro</span>
+</span><span class="hll"><span class="linenos" data-linenos="13 "></span><span class="na">NetcatAvroAgent.sinks.AvroSink.hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
+</span><span class="hll"><span class="linenos" data-linenos="14 "></span><span class="na">NetcatAvroAgent.sinks.AvroSink.port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10003</span>
+</span><span class="linenos" data-linenos="15 "></span>
+<span class="linenos" data-linenos="16 "></span><span class="c1"># Unimos el origen y el destino a través del canal de fichero</span>
+<span class="linenos" data-linenos="17 "></span><span class="na">NetcatAvroAgent.sources.Netcat.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">FileChannel</span>
+<span class="linenos" data-linenos="18 "></span><span class="na">NetcatAvroAgent.sinks.AvroSink.channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">FileChannel</span>
+<span class="linenos" data-linenos="19 "></span><span class="na">NetcatAvroAgent.channels.FileChannel.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">file</span>
+<span class="linenos" data-linenos="20 "></span><span class="na">NetcatAvroAgent.channels.FileChannel.dataDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/iabd/flume/data</span>
+<span class="linenos" data-linenos="21 "></span><span class="na">NetcatAvroAgent.channels.FileChannel.checkpointDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/iabd/flume/checkpoint</span>
+</code></pre></div>
+<p>A continuación, creamos un segundo agente (<code>AvroHdfsAgent</code>) que utilice como fuente <em>Avro</em> capturando los datos desde el mismo host y puerto que el <em>sink</em> anterior, y que almacene los eventos recibidos en HDFS. Para ello, creamos el agente <code>avro-hdfs.conf</code>:</p>
+<div class="highlight"><span class="filename">avro-hdfs.conf</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Nombramos a los componentes del agente</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="na">AvroHdfsAgent.sources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">AvroSource</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="na">AvroHdfsAgent.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="na">AvroHdfsAgent.sinks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">HdfsSink</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># Describimos el origen como Avro en localhost:10003</span>
+<span class="hll"><span class="linenos" data-linenos=" 7 "></span><span class="na">AvroHdfsAgent.sources.AvroSource.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">avro</span>
+</span><span class="hll"><span class="linenos" data-linenos=" 8 "></span><span class="na">AvroHdfsAgent.sources.AvroSource.bind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
+</span><span class="hll"><span class="linenos" data-linenos=" 9 "></span><span class="na">AvroHdfsAgent.sources.AvroSource.port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10003</span>
+</span><span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># Describimos el destino HDFS </span>
+<span class="linenos" data-linenos="12 "></span><span class="na">AvroHdfsAgent.sinks.HdfsSink.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hdfs</span>
+<span class="linenos" data-linenos="13 "></span><span class="na">AvroHdfsAgent.sinks.HdfsSink.hdfs.path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/user/iabd/flume/avro_data/</span>
+<span class="linenos" data-linenos="14 "></span><span class="na">AvroHdfsAgent.sinks.HdfsSink.hdfs.fileType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">DataStream</span>
+<span class="linenos" data-linenos="15 "></span><span class="na">AvroHdfsAgent.sinks.HdfsSink.hdfs.writeFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Text</span>
+<span class="linenos" data-linenos="16 "></span>
+<span class="linenos" data-linenos="17 "></span><span class="c1"># Unimos el origen y el destino</span>
+<span class="linenos" data-linenos="18 "></span><span class="na">AvroHdfsAgent.sources.AvroSource.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel</span>
+<span class="linenos" data-linenos="19 "></span><span class="na">AvroHdfsAgent.sinks.HdfsSink.channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel</span>
+<span class="linenos" data-linenos="20 "></span><span class="na">AvroHdfsAgent.channels.MemChannel.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">memory</span>
+</code></pre></div>
+<p>Primero lanzamos este último agente, para que <em>Flume</em> quede a la espera de mensajes <em>Avro</em> en <code>localhost:10003</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./bin/flume-ng<span class="w"> </span>agent<span class="w"> </span>--conf<span class="w"> </span>./conf/<span class="w"> </span>--conf-file<span class="w"> </span>./conf/avro-hdfs.conf<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--name<span class="w"> </span>AvroHdfsAgent<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>-Dflume.root.logger<span class="o">=</span>INFO,console
+</code></pre></div>
+<p>Una vez ha arrancado, en nueva pestaña, lanzamos el primer agente:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./bin/flume-ng<span class="w"> </span>agent<span class="w"> </span>--conf<span class="w"> </span>./conf/<span class="w"> </span>--conf-file<span class="w"> </span>./conf/netcat-avro.conf<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--name<span class="w"> </span>NetcatAvroAgent<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>-Dflume.root.logger<span class="o">=</span>INFO,console
+</code></pre></div>
+<p>Finalmente, en otro terminal, escribimos mensajes <em>Netcat</em> accediendo a <code>curl telnet://localhost:44444</code>. Si accedéis a la carpeta <code>/user/iabd/flume/avro_data</code> en HDFS podremos comprobar cómo se van creando archivos que agrupan los mensajes enviados.</p>
+<h2 id="caso-5-flujo-multi-agente">Caso 5 - Flujo multi-agente<a class="headerlink" href="#caso-5-flujo-multi-agente" title="Permanent link">&para;</a></h2>
+<p>Para demostrar como varios agentes pueden conectarse entre sí, vamos a realizar un caso de uso donde leeremos información de tres fuentes distintas: una fuente de <em>Netcat</em> con un canal basado en ficheros, otra que realice <em>spooling</em> de una carpeta (vigila una carpeta y cuando haya algún archivo, lo ingesta y lo renombra añadiéndole el sufijo <code>COMPLETED</code>) utilizando un canal en memoria y un tercero que ejecute un comando utilizando también un canal en memoria.</p>
+<p>Como agente de consolidación que una la información de las tres fuentes de datos, vamos a reutilizar el agente <em>AvroHdfsAgent</em> que hemos creado en el caso de uso anterior.</p>
+<figure style="align: center">
+    <img src="images/05flume-consolidation.png">
+    <figcaption>Consolidando flujos</figcaption>
+</figure>
+
+<p>Para ello, vamos a definir los agentes en  siguiente fichero de configuración <code>multiagent-avro.conf</code>):</p>
+<div class="highlight"><span class="filename">multiagent-avro.conf</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Nombramos las tres fuentes con sus tres sumideros</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="na">MultiAgent.sources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Netcat Spooldir Exec</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="na">MultiAgent.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">FileChannel MemChannel1 MemChannel2</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="na">MultiAgent.sinks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">AvroSink1 AvroSink2 AvroSink3</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># Describimos el primer agente</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="na">MultiAgent.sources.Netcat.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">netcat</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="na">MultiAgent.sources.Netcat.bind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="na">MultiAgent.sources.Netcat.port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10004</span>
+<span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># Describimos el segundo agente</span>
+<span class="linenos" data-linenos="12 "></span><span class="na">MultiAgent.sources.Spooldir.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">spooldir</span>
+<span class="linenos" data-linenos="13 "></span><span class="na">MultiAgent.sources.Spooldir.spoolDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/iabd/flume/spoolDir</span>
+<span class="linenos" data-linenos="14 "></span>
+<span class="linenos" data-linenos="15 "></span><span class="c1"># Describimos el tercer agente</span>
+<span class="linenos" data-linenos="16 "></span><span class="na">MultiAgent.sources.Exec.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">exec</span>
+<span class="linenos" data-linenos="17 "></span><span class="na">MultiAgent.sources.Exec.command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cat /home/iabd/datos/empleados.txt</span>
+<span class="linenos" data-linenos="18 "></span>
+<span class="linenos" data-linenos="19 "></span><span class="c1"># Describimos los tres destinos como Avro en localhost:10003</span>
+<span class="linenos" data-linenos="20 "></span><span class="na">MultiAgent.sinks.AvroSink1.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">avro</span>
+<span class="linenos" data-linenos="21 "></span><span class="na">MultiAgent.sinks.AvroSink1.hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
+<span class="linenos" data-linenos="22 "></span><span class="na">MultiAgent.sinks.AvroSink1.port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10003</span>
+<span class="linenos" data-linenos="23 "></span>
+<span class="linenos" data-linenos="24 "></span><span class="na">MultiAgent.sinks.AvroSink2.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">avro</span>
+<span class="linenos" data-linenos="25 "></span><span class="na">MultiAgent.sinks.AvroSink2.hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
+<span class="linenos" data-linenos="26 "></span><span class="na">MultiAgent.sinks.AvroSink2.port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10003</span>
+<span class="linenos" data-linenos="27 "></span>
+<span class="linenos" data-linenos="28 "></span><span class="na">MultiAgent.sinks.AvroSink3.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">avro</span>
+<span class="linenos" data-linenos="29 "></span><span class="na">MultiAgent.sinks.AvroSink3.hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
+<span class="linenos" data-linenos="30 "></span><span class="na">MultiAgent.sinks.AvroSink3.port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10003</span>
+<span class="linenos" data-linenos="31 "></span>
+<span class="linenos" data-linenos="32 "></span><span class="c1"># Describimos los canales</span>
+<span class="linenos" data-linenos="33 "></span><span class="na">MultiAgent.channels.FileChannel.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">file</span>
+<span class="linenos" data-linenos="34 "></span><span class="na">MultiAgent.channels.FileChannel.dataDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/iabd/flume/data</span>
+<span class="linenos" data-linenos="35 "></span><span class="na">MultiAgent.channels.FileChannel.checkpointDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/iabd/flume/checkpoint</span>
+<span class="linenos" data-linenos="36 "></span><span class="na">MultiAgent.channels.MemChannel1.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">memory</span>
+<span class="linenos" data-linenos="37 "></span><span class="na">MultiAgent.channels.MemChannel2.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">memory</span>
+<span class="linenos" data-linenos="38 "></span>
+<span class="linenos" data-linenos="39 "></span><span class="c1"># Unimos los orígenes y destinos</span>
+<span class="linenos" data-linenos="40 "></span><span class="na">MultiAgent.sources.Netcat.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">FileChannel</span>
+<span class="linenos" data-linenos="41 "></span><span class="na">MultiAgent.sources.Spooldir.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel1</span>
+<span class="linenos" data-linenos="42 "></span><span class="na">MultiAgent.sources.Exec.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel2</span>
+<span class="linenos" data-linenos="43 "></span><span class="na">MultiAgent.sinks.AvroSink1.channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">FileChannel</span>
+<span class="linenos" data-linenos="44 "></span><span class="na">MultiAgent.sinks.AvroSink2.channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel1</span>
+<span class="linenos" data-linenos="45 "></span><span class="na">MultiAgent.sinks.AvroSink3.channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel2</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Preparación</p>
+<p>Antes de arrancar los agentes, asegúrate de tener creada la carpeta <code>/home/iabd/flume/spoolDir</code> y disponible el recurso <code>/home/iabd/datos/empleados.txt</code>.</p>
+</div>
+<p>Igual que en el caso de uso anterior, primero lanzamos el agente consolidador para que <em>Flume</em> quede a la espera de mensajes <em>Avro</em> en <code>localhost:10003</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./bin/flume-ng<span class="w"> </span>agent<span class="w"> </span>--conf<span class="w"> </span>./conf/<span class="w"> </span>--conf-file<span class="w"> </span>./conf/avro-hdfs.conf<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--name<span class="w"> </span>AvroHdfsAgent<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>-Dflume.root.logger<span class="o">=</span>INFO,console
+</code></pre></div>
+<p>Una vez ha arrancado, en una nueva pestaña, lanzamos el multi agente:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./bin/flume-ng<span class="w"> </span>agent<span class="w"> </span>--conf<span class="w"> </span>./conf/<span class="w"> </span>--conf-file<span class="w"> </span>./conf/multiagent-avro.conf<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--name<span class="w"> </span>MultiAgent<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>-Dflume.root.logger<span class="o">=</span>INFO,console
+</code></pre></div>
+<div class="admonition help">
+<p class="admonition-title">Interceptores</p>
+<p>Podemos utilizar interceptores para modificar o borrar eventos al vuelo a partir del <em>timestamp</em>, nombre del <em>host</em>, <em>uuid</em>, etc... incluso mediante el uso de una expresión regular.
+Si quieres profundizar en el tema, el siguiente artículo detalla los diferentes tipos y configuraciones:
+<a href="https://data-flair.training/blogs/flume-interceptors/">https://data-flair.training/blogs/flume-interceptors/</a></p>
+</div>
+<p>En este caso, para poder probarlo, además de enviar comandos <em>Netstat</em> en <code>curl telnet://localhost:10004</code>, prueba a colocar un archivo de texto (por ejemplo, un documento CSV) en <code>/home/iabd/flume/spoolDir</code>.</p>
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Página oficial de <a href="https://flume.apache.org/">Flume</a></li>
+<li><a href="https://flume.apache.org/FlumeUserGuide.html">Flume User Guide</a></li>
+</ul>
+<h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Preparación MariaBD</p>
+<p>Para estos actividades y futuras sesiones, vamos a utilizar una base de datos (<em>retail_db</em>) que contiene información sobre un comercio (clientes, productos, pedidos, etc...).</p>
+<p>Para ello, descargaremos el archivo <a href="resources/create_db.sql">create_db.sql</a> con las sentencias para crear la base de datos y los datos como instrucciones SQL.</p>
+<p>Tras ello, si nos conectamos a <em>MariaDB</em> (<code>mariadb -u iabd -p</code>) desde la misma carpeta que hemos descargado el archivo, ejecutaremos los siguientes comando:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">create</span><span class="w"> </span><span class="k">database</span><span class="w"> </span><span class="n">retail_db</span><span class="p">;</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">use</span><span class="w"> </span><span class="n">retail_db</span><span class="p">;</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">source</span><span class="w"> </span><span class="n">create_db</span><span class="p">.</span><span class="k">sql</span><span class="p">;</span>
+<span class="linenos" data-linenos="4 "></span><span class="k">show</span><span class="w"> </span><span class="n">tables</span><span class="p">;</span>
+</code></pre></div>
+</div>
+<ol>
+<li>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RA5074.3</abbr> / <abbr title="Se han extraído y almacenado datos de diversas fuentes, para ser tratados en distintos escenarios.">CE4.3a</abbr> y <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CE4.3b</abbr> / 2p) Mediante <em>Flume</em>, realiza los caso de uso 3, 4 y 5.</p>
+</li>
+<li>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RA5074.3</abbr> / <abbr title="Se han extraído y almacenado datos de diversas fuentes, para ser tratados en distintos escenarios.">CE4.3a</abbr>, <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CE4.3b</abbr> y <abbr title="Se ha comprobado que la revolución digital exige poder almacenar y procesar ingentes cantidades de datos de distinto tipo y descubrir su valor.">CE4.3c</abbr> / 1p) Haciendo uso de Flume, recupera información de Twitter y almacénala en HDFS. Para ello, utiliza el <a href="https://flume.apache.org/FlumeUserGuide.html#twitter-1-firehose-source-experimental">Twitter 1% Firehouse source</a> y el <a href="https://flume.apache.org/FlumeUserGuide.html#hdfs-sink">HDFS sink</a>.</p>
+<p>Para ello, necesitaréis las claves de desarrollo de <em>Twitter</em>. Adjunta una captura de pantalla donde se visualice el contenido de uno de los bloques de HDFS.</p>
+<div class="admonition tip">
+<p class="admonition-title">Cuidado con el espacio de almacenamiento</p>
+<p>Una vez lances el agente, páralo a los tres segundos para no llenar de datos HDFS.</p>
+</div>
+<p><em>Cloudera</em> tiene su propia librería para acceder a <em>Twitter</em> donde podemos configurar qué mensajes descargar. Puedes consultar un ejemplo completo <a href="https://github.com/cloudera/cdh-twitter-example">aquí</a>.</p>
+</li>
+</ol>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Volver al principio
+          </button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="sqoop.html" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Sqoop" rel="prev">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Sqoop
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="hive.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Hive" rel="next">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Hive
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2023-2024 Aitor Medrano - Licencia CC BY-NC-SA
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/aitormedrano" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:<a.medrano@edu.gva.es>" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l217.6 163.2c11.4 8.5 27 8.5 38.4 0l217.6-163.2c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48H48zM0 176v208c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V176L294.4 339.2a63.9 63.9 0 0 1-76.8 0L0 176z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+
+
+  
+
+
+<h4>Consentimiento de cookie</h4>
+<p>Esta página de apuntes utiliza cookies para reconocer las visitas, medir la efectividad de la documentación y averiguar si encuentras aquello que buscas o cómo has llegado a estos apuntes. Con tu consentimiento, me ayudas a mejorar estos materiales.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Aceptar</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Gestionar cookies</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.dfff1995.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.dff1b7c8.min.js"></script>
+      
+    
+  </body>
+</html>
