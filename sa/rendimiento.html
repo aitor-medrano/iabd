@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.3">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.2">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.79e020e9.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.d451bc0e.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.a5377069.min.css">
@@ -511,8 +511,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#arrays-e-indices-multiclave" class="md-nav__link">
-    Arrays e índices Multiclave
+  <a href="#multiclave" class="md-nav__link">
+    Multiclave
   </a>
   
 </li>
@@ -1346,8 +1346,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#arrays-e-indices-multiclave" class="md-nav__link">
-    Arrays e índices Multiclave
+  <a href="#multiclave" class="md-nav__link">
+    Multiclave
   </a>
   
 </li>
@@ -1952,7 +1952,8 @@
 <span class="linenos" data-linenos="92 "></span><span class="w">  </span><span class="p">}</span>
 </code></pre></div>
 <p>Podemos observar como ahora sólo examina una única clave y un documento, utilizando el índice <code>student_id_1_class_id_1</code>, y que rechaza emplear los índices simples, ya sea el del estudiante como el de la clase.</p>
-<p>Es importante destacar que el orden de los índices importa, y mucho. Si hacemos una consulta que sólo utilice el atributo <code>class_id</code>, el índice compuesto <em>no</em> se va a utilizar. Pero volviendo al índice creado, si hacemos una consulta por ambos campos, da igual el orden que utilizamos en la búsqueda que siempre va a utilizar el índice. Esto es, las siguientes consultas van a utilizar el mismo índice <code>student_id_1_class_id_1</code>:</p>
+<p>Es importante destacar que en los índices compuestos, el orden de los índices importa, y mucho. Si hacemos una consulta que sólo utilice el atributo <code>class_id</code>, el índice compuesto <em>no</em> se va a utilizar, ya que los identificadores de clases realmente son índices secundarios a partir del identificador del estudiante, y localizar una clase implicaría volver a recorrer todos los estudiantes.</p>
+<p>Pero volviendo al índice creado, si hacemos una consulta por ambos campos, da igual el orden que utilizamos en la búsqueda que siempre va a utilizar el índice. Esto es, las siguientes consultas van a utilizar el mismo índice <code>student_id_1_class_id_1</code>, ya que el orden de los campos en la consulta no importa:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="err">db.grades.</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">d(</span><span class="p">{</span><span class="nt">&quot;student_id&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;class_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">}</span><span class="err">)</span>
 <span class="linenos" data-linenos="2 "></span><span class="err">db.grades.</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">d(</span><span class="p">{</span><span class="nt">&quot;class_id&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;student_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span><span class="err">)</span>
 </code></pre></div>
@@ -2098,24 +2099,68 @@
 </div>
 </div>
 </div>
-<h3 id="arrays-e-indices-multiclave">Arrays e índices Multiclave<a class="headerlink" href="#arrays-e-indices-multiclave" title="Permanent link">&para;</a></h3>
+<h3 id="multiclave">Multiclave<a class="headerlink" href="#multiclave" title="Permanent link">&para;</a></h3>
+<div class="admonition info">
+<p class="admonition-title">Preparando los ejemplos</p>
+<p>Para los ejemplos con arrays vamos a trabajar con la colección de mensajes de un blog almacenada en la colección <code>sample_training.posts</code>. Un ejemplo de mensaje sería:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;50ab0f8bbcf1bfe2536dc40e&quot;</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="nt">&quot;body&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Four score and seven years ago our fathers brought forth on this continent a new nation...&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="nt">&quot;permalink&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;aBkusYpZxvbvJkgGjTDv&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">  </span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;machine&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Gettysburg Address&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">  </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="s2">&quot;season&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;rest&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;viola&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;saudi arabia&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;difference&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="s2">&quot;computer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;humor&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;valley&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;scene&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;jute&quot;</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">  </span><span class="p">],</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">  </span><span class="nt">&quot;comments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="p">{</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">      </span><span class="nt">&quot;body&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Lorem ipsum dolor sit amet...&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">      </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bONSPozL@irpkmUiT.com&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">      </span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Flora Duell&quot;</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">    </span><span class="p">},</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">    </span><span class="err">...</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">  </span><span class="p">],</span>
+<span class="linenos" data-linenos="21 "></span><span class="w">  </span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="22 "></span><span class="w">    </span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-11-20T05:05:15.264Z&quot;</span>
+<span class="linenos" data-linenos="23 "></span><span class="w">  </span><span class="p">}</span>
+<span class="linenos" data-linenos="24 "></span><span class="p">}</span><span class="w">    </span>
+</code></pre></div>
+</div>
 <p>Por supuesto, podemos crear índices sobre propiedades que forman parte de un array. Así pues, podemos crear un índice sobre el autor de los comentarios mediante:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="nx">comments</span><span class="p">.</span><span class="nx">author</span><span class="o">:</span><span class="mf">1</span><span class="p">}</span><span class="w"> </span><span class="p">)</span>
 </code></pre></div>
 <p>Pero además también podemos crear un índice sobre todas las etiquetas, lo cual indexa cada elemento del array, con lo que podemos buscar por cualquier objeto del array. Este tipo de índices se conocen como <strong>multiclave</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="nx">tags</span><span class="o">:</span><span class="mf">1</span><span class="p">}</span><span class="w"> </span><span class="p">)</span>
 </code></pre></div>
-<p>Cuando se indexa una propiedad que es un array se crea un índice multiclave para todos los valores del array de todos los documentos. Internamente, está creando un índice simple para cada uno de los valores. El uso de estos índices son lo que hacen que las consultas sobre documentos embebidos funcionen tan rápido.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="err">db.pos</span><span class="kc">ts</span><span class="err">.</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">d(</span><span class="p">{</span><span class="nt">&quot;tags&quot;</span><span class="p">:{</span><span class="nt">&quot;$all&quot;</span><span class="p">:[</span><span class="s2">&quot;math&quot;</span><span class="p">,</span><span class="s2">&quot;action&quot;</span><span class="p">]}}</span><span class="err">)</span>
+<p>Cuando se indexa una propiedad que es un array, se crea un índice multiclave para todos los valores del array de todos los documentos. Internamente, está creando un índice simple para cada uno de los valores. El uso de estos índices son lo que hacen que las consultas sobre documentos embebidos funcionen tan rápido.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="err">db.pos</span><span class="kc">ts</span><span class="err">.</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">d(</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;$all&quot;</span><span class="p">:[</span><span class="s2">&quot;computer&quot;</span><span class="p">,</span><span class="s2">&quot;humor&quot;</span><span class="p">]}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="err">)</span>
 </code></pre></div>
-<p>Es importante destacar que sólo se pueden crear índices compuestos multiclave cuando únicamente una de las propiedades del índice compuesto es un array; es decir, no puede haber dos propiedades array en un índice compuesto, ya que provocaría un producto cartesiano y su rendimiento no sería escalable. Hay que tener cuidado ya que no se va a quejar al crearlo, solo al insertar, porque no va a poder indexar arrays paralelos.</p>
+<p>Es importante destacar que sólo se pueden crear índices compuestos multiclave cuando únicamente una de las propiedades del índice compuesto es un array; es decir, no puede haber dos propiedades array en un índice compuesto, ya que provocaría un producto cartesiano y su rendimiento no sería escalable.</p>
 <h3 id="otros-tipos-de-indices">Otros tipos de índices<a class="headerlink" href="#otros-tipos-de-indices" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Geoespaciales, para trabajar con coordenadas: <a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-geospatial/">https://www.mongodb.com/docs/manual/core/indexes/index-types/index-geospatial/</a></li>
-<li>De texto, para realizar búsquedas dentro de un campo: <a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-text/">https://www.mongodb.com/docs/manual/core/indexes/index-types/index-text/</a></li>
-<li>Comodín (<em>wildcards</em>) (curso MongoDB Performance, poner un par de párrafos) <a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-wildcard/">https://www.mongodb.com/docs/manual/core/indexes/index-types/index-wildcard/</a></li>
-<li>Hash, centrado en el uso de sharding: <a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-hashed/">https://www.mongodb.com/docs/manual/core/indexes/index-types/index-hashed/</a></li>
+<li>
+<p>De <a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-text/">texto</a>, para realizar búsquedas dentro de un campo:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">({</span><span class="s2">&quot;body&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">})</span>
+<span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">({</span><span class="s2">&quot;body&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">default_language</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;english&quot;</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="c1">// o spanish</span>
+</code></pre></div>
+<p>Pudiendo realizar búsquedas con el operador <a href="https://www.mongodb.com/docs/manual/reference/operator/query/text/"><code>$text</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">$text</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">$search</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;seven&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">})</span>
+</code></pre></div>
+<p>Estos índices también pueden ser compuestos, sensibles o no a las mayúsculas, permitiendo delimitar los <em>tokenizadores</em>, el idioma, así como asignar diferente peso a cada campo del índice.</p>
+</li>
+<li>
+<p>Comodín (<em>wildcards</em>) (curso MongoDB Performance, poner un par de párrafos) <a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-wildcard/">https://www.mongodb.com/docs/manual/core/indexes/index-types/index-wildcard/</a></p>
+</li>
+<li>Hash, centrado en el uso de sharding: <a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-hashed/">https://www.mongodb.com/docs/manual/core/indexes/index-types/index-hashed/</a>
+https://learning.oreilly.com/library/view/mastering-mongodb-6-x/9781803243863/B18155_08.xhtml#:-:text=Hashed%20indexes</li>
+<li>TTL: </li>
+<li>Únicos:</li>
 </ul>
+<p>FIXME: aqui hashed indexes</p>
 <h3 id="manejando-indices">Manejando índices<a class="headerlink" href="#manejando-indices" title="Permanent link">&para;</a></h3>
 <p>Toda la información relativa a los índices creados se almacenan en la colección <code>system.indexes</code>, la cual podremos consultar.</p>
 <p>Además, también podemos obtener los índices de una determinada colección mediante el método <code>getIndexes()</code>.</p>
@@ -2363,10 +2408,10 @@ db.listingsAndReviews.find({"property_type":"Apartment"}).sort("minimun_nights")
         </div>
         
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
-  Volver al principio
-</button>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Volver al principio
+          </button>
         
       </main>
       
@@ -2460,7 +2505,6 @@ db.listingsAndReviews.find({"property_type":"Apartment"}).sort("minimun_nights")
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    
       <div class="md-consent" data-md-component="consent" id="__consent" hidden>
         <div class="md-consent__overlay"></div>
         <aside class="md-consent__inner">
@@ -2521,7 +2565,7 @@ db.listingsAndReviews.find({"property_type":"Apartment"}).sort("minimun_nights")
     <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.a264c092.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.6eac0284.min.js"></script>
+      <script src="../assets/javascripts/bundle.726fbb30.min.js"></script>
       
     
   </body>
