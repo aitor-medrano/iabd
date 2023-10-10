@@ -511,6 +511,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#unicos" class="md-nav__link">
+    Únicos
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#multiclave" class="md-nav__link">
     Multiclave
   </a>
@@ -527,13 +534,6 @@
           <li class="md-nav__item">
   <a href="#manejando-indices" class="md-nav__link">
     Manejando índices
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rendimiento_1" class="md-nav__link">
-    Rendimiento
   </a>
   
 </li>
@@ -1346,6 +1346,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#unicos" class="md-nav__link">
+    Únicos
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#multiclave" class="md-nav__link">
     Multiclave
   </a>
@@ -1362,13 +1369,6 @@
           <li class="md-nav__item">
   <a href="#manejando-indices" class="md-nav__link">
     Manejando índices
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rendimiento_1" class="md-nav__link">
-    Rendimiento
   </a>
   
 </li>
@@ -1426,6 +1426,7 @@
 <h2 id="indices">Índices<a class="headerlink" href="#indices" title="Permanent link">&para;</a></h2>
 <p>Los índices son una parte importante de la gestión de bases de datos. Un índice en una base de datos es similar a un índice de un libro; permite saltar directamente a la parte del libro en vez de tener que pasar las páginas buscando el tema o la palabra que nos interesa.</p>
 <p>En el caso de <em>MongoDB</em>, un <a href="https://www.mongodb.com/docs/manual/indexes/">índice</a> es una estructura de datos que almacena información sobre los valores de determinados campos de los documentos de una colección. Esta estructura permite recorrer los datos y ordenarlos de manera muy rápida. Así pues, los índices se utilizan tanto al buscar un documento como al ordenar los datos de una consulta.</p>
+<p>Como idea base, emplear índices mejora el rendimiento de las consultas.</p>
 <p>Cuando una colección no contiene un índice, al buscar un documento, se realizará una escaneo de toda la colección, lo que se conoce como un <em>collection scan</em>, operación que tiene una complejidad lineal <code>O(N)</code>, ya que la búsqueda de un documento es proporcional a la cantidad de documentos de la colección.</p>
 <div class="admonition info">
 <p class="admonition-title">Preparando los ejemplos</p>
@@ -2015,7 +2016,7 @@
 <span class="linenos" data-linenos="3 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">partialFilterExpression</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;pop&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">$gte</span><span class="o">:</span><span class="w"> </span><span class="mf">5000</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="linenos" data-linenos="4 "></span><span class="p">)</span>
 </code></pre></div>
-<p>Sólo se empleará el índice cuando hagamos una consulta sobre dichos campos y obtengamos un subconjunto de los datos almacenados. Por ejemplo:</p>
+<p>Sólo se empleará el índice cuando hagamos una consulta sobre dichos campos y obtengamos un subconjunto de los datos almacenados (la condición debe ser tan o más restrictiva que la de la definición del índice). Por ejemplo:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">zips</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s2">&quot;state&quot;</span><span class="o">:</span><span class="s2">&quot;AL&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1">// No emplea el índice, no utiliza el filtro</span>
 <span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">zips</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s2">&quot;state&quot;</span><span class="o">:</span><span class="s2">&quot;AL&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;pop&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">$lt</span><span class="o">:</span><span class="w"> </span><span class="mf">4000</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="c1">// No emplea el índice, ya que no cumple el filtr</span>
 <span class="linenos" data-linenos="3 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">zips</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s2">&quot;state&quot;</span><span class="o">:</span><span class="s2">&quot;AL&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;pop&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">$gt</span><span class="o">:</span><span class="w"> </span><span class="mf">6500</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="c1">// Sí emplea el filtro</span>
@@ -2063,6 +2064,7 @@
 <span class="linenos" data-linenos="40 "></span><span class="w">    </span><span class="nx">ok</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
 <span class="linenos" data-linenos="41 "></span><span class="w">  </span><span class="p">}</span>
 </code></pre></div>
+<p>La ventaja de utilizar índices parciales es que son más ligeros en su creación y mantenimiento y utilizan menos espacio que un índice sobre todos los posibles valores.</p>
 <h4 id="dispersos">Dispersos<a class="headerlink" href="#dispersos" title="Permanent link">&para;</a></h4>
 <p>Un tipo especial de índice parcial son los índices dispersos (<a href="https://www.mongodb.com/docs/manual/core/index-sparse/"><em>sparse</em></a>), los cuales únicamente indexan aquellos documentos que tienen el campo (incluso con valor nulo), saltando aquellos donde el campo no existe.</p>
 <p>Así pues, estas dos sentencias son equivalentes:</p>
@@ -2072,33 +2074,49 @@
 <div class="admonition question">
 <p class="admonition-title">Autoevaluación</p>
 <p>Suponemos que tenemos los siguientes documentos en una colección llamada 'people' con los siguientes documentos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">people</span><span class="p">.</span><span class="nx">find</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">iabd</span><span class="p">.</span><span class="nx">find</span><span class="p">()</span>
 <span class="linenos" data-linenos="2 "></span><span class="o">&lt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;_id&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&quot;50a464fb0a9dfcc4f19d6271&quot;</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;nombre&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Andreu&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;cargo&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Técnico&quot;</span><span class="w"> </span><span class="p">}</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;_id&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&quot;50a4650c0a9dfcc4f19d6272&quot;</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;nombre&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Aitor&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;cargo&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;CEO&quot;</span><span class="w"> </span><span class="p">}</span>
 <span class="linenos" data-linenos="4 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;_id&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&quot;50a465280a9dfcc4f19d6273&quot;</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;nombre&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Marina&quot;</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 <p>Y hay un índice definido del siguiente modo:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">people</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">({</span><span class="nx">cargo</span><span class="o">:</span><span class="mf">1</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nx">sparse</span><span class="o">:</span><span class="mf">1</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">iabd</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">({</span><span class="nx">cargo</span><span class="o">:</span><span class="mf">1</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nx">sparse</span><span class="o">:</span><span class="mf">1</span><span class="p">})</span>
 </code></pre></div>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Enunciado</label><label for="__tabbed_2_2">Solución</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Si realizamos la siguiente consulta, ¿Qué documentos aparecerán y por qué?</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">people</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">cargo</span><span class="o">:</span><span class="kc">null</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">iabd</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">cargo</span><span class="o">:</span><span class="kc">null</span><span class="p">})</span>
 </code></pre></div>
 <ul>
 <li>Ningún documento, ya que la consulta utiliza el índice y no puede haber documentos que no contengan el campo <code>cargo</code></li>
 <li>Ningún documento, ya que la consulta de <code>cargo:null</code> sólo encuentra documentos que de manera explícita tienen el cargo a nulo, independientemente del índice.</li>
-<li>El documento de Marina, ya que la consulta no utilizará el índice</li>
+<li>El documento de <code>Marina</code>, ya que la consulta no utilizará el índice</li>
 <li>Todos los documentos de la colección, ya que todos cumplen que <code>cargo:null</code></li>
 </ul>
 </div>
 <div class="tabbed-block">
-<p>El documento de Marina, ya que el índice no se ejecutará sobre este documento.</p>
+<p>El documento de <code>Marina</code>, ya que el índice no se ejecutará sobre este documento.</p>
 </div>
 </div>
 </div>
 </div>
+<h3 id="unicos">Únicos<a class="headerlink" href="#unicos" title="Permanent link">&para;</a></h3>
+<p>Un índice único es similar al que creamos en cualquier sistema gestor de bases datos, prohibiendo valores duplicados para el campo indexado. <em>MongoDB</em>, por defecto, crea un índice único en el campo <code>_id</code> para cada colección.</p>
+<p>Por ejemplo, para la colección <code>zips</code> si queremos asegurarnos que no hay dos <code>zip</code> repetidos podemos hacer:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">zips</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;zip&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">unique</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+<p>Además, una vez creado el índice, no permitirá insertar valores duplicados.</p>
+<p>En un índice compuesto, la univocidad se realiza entre las combinaciones de valores de todos los campos del índices. Por ejemplo, las siguientes operaciones no violan el índice único, ya que las combinaciones de <code>nombre</code> y <code>cargo</code> no se repiten:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="err">&gt;</span><span class="w"> </span><span class="err">db.iabd.crea</span><span class="kc">te</span><span class="err">I</span><span class="kc">n</span><span class="err">dex(</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cargo&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">u</span><span class="kc">n</span><span class="err">ique</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="err">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="err">&gt;</span><span class="w"> </span><span class="err">db.iabd.i</span><span class="kc">nsert</span><span class="err">(</span><span class="p">{</span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Marina&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cargo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Técnico&quot;</span><span class="p">}</span><span class="err">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="err">&gt;</span><span class="w"> </span><span class="err">db.iabd.i</span><span class="kc">nsert</span><span class="err">(</span><span class="p">{</span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Marina&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cargo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CEO&quot;</span><span class="p">}</span><span class="err">)</span>
+</code></pre></div>
+<div class="admonition caution">
+<p class="admonition-title">Datos duplicados</p>
+<p>Si ya tenemos una colección con datos duplicados, <em>MongoDB</em> no nos va a dejar crear un índice único</p>
+</div>
+<p>¿Y qué sucede si insertamos un documento que no contiene el campo indexado? Pues el primero que insertemos, funcionará. Pero si insertamos un segundo documento, no lo insertará, ya que <em>MongoDB</em> almacenará como nulo el valor del primer documento, y para el segundo, se quejará que ya existe uno con dicho valor.</p>
 <h3 id="multiclave">Multiclave<a class="headerlink" href="#multiclave" title="Permanent link">&para;</a></h3>
 <div class="admonition info">
 <p class="admonition-title">Preparando los ejemplos</p>
@@ -2141,7 +2159,9 @@
 <p>Es importante destacar que sólo se pueden crear índices compuestos multiclave cuando únicamente una de las propiedades del índice compuesto es un array; es decir, no puede haber dos propiedades array en un índice compuesto, ya que provocaría un producto cartesiano y su rendimiento no sería escalable.</p>
 <h3 id="otros-tipos-de-indices">Otros tipos de índices<a class="headerlink" href="#otros-tipos-de-indices" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Geoespaciales, para trabajar con coordenadas: <a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-geospatial/">https://www.mongodb.com/docs/manual/core/indexes/index-types/index-geospatial/</a></li>
+<li>
+<p><a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-geospatial">Geoespaciales</a>, para trabajar con coordenadas.</p>
+</li>
 <li>
 <p>De <a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-text/">texto</a>, para realizar búsquedas dentro de un campo:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">({</span><span class="s2">&quot;body&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">})</span>
@@ -2153,85 +2173,73 @@
 <p>Estos índices también pueden ser compuestos, sensibles o no a las mayúsculas, permitiendo delimitar los <em>tokenizadores</em>, el idioma, así como asignar diferente peso a cada campo del índice.</p>
 </li>
 <li>
-<p>Comodín (<em>wildcards</em>) (curso MongoDB Performance, poner un par de párrafos) <a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-wildcard/">https://www.mongodb.com/docs/manual/core/indexes/index-types/index-wildcard/</a></p>
+<p><a href="https://www.mongodb.com/docs/manual/core/index-case-insensitive/">Insensibles a las mayúsculas</a> (<em>case insensitivity</em>): permiten la realización de consultas que realizan comparaciones de cadena sin tener en cuenta las mayúsculas. Para ello, emplearemos el parámetro <a href="https://www.mongodb.com/docs/manual/reference/collation"><code>collation</code></a>, indicando el idioma mediante <code>locale</code> y el nivel de comparación con <code>strength</code> (por ejemplo, si queremos que ignore las tildes, diéresis, etc...):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nx">collation</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">locale</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;en&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">strength</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="w"> </span><span class="p">}}</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
 </li>
-<li>Hash, centrado en el uso de sharding: <a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-hashed/">https://www.mongodb.com/docs/manual/core/indexes/index-types/index-hashed/</a>
-https://learning.oreilly.com/library/view/mastering-mongodb-6-x/9781803243863/B18155_08.xhtml#:-:text=Hashed%20indexes</li>
-<li>TTL: </li>
-<li>Únicos:</li>
+<li>
+<p><a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-wildcard/">Comodín</a> (<em>wildcards</em>) para crear índices sobre campos cuyos nombres pueden cambiar dentro de una colección, permitiendo realizar consultas indexadas en un conjunto de campos desconocido.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;$**&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;comments.$**&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+</li>
+<li>
+<p><a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-hashed">Hash</a>, centrado en el uso de <em>sharding</em>.</p>
+</li>
+<li>
+<p><a href="https://www.mongodb.com/docs/manual/core/index-ttl">TTL</a> (<em>Time-to-live</em>): utilizados para eliminar los documentos pasados un determinado tiempo.
+    Por ejemplo, si queremos que se eliminen los posts que tienen más de un año de duración (3600 * 24 * 365 = 31536000) haríamos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="err">db.pos</span><span class="kc">ts</span><span class="err">.crea</span><span class="kc">te</span><span class="err">I</span><span class="kc">n</span><span class="err">dex(</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">da</span><span class="kc">te</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">expireA</span><span class="kc">fter</span><span class="err">Seco</span><span class="kc">n</span><span class="err">ds</span><span class="p">:</span><span class="w"> </span><span class="mi">31536000</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="err">)</span>
+</code></pre></div>
+</li>
 </ul>
-<p>FIXME: aqui hashed indexes</p>
 <h3 id="manejando-indices">Manejando índices<a class="headerlink" href="#manejando-indices" title="Permanent link">&para;</a></h3>
-<p>Toda la información relativa a los índices creados se almacenan en la colección <code>system.indexes</code>, la cual podremos consultar.</p>
-<p>Además, también podemos obtener los índices de una determinada colección mediante el método <code>getIndexes()</code>.</p>
-<p>Al crear un índice también podemos pasarle algunas opciones como segundo parámetro, como por ejemplo, <code>unique:true</code>, para sólo permitir valores únicos en el campo. Además, no puede haber valores repetidos y una vez creado no permitirá insertar valores duplicados.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">zips</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="nx">zip</span><span class="o">:</span><span class="mf">1</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nx">unique</span><span class="o">:</span><span class="mf">1</span><span class="p">}</span><span class="w"> </span><span class="p">)</span>
+<p>FIXME:
+https://learning.oreilly.com/library/view/mastering-mongodb-6-x/9781803243863/B18155_08.xhtml#:-:text=Managing%20indexes</p>
+<p>En versiones previas a la 4.4, los índices se podían <a href="https://docs.mongodb.org/manual/core/index-creation">crear</a> en <em>foreground</em>, de manera que al crear un índice se bloqueaban a todos los <em>writers</em> o en modo <em>background</em> que no penalizaba las escrituras pero tardaba más.</p>
+<p>Actualmente, se utiliza un mecanismo optimizado el cual es el método por defecto.</p>
+<p>Una vez creados los índices, podemos consultar los índices de una determinada colección mediante el método <a href="https://www.mongodb.com/docs/manual/reference/method/db.collection.getIndexes/"><code>getIndexes()</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">getIndexes</span><span class="p">()</span><span class="w"> </span><span class="c1">// muestra los índices de la colección grades</span>
 </code></pre></div>
-<p>Finalmente, para borrar un índice emplearemos el método <code>dropIndex(atributo)</code>.</p>
-<p>En resumen, algunas de las operaciones relacionadas con los índices más importantes son:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">system</span><span class="p">.</span><span class="nx">indexes</span><span class="p">.</span><span class="nx">find</span><span class="p">()</span><span class="w"> </span><span class="c1">// muestra los índices existentes</span>
-<span class="linenos" data-linenos="2 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">getIndexes</span><span class="p">()</span><span class="w"> </span><span class="c1">// muestra los índices de la colección grades</span>
-<span class="linenos" data-linenos="3 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">dropIndex</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;student_id&quot;</span><span class="o">:</span><span class="mf">1</span><span class="p">}</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="c1">// borra el índice que existe sobre la propiedad student_id</span>
+<p>Si vemos que no usamos un índice o que su rendimiento es peor, podemos borrarlo empleando el método <a href="https://www.mongodb.com/docs/manual/reference/method/db.collection.dropIndex"><code>dropIndex(atributo)</code></a>:.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">dropIndex</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;student_id&quot;</span><span class="o">:</span><span class="mf">1</span><span class="p">}</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="c1">// borra el índice que existe sobre la propiedad student_id</span>
 </code></pre></div>
-<p>LOS INDICES TIENEN QUE CABER EN RAM</p>
-<h3 id="rendimiento_1">Rendimiento<a class="headerlink" href="#rendimiento_1" title="Permanent link">&para;</a></h3>
-<p>Por defecto, los índices se crean en <em>foreground</em>, de modo que al crear un índice se van a bloquear a todos los <em>writers</em>. Si queremos crearlos en <em>background</em> para no penalizar las escrituras (es más lento, de 2 a 5 veces) lo indicaremos con un segundo parámetro:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">students</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">({</span><span class="s2">&quot;twitter&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nx">background</span><span class="o">:</span><span class="kc">true</span><span class="p">})</span>
-</code></pre></div>
-<p>Más información sobre la creación en <em>background</em> en <a href="https://docs.mongodb.org/manual/core/index-creation/">https://docs.mongodb.org/manual/core/index-creation/</a></p>
-<p>Algunos de los operadores que no utilizan los índices eficientemente son los operadores <code>$where</code>, <code>$nin</code> y <code>$exists</code>. Cuando estos operadores se emplean en una consultar hay que tener en mente un posible cuelo de botella cuando el tamaño de los datos incremente.</p>
-<p>Plan de ejecución
-Al explicar los índices ya hemos visto que podemos obtener información sobre la operación realizada mediante el método .explain().</p>
-<p>El atributo indexOnly me dice si toda la información que quiero recuperar se encuentra en el índice. Este atributo va a depender de los campos que quiera que me devuelva la consulta, si son un subconjunto del índice utilizado.</p>
-<p>Más información en http://docs.mongodb.org/manual/reference/method/cursor.explain/
-Los índices tienen que caber en memoria. Si están en disco, pese a ser algorítmicamente mejores que no tener, al ser más grandes que la RAM disponible, no se obtienen beneficios por la penalización de la paginación.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>Indexes - https://www.mongodb.com/docs/manual/core/data-model-operations/#std-label-data-model-indexes
-<span class="linenos" data-linenos=" 2 "></span>Use indexes to improve performance for common queries. Build indexes on fields that appear often in queries and for all operations that return sorted results. MongoDB automatically creates a unique index on the _id field.
-<span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span>As you create indexes, consider the following behaviors of indexes:
-<span class="linenos" data-linenos=" 5 "></span>
-<span class="linenos" data-linenos=" 6 "></span>Each index requires at least 8 kB of data space.
-<span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span>Adding an index has some negative performance impact for write operations. For collections with high write-to-read ratio, indexes are expensive since each insert must also update any indexes.
-<span class="linenos" data-linenos=" 9 "></span>
-<span class="linenos" data-linenos="10 "></span>Collections with high read-to-write ratio often benefit from additional indexes. Indexes do not affect un-indexed read operations.
-<span class="linenos" data-linenos="11 "></span>
-<span class="linenos" data-linenos="12 "></span>When active, each index consumes disk space and memory. This usage can be significant and should be tracked for capaciudad planning, especially for concerns over working set size.
-<span class="linenos" data-linenos="13 "></span>
-<span class="linenos" data-linenos="14 "></span>See Indexing Strategies for more information on indexes as well as Analyze Query Performance. Additionally, the MongoDB database profiler may help identify inefficient queries.
-</code></pre></div>
+<h4 id="rendimiento_1">Rendimiento<a class="headerlink" href="#rendimiento_1" title="Permanent link">&para;</a></h4>
+<p>En cuanto al rendimiento, algunos de los operadores que no utilizan los índices eficientemente son los operadores <code>$where</code>, <code>$nin</code> y <code>$exists</code>. Cuando estos operadores se emplean en una consultar hay que tener en mente un posible cuelo de botella cuando el tamaño de los datos incremente.</p>
+<p>Al explicar los índices ya hemos visto que podemos obtener información sobre la operación realizada mediante el método <a href="http://docs.mongodb.org/manual/reference/method/cursor.explain/"><code>explain()</code></a>.</p>
+<p>El atributo <code>indexOnly</code> nos dice si toda la información que queremos recuperar se encuentra en el índice. Este atributo va a depender de los campos que quiera que me devuelva la consulta, si son un subconjunto del índice utilizado.</p>
+<p>Ya hemos comentado que los índices consumen espacio en disco y memoria. Es importante vigilar y planificar su uso, para no sobrepasar las prestaciones de nuestro sistema.</p>
+<div class="admonition importante">
+<p class="admonition-title">Vigilar la RAM</p>
+<p><strong>Los índices tienen que caber en memoria</strong>.</p>
+</div>
+<p>Si los índices están en disco, pese a ser algorítmicamente mejores que no tener, al ser más grandes que la RAM disponible, no se obtienen beneficios por la penalización de la paginación.</p>
 <p>Para averiguar el tamaño de los índices (en bytes):</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">students</span><span class="p">.</span><span class="nx">stats</span><span class="p">()</span><span class="w">  </span><span class="c1">// obtiene estadísticas de la colección</span>
-<span class="linenos" data-linenos="2 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">students</span><span class="p">.</span><span class="nx">totalIndexSize</span><span class="p">()</span><span class="w">  </span><span class="c1">// obtiene el tamaño del índice</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">stats</span><span class="p">()</span><span class="w">  </span><span class="c1">// obtiene estadísticas de la colección</span>
+<span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">totalIndexSize</span><span class="p">()</span><span class="w">  </span><span class="c1">// obtiene el tamaño del índice</span>
 </code></pre></div>
-<p>Mucho cuidado con los índices multikeys porque crecen mucho y si el documento tiene que moverse en disco, el cambio supone tener que cambiar todos los puntos de índice del array.
-Aunque sea más responsabilidad de un DBA, los desarrolladores debemos saber si el índice va a caber en memoria. Si no van a caber es mejor no usarlos.</p>
-<p>Si vemos que no usamos un índice o que su rendimiento es peor, podemos borrarlos con dropIndex.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">students</span><span class="p">.</span><span class="nx">dropIndex</span><span class="p">(</span><span class="s1">&#39;nombreDeíndice&#39;</span><span class="p">)</span>
-</code></pre></div>
-<p>Podemos obtener más información sobre el rendimiento de las consultas mediante su plan de ejecución en <a href="https://docs.mongodb.org/manual/tutorial/analyze-query-plan/">https://docs.mongodb.org/manual/tutorial/analyze-query-plan/</a></p>
+<p>Mucho cuidado con los índices multiclave porque crecen mucho y si el documento tiene que moverse en disco, el cambio supone tener que cambiar todos los puntos de índice del array.
+Aunque sea más responsabilidad de un administrador de bases de datos (DBA), los desarrolladores debemos saber si el índice va a caber en memoria. Si no van a caber es mejor no usarlos.</p>
 <div class="admonition question">
 <p class="admonition-title">Autoevaluación</p>
-<p>Hemos actualizado un documento con una clave llamada etiquetas que provoca que el documento tenga que moverse a disco. Supongamos que el documento contiene 100 etiquetas en él y que el array de etiquetas está indexada con un índice multiclave.</p>
-<p>¿Cuantos puntos de índice tienen que actualizarse en el índice para acomodar el movimiento? [2]</p>
+<p>Hemos actualizado un documento con una clave llamada <code>etiquetas</code> que provoca que el documento tenga que moverse a disco. Supongamos que el documento contiene 10.000 etiquetas en él y que el array de <code>etiquetas</code> está indexada con un índice multiclave.</p>
+<p>¿Cuantos elementos tienen que actualizarse en el índice para acomodar el movimiento? <sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
 </div>
-<div class="admonition info">
-<p class="admonition-title">Forzando índices</p>
-<p>Si en algún momento queremos forzar el uso de un determinado índice al realizar una consulta, necesitaremos usar el método .hint({campo:1})</p>
-</div>
+<h4 id="forzando-indices">Forzando índices<a class="headerlink" href="#forzando-indices" title="Permanent link">&para;</a></h4>
+<p>Si en algún momento queremos forzar el uso de un determinado índice al realizar una consulta, necesitaremos usar el método <a href="https://www.mongodb.com/docs/manual/reference/method/cursor.hint/"><code>hint({campo:1}</code></a></p>
 <p>Si queremos que se utilice el índice asociado a la propiedad twitter:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">people</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">nombre</span><span class="o">:</span><span class="s2">&quot;Aitor Medrano&quot;</span><span class="p">,</span><span class="nx">twitter</span><span class="o">:</span><span class="s2">&quot;aitormedrano&quot;</span><span class="p">}).</span><span class="nx">hint</span><span class="p">({</span><span class="nx">twitter</span><span class="o">:</span><span class="mf">1</span><span class="p">}})</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">iabd</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">nombre</span><span class="o">:</span><span class="s2">&quot;Aitor Medrano&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">twitter</span><span class="o">:</span><span class="s2">&quot;aitormedrano&quot;</span><span class="p">}).</span><span class="nx">hint</span><span class="p">({</span><span class="nx">twitter</span><span class="o">:</span><span class="mf">1</span><span class="p">})</span>
 </code></pre></div>
-<p>Si por algún motivo no queremos usar índices, le pasaremos el operador $natural al método hint().</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">people</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">nombre</span><span class="o">:</span><span class="s2">&quot;Aitor Medrano&quot;</span><span class="p">,</span><span class="nx">twitter</span><span class="o">:</span><span class="s2">&quot;aitormedrano&quot;</span><span class="p">}).</span><span class="nx">hint</span><span class="p">({</span><span class="nx">$natural</span><span class="o">:</span><span class="mf">1</span><span class="p">}})</span>
+<p>Si por algún motivo no queremos usar índices y forzar un escaneo de toda la colección, le pasaremos el operador <code>$natural</code> al método <code>hint()</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">iabd</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">nombre</span><span class="o">:</span><span class="s2">&quot;Aitor Medrano&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">twitter</span><span class="o">:</span><span class="s2">&quot;aitormedrano&quot;</span><span class="p">}).</span><span class="nx">hint</span><span class="p">({</span><span class="nx">$natural</span><span class="o">:</span><span class="mf">1</span><span class="p">})</span>
 </code></pre></div>
 <p>Si usamos un <em>hint</em> sobre un índice <em>sparse</em> y no hay documentos a devolver con dicho índice porque todos sus campos son nulos, la consulta no devolverá nada, aunque haya documentos que sin dicho índice si cumplen los criterios.</p>
-<p>Hay que destacar que los operadores <code>$gt</code>, <code>$lt</code>, <code>$ne</code> … provocan un uso ineficiente de los índices, ya que la consulta tiene que recorrer toda la colección de índices. Si hacemos una consulta sobre varios atributos y en uno de ellos usamos <code>$gt</code>, <code>$lt</code> o similar, es mejor hacer un <em>hint</em> sobre el resto de atributos que sí tienen una selección directa.</p>
-<p>Por ejemplo, supongamos que en la colección de calificaciones quieséramos obtener los exámenes con un calificación comprendida entre 95 y 98.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="w"> </span><span class="nx">score</span><span class="o">:</span><span class="p">{</span><span class="nx">$gt</span><span class="o">:</span><span class="mf">95</span><span class="p">,</span><span class="w"> </span><span class="nx">$lte</span><span class="o">:</span><span class="mf">98</span><span class="p">},</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="s2">&quot;exam&quot;</span><span class="w"> </span><span class="p">})</span>
+<p>Un caso particular que conviene destacar es cuando utilizamos los los operadores <code>$gt</code>, <code>$lt</code>, <code>$ne</code> …, los cuales provocan un uso ineficiente de los índices, al tener que recorrer toda la colección de índices. Si hacemos una consulta sobre varios atributos y en uno de ellos usamos <code>$gt</code>, <code>$lt</code> o similar, es mejor hacer un <em>hint</em> sobre el resto de atributos que sí tienen una selección directa.</p>
+<p>Por ejemplo, supongamos que en la colección de <em>zips</em> quieséramos obtener las poblaciones del estado de Alabama (<code>AL</code>) que tienen una población comprendida entre 10000 y 50000:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">zips</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="w"> </span><span class="s2">&quot;pop&quot;</span><span class="o">:</span><span class="p">{</span><span class="nx">$gt</span><span class="o">:</span><span class="mf">10000</span><span class="p">,</span><span class="w"> </span><span class="nx">$lte</span><span class="o">:</span><span class="mf">50000</span><span class="p">},</span><span class="w"> </span><span class="s2">&quot;state&quot;</span><span class="o">:</span><span class="s2">&quot;AL&quot;</span><span class="w"> </span><span class="p">})</span>
 </code></pre></div>
-<p>Para esta consulta, suponiendo que tenemos un índice tanto en score como en type, sería conveniente hacer el hint sobre el type</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="w"> </span><span class="nx">score</span><span class="o">:</span><span class="p">{</span><span class="nx">$gt</span><span class="o">:</span><span class="mf">95</span><span class="p">,</span><span class="w"> </span><span class="nx">$lte</span><span class="o">:</span><span class="mf">98</span><span class="p">},</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="s2">&quot;exam&quot;</span><span class="w"> </span><span class="p">}).</span><span class="nx">hint</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span>
+<p>Para esta consulta, suponiendo que tenemos un índice tanto en <code>pop</code> como en <code>state</code>, sería conveniente hacer el <em>hint</em> sobre el <code>state</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">zips</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="w"> </span><span class="s2">&quot;pop&quot;</span><span class="o">:</span><span class="p">{</span><span class="nx">$gt</span><span class="o">:</span><span class="mf">10000</span><span class="p">,</span><span class="w"> </span><span class="nx">$lte</span><span class="o">:</span><span class="mf">50000</span><span class="p">},</span><span class="w"> </span><span class="s2">&quot;state&quot;</span><span class="o">:</span><span class="s2">&quot;AL&quot;</span><span class="w"> </span><span class="p">}).</span><span class="nx">hint</span><span class="p">({</span><span class="s2">&quot;state&quot;</span><span class="o">:</span><span class="mf">1</span><span class="p">})</span>
 </code></pre></div>
 <h2 id="colecciones-limitadas">Colecciones limitadas<a class="headerlink" href="#colecciones-limitadas" title="Permanent link">&para;</a></h2>
 <p>Una colección limitada (<em>capped collection</em>) es una colección de tamaño fijo, donde se garantiza el orden natural de los datos, es decir, el orden en que se insertaron.</p>
@@ -2353,6 +2361,29 @@ e. perfecta, da igual que el orden de los atributos en el filtrado no coincida c
 <p>db.listingsAndReviews.find({"property_type":"Apartment"}).sort("beds")
 db.listingsAndReviews.find({"property_type":"Apartment"}).sort("minimun_nights")</p>
 <p>https://learning.oreilly.com/library/view/mastering-mongodb-6-x/9781803243863/B18155_08.xhtml#_idParaDest-139</p>
+<ol>
+<li>
+<p>Realiza las siguientes acciones anotando el comando necesario:</p>
+<ol>
+<li>Crea un colección llamada <code>nombres</code>.</li>
+<li>Añade 5 documentos con tu nombre con diferentes combinaciones de mayúsculas y minúsculas, pero ninguno que esté todo en minúsculas.</li>
+<li>Crea una consulta que busque tu nombre en minúsculas.</li>
+<li>Crea un índice con el <em>locale</em> en español sobre el nombre.</li>
+<li>Repite la consulta del punto 3 y comprueba cómo devuelve todos los documentos existentes.</li>
+</ol>
+</li>
+<li>
+<p>Investiga para qué sirven los <a href="https://www.mongodb.com/docs/manual/core/index-hidden/">índices ocultos</a> en <em>MongoDB</em>, indicando al menos dos casos de uso donde tiene sentido su utilización.</p>
+</li>
+</ol>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>10.000, es decir, todos los valores existentes en el índice multiclave.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
   
