@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.3">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.d451bc0e.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.79e020e9.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.a5377069.min.css">
@@ -2259,7 +2259,7 @@ Aunque sea más responsabilidad de un administrador de bases de datos (DBA), los
 <p>Si retomamos el ejemplo anterior, pero fijamos su máximo a 100 elementos, crearíamos la colección del siguiente modo:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">createCollection</span><span class="p">(</span><span class="s2">&quot;auditoria&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="nx">capped</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">size</span><span class="o">:</span><span class="mf">20480</span><span class="p">,</span><span class="w"> </span><span class="nx">max</span><span class="o">:</span><span class="mf">100</span><span class="p">})</span>
 </code></pre></div>
-<p>El shell de <em>MongoDB</em> ofrece la utilidad <a href="https://www.mongodb.com/docs/manual/reference/method/db.collection.validate/"><code>validate()</code></a> para visualizar la cantidad de espacio utilizado por cada colección, ya sea limitada o no. Para comprobar el estado de la colección anterior haríamos:</p>
+<p>El shell de <em>MongoDB</em> ofrece la utilidad <a href="https://www.mongodb.com/docs/manual/reference/method/db.collection.validate/"><code>validate()</code></a> para comprobar la consistencia de la colección, ya sea limitada o no. Para comprobar el estado de la colección anterior haríamos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">auditoria</span><span class="p">.</span><span class="nx">validate</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="o">&lt;</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nx">ns</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;iabd.auditoria&#39;</span><span class="p">,</span>
@@ -2279,7 +2279,7 @@ Aunque sea más responsabilidad de un administrador de bases de datos (DBA), los
 <span class="linenos" data-linenos="17 "></span><span class="w">    </span><span class="nx">ok</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span>
 <span class="linenos" data-linenos="18 "></span><span class="w">  </span><span class="p">}</span>
 </code></pre></div>
-<p>Si queremos consultar los datos de una colección limitada, por su idiosincracia, los resultados aparecerán en el orden de inserción. Si queremos obtenerlos en orden inverso, le tenemos que pasar el operador `$natural`` al método sort():</p>
+<p>Si queremos consultar los datos de una colección limitada, por su idiosincrasia, los resultados aparecerán en el orden de inserción. Si queremos obtenerlos en orden inverso, le tenemos que pasar el operador <code>$natural</code> al método <code>sort()</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">auditoria</span><span class="p">.</span><span class="nx">find</span><span class="p">()</span><span class="w"> </span><span class="c1">// orden natural</span>
 <span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">auditoria</span><span class="p">.</span><span class="nx">find</span><span class="p">().</span><span class="nx">sort</span><span class="p">({</span><span class="w"> </span><span class="nx">$natural</span><span class="o">:-</span><span class="mf">1</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="c1">// orden inverso</span>
 </code></pre></div>
@@ -2289,24 +2289,27 @@ Aunque sea más responsabilidad de un administrador de bases de datos (DBA), los
 <p>De forma alternativa, podríamos utilizar un índice TTL dentro de una colección ordinaria, pero perderíamos
 parte de las prestaciones que ofrecen las colecciones <em>capped</em>.</p>
 <h2 id="profiling">Profiling<a class="headerlink" href="#profiling" title="Permanent link">&para;</a></h2>
-<p>Si arrancamos el demonio con la opción <code>--rest</code> lanzará un servidor HTTP que escucha peticiones en el puerto 28017. Este servidor captura peticiones REST que permiten realizar consultas sobre la información administrativa de la base de datos.</p>
-<p>Así pues, si abrimos el navegador y accedemos a <a href="http://localhost:28017">http://localhost:28017</a> obtendremos algo similar a esto:</p>
-<p>Interfaz REST de mongod
-Figure 4. Interfaz REST de mongod</p>
-<p>Más información en <a href="http://docs.mongodb.org/ecosystem/tools/http-interfaces">http://docs.mongodb.org/ecosystem/tools/http-interfaces</a></p>
-<p>Además, MongoDB trae integradas varias herramientas para el control del rendimiento.</p>
-<p>Por ejemplo, la colección db.system.profile auditará las consultas ejecutadas. Podemos indicar el nivel de las consultas a auditar mediante tres niveles: 0 (ninguna), 1 (consultas lentas), 2 (todas las consultas)</p>
+<div class="admonition info inline end">
+<p class="admonition-title">Trabajando en local</p>
+<p>Para poder trabajar el profiling, no podemos hacerlo mediante MongoDB Atlas. Por ello, se recomienda utilizar una instalación en local o mediante un contenedor Docker.</p>
+</div>
+<p>MongoDB incorpora varias herramientas para el control del rendimiento.</p>
+<p>Por ejemplo, la colección <code>db.system.profile</code> auditará las consultas ejecutadas. Podemos indicar el nivel de las consultas a auditar mediante tres niveles: <code>0</code> (ninguna), <code>1</code> (consultas lentas), <code>2</code> (todas las consultas)</p>
 <p>Si queremos que se auditen todas las consultas, lo indicaremos del siguiente modo:</p>
-<p>Auditando todas las consultas</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">setProfilingLevel</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span>
+<p>db.zips.find({ "pop":{$gt:10000, $lte:50000}, "state":{$in: ["AL","AK","AZ","CA"] }})</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">setProfilingLevel</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="o">&lt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">was</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">slowms</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="p">,</span><span class="w"> </span><span class="nx">sampleRate</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
-<p>El método setProfilingLevel() también admite un segundo parámetro para indicar el numero mínimo de milisegundos de las consultas para ser auditadas.</p>
-<p>Por defecto, MongoDB automáticamente escribe en el log las consultas que tardan más de 100ms.
+<p>El método <code>setProfilingLevel()</code> también admite un segundo parámetro para indicar el numero mínimo de milisegundos de las consultas para ser auditadas.</p>
+<p>Por defecto, <em>MongoDB</em> automáticamente escribe en el log las consultas que tardan más de 100ms.
 Si queremos indicar estas propiedades al arrancar el demonio, le pasaremos los parámetros <code>--profile</code> y/o <code>--slowms</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">mongod</span><span class="w"> </span><span class="o">--</span><span class="nx">profile</span><span class="o">=</span><span class="mf">1</span><span class="w"> </span><span class="o">--</span><span class="nx">slowms</span><span class="o">=</span><span class="mf">15</span>
 </code></pre></div>
-<p>Si en algún momento queremos consultar tanto el nivel como el estado del profiling, podemos utilizar los métodos <code>db.getProfilingLevel()</code> y <code>db.getProfilingStatus()</code>.</p>
-<p>Sobre los datos auditados, podemos hacer find sobre <code>db.system.profile</code> y filtrar por los campos mostrados:</p>
+<p>Si en algún momento queremos consultar el estado del <em>profiling</em> podemos utilizar <code>db.getProfilingStatus()</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">getProfilingStatus</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span><span class="o">&lt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">was</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="nx">slowms</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="p">,</span><span class="w"> </span><span class="nx">sampleRate</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>Sobre los datos auditados, podemos hacer <code>find</code> sobre <code>db.system.profile</code> y filtrar por los campos mostrados:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">system</span><span class="p">.</span><span class="nx">profile</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="w"> </span><span class="nx">millis</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">$gt</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">1000</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}).</span><span class="nx">sort</span><span class="p">({</span><span class="nx">ts</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">})</span>
 <span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">system</span><span class="p">.</span><span class="nx">profile</span><span class="p">.</span><span class="nx">find</span><span class="p">().</span><span class="nx">limit</span><span class="p">(</span><span class="mf">10</span><span class="p">).</span><span class="nx">sort</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ts</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">).</span><span class="nx">pretty</span><span class="p">()</span>
 </code></pre></div>
@@ -2320,17 +2323,36 @@ Si queremos indicar estas propiedades al arrancar el demonio, le pasaremos los p
 <p>Otras herramientas para controlar el rendimiento que se ejecutan en un terminal, son:</p>
 <ul>
 <li>
-<p><code>mongotop</code> → similar a la herramienta top de UNIX, muestra el tiempo empleado por MongoDB en las diferentes colecciones, indicando tanto el tiempo empleado en lectura como en escrituras. Para ello, si queremos se ejecute cada tres segundos, en un terminal:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>mongotop<span class="w"> </span><span class="m">3</span>
+<p><a href="http://docs.mongodb.org/manual/reference/program/mongotop/"><code>mongotop</code></a> → similar a la herramienta top de UNIX, muestra el tiempo empleado por MongoDB en las diferentes colecciones, indicando tanto el tiempo empleado en lectura como en escrituras. Para ello, si queremos se ejecute cada tres segundos, en un terminal:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>mongotop<span class="w"> </span><span class="m">3</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">                    </span>ns<span class="w">    </span>total<span class="w">    </span><span class="nb">read</span><span class="w">    </span>write<span class="w">    </span><span class="m">2023</span>-10-11T18:45:17Z
+<span class="linenos" data-linenos=" 4 "></span><span class="w">        </span>admin.atlascli<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span>admin.system.version<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span>config.collections<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos=" 7 "></span>config.system.sessions<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">  </span>config.transactions<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">        </span>iabd.auditoria<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos="10 "></span><span class="w">        </span>iabd.contacto<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos="11 "></span><span class="w">      </span>iabd.restaurants<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos="12 "></span><span class="w">  </span>iabd.system.profile<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos="13 "></span><span class="w">          </span>iabd.usuario<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w"> </span>
 </code></pre></div>
-<p>Más información en : <a href="http://docs.mongodb.org/manual/reference/program/mongotop/">http://docs.mongodb.org/manual/reference/program/mongotop/</a></p>
 </li>
 <li>
-<p><code>mongostat</code> → muestra el número de operaciones por cada tipo que se realizan por segundo a nivel de servidor, lo que nos da una instantánea de los que está haciendo el servidor.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>mongostat<span class="w"> </span><span class="m">5</span>
+<p><a href="http://docs.mongodb.org/manual/reference/program/mongostat/"><code>mongostat</code></a> → muestra el número de operaciones por cada tipo que se realizan por segundo a nivel de servidor, lo que nos da una instantánea de los que está haciendo el servidor.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>mongostat<span class="w"> </span><span class="m">5</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span>insert<span class="w"> </span>query<span class="w"> </span>update<span class="w"> </span>delete<span class="w"> </span>getmore<span class="w"> </span><span class="nb">command</span><span class="w"> </span>dirty<span class="w"> </span>used<span class="w"> </span>flushes<span class="w"> </span>vsize<span class="w">  </span>res<span class="w"> </span>qrw<span class="w"> </span>arw<span class="w"> </span>net_in<span class="w"> </span>net_out<span class="w"> </span>conn<span class="w">                </span><span class="nb">time</span>
+<span class="linenos" data-linenos=" 4 "></span>*0<span class="w">    </span>*0<span class="w">     </span>*0<span class="w">     </span>*0<span class="w">       </span><span class="m">0</span><span class="w">     </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w">  </span><span class="m">0</span>.0%<span class="w"> </span><span class="m">7</span>.6%<span class="w">       </span><span class="m">0</span><span class="w"> </span><span class="m">2</span>.75G<span class="w"> </span>399M<span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w">   </span>111b<span class="w">   </span><span class="m">59</span>.8k<span class="w">   </span><span class="m">21</span><span class="w"> </span>Oct<span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">18</span>:46:20.551
+<span class="linenos" data-linenos=" 5 "></span>*0<span class="w">     </span><span class="m">1</span><span class="w">     </span>*0<span class="w">     </span>*0<span class="w">       </span><span class="m">0</span><span class="w">     </span><span class="m">2</span><span class="p">|</span><span class="m">0</span><span class="w">  </span><span class="m">0</span>.1%<span class="w"> </span><span class="m">7</span>.6%<span class="w">       </span><span class="m">0</span><span class="w"> </span><span class="m">2</span>.75G<span class="w"> </span>399M<span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w">   </span>329b<span class="w">   </span><span class="m">64</span>.3k<span class="w">   </span><span class="m">21</span><span class="w"> </span>Oct<span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">18</span>:46:25.550
+<span class="linenos" data-linenos=" 6 "></span>*0<span class="w">    </span>*0<span class="w">     </span>*0<span class="w">     </span>*0<span class="w">       </span><span class="m">0</span><span class="w">     </span><span class="m">1</span><span class="p">|</span><span class="m">0</span><span class="w">  </span><span class="m">0</span>.1%<span class="w"> </span><span class="m">7</span>.6%<span class="w">       </span><span class="m">0</span><span class="w"> </span><span class="m">2</span>.75G<span class="w"> </span>399M<span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w">   </span>259b<span class="w">   </span><span class="m">60</span>.1k<span class="w">   </span><span class="m">21</span><span class="w"> </span>Oct<span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">18</span>:46:30.550
+<span class="linenos" data-linenos=" 7 "></span>*0<span class="w">    </span>*0<span class="w">     </span>*0<span class="w">     </span>*0<span class="w">       </span><span class="m">0</span><span class="w">     </span><span class="m">2</span><span class="p">|</span><span class="m">0</span><span class="w">  </span><span class="m">0</span>.1%<span class="w"> </span><span class="m">7</span>.6%<span class="w">       </span><span class="m">0</span><span class="w"> </span><span class="m">2</span>.75G<span class="w"> </span>399M<span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w">   </span>289b<span class="w">   </span><span class="m">61</span>.9k<span class="w">   </span><span class="m">21</span><span class="w"> </span>Oct<span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">18</span>:46:35.540
+<span class="linenos" data-linenos=" 8 "></span>*0<span class="w">    </span>*0<span class="w">     </span>*0<span class="w">     </span>*0<span class="w">       </span><span class="m">0</span><span class="w">     </span><span class="m">3</span><span class="p">|</span><span class="m">0</span><span class="w">  </span><span class="m">0</span>.1%<span class="w"> </span><span class="m">7</span>.6%<span class="w">       </span><span class="m">0</span><span class="w"> </span><span class="m">2</span>.75G<span class="w"> </span>399M<span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w">   </span>353b<span class="w">   </span><span class="m">60</span>.3k<span class="w">   </span><span class="m">21</span><span class="w"> </span>Oct<span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">18</span>:46:40.547
+<span class="linenos" data-linenos=" 9 "></span>*0<span class="w">    </span>*0<span class="w">     </span>*0<span class="w">     </span>*0<span class="w">       </span><span class="m">0</span><span class="w">     </span><span class="m">2</span><span class="p">|</span><span class="m">0</span><span class="w">  </span><span class="m">0</span>.1%<span class="w"> </span><span class="m">7</span>.6%<span class="w">       </span><span class="m">0</span><span class="w"> </span><span class="m">2</span>.75G<span class="w"> </span>399M<span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w">   </span>246b<span class="w">   </span><span class="m">60</span>.2k<span class="w">   </span><span class="m">21</span><span class="w"> </span>Oct<span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">18</span>:46:45.547
+<span class="linenos" data-linenos="10 "></span>*0<span class="w">    </span>*0<span class="w">     </span>*0<span class="w">     </span>*0<span class="w">       </span><span class="m">0</span><span class="w">     </span><span class="m">1</span><span class="p">|</span><span class="m">0</span><span class="w">  </span><span class="m">0</span>.1%<span class="w"> </span><span class="m">7</span>.6%<span class="w">       </span><span class="m">0</span><span class="w"> </span><span class="m">2</span>.75G<span class="w"> </span>399M<span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w">   </span>112b<span class="w">   </span><span class="m">59</span>.9k<span class="w">   </span><span class="m">21</span><span class="w"> </span>Oct<span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">18</span>:46:50.545<span class="w">  </span>
 </code></pre></div>
 <p>Una buena columna a vigilar es idx miss %, la cual muestra los índices perdidos, es decir, aquellas consultas que han causado paginación y en vez de obtener los datos de memoria han tenido que acceder a disco.</p>
-<p>Más información en : <a href="http://docs.mongodb.org/manual/reference/program/mongostat/">http://docs.mongodb.org/manual/reference/program/mongostat/</a></p>
 </li>
 </ul>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
@@ -2460,10 +2482,10 @@ db.listingsAndReviews.find({"property_type":"Apartment"}).sort("minimun_nights")
         </div>
         
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-            
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
-            Volver al principio
-          </button>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Volver al principio
+</button>
         
       </main>
       
@@ -2557,6 +2579,7 @@ db.listingsAndReviews.find({"property_type":"Apartment"}).sort("minimun_nights")
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
+    
       <div class="md-consent" data-md-component="consent" id="__consent" hidden>
         <div class="md-consent__overlay"></div>
         <aside class="md-consent__inner">
@@ -2617,7 +2640,7 @@ db.listingsAndReviews.find({"property_type":"Apartment"}).sort("minimun_nights")
     <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.a264c092.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.726fbb30.min.js"></script>
+      <script src="../assets/javascripts/bundle.6eac0284.min.js"></script>
       
     
   </body>
