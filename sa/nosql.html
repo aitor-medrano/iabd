@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.3">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.2">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.79e020e9.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.d451bc0e.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.a5377069.min.css">
@@ -1596,7 +1596,8 @@
 <p>La solución es el <ins>despliegue de las aplicaciones y sus datos en clústeres de servidores, distribuyendo el procesamiento en múltiples máquinas</ins>.</p>
 <h2 id="no-solo-sql">No Solo SQL<a class="headerlink" href="#no-solo-sql" title="Permanent link">&para;</a></h2>
 <p>Si definimos NoSQL formalmente, podemos decir que se trata de un conjunto de tecnologías que permiten el procesamiento rápido y eficiente de conjuntos de datos dando la <ins>mayor importancia al rendimiento, la fiabilidad y la agilidad</ins>.</p>
-<p>Si nos basamos en el acrónimo, el término se refiere a cualquier almacén de datos que no sigue un modelo relacional, los datos no son relacionales y por tanto no utilizan SQL como lenguaje de consulta. Otra aceptación implica que el <em>No</em> hace referencia a <em>not only</em>, es decir, que los sistemas NoSQL se centran en sistemas complementarios a los SGBD relacionales, que fijan sus prioridades en la escalabilidad y la disponibilidad en contra de la atomicidad y consistencia de los datos.</p>
+<p>Si nos basamos en el acrónimo, el término da la sensación que se refiere a cualquier almacén de datos que no sigue un modelo relacional, los datos no son relacionales y por tanto no utilizan SQL como lenguaje de consulta. Realmente implica que el <em>No</em> hace referencia a <em>not only</em>, es decir, que los sistemas NoSQL se centran en sistemas complementarios a los SGBD relacionales, que fijan sus prioridades en la escalabilidad y la disponibilidad en contra de la atomicidad y consistencia de los datos.</p>
+<p>Es decir, más que sustitutos de los sistemas relacionales, las soluciones NoSQL se plantean como alternativas y complementarias a los sistemas gestores de bases de datos relacionales.</p>
 <p><a name="acid"></a></p>
 <div class="admonition info">
 <p class="admonition-title">ACID</p>
@@ -1642,6 +1643,7 @@
 <p>Si la base de datos es grande, conlleva un proceso lento que implica parar el sistema durante un tiempo considerable. Si frecuentemente cambiamos los datos que la aplicación almacena (al usar un desarrollo iterativo), también tendremos períodos frecuentes de inactividad del sistema, a no ser que utilicemos un <a href="https://medium.com/devopslatam/introducci%C3%B3n-a-los-despliegues-azul-verde-bb4055811279">despliegue azul/verde</a> y tengamos redundancia de nuestro sistema de almacenamiento. Así pues, no hay un modo efectivo mediante una base de datos relacional de almacenar los datos que están desestructurados o que no se conocen de antemano.</p>
 <p>Las bases de datos NoSQL se construyen para permitir la inserción de datos sin un esquema predefinido. Esto facilita la modificación de la aplicación en tiempo real, sin preocuparse por interrupciones de servicio. Aunque no tengamos un esquema al guardar la información, sí que podemos definir esquemas de lectura (<em>schema-on-read</em>) para comprobar que la información almacenada tiene el formato que espera cargar cada aplicación.</p>
 <p>De este modo se consigue un desarrollo más rápido, integración de código más robusto y menos tiempo empleado en la administración de la base de datos.</p>
+<p>Aunque lo veremos en profundidad en las siguientes sesiones, los modelos de datos NoSQL priman la redundancia de los datos, denormalizando los datos para evitar el uso de <em>joins</em>. Por ello, es importante que la definición de los esquemas sea flexible para poder añadir campos conforme la aplicación evolucione.</p>
 <h3 id="particionado">Particionado<a class="headerlink" href="#particionado" title="Permanent link">&para;</a></h3>
 <p>Dado el modo en el que se estructuran las bases de datos relacionales, normalmente escalan verticalmente - un único servidor que almacena toda la base de datos para asegurar la disponibilidad continua de los datos. Esto se traduce en costes que se incrementan rápidamente, con un límites definidos por el propio hardware, y en un pequeño número de puntos críticos de fallo dentro de la infraestructura de datos.</p>
 <p>La solución es escalar horizontalmente, añadiendo nuevos servidores en vez de concentrarse en incrementar la capacidad de un único servidor, lo que permite tratar con conjuntos de datos más grandes de lo que sería capaz cualquier máquina por sí sola. Este escalado horizontal se conoce como <strong><em>Sharding</em></strong> o Particionado.</p>
@@ -1834,7 +1836,7 @@
 <h3 id="clave-valor">Clave-Valor<a class="headerlink" href="#clave-valor" title="Permanent link">&para;</a></h3>
 <p>Un almacén clave-valor es una simple tabla <em>hash</em> donde todos los accesos a la base de datos se realizan a través de la clave primaria.</p>
 <p>Desde una perspectiva de modelo de datos, los almacenes de clave-valor son los más básicos.</p>
-<p>Su funcionamiento es similar a tener una tabla relacional con dos columnas, por ejemplo <code>id</code> y <code>nombre</code>, siendo <code>id</code> la columna utilizada como clave y <code>nombre</code> como valor. Mientras que en una base de datos en el campo <code>nombre</code> sólo podemos almacenar datos de tipo cadena o numérico, en un almacén clave-valor, el valor puede ser de un dato simple o un objeto. Cuando una aplicación accede mediante la clave y el valor, se almacenan el par de elementos. Si la clave ya existe, el valor se modifica.</p>
+<p>Su funcionamiento es similar a tener una tabla relacional con dos columnas, por ejemplo <code>id</code> y <code>nombre</code>, siendo <code>id</code> la columna utilizada como clave y <code>nombre</code> como valor. Mientras que en una base de datos en el campo <code>nombre</code> sólo podemos almacenar datos de tipo cadena o numérico, en un almacén clave-valor, el valor puede ser de un dato simple o un objeto. En muchos casos, se almacena un objeto binario BLOB (<em>Binary Large Object</em>). Cuando una aplicación accede mediante la clave y el valor, se almacenan el par de elementos. Si la clave ya existe, el valor se modifica.</p>
 <figure style="align: center;">
     <img src="images/01key-value.jpg" width="400px">
     <figcaption>Representación de un almacén clave-valor</figcaption>
@@ -1845,7 +1847,7 @@
 <p>Por ejemplo, <em>Riak</em> permite interactuar con la base de datos mediante peticiones HTTP:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl<span class="w"> </span>-v<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>&lt;http://localhost:8091/riak/heroes/ace&gt;<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="o">{</span><span class="s2">&quot;nombre&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;Batman&quot;</span>,<span class="w"> </span><span class="s2">&quot;color&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;Negro&quot;</span><span class="o">}</span>
 </code></pre></div>
-<p>Algunos almacenes clave-valor, como puede ser <a href="https://redis.io">Redis</a>, permiten almacenar datos con cualquier estructura, como por ejemplos listas, conjuntos, hashes y pueden realizar operaciones como intersección, unión, diferencia y rango.</p>
+<p>Algunos almacenes clave-valor, como puede ser <a href="https://redis.io">Redis</a>, permiten almacenar datos con cualquier estructura, como por ejemplos listas, conjuntos, hashes, permitiendo realizar operaciones como la intersección, unión, diferencia y rango.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Comandos Redis</label><label for="__tabbed_1_2">Python</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -2197,10 +2199,10 @@ Poner intro de ingeniería de datos, evolución de las bases de datos OLAP/OLTP
         </div>
         
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
-  Volver al principio
-</button>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Volver al principio
+          </button>
         
       </main>
       
@@ -2294,7 +2296,6 @@ Poner intro de ingeniería de datos, evolución de las bases de datos OLAP/OLTP
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    
       <div class="md-consent" data-md-component="consent" id="__consent" hidden>
         <div class="md-consent__overlay"></div>
         <aside class="md-consent__inner">
@@ -2355,7 +2356,7 @@ Poner intro de ingeniería de datos, evolución de las bases de datos OLAP/OLTP
     <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.a264c092.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.6eac0284.min.js"></script>
+      <script src="../assets/javascripts/bundle.726fbb30.min.js"></script>
       
     
   </body>
