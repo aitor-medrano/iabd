@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.3">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.d451bc0e.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.79e020e9.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.a5377069.min.css">
@@ -2843,15 +2843,19 @@
 <h2 id="borrando-documentos">Borrando documentos<a class="headerlink" href="#borrando-documentos" title="Permanent link">&para;</a></h2>
 <p>Para borrar, usaremos los método <a href="https://www.mongodb.com/docs/manual/reference/method/db.collection.deleteOne/"><code>deleteOne</code></a> o <a href="https://www.mongodb.com/docs/manual/reference/method/db.collection.deleteMany/"><code>deleteMany</code></a>, los cuales funcionan de manera similar a <code>findOne</code> y <code>find</code>. Si no pasamos ningún parámetro, <code>deleteOne</code> borrará el primer documento, o en el caso de <code>deleteMany</code> toda la colección documento a documento. Si le pasamos un parámetro, éste será el criterio de selección de documentos a eliminar.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">people</span><span class="p">.</span><span class="nx">deleteOne</span><span class="p">({</span><span class="nx">nombre</span><span class="o">:</span><span class="s2">&quot;Marina Medrano&quot;</span><span class="p">})</span>
+<span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">people</span><span class="p">.</span><span class="nx">deleteMany</span><span class="p">({</span><span class="nx">nombre</span><span class="o">:</span><span class="s2">&quot;Marina Medrano&quot;</span><span class="p">})</span>
 </code></pre></div>
 <p>Al eliminar un documento, no podemos olvidar que cualquier referencia al documento que exista en la base de datos seguirá existiendo. Por este motivo, manualmente también hay que eliminar o modificar esas referencias.</p>
-<p>Si queremos borrar toda la colección, es más eficiente usar el método <a href="https://www.mongodb.com/docs/manual/reference/method/db.collection.drop/"><code>drop</code></a>, ya que también elimina los índices.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">people</span><span class="p">.</span><span class="nx">drop</span><span class="p">()</span>
-</code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Eliminar un campo</p>
 <p>Recordad que eliminar un determinado campo de un documento no se considera un operación de borrado, sino una actualización mediante el operador <a href="https://www.mongodb.com/docs/manual/reference/operator/update/unset/"><code>$unset</code></a>.</p>
 </div>
+<p>Si queremos borrar toda la colección, es más eficiente usar el método <a href="https://www.mongodb.com/docs/manual/reference/method/db.collection.drop/"><code>drop</code></a>, ya que también elimina los índices.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">people</span><span class="p">.</span><span class="nx">drop</span><span class="p">()</span>
+</code></pre></div>
+<p>Finalmente, para eliminar una base de datos usaremos el comando <a href="https://www.mongodb.com/docs/manual/reference/method/db.dropDatabase/"><code>db.dropDatabase()</code></a>, que eliminará la base de datos sobre la que nos encontremos (en nuestro caso, en <code>iabd</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">dropDatabase</span><span class="p">()</span>
+</code></pre></div>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.mongodb.com/docs/manual/">Manual de MongoDB</a></li>
@@ -2990,10 +2994,10 @@ Preparar actividades sobre Lara
         </div>
         
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-            
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
-            Volver al principio
-          </button>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Volver al principio
+</button>
         
       </main>
       
@@ -3087,6 +3091,7 @@ Preparar actividades sobre Lara
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
+    
       <div class="md-consent" data-md-component="consent" id="__consent" hidden>
         <div class="md-consent__overlay"></div>
         <aside class="md-consent__inner">
@@ -3147,7 +3152,7 @@ Preparar actividades sobre Lara
     <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.a264c092.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.726fbb30.min.js"></script>
+      <script src="../assets/javascripts/bundle.6eac0284.min.js"></script>
       
     
   </body>
