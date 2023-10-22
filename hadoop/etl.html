@@ -1608,6 +1608,132 @@
 </ul>
 </li>
 </ul>
+<!--
+https://learning.oreilly.com/library/view/fundamentals-of-data/9781098108298/ch02.html#:-:text=Evaluating%20source%20systems%3A%20Key%20engineering%20considerations
+
+---
+Consideraciones del origen
+---
+
+What are the essential characteristics of the data source? Is it an application? A swarm of IoT devices?
+
+How is data persisted in the source system? Is data persisted long term, or is it temporary and quickly deleted?
+
+At what rate is data generated? How many events per second? How many gigabytes per hour?
+
+What level of consistency can data engineers expect from the output data? If you’re running data-quality checks against the output data, how often do data inconsistencies occur—nulls where they aren’t expected, lousy formatting, etc.?
+
+How often do errors occur?
+
+Will the data contain duplicates?
+
+Will some data values arrive late, possibly much later than other messages produced simultaneously?
+
+What is the schema of the ingested data? Will data engineers need to join across several tables or even several systems to get a complete picture of the data?
+
+If schema changes (say, a new column is added), how is this dealt with and communicated to downstream stakeholders?
+
+How frequently should data be pulled from the source system?
+
+For stateful systems (e.g., a database tracking customer account information), is data provided as periodic snapshots or update events from change data capture (CDC)? What’s the logic for how changes are performed, and how are these tracked in the source database?
+
+Who/what is the data provider that will transmit the data for downstream consumption?
+
+Will reading from a data source impact its performance?
+
+Does the source system have upstream data dependencies? What are the characteristics of these upstream systems?
+
+Are data-quality checks in place to check for late or missing data?
+
+---
+Almacenamiento
+---
+Is this storage solution compatible with the architecture’s required write and read speeds?
+
+Will storage create a bottleneck for downstream processes?
+
+Do you understand how this storage technology works? Are you utilizing the storage system optimally or committing unnatural acts? For instance, are you applying a high rate of random access updates in an object storage system? (This is an antipattern with significant performance overhead.)
+
+Will this storage system handle anticipated future scale? You should consider all capacity limits on the storage system: total available storage, read operation rate, write volume, etc.
+
+Will downstream users and processes be able to retrieve data in the required service-level agreement (SLA)?
+
+Are you capturing metadata about schema evolution, data flows, data lineage, and so forth? Metadata has a significant impact on the utility of data. Metadata represents an investment in the future, dramatically enhancing discoverability and institutional knowledge to streamline future projects and architecture changes.
+
+Is this a pure storage solution (object storage), or does it support complex query patterns (i.e., a cloud data warehouse)?
+
+Is the storage system schema-agnostic (object storage)? Flexible schema (Cassandra)? Enforced schema (a cloud data warehouse)?
+
+How are you tracking master data, golden records data quality, and data lineage for data governance? (We have more to say on these in “Data Management”.)
+
+How are you handling regulatory compliance and data sovereignty? For example, can you store your data in certain geographical locations but not others?
+
+---
+Ingesta
+---
+
+What are the use cases for the data I’m ingesting? Can I reuse this data rather than create multiple versions of the same dataset?
+
+Are the systems generating and ingesting this data reliably, and is the data available when I need it?
+
+What is the data destination after ingestion?
+
+How frequently will I need to access the data?
+
+In what volume will the data typically arrive?
+
+What format is the data in? Can my downstream storage and transformation systems handle this format?
+
+Is the source data in good shape for immediate downstream use? If so, for how long, and what may cause it to be unusable?
+
+If the data is from a streaming source, does it need to be transformed before reaching its destination? Would an in-flight transformation be appropriate, where the data is transformed within the stream itself?
+
+---
+Batch vs Streaming
+---
+
+If I ingest the data in real time, can downstream storage systems handle the rate of data flow?
+
+Do I need millisecond real-time data ingestion? Or would a micro-batch approach work, accumulating and ingesting data, say, every minute?
+
+What are my use cases for streaming ingestion? What specific benefits do I realize by implementing streaming? If I get data in real time, what actions can I take on that data that would be an improvement upon batch?
+
+Will my streaming-first approach cost more in terms of time, money, maintenance, downtime, and opportunity cost than simply doing batch?
+
+Are my streaming pipeline and system reliable and redundant if infrastructure fails?
+
+What tools are most appropriate for the use case? Should I use a managed service (Amazon Kinesis, Google Cloud Pub/Sub, Google Cloud Dataflow) or stand up my own instances of Kafka, Flink, Spark, Pulsar, etc.? If I do the latter, who will manage it? What are the costs and trade-offs?
+
+If I’m deploying an ML model, what benefits do I have with online predictions and possibly continuous training?
+
+Am I getting data from a live production instance? If so, what’s the impact of my ingestion process on this source system?
+
+---
+Transformation
+---
+What’s the cost and return on investment (ROI) of the transformation? What is the associated business value?
+
+Is the transformation as simple and self-isolated as possible?
+
+What business rules do the transformations support?
+Typically, data is transformed in source systems or in flight during ingestion
+Data preparation, data wrangling, and cleaning—these transformative tasks add value for end consumers of data.
+
+
+---
+ML
+---
+Is the data of sufficient quality to perform reliable feature engineering? Quality requirements and assessments are developed in close collaboration with teams consuming the data.
+
+Is the data discoverable? Can data scientists and ML engineers easily find valuable data?
+
+Where are the technical and organizational boundaries between data engineering and ML engineering? This organizational question has significant architectural implications.
+
+Does the dataset properly represent ground truth? Is it unfairly biased?
+
+
+-->
+
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.futurespace.es/ingesta-es-mas-que-una-mudanza-de-datos/">Ingesta, es más que una mudanza de datos</a></li>
@@ -1630,6 +1756,8 @@ Del apartado <a href="#consideraciones">Consideraciones</a> contesta todas las p
 https://streamsets.com/learn/data-ingestion/
 https://streamsets.com/learn/etl-or-elt/
 https://aprenderbigdata.com/pipeline-de-datos/
+
+FIXME: mover sesiones teóricas a carpeta DE y crear un bloque de ingenieria de datos
 -->
 
 
