@@ -6,21 +6,21 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Modelado de datos NoSQL, analizando al carga de trabajo, las relaciones 1:1, 1:N, 1:S (squillions), N:M, ya sea mediante documentos embebidos o referencias. Patrones de diseño sobre modelos NoSQL y validación de esquemas.">
+        <meta name="description" content="Modelado de datos NoSQL, las relaciones 1:1, 1:N, 1:S (squillions), N:M. Uso de documentos embebidos o referencias, patrones de diseño y validación de esquemas.">
       
       
       
         <link rel="canonical" href="https://aitor-medrano.github.io/iabd/sa/modelado.html">
       
       
-        <link rel="prev" href="agregaciones.html">
+        <link rel="prev" href="mongo.html">
       
       
-        <link rel="next" href="rendimiento.html">
+        <link rel="next" href="agregaciones.html">
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.3">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.2">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.79e020e9.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.d451bc0e.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.a5377069.min.css">
@@ -73,7 +73,7 @@
       
         <meta  property="og:title"  content="Modelado de datos NoSQL - Inteligencia Artificial y Big Data" >
       
-        <meta  property="og:description"  content="Modelado de datos NoSQL, analizando al carga de trabajo, las relaciones 1:1, 1:N, 1:S (squillions), N:M, ya sea mediante documentos embebidos o referencias. Patrones de diseño sobre modelos NoSQL y validación de esquemas." >
+        <meta  property="og:description"  content="Modelado de datos NoSQL, las relaciones 1:1, 1:N, 1:S (squillions), N:M. Uso de documentos embebidos o referencias, patrones de diseño y validación de esquemas." >
       
         <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/sa/modelado.png" >
       
@@ -89,7 +89,7 @@
       
         <meta  name="twitter:title"  content="Modelado de datos NoSQL - Inteligencia Artificial y Big Data" >
       
-        <meta  name="twitter:description"  content="Modelado de datos NoSQL, analizando al carga de trabajo, las relaciones 1:1, 1:N, 1:S (squillions), N:M, ya sea mediante documentos embebidos o referencias. Patrones de diseño sobre modelos NoSQL y validación de esquemas." >
+        <meta  name="twitter:description"  content="Modelado de datos NoSQL, las relaciones 1:1, 1:N, 1:S (squillions), N:M. Uso de documentos embebidos o referencias, patrones de diseño y validación de esquemas." >
       
         <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/sa/modelado.png" >
       
@@ -396,26 +396,6 @@
                 
   
   
-  
-    <li class="md-nav__item">
-      <a href="agregaciones.html" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Agregaciones en MongoDB
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -594,6 +574,26 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="agregaciones.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Agregaciones en MongoDB
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -1554,7 +1554,7 @@
 </div>
 <p>Desde MongoDB recomiendan seguir la siguiente metodología a la hora de definir nuestro modelo de datos, la cual han separado en tres fases:</p>
 <figure style="align: center;">
-    <img src="images/03data-modeling-metodology.png" width="500px">
+    <img src="images/03data-modeling-metodology.png" alt="Metodología de modelado de datos" width="500px">
     <figcaption>Metodología de modelado de datos</figcaption>
 </figure>
 
@@ -1705,7 +1705,7 @@
 <h3 id="referencias-manuales">Referencias manuales<a class="headerlink" href="#referencias-manuales" title="Permanent link">&para;</a></h3>
 <p>De manera similar a una base de datos relacional, se almacena el campo <code>_id</code> de un documento en otro documento a modo de clave ajena. De este modo, la aplicación realiza una segunda consulta para obtener los datos relacionados. Estas referencias son sencillas y suficientes para la mayoría de casos de uso.</p>
 <figure style="align: center;">
-    <img src="images/03data-model-normalized.png" width="500px">
+    <img src="images/03data-model-normalized.png" alt="Referencias manuales" width="500px">
     <figcaption>Referencias manuales</figcaption>
 </figure>
 
@@ -1770,7 +1770,7 @@
 <h3 id="datos-embebidos">Datos embebidos<a class="headerlink" href="#datos-embebidos" title="Permanent link">&para;</a></h3>
 <p>En cambio, si dentro de un documento almacenamos los datos mediante sub-documentos, ya sea dentro de un atributo o un array, podremos obtener todos los datos mediante un único acceso, sin necesidad de claves ajenas ni comprobaciones de integridad referencial.</p>
 <figure style="align: center;">
-    <img src="images/03data-model-denormalized.png" width="500px">
+    <img src="images/03data-model-denormalized.png" alt="Datos embebidos" width="500px">
     <figcaption>Datos embebidos</figcaption>
 </figure>
 
@@ -1826,6 +1826,11 @@
 <div class="admonition caution">
 <p class="admonition-title">Vigilar el tamaño</p>
 <p>Hay que tener siempre en mente la restricción de los 16 MB de BSON. Si vamos a embeber muchos documentos y estos son grandes, hay que vigilar no llegar a dicho tamaño.</p>
+<p>Si queremos saber cuanto ocupa un documento, en el <em>shell</em> podemos obtener su tamaño mediante el comando <code>bsonsize</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="err">&gt;</span><span class="w"> </span><span class="err">var</span><span class="w"> </span><span class="err">p</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">db.people.</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">dO</span><span class="kc">ne</span><span class="err">()</span>
+<span class="linenos" data-linenos="2 "></span><span class="err">&gt;</span><span class="w"> </span><span class="err">bso</span><span class="kc">ns</span><span class="err">ize(p)</span>
+<span class="linenos" data-linenos="3 "></span><span class="err">&lt;</span><span class="w"> </span><span class="mi">96</span>
+</code></pre></div>
 </div>
 </li>
 <li>
@@ -1993,7 +1998,7 @@ Arrays con una alta cardinalidad son una clara pista para no embeber.</p>
 <li>Agrupación: calculado, cubo, atípico</li>
 </ul>
 <figure style="align: center;">
-    <img src="images/03patterns.png">
+    <img src="images/03patterns.png" alt="Patrones y Casos de Uso - mongodb.com">
     <figcaption>Patrones y Casos de Uso - mongodb.com</figcaption>
 </figure>
 
@@ -2141,7 +2146,7 @@ Probablemente, con una pequeña sinopsis, el director y los tres o cuatro actore
 <h4 id="calculado">Calculado<a class="headerlink" href="#calculado" title="Permanent link">&para;</a></h4>
 <p>El patrón <a href="https://www.mongodb.com/blog/post/building-with-patterns-the-computed-pattern">calculado / <em>computed</em></a> se utiliza cuando queremos evitar tener que recalcular datos en cada lectura. Para ello, en una colección aparte se guardan los datos calculados, de manera que cuando llega un nuevo registro a la colección con los datos, se recalcula este valor y se modifica el documento oportuno en la colección de datos calculados.</p>
 <figure style="align: center;">
-    <img src="images/03computed-pattern.png" width="600">
+    <img src="images/03computed-pattern.png" alt="Patrón calculado - mongodb.com" width="600">
     <figcaption>Patrón calculado - mongodb.com</figcaption>
 </figure>
 
@@ -2384,16 +2389,16 @@ Probablemente, con una pequeña sinopsis, el director y los tres o cuatro actore
 
 <ol>
 <li>
-<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 2p) Transforma el siguiente modelo entidad-relación a un modelo documental, teniendo en cuenta que la aplicación se va a encargar de mostrar la información del alumnado y los cursos en los que está matriculado:</p>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 1p) Transforma el siguiente modelo entidad-relación a un modelo documental, teniendo en cuenta que la aplicación se va a encargar de mostrar la información del alumnado y los cursos en los que está matriculado. Para ello, entrega un documento JSON a modo de ejemplo de un/a alumno/a:</p>
 <p><figure style="align: center;">
-    <img src="images/03eerDocenteBig.png" width="800px">
+    <img src="images/03eerDocenteBig.png" alt="Modelo entidad relación escolar" width="800px">
     <figcaption>Modelo entidad relación escolar</figcaption>
 </figure></p>
 <p>¿Qué cambiaría si nos interesase el punto de vista del docente y los cursos que imparte?
 Y si nuestra aplicación tuviera que darle cabida a ambos casos, ¿qué solución propones?</p>
 </li>
 <li>
-<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 2p) Define el modelo de datos necesario para modelar al aplicación de captura de datos del PIA Lara:</p>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 3p) Define el modelo de datos necesario para modelar al aplicación de captura de datos del PIA Lara:</p>
 <ul>
 <li>Debes tener en cuenta la gestión de los usuarios, los cuales pueden ser los usuarios finales (clientes), los técnicos de asistencia (técnicos), así como los usuarios administradores de la aplicación.</li>
 <li>De los clientes, además del nombre completo, sexo y la fecha de nacimiento, registraremos su enfermedad (puede que con subcategorías), así como su patología/disfonía (¿con una descripción?), y otros datos que consideres oportunos.</li>
@@ -2414,6 +2419,9 @@ Y si nuestra aplicación tuviera que darle cabida a ambos casos, ¿qué solució
 </div>
 <p>Para ello, primero define la carga del modelo y a continuación, crea diferentes colecciones/documentos JSON con datos de muestra así como validadores para cada una de las colecciones que necesites.</p>
 </li>
+</ol>
+<p>(opcional)</p>
+<ol start="3">
 <li>
 <p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 1p) Nuestro ayuntamiento está diseñando un plan energético para fomentar la instalación de placas solares. Aquellos viviendas que se sitúen en barrios que generan más energía de la que consumen recibirán un bono económico por el exceso de energía.</p>
 <p>Nuestra base de datos almacena, para cada vivienda, cuanta energía produce por hora (en kW), cuanta consume, y cuanta necesita consumir de la red eléctrica. Un dato de una muestra de energía sería:</p>
@@ -2513,10 +2521,10 @@ FIXME: revisar relaciones N:M ... explicar mejor, diferenciar entre 1:F y 1:N o 
         </div>
         
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
-  Volver al principio
-</button>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Volver al principio
+          </button>
         
       </main>
       
@@ -2527,7 +2535,7 @@ FIXME: revisar relaciones N:M ... explicar mejor, diferenciar entre 1:F y 1:N o 
       <nav class="md-footer__inner md-grid" aria-label="Pie" >
         
           
-          <a href="agregaciones.html" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Agregaciones en MongoDB">
+          <a href="mongo.html" class="md-footer__link md-footer__link--prev" aria-label="Anterior: MongoDB">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -2537,20 +2545,20 @@ FIXME: revisar relaciones N:M ... explicar mejor, diferenciar entre 1:F y 1:N o 
                 Anterior
               </span>
               <div class="md-ellipsis">
-                Agregaciones en MongoDB
+                MongoDB
               </div>
             </div>
           </a>
         
         
           
-          <a href="rendimiento.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Rendimiento">
+          <a href="agregaciones.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Agregaciones en MongoDB">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Siguiente
               </span>
               <div class="md-ellipsis">
-                Rendimiento
+                Agregaciones en MongoDB
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -2609,7 +2617,6 @@ FIXME: revisar relaciones N:M ... explicar mejor, diferenciar entre 1:F y 1:N o 
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    
     
       <div class="md-consent" data-md-component="consent" id="__consent" hidden>
         <div class="md-consent__overlay"></div>
@@ -2671,7 +2678,7 @@ FIXME: revisar relaciones N:M ... explicar mejor, diferenciar entre 1:F y 1:N o 
     <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.a264c092.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.6eac0284.min.js"></script>
+      <script src="../assets/javascripts/bundle.726fbb30.min.js"></script>
       
     
   </body>
