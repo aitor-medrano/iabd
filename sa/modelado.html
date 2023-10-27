@@ -554,6 +554,26 @@
     Validación de esquemas
   </a>
   
+    <nav class="md-nav" aria-label="Validación de esquemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validando-una-coleccion-existente" class="md-nav__link">
+    Validando una colección existente
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obteniendo-el-validador" class="md-nav__link">
+    Obteniendo el validador
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1487,6 +1507,26 @@
     Validación de esquemas
   </a>
   
+    <nav class="md-nav" aria-label="Validación de esquemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validando-una-coleccion-existente" class="md-nav__link">
+    Validando una colección existente
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obteniendo-el-validador" class="md-nav__link">
+    Obteniendo el validador
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1543,8 +1583,8 @@
 <li>Las propiedades transaccionales <a href="mongo.html#acid">ACID</a> se cumplen a nivel de documento. Si tenemos la información separada en varios documentos, tenemos que utilizar el <a href="https://www.mongodb.com/docs/manual/core/transactions/">modelo transaccional</a> de <em>MongoDB</em> de forma programativa.</li>
 </ul>
 <p>Dependiendo del tipo de relación entre dos documentos, normalizaremos los datos para minimizar la redundancia pero manteniendo en la medida de lo posible que mediante operaciones atómicas se mantenga la integridad de los datos. Para ello, bien crearemos referencias entre dos documentos o embeberemos un documento dentro de otro, pero intentando que la información más utilizada quepa en un único documento.</p>
-<p><em>MongoDB</em> es una base de datos documental, no relacional, donde el esquema no se debe basar en el uso de claves ajenas/<em>joins</em>, ya que realmente no existen. A la hora de diseñar un esquema, si nos encontramos que el esquema está en 3FN o si cuando hacemos consultas estamos teniendo que realizar varias consultas de manera programativa (primero acceder a una tabla, con ese <code>_id</code> ir a otra tabla, etc… o hacemos un uso extensivo del operador <code>$lookup</code> mediante el <em>framework</em> de agregación.) es que no estamos siguiendo el enfoque adecuado.</p>
-<p>En resumen, diseñar un buen modelo de datos puede suponer que nuestro código sea más legible y mantenible, así como un mayor rendimiento de nuestras aplicaciones.</p>
+<p><em>MongoDB</em> es una base de datos documental, no relacional, donde el esquema no se debe basar en el uso de claves ajenas/<em>joins</em>, ya que realmente no existen. A la hora de diseñar un esquema, si nos encontramos que el esquema está en 3FN o si cuando hacemos consultas estamos teniendo que realizar varias consultas de manera programativa (primero acceder a una tabla, con ese <code>_id</code> ir a otra tabla, etc… o hacemos un uso extensivo del operador <code>$lookup</code> mediante el <em>framework</em> de agregación) es que no estamos siguiendo el enfoque adecuado.</p>
+<p>En resumen, diseñar un buen modelo de datos documental supondrá que nuestro código será más legible y mantenible, así como tener un mayor rendimiento de nuestras aplicaciones, aunque conlleve la redundancia de datos.</p>
 <h2 id="metodologia">Metodología<a class="headerlink" href="#metodologia" title="Permanent link">&para;</a></h2>
 <p>A la hora de tomar decisiones sobre nuestro modelo, nuestra primera decisión es si vamos a modelar para obtener una mayor simplicidad del esquema o queremos un mejor rendimiento.</p>
 <p>Si nuestro equipo de desarrollo es pequeño o estamos desarrollando una única aplicación, nos decantaremos por la <strong>simplicidad</strong> cuando las consultas suelan ser siempre las mismas, pudiendo embeber la mayoría de entidades en un único documento. En cambio, si nuestro equipo es grande, multiples aplicaciones realizan un gran número de lecturas/escrituras, nos centraremos en el <strong>rendimiento</strong>, donde nos centraremos en el tamaño de los datos, la cantidad de las operaciones y su calificación/importancia, y embebiendo o relacionando los documentos conforme sea mejor.</p>
@@ -1956,6 +1996,13 @@
 <span class="linenos" data-linenos="5 "></span><span class="w">  </span><span class="nx">libros</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">]</span>
 <span class="linenos" data-linenos="6 "></span><span class="p">}</span>
 </code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Aunque tenemos información redundante</p>
+<p>Al utilizar referencias para representar una relación muchos a mucho, realmente sólo necesitamos un array de referencias en sólo una de las colección.
+Si elementos el atributo <code>libros</code> de la colección <code>autor-con-libros</code> ¿Podriamos obtener todos los libros de un autor? Por supuesto.
+Y sí quisiéramos obtener todos los libros de autores alemanes, aunque nos tocase realizar un <em>join</em>, también lo podríamos conseguir.</p>
+<p>Dicho esto, aunque podemos tener un array en ambas colecciones, dependiendo del caso, puede conllevar una sobrecarga extra innecesaria.</p>
+</div>
 </li>
 <li>
 <p>Embeber un documento dentro de otro (<em>One Way Embedding</em>). Por ejemplo:</p>
@@ -1971,7 +2018,7 @@
 <span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="nx">autores</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="nx">nombre</span><span class="o">:</span><span class="s2">&quot;Michael Ende&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">pais</span><span class="o">:</span><span class="s2">&quot;Alemania&quot;</span><span class="p">}]</span>
 <span class="linenos" data-linenos="11 "></span><span class="p">}</span>
 </code></pre></div>
-<p>En principio este enfoque no se recomienda porque el documento puede crecer mucho y provocar anomalías de modificaciones donde la información no es consistente. Si se opta por esta solución, hay que tener en cuenta que si un documento depende de otro para su creación (por ejemplo, si metemos los profesores dentro de los estudiantes, no vamos a poder dar de alta a profesores sin haber dado de alta previamente a un alumno).</p>
+<p>En principio este enfoque no se recomienda porque el documento puede crecer mucho y provocar anomalías de modificaciones donde la información no es consistente. Si se opta por esta solución, hay que tener en cuenta que si un documento depende de otro para su creación. Por ejemplo, en una colección que relacione profesor con alumnos, si metemos los profesores dentro de los estudiantes, no vamos a poder dar de alta a profesores sin haber dado de alta previamente a un alumno.</p>
 <p>A modo de resumen, en las relaciones N:M, hay que establecer el tamaño de N y M. Si N como máximo vale 3 y M 500000, entonces deberíamos seguir un enfoque de embeber la N dentro de la M (<em>One Way Embedding</em>).</p>
 <p>En cambio, si N vale 3 y M vale 5, entonces podemos hacer que ambos embeban al otro documento (<em>Two Way Embedding</em>).</p>
 </li>
@@ -1985,6 +2032,28 @@
 <p>Los array no pueden crecer de forma descontrolada.
 Si hay un par de cientos de documentos en el lado de N, no hay que embeberlos. Si hay más de unos pocos miles de documentos en el lado de N, no hay que usar un array de referencias.
 Arrays con una alta cardinalidad son una clara pista para no embeber.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Autoevaluación</p>
+<p>A partir del siguiente supuesto, realiza el modelo documental necesario.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Enunciado</label><label for="__tabbed_1_2">Solución</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Tenemos <strong>almacenes</strong>, de los cuales, además de su nombre, necesitamos almacenar su <strong>dirección</strong>, con su calle, ciudad, provincia y país. No tendremos más de 200 almacenes.
+Cada uno de los almacenes almacenará <strong>productos</strong>, hasta un máximo de 10.000 por almacén. De cada producto, además de su código, nombre y descripción, guardaremos los últimos 200 <strong>precios</strong> a los cuales se ha vendido cada producto.
+Además, cada producto puede tener <strong>opiniones</strong> creadas por usuarios, hasta un máximo de 1.000. Para estas opiniones, además de los datos del usuario, almacenaremos la fecha y el texto de la opinión.</p>
+<p>Respecto a los <strong>usuarios</strong>, además del nombre, guardaremos la <strong>dirección</strong> completa (calle, ciudad y código postal) donde enviar los productos, así como hasta un máximo de 10 tarjetas de crédito con la que realiza los pagos.
+De las <strong>tarjetas</strong>, almacenaremos su tipo, número bancario, fecha de expedición y código de seguridad.</p>
+<p>¿Cuántas colecciones crearías?</p>
+</div>
+<div class="tabbed-block">
+<p><figure style="align: center;">
+    <img src="images/03lab-many-to-many.png" alt="Lab Muchos a muchos - mongodb.com" width="500px">
+    <figcaption>Lab Muchos a muchos - mongodb.com</figcaption>
+</figure></p>
+</div>
+</div>
+</div>
 </div>
 <h3 id="jerarquicas">Jerárquicas<a class="headerlink" href="#jerarquicas" title="Permanent link">&para;</a></h3>
 <p>Si tenemos que modelar alguna entidad que tenga hijos y nos importa las relaciones padre-hijos (categoría-subcategoría), podemos tanto embeber un array con los hijos de un documento (<em>children</em>), como embeber un array con los padres de un documento (<em>ancestors</em>)</p>
@@ -2348,6 +2417,7 @@ Probablemente, con una pequeña sinopsis, el director y los tres o cuatro actore
 <span class="linenos" data-linenos="11 "></span><span class="w">  </span><span class="p">}</span>
 <span class="linenos" data-linenos="12 "></span><span class="p">}</span>
 </code></pre></div>
+<h3 id="validando-una-coleccion-existente">Validando una colección existente<a class="headerlink" href="#validando-una-coleccion-existente" title="Permanent link">&para;</a></h3>
 <div class="admonition caution inline end">
 <p class="admonition-title">MongoAtlas y <code>collMod</code></p>
 <p>Para poder ejecutar <code>collMod</code> el usuario necesita permisos de administrador, y con MongoAtlas, el usuario que se nos crea por defecto no tiene los permisos necesarios.</p>
@@ -2357,6 +2427,40 @@ Probablemente, con una pequeña sinopsis, el director y los tres o cuatro actore
 </code></pre></div>
 <p>Así pues, podemos sustituir la validación previa con la nueva sobre la colección de <code>personas</code> mediante:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">runCommand</span><span class="p">({</span><span class="s2">&quot;collMod&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;personas&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;validator&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">validadorConsolas</span><span class="p">})</span>
+</code></pre></div>
+<h3 id="obteniendo-el-validador">Obteniendo el validador<a class="headerlink" href="#obteniendo-el-validador" title="Permanent link">&para;</a></h3>
+<p>Si queremos saber qué validador tiene una determinada colección, mediante <em>MongoDB Compass podemos acceder a la pestaña </em>Validation*, y además de comprobar el validador existente, podemos cambiar el comportamiento y el nivel de validación:</p>
+<figure style="align: center;">
+    <img src="images/03validation-compass.png" alt="Validación de documentos en MongoDB Compass">
+    <figcaption>Validación de documentos en MongoDB Compass</figcaption>
+</figure>
+
+<p>Si queremos <a href="https://www.mongodb.com/docs/manual/core/schema-validation/view-existing-validation-rules">obtener el validador mediante comandos</a>, podemos emplear el método <a href="https://www.mongodb.com/docs/manual/reference/method/db.getCollectionInfos"><code>getCollectionInfos</code></a> pasándole la colección de la que queremos información:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">getCollectionInfos</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;personas&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">)[</span><span class="mf">0</span><span class="p">].</span><span class="nx">options</span><span class="p">.</span><span class="nx">validator</span>
+<span class="linenos" data-linenos="2 "></span><span class="o">&lt;</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="s1">&#39;$jsonSchema&#39;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">      </span><span class="nx">bsonType</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">      </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Validador de consolas&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="6 "></span><span class="w">      </span><span class="p">...</span>
+<span class="linenos" data-linenos="7 "></span><span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p>O mediante el comando de base de datos <a href="https://www.mongodb.com/docs/manual/reference/command/listCollections/#mongodb-dbcommand-dbcmd.listCollections"><code>listCollections</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">runCommand</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">listCollections</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">filter</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;personas&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">)</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="o">&lt;</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="nx">cursor</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="nx">Long</span><span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="nx">ns</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;iabd.$cmd.listCollections&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="nx">firstBatch</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">      </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">        </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;personas&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">        </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;collection&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">        </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">          </span><span class="nx">validator</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">            </span><span class="s1">&#39;$jsonSchema&#39;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">              </span><span class="nx">bsonType</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">              </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Validador de consolas&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">  </span><span class="p">...</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">  </span><span class="p">}</span>
 </code></pre></div>
 <p>Más información sobre la validación de esquemas en <a href="https://www.mongodb.com/docs/manual/core/schema-validation/">https://www.mongodb.com/docs/manual/core/schema-validation/</a> y en <a href="https://www.digitalocean.com/community/tutorials/how-to-use-schema-validation-in-mongodb">https://www.digitalocean.com/community/tutorials/how-to-use-schema-validation-in-mongodb</a></p>
 <div class="admonition important">
@@ -2455,16 +2559,7 @@ Y si nuestra aplicación tuviera que darle cabida a ambos casos, ¿qué solució
 </ol>
 <!--
 https://university.mongodb.com/exam/guide
-
 https://github.com/JaimeRC/mongodb-university-courses/blob/master/M320:%20Data%20Modeling/Chapter%204:%20Patterns%20(Part%202)/README.md
-
-https://learning.oreilly.com/library/view/mastering-mongodb-6-x/9781803243863/B18155_15.xhtml#_idParaDest-284
-
-https://www.mongodb.com/docs/manual/core/schema-validation/view-existing-validation-rules/#std-label-schema-view-validation-rules
--->
-
-<!--
-FIXME: revisar relaciones N:M ... explicar mejor, diferenciar entre 1:F y 1:N o 1:M bidireccional
 -->
 
 
