@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.3">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.2">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.79e020e9.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.d451bc0e.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.a5377069.min.css">
@@ -2293,6 +2293,12 @@
       <a href="../tags.html#modelado-documental" class="md-tag">Modelado documental</a>
     
   
+    
+    
+    
+      <a href="../tags.html#bda-ra1" class="md-tag">BDA RA1</a>
+    
+  
 </nav>
 
 
@@ -2379,7 +2385,7 @@
 <ul>
 <li>Caso de uso<ul>
 <li>Una organización ha desplegado 100.000.000 de sensores meteorológicos.</li>
-<li>El objeto es capturar en una base de datos los datos transmitidos de todos los dispositivos para realizar predicciones y analizar tendencias.</li>
+<li>El objetivo es capturar en una base de datos los datos transmitidos de todos los dispositivos para realizar predicciones y analizar tendencias.</li>
 </ul>
 </li>
 <li>Datos principales<ul>
@@ -3215,7 +3221,7 @@ Probablemente, con una pequeña sinopsis, el director y los tres o cuatro actore
 
 <ol>
 <li>
-<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 1p) Transforma el siguiente modelo entidad-relación a un modelo documental, teniendo en cuenta que la aplicación se va a encargar de mostrar la información del alumnado y los cursos en los que está matriculado. Para ello, entrega un documento JSON a modo de ejemplo de un/a alumno/a:</p>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 1p) Transforma el siguiente modelo entidad-relación a un modelo documental, teniendo en cuenta que la aplicación se va a encargar de mostrar la información del alumnado y los cursos en los que está matriculado. Para ello, entrega un documento JSON por cada colección con un documento a modo de ejemplo:</p>
 <p><figure style="align: center;">
     <img src="images/03eerDocenteBig.png" alt="Modelo entidad relación escolar" width="800px">
     <figcaption>Modelo entidad relación escolar</figcaption>
@@ -3224,14 +3230,15 @@ Probablemente, con una pequeña sinopsis, el director y los tres o cuatro actore
 Y si nuestra aplicación tuviera que darle cabida a ambos casos, ¿qué solución propones?</p>
 </li>
 <li>
-<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 3p) Define el modelo de datos necesario para modelar al aplicación de captura de datos del PIA Lara:</p>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 3p) Define el modelo de datos necesario para modelar la aplicación de captura de datos del PIA Lara:</p>
 <ul>
 <li>Debes tener en cuenta la gestión de los usuarios, los cuales pueden ser los usuarios finales (clientes), los técnicos de asistencia (técnicos), así como los usuarios administradores de la aplicación.</li>
 <li>De los clientes, además del nombre completo, sexo y la fecha de nacimiento, registraremos su enfermedad (puede que con subcategorías), así como su patología/disfonía (¿con una descripción?), y otros datos que consideres oportunos.</li>
-<li>Un cliente va a grabar muchas muestras de audios, y además del audio (el cual almacenaremos en un sistema externo y del cual en nuestra base de datos NoSQL almacenaremos su ruta/id), guardaremos la fecha de la grabación, usuario, texto, ¿estado de ánimo del cliente?, ¿velocidad de grabación? ... (aquí deberéis pensar en todos los datos que necesitemos para un mejor etiquetado de los datos).</li>
-<li>Los textos de grabación (<em>sylabus</em>) pueden estar predefinidos, de manera que desde el administrador o el técnico se dén de alta, o que cada cliente/técnico los inserte en el momento de grabar el audio. Todos los textos se agruparán por categoría, y cada texto/frase, puede tener un número de orden, así como un estado de ánimo.</li>
+<li>Un cliente va a grabar muchas muestras de audios, y además del audio (el cual almacenaremos en un sistema externo y del cual en nuestra base de datos NoSQL almacenaremos su ruta/id), guardaremos la fecha de la grabación, usuario, texto, categoría/tag, ¿estado de ánimo del cliente?, ¿velocidad de grabación? ... (aquí deberéis pensar en todos los datos que necesitemos para un mejor etiquetado de los datos). Además, en todo momento, necesitamos saber cuantos audios ha grabado un cliente, así como la categoría del último audio grabado y la última vez que entró al sistema.</li>
+<li>Los textos de grabación (<em>sylabus</em>) pueden estar predefinidos, de manera que desde el administrador o el técnico se dén de alta, o que cada cliente/técnico los inserte en el momento de grabar el audio. Todos los textos se agruparán por categoría/tag, y cada texto/frase, puede tener un número de orden, así como un estado de ánimo. Puede ser útil almacenar la cantidad de audios ya almacenados, así como cuantos usuarios diferentes han grabado dichos textos.</li>
 <li>Los listados que luego necesitaremos para recuperar los datos son:<ul>
-<li>Cliente de una determinada enfermedad/patología, pudiendo segmentar por rangos de edad y sexo.</li>
+<li>Clientes de una determinada enfermedad/patología, pudiendo segmentar por rangos de edad y sexo.</li>
+<li>Clientes con datos de identificación, así como cantidad de audios grabados, última categoría, fecha de acceso, etc...</li>
 <li>Audios y datos de las muestras de un determinado cliente.</li>
 <li>Audios y datos de las muestras de una determinada enfermedad.</li>
 <li>Audios y datos de las muestras de una determinada patología.</li>
@@ -3243,7 +3250,12 @@ Y si nuestra aplicación tuviera que darle cabida a ambos casos, ¿qué solució
 <p class="admonition-title">Recuerda</p>
 <p>Para luego realizar un buen modelo de IA, los datos en su mayoría deberían ser numéricos. Los datos categóricos sirven para matizar y/o filtrar los datos, y si son un conjunto cerrado, luego se pueden codificar como números, por ejemplo mediante el patrón <em>One Hot Encoding</em>.</p>
 </div>
-<p>Para ello, primero define la carga del modelo y a continuación, crea diferentes colecciones/documentos JSON con datos de muestra así como validadores para cada una de las colecciones que necesites.</p>
+<p>Para ello:</p>
+<ol>
+<li>(0.5p) Define la carga del modelo.</li>
+<li>(1.5p) Crea diferentes colecciones/documentos JSON con datos de muestra.</li>
+<li>(1p) Define validadores para cada una de las colecciones que necesites.</li>
+</ol>
 </li>
 </ol>
 <p>(opcional)</p>
@@ -3338,10 +3350,10 @@ https://github.com/JaimeRC/mongodb-university-courses/blob/master/M320:%20Data%2
         </div>
         
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
-  Volver al principio
-</button>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Volver al principio
+          </button>
         
       </main>
       
@@ -3435,7 +3447,6 @@ https://github.com/JaimeRC/mongodb-university-courses/blob/master/M320:%20Data%2
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    
       <div class="md-consent" data-md-component="consent" id="__consent" hidden>
         <div class="md-consent__overlay"></div>
         <aside class="md-consent__inner">
@@ -3496,7 +3507,7 @@ https://github.com/JaimeRC/mongodb-university-courses/blob/master/M320:%20Data%2
     <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.a264c092.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.6eac0284.min.js"></script>
+      <script src="../assets/javascripts/bundle.726fbb30.min.js"></script>
       
     
   </body>
