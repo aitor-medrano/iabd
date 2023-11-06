@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Consultas agregadas mediante el framework de agregación en MongoDB, mediante los diversos operadores $group, $project, $match, $unwind o joins mediante $lookup.">
+        <meta name="description" content="Framework de agregación en MongoDB">
       
       
       
@@ -73,7 +73,7 @@
       
         <meta  property="og:title"  content="Framework de agregación en MongoDB - Inteligencia Artificial y Big Data" >
       
-        <meta  property="og:description"  content="Consultas agregadas mediante el framework de agregación en MongoDB, mediante los diversos operadores $group, $project, $match, $unwind o joins mediante $lookup." >
+        <meta  property="og:description"  content="Framework de agregación en MongoDB" >
       
         <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/sa/agregaciones.png" >
       
@@ -89,7 +89,7 @@
       
         <meta  name="twitter:title"  content="Framework de agregación en MongoDB - Inteligencia Artificial y Big Data" >
       
-        <meta  name="twitter:description"  content="Consultas agregadas mediante el framework de agregación en MongoDB, mediante los diversos operadores $group, $project, $match, $unwind o joins mediante $lookup." >
+        <meta  name="twitter:description"  content="Framework de agregación en MongoDB" >
       
         <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/sa/agregaciones.png" >
       
@@ -2444,7 +2444,7 @@
 <p class="admonition-title">Cuidado con el tamaño</p>
 <p>El resultado del <em>pipeline</em> es un documento y por lo tanto está sujeto a la restricción de BSON, que limita su tamaño a 16MB.</p>
 </div>
-<p>En la siguiente imagen se resumen los pasos de una agrupación donde primero se eligen los elementos que vamos a agrupar mediante <code>$match</code>, el resultado saliente se agrupan con <code>$group</code>, y sobre los agrupados mediante <code>$sum</code> se calcula el total:</p>
+<p>En la siguiente imagen se resumen los pasos de una agrupación donde primero se eligen los elementos que vamos a agrupar mediante <code>$match</code>, el resultado saliente se agrupan con <code>$group</code>, y sobre los agrupado mediante <code>$sum</code> se calcula el total:</p>
 <figure style="align: center;">
     <img src="images/05aggregation-pipeline.png">
     <figcaption>Ejemplo de pipeline con $match y $group</figcaption>
@@ -2519,7 +2519,7 @@
 <p>O si ya nos hemos conectado previamente, cargarlo mediante <code>load</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">load</span><span class="p">(</span><span class="s2">&quot;productos.js&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>O copiar el contenido y pegarlo directamente en el <em>shell</em> de <em>MongoDB Compass</em> (son pocos datos).</p>
+<p>O copiar el contenido y pegarlo directamente en el shell de MongoDB Compass (son pocos datos).</p>
 </div>
 <h2 id="group">$group<a class="headerlink" href="#group" title="Permanent link">&para;</a></h2>
 <p>La fase <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/"><code>group</code></a> agrupa los documentos con el propósito de calcular valores agregados de una colección de documentos. Por ejemplo, podemos usar <code>$group</code> para calcular la media de páginas visitadas de manera diaria.</p>
@@ -2541,7 +2541,7 @@
 <span class="linenos" data-linenos="10 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">_id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Google&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">total</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">}</span>
 <span class="linenos" data-linenos="11 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">_id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Amazon&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">total</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
-<p>Si lo que queremos es que el valor del identificador contenga un objeto, lo podemos hacer asociándolo como valor:</p>
+<p>Si lo que queremos es que el valor del identificador contenga un objeto, lo podemos hacer asociandolo como valor:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">productos</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$group</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="hll"><span class="linenos" data-linenos=" 3 "></span><span class="w">      </span><span class="nx">_id</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;empresa&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$fabricante&quot;</span><span class="w"> </span><span class="p">},</span>
@@ -2763,11 +2763,11 @@
 </ol>
 <h2 id="project">$project<a class="headerlink" href="#project" title="Permanent link">&para;</a></h2>
 <p>Si queremos realizar una proyección sobre el conjunto de resultados y quedarnos con un subconjunto de los campos usaremos el operador <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/"><code>$project</code></a>. Como resultado obtendremos el mismo número de documentos, y en el orden indicado en la proyección.</p>
-<p>La proyección dentro del fram*ework de agregación es mucho más potente que dentro de las consultas normales. Se emplea para:</p>
+<p>La proyección dentro del <em>framework</em> de agregación es mucho más potente que dentro de las consultas normales. Se emplea para:</p>
 <ul>
 <li>renombrar campos.</li>
 <li>introducir campos calculados en el documento resultante mediante <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/"><code>$add</code></a>, <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/"><code>$substract</code></a>, <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/"><code>$multiply</code></a>, <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/"><code>$divide</code></a> o <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/mod/"><code>$mod</code></a></li>
-<li>transformar campos a mayúsculas <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/"><code>$toUpper</code></a> o minúsculas <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/"><code>$toLower</code></a>, unir campos mediante <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/"><code>$concat</code></a> u obtener subcadenas con <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/substr/"><code>$substr</code></a>.</li>
+<li>transformar campos a mayúsculas <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/"><code>$toUpper</code></a> o minúsculas <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/"><code>$toLower</code></a>, concatenar campos mediante <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/"><code>$concat</code></a> u obtener subcadenas con <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/substr/"><code>$substr</code></a>.</li>
 <li>transformar campos en base a valores obtenidos a partir de una condición mediante expresiones lógicas con los operadores de comparación vistos en las consultas.</li>
 </ul>
 <!-- Trabajar con fechas: https://www.mongodb.com/docs/manual/reference/operator/aggregation/#date-expression-operators -->
@@ -2877,7 +2877,7 @@
 </div>
 </div>
 <h2 id="skip-y-limit">$skip y $limit<a class="headerlink" href="#skip-y-limit" title="Permanent link">&para;</a></h2>
-<p>El operador <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/"><code>$limit</code></a> únicamente limita el número de documentos que pasan a través del pipeline.</p>
+<p>El operador <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/"><code>$limit</code></a> únicamente limita el número de documentos que pasan a través del <em>pipeline</em>.</p>
 <p>El operador recibe un número como parámetro:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">productos</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([{</span><span class="nx">$limit</span><span class="o">:</span><span class="mf">3</span><span class="p">}])</span>
 </code></pre></div>
@@ -2918,7 +2918,7 @@
 </code></pre></div>
 </div>
 <h2 id="unwind">$unwind<a class="headerlink" href="#unwind" title="Permanent link">&para;</a></h2>
-<p>El operador <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/"><code>$unwind</code></a> es muy interesante y se utiliza sólo con campos de tipo array. Al usarlo con un campo array de tamaño N en un documento, lo transforma en N documentos con el campo tomando el valor individual de cada uno de los elementos del array.</p>
+<p>El operador <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/"><code>$unwind</code></a> es muy interesante y se utiliza sólo con operadores array. Al usarlo con un campo array de tamaño N en un documento, lo transforma en N documentos con el campo tomando el valor individual de cada uno de los elementos del array.</p>
 <p>Si retomamos el ejemplo de la sesión anterior donde actualizábamos una colección de enlaces, teníamos un enlace con la siguiente información:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">enlaces</span><span class="p">.</span><span class="nx">findOne</span><span class="p">()</span>
 <span class="linenos" data-linenos="2 "></span><span class="o">&lt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">_id</span><span class="o">:</span><span class="w"> </span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&quot;635533668420cd585aac88f3&quot;</span><span class="p">),</span>
@@ -2961,7 +2961,7 @@
 </code></pre></div>
 <h3 id="doble-unwind">Doble $unwind<a class="headerlink" href="#doble-unwind" title="Permanent link">&para;</a></h3>
 <p>Si trabajamos con documentos que tienen varios arrays, podemos necesitar desenrollar los dos arrays. Al hacer un doble <em>unwind</em> se crea un producto cartesiano entre los elementos de los 2 arrays.</p>
-<p>Supongamos que tenemos los siguientes documentos de un inventario de ropa:</p>
+<p>Supongamos que tenemos los datos del siguiente inventario de ropa:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">inventario</span><span class="p">.</span><span class="nx">drop</span><span class="p">();</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">inventario</span><span class="p">.</span><span class="nx">insertOne</span><span class="p">({</span><span class="s1">&#39;nombre&#39;</span><span class="o">:</span><span class="s2">&quot;Camiseta&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">                           </span><span class="s1">&#39;tallas&#39;</span><span class="o">:</span><span class="p">[</span><span class="s2">&quot;S&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;M&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;L&quot;</span><span class="p">],</span>
@@ -3081,7 +3081,7 @@
 <span class="linenos" data-linenos="17 "></span><span class="w">       </span><span class="kc">na</span><span class="err">me</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Texas&#39;</span><span class="p">,</span>
 <span class="linenos" data-linenos="18 "></span><span class="w">       </span><span class="err">abbrevia</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;TX&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
-<p>Como la relación siempre va a provocar la creación de un array, si nos interesa (por ejemplo, porque es una relación 1:1), mediante <code>$unwind</code> lo podemos deshacer:</p>
+<p>Como la relación siempre va a provocar la creación de un array, mediante <code>$unwind</code>, lo podemos deshacer:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Consulta</label><label for="__tabbed_3_2">Resultado</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -3152,7 +3152,7 @@
 <span class="linenos" data-linenos="3 "></span><span class="p">{</span><span class="w"> </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;TX&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">es</span><span class="kc">ta</span><span class="err">do</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Texas&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">poblacio</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="mi">16986510</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 <h2 id="persistiendo-los-resultados">Persistiendo los resultados<a class="headerlink" href="#persistiendo-los-resultados" title="Permanent link">&para;</a></h2>
-<p>Una vez hemos realizado nuestras consultas mediante el <em>framework</em> de agregación, es muy posible que queramos almacenar el resultado en una nueva colección para poder volver a consultar el resultado sin necesidad de ejecutar todas las fases.</p>
+<p>Una vez hemos realizado nuestras consultas mediante el framework de agregación, es muy posible que queramos almacenar el resultado en una nueva colección para poder volver a consultar el resultado sin necesidad de ejecutar todas las fases.</p>
 <p>Para ello, podemos emplear los operadores:</p>
 <ul>
 <li><a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/"><code>$out</code></a> recoge los documentos de una agregación y los persiste en una colección, sobrescribiendo los datos existentes.</li>
@@ -3183,8 +3183,8 @@
 <span class="linenos" data-linenos="2 "></span><span class="o">&lt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">_id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;WY&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">estado</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Wyoming&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">poblacion</span><span class="o">:</span><span class="w"> </span><span class="mf">453588</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 <h2 id="de-sql-al-pipeline-de-agregaciones">De SQL al Pipeline de agregaciones<a class="headerlink" href="#de-sql-al-pipeline-de-agregaciones" title="Permanent link">&para;</a></h2>
-<p>Ya hemos visto que el pipeline ofrece operadores para realizar la misma funcionalidad de agrupación que ofrece SQL.</p>
-<p>Si relacionamos los comandos SQL con el pipeline de agregaciones tenemos las siguientes equivalencias:</p>
+<p>Ya hemos visto que el <em>pipeline</em> ofrece operadores para realizar la misma funcionalidad de agrupación que ofrece SQL.</p>
+<p>Si relacionamos los comandos SQL con el <em>pipeline</em> de agregaciones tenemos las siguientes equivalencias:</p>
 <table>
 <thead>
 <tr>
@@ -3194,55 +3194,55 @@
 </thead>
 <tbody>
 <tr>
-<td>WHERE</td>
-<td>$match</td>
+<td><code>WHERE</code></td>
+<td><code>$match</code></td>
 </tr>
 <tr>
-<td>GROUP BY</td>
-<td>$group</td>
+<td><code>GROUP BY</code></td>
+<td><code>$group</code></td>
 </tr>
 <tr>
-<td>HAVING</td>
-<td>$match</td>
+<td><code>HAVING</code></td>
+<td><code>$match</code></td>
 </tr>
 <tr>
-<td>SELECT</td>
-<td>$project</td>
+<td><code>SELECT</code></td>
+<td><code>$project</code></td>
 </tr>
 <tr>
-<td>ORDER BY</td>
-<td>$sort</td>
+<td><code>ORDER BY</code></td>
+<td><code>$sort</code></td>
 </tr>
 <tr>
-<td>LIMIT</td>
-<td>$limit</td>
+<td><code>LIMIT</code></td>
+<td><code>$limit</code></td>
 </tr>
 <tr>
-<td>SUM()</td>
-<td>$sum</td>
+<td><code>SUM()</code></td>
+<td><code>$sum</code></td>
 </tr>
 <tr>
-<td>COUNT()</td>
-<td>$sum / $sortByCount</td>
+<td><code>COUNT()</code></td>
+<td><code>$sum</code> / <code>$sortByCount</code></td>
 </tr>
 <tr>
-<td>join</td>
-<td>$lookup</td>
+<td><em>join</em></td>
+<td><code>$lookup</code></td>
 </tr>
 </tbody>
 </table>
-<p>Podemos encontrar ejemplos de consultas SQL transformadas al pipeline en <a href="https://www.mongodb.com/docs/manual/reference/sql-aggregation-comparison/">https://www.mongodb.com/docs/manual/reference/sql-aggregation-comparison/</a></p>
+<p>Podemos encontrar ejemplos de consultas SQL transformadas al <em>pipeline</em> en <a href="https://www.mongodb.com/docs/manual/reference/sql-aggregation-comparison/">https://www.mongodb.com/docs/manual/reference/sql-aggregation-comparison/</a></p>
 <h2 id="limitaciones">Limitaciones<a class="headerlink" href="#limitaciones" title="Permanent link">&para;</a></h2>
 <p>Hay que tener en cuenta las siguiente limitaciones:</p>
 <ul>
-<li>En versiones anteriores a la 2.6, el pipeline devolvía en cada fase un objeto BSON, y por tanto, el resultado estaba limitado a 16MB</li>
+<li>En versiones anteriores a la 2.6, el <em>pipeline</em> devolvía en cada fase un objeto BSON, y por tanto, el resultado estaba limitado a 16MB</li>
 <li>Actualmente, sólo cada documento que forme parte del resultado final debe ocupar menos de 16MB.</li>
-<li>Las fases tienen un límite de 100MB en memoria. Si una fase excede dicho límite, se producirá un error. En este caso, hay que habilitar el uso de disco mediante <code>allowDiskUse</code> en las opciones de la agregación.</li>
+<li>Las fases tienen un límite de 100MB en memoria. Antes de la versión 6.0, si una consulta superaba el límite se producía un error, a no se que se habilitara el uso de disco de manera explicita mediante <code>{allowDiskUse: true}</code> en cada consulta. Desde la versión 6.0, a partir de los 100MB se utilizan ficheros temporales en disco por defecto.</li>
 </ul>
 <p>Más información en <a href="https://www.mongodb.com/docs/manual/core/aggregation-pipeline-limits/">https://www.mongodb.com/docs/manual/core/aggregation-pipeline-limits/</a></p>
 <h2 id="agregaciones-con-compass">Agregaciones con Compass<a class="headerlink" href="#agregaciones-con-compass" title="Permanent link">&para;</a></h2>
-<p>MongoDB Compass nos ofrece la herramienta <a href="https://docs.mongodb.com/compass/master/aggregation-pipeline-builder/">Aggregation Pipeline Builder</a> para crear, borrar y reorganizar fácilmente fases en un pipeline, así como evaluar los documento resultantes en tiempo real.</p>
-<p>Vamos a practicar con la colección de <code>zips</code>:</p>
+<p>MongoDB Compass nos ofrece la herramienta <a href="https://docs.mongodb.com/compass/master/aggregation-pipeline-builder/">Aggregation Pipeline Builder</a> para crear, borrar y reorganizar fácilmente las fases en un <em>pipeline</em>, así como evaluar los documento resultantes en tiempo real.</p>
+<p>Practicaremos con la colección de <code>zips</code>:</p>
 <figure style="align: center;">
     <img src="images/05compass-aggregations.png">
     <figcaption>Agregaciones en MongoDB Compass</figcaption>
