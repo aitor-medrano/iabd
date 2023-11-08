@@ -3154,29 +3154,26 @@ Si queremos indicar estas propiedades al arrancar el demonio, le pasaremos los p
 <p>Podéis consultar todos los campos disponibles en <a href="http://docs.mongodb.org/manual/reference/database-profiler/">http://docs.mongodb.org/manual/reference/database-profiler/</a></p>
 <p>Otras herramientas para controlar el rendimiento que se ejecutan en un terminal, son:</p>
 <ul>
-<li><a href="http://docs.mongodb.org/manual/reference/program/mongotop/"><code>mongotop</code></a> → similar a la herramienta <code>top</code> de UNIX, muestra el tiempo empleado por MongoDB en las diferentes colecciones, indicando tanto el tiempo empleado en lectura como en escrituras. Para ello, si queremos se ejecute cada tres segundos, en un terminal:</li>
-</ul>
+<li>
+<p><a href="http://docs.mongodb.org/manual/reference/program/mongotop/"><code>mongotop</code></a> → similar a la herramienta <code>top</code> de UNIX, muestra el tiempo empleado por MongoDB en las diferentes colecciones, indicando tanto el tiempo empleado en lectura como en escrituras. Para ello, si queremos se ejecute cada tres segundos, en un terminal:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>mongotop<span class="w"> </span><span class="m">3</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">                    </span>ns<span class="w">    </span>total<span class="w">    </span><span class="nb">read</span><span class="w">    </span>write<span class="w">    </span><span class="m">2023</span>-10-11T18:45:17Z
+<span class="linenos" data-linenos=" 4 "></span><span class="w">        </span>admin.atlascli<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span>admin.system.version<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span>config.collections<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos=" 7 "></span>config.system.sessions<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">   </span>config.transactions<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">        </span>iabd.auditoria<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos="10 "></span><span class="w">         </span>iabd.contacto<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos="11 "></span><span class="w">      </span>iabd.restaurants<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos="12 "></span><span class="w">   </span>iabd.system.profile<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w">                        </span>
+<span class="linenos" data-linenos="13 "></span><span class="w">          </span>iabd.usuario<span class="w">      </span>0ms<span class="w">     </span>0ms<span class="w">      </span>0ms<span class="w"> </span>
+</code></pre></div>
 <!--
 db.zips.find({ "pop":{$gt:10000, $lte:50000}, "state":{$in: ["AL","AK","AZ","CA"] }})
 -->
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>``` bash
-<span class="linenos" data-linenos=" 2 "></span>mongotop 3
-<span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span>                    ns    total    read    write    2023-10-11T18:45:17Z
-<span class="linenos" data-linenos=" 5 "></span>        admin.atlascli      0ms     0ms      0ms                        
-<span class="linenos" data-linenos=" 6 "></span>  admin.system.version      0ms     0ms      0ms                        
-<span class="linenos" data-linenos=" 7 "></span>    config.collections      0ms     0ms      0ms                        
-<span class="linenos" data-linenos=" 8 "></span>config.system.sessions      0ms     0ms      0ms                        
-<span class="linenos" data-linenos=" 9 "></span>   config.transactions      0ms     0ms      0ms                        
-<span class="linenos" data-linenos="10 "></span>        iabd.auditoria      0ms     0ms      0ms                        
-<span class="linenos" data-linenos="11 "></span>         iabd.contacto      0ms     0ms      0ms                        
-<span class="linenos" data-linenos="12 "></span>      iabd.restaurants      0ms     0ms      0ms                        
-<span class="linenos" data-linenos="13 "></span>   iabd.system.profile      0ms     0ms      0ms                        
-<span class="linenos" data-linenos="14 "></span>          iabd.usuario      0ms     0ms      0ms 
-<span class="linenos" data-linenos="15 "></span>```
-</code></pre></div>
-<ul>
+</li>
 <li>
 <p><a href="http://docs.mongodb.org/manual/reference/program/mongostat/"><code>mongostat</code></a> → muestra el número de operaciones por cada tipo que se realizan por segundo a nivel de servidor, lo que nos da una instantánea de los que está haciendo el servidor.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>mongostat<span class="w"> </span><span class="m">5</span>
@@ -3190,7 +3187,6 @@ db.zips.find({ "pop":{$gt:10000, $lte:50000}, "state":{$in: ["AL","AK","AZ","CA"
 <span class="linenos" data-linenos=" 9 "></span>*0<span class="w">    </span>*0<span class="w">     </span>*0<span class="w">     </span>*0<span class="w">       </span><span class="m">0</span><span class="w">     </span><span class="m">2</span><span class="p">|</span><span class="m">0</span><span class="w">  </span><span class="m">0</span>.1%<span class="w"> </span><span class="m">7</span>.6%<span class="w">       </span><span class="m">0</span><span class="w"> </span><span class="m">2</span>.75G<span class="w"> </span>399M<span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w">   </span>246b<span class="w">   </span><span class="m">60</span>.2k<span class="w">   </span><span class="m">21</span><span class="w"> </span>Oct<span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">18</span>:46:45.547
 <span class="linenos" data-linenos="10 "></span>*0<span class="w">    </span>*0<span class="w">     </span>*0<span class="w">     </span>*0<span class="w">       </span><span class="m">0</span><span class="w">     </span><span class="m">1</span><span class="p">|</span><span class="m">0</span><span class="w">  </span><span class="m">0</span>.1%<span class="w"> </span><span class="m">7</span>.6%<span class="w">       </span><span class="m">0</span><span class="w"> </span><span class="m">2</span>.75G<span class="w"> </span>399M<span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">0</span><span class="w">   </span>112b<span class="w">   </span><span class="m">59</span>.9k<span class="w">   </span><span class="m">21</span><span class="w"> </span>Oct<span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">18</span>:46:50.545<span class="w">  </span>
 </code></pre></div>
-<p>Una buena columna a vigilar es idx miss %, la cual muestra los índices perdidos, es decir, aquellas consultas que han causado paginación y en vez de obtener los datos de memoria han tenido que acceder a disco.</p>
 </li>
 </ul>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>

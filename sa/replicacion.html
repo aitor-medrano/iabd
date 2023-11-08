@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Replicación y particionado (sharding) en MongoDB. Trabajando con conjuntos de réplicas, preferencias de lectura, consistencia en la lectura y en la escritura. Particionado de los datos (sharded cluster) y elección de la shard key/clave de particionado.">
+        <meta name="description" content="Trabajando con conjuntos de réplicas, preferencias de lectura, consistencia en la lectura/escritura. Particionado de los datos y elección de la clave de particionado.">
       
       
       
@@ -73,7 +73,7 @@
       
         <meta  property="og:title"  content="Replicación y particionado (sharding) en MongoDB. - Inteligencia Artificial y Big Data" >
       
-        <meta  property="og:description"  content="Replicación y particionado (sharding) en MongoDB. Trabajando con conjuntos de réplicas, preferencias de lectura, consistencia en la lectura y en la escritura. Particionado de los datos (sharded cluster) y elección de la shard key/clave de particionado." >
+        <meta  property="og:description"  content="Trabajando con conjuntos de réplicas, preferencias de lectura, consistencia en la lectura/escritura. Particionado de los datos y elección de la clave de particionado." >
       
         <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/sa/replicacion.png" >
       
@@ -89,7 +89,7 @@
       
         <meta  name="twitter:title"  content="Replicación y particionado (sharding) en MongoDB. - Inteligencia Artificial y Big Data" >
       
-        <meta  name="twitter:description"  content="Replicación y particionado (sharding) en MongoDB. Trabajando con conjuntos de réplicas, preferencias de lectura, consistencia en la lectura y en la escritura. Particionado de los datos (sharded cluster) y elección de la shard key/clave de particionado." >
+        <meta  name="twitter:description"  content="Trabajando con conjuntos de réplicas, preferencias de lectura, consistencia en la lectura/escritura. Particionado de los datos y elección de la clave de particionado." >
       
         <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/sa/replicacion.png" >
       
@@ -2342,11 +2342,11 @@
 <h3 id="conjunto-de-replicas">Conjunto de réplicas<a class="headerlink" href="#conjunto-de-replicas" title="Permanent link">&para;</a></h3>
 <p>En MongoDB se replican los datos mediante un conjunto de réplicas  (<em>Replica Set</em>), el cual es un grupo de servidores (nodos <em>mongod</em>) donde uno de ellos ejerce la función de primario y por tanto recibe las peticiones de los clientes, y el resto de servidores hace de secundarios, manteniendo copias de los datos del primario.</p>
 <figure style="align: center;">
-    <img src="images/06replication.png">
+    <img src="images/06replication.png" alt="Conjunto de Réplicas en MongoDB">
     <figcaption>Conjunto de Réplicas en MongoDB</figcaption>
 </figure>
 
-<p>Si el nodo primario se cae, los secundarios eligen un nuevo primario entre ellos mismos, en un proceso que se conoce como votación. La aplicación se conectará al nuevo primario de manera transparente. Cuando el antiguo nodo primario vuelva en sí, será un nuevo nodo secundario.</p>
+<p>Si el nodo primario se cae, los secundarios eligen un nuevo primario entre ellos mismos, en un proceso que se conoce como <em>votación</em>. La aplicación se conectará al nuevo primario de manera transparente. Cuando el antiguo nodo primario vuelva en sí, será un nuevo nodo secundario.</p>
 <p>Al usar replicación, si un servidor se cae, siempre vamos a poder obtener los datos a partir de otros servidores del conjunto. Si los datos de un servidor se dañan o son inaccesibles, podemos crear una nueva copia desde uno de los miembros del conjunto.</p>
 <h4 id="elementos-de-un-conjunto-de-replicas">Elementos de un conjunto de réplicas<a class="headerlink" href="#elementos-de-un-conjunto-de-replicas" title="Permanent link">&para;</a></h4>
 <p>Los tipos de nodos que podemos encontrar en un conjunto de réplica son:</p>
@@ -2845,7 +2845,7 @@ Esto favorece que el desarrollador ignore que la aplicación no se comunica con 
 <p>Antes de plantearse hacer <em>auto-sharding</em> sobre nuestros datos, es conveniente dominar cómo se trabaja con <em>MongoDB</em> y el uso de conjuntos de réplica.</p>
 </div>
 <h3 id="sharded-cluster">Sharded Cluster<a class="headerlink" href="#sharded-cluster" title="Permanent link">&para;</a></h3>
-<p>El particionado de MongoDB permite crear un cluster de muchas máquinas, dividiendo a nivel de colección y poniendo un subconjunto de los datos de la colección en cada uno de los fragmentos.</p>
+<p>El particionado de <em>MongoDB</em> permite crear un cluster de muchas máquinas, dividiendo a nivel de colección y poniendo un subconjunto de los datos de la colección en cada uno de los fragmentos.</p>
 <p>Los componentes de un <em>sharded cluster</em> son:</p>
 <ul>
 <li><strong><em>Shards</em></strong> (Fragmentos): Cada una de las máquinas del cluster, que almacena un subconjunto de los datos de la colección. Cada <em>shard</em> es una instancia de <em>mongod</em> o un conjunto de réplicas. En un entorno de producción, todos los <em>shards</em> son conjuntos de réplica.</li>
@@ -2877,7 +2877,7 @@ Esto favorece que el desarrollador ignore que la aplicación no se comunica con 
 <p>Para que <em>MongoDB</em> sepa cómo dividir una colección entre rangos no solapados hay que elegir una <a href="https://www.mongodb.com/docs/manual/core/sharding-shard-key/"><em>shard key</em></a>, normalmente el identificador del documento, por ejemplo, <code>student_id</code>. Este identificador (o su <em>hash</em>) es la clave del <em>chunk</em> (por lo hace la misma función que una clave primaria).</p>
 <p>La <em>shard key</em> puede ser un campo sencillo o compuesto el cual debe estar indexado, y que va a determinar la distribución de los documentos entre los fragmentos del clúster.</p>
 <figure style="align: center;">
-    <img src="images/06shard-key.avif">
+    <img src="images/06shard-key.png" title="Fragmentación por la shard-key">
     <figcaption>Fragmentación por la shard-key</figcaption>
 </figure>
 
@@ -3329,7 +3329,7 @@ Por ejemplo, mediante <code>sh.help()</code> obtendremos la ayuda de los método
 <p>Adjunta un documento con los scripts de creación, comandos empleados y las salidas generadas.</p>
 </li>
 <li>
-<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 2p) Se pide crear un clúster de MongoDB con tres nodos y tres particiones y volver a importar las <a href="resources/1000cities.json">1000 ciudades</a>.</p>
+<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 2p) Se pide crear un clúster de <em>MongoDB</em> con tres nodos y tres particiones y volver a importar las <a href="resources/1000cities.json">1000 ciudades</a>.</p>
 <p>Una vez creado, se pide:</p>
 <ol>
 <li>Particionar los datos por el nombre de la ciudad.</li>
