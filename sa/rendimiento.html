@@ -3044,20 +3044,20 @@
 <span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">dropIndex</span><span class="p">(</span><span class="w"> </span><span class="s2">&quot;student_idx&quot;</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="c1">// borra el índice por su nombre</span>
 </code></pre></div>
 <h4 id="rendimiento">Rendimiento<a class="headerlink" href="#rendimiento" title="Permanent link">&para;</a></h4>
-<p>En cuanto al rendimiento, algunos de los operadores que no utilizan los índices eficientemente son los operadores <code>$where</code>, <code>$nin</code> y <code>$exists</code>. Cuando estos operadores se emplean en una consultar hay que tener en mente un posible cuelo de botella cuando el tamaño de los datos incremente.</p>
+<p>En cuanto al rendimiento, algunos de los operadores que no utilizan los índices eficientemente son los operadores <code>$where</code>, <code>$nin</code> y <code>$exists</code>. Cuando estos operadores se emplean en una consulta hay que tener en mente un posible cuelo de botella cuando el tamaño de los datos incremente.</p>
 <p>Al explicar los índices ya hemos visto que podemos obtener información sobre la operación realizada mediante el método <a href="http://docs.mongodb.org/manual/reference/method/cursor.explain/"><code>explain()</code></a>.</p>
 <p>El atributo <code>indexOnly</code> nos dice si toda la información que queremos recuperar se encuentra en el índice. Este atributo va a depender de los campos que quiera que me devuelva la consulta, si son un subconjunto del índice utilizado.</p>
-<p>Ya hemos comentado que los índices consumen espacio en disco y memoria. Es importante vigilar y planificar su uso, para no sobrepasar las prestaciones de nuestro sistema, de manera que sólo utilicemos índices cuando tengamos consultas que se repiten en el tiempo y que empiezan a ser lentas.</p>
+<p>Como los índices consumen espacio en disco y memoria, es importante vigilar y planificar su uso, para no sobrepasar las prestaciones de nuestro sistema, de manera que sólo utilicemos índices cuando tengamos consultas que se repiten en el tiempo y que empiezan a ser lentas.</p>
 <div class="admonition importante">
 <p class="admonition-title">Vigilar la RAM</p>
-<p><strong>Los índices tienen que caber en memoria</strong>.</p>
+<p><strong>Los índices deben caber en memoria</strong>.</p>
 <p>Para averiguar el tamaño de los índices (en bytes):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">stats</span><span class="p">()</span><span class="w">  </span><span class="c1">// obtiene estadísticas de la colección</span>
 <span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">totalIndexSize</span><span class="p">()</span><span class="w">  </span><span class="c1">// obtiene el tamaño de los índices</span>
 </code></pre></div>
 </div>
-<p>Si los índices están en disco, pese a ser algorítmicamente mejores que no tener, al ser más grandes que la RAM disponible, no se obtienen beneficios por la penalización de la paginación.</p>
-<p>Mucho cuidado con los índices multiclave porque crecen mucho y si el documento tiene que moverse en disco, el cambio supone tener que cambiar todos los puntos de índice del array.
+<p>No obstante, si los índices están en disco, pese a ser algorítmicamente mejores que no tener, al ser más grandes que la RAM disponible, no se obtienen beneficios por la penalización de la paginación.</p>
+<p>Mucho cuidado con los índices multiclave porque crecen fácilmente, y si el documento tiene que moverse a disco, el cambio supone tener que cambiar todos los puntos de índice del array.
 Aunque sea más responsabilidad de un administrador de bases de datos (DBA), los desarrolladores debemos saber si el índice va a caber en memoria. Si no van a caber es mejor no usarlos.</p>
 <div class="admonition question">
 <p class="admonition-title">Autoevaluación</p>
