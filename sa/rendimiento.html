@@ -3082,7 +3082,7 @@ Aunque sea más responsabilidad de un administrador de bases de datos (DBA), los
 </code></pre></div>
 <h2 id="colecciones-limitadas">Colecciones limitadas<a class="headerlink" href="#colecciones-limitadas" title="Permanent link">&para;</a></h2>
 <p>Una colección <a href="https://docs.mongodb.org/manual/core/capped-collections/">limitada</a> (<em>capped collection</em>) es una colección de tamaño fijo (por cantidad de documentos o tamaño de la colección), donde se garantiza el orden natural de los datos, es decir, el orden en que se insertaron.</p>
-<p>Una vez se llena la colección, se eliminan los datos más antiguos, y los datos más nuevos se añaden al final, de manera similar a un <em>buffer</em> circular, asegurando que el orden natural de la colección sigue el que se insertaron los registros.</p>
+<p>Una vez se llena la colección, se eliminan los datos más antiguos, y los datos más recientes se añaden al final, de manera similar a un <em>buffer</em> circular, asegurando que el orden natural de la colección sigue el que se insertaron los registros.</p>
 <p>Este tipo de colecciones se utilizan para logs y auto-guardado de información, ya que su rendimiento es muy alto para inserciones, permitiendo obtener datos similares a "<em>logs de la última hora</em>".</p>
 <p>Se crean de manera explícita mediante el método <code>createCollection</code>, pasándole el tamaño en <em>bytes</em> de la colección y valor <code>capped</code> a <code>true</code>. Por ejemplo, si queremos crear una colección para auditar datos de 20 KB haríamos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">createCollection</span><span class="p">(</span><span class="s2">&quot;auditoria&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="nx">capped</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nx">size</span><span class="o">:</span><span class="mf">20480</span><span class="p">})</span>
@@ -3226,7 +3226,7 @@ db.zips.find({ "pop":{$gt:10000, $lte:50000}, "state":{$in: ["AL","AK","AZ","CA"
 <p>Así pues, se pide:</p>
 <ol>
 <li>Carga los datos almacenados en <a href="resources/restaurants.zip"><code>restaurants.zip</code></a> en la colección <code>iabd.restaurants</code>.</li>
-<li>Habilita la auditoria de <em>MongoDB</em> para registrar las consultas que tardan más de 100ms.</li>
+<li>Habilita la auditoria de <em>MongoDB</em> para registrar las consultas que tardan más de 90ms.</li>
 <li>Ejecuta <code>mongotop 3</code> para comprobar el rendimiento de la colección <code>iabd.restaurants</code></li>
 <li>Comprueba el rendimiento mediante el plan de ejecución de las diferentes consultas.</li>
 <li>Comprueba qué consulta es la que más tarda utilizando <code>db.system.profile</code>.</li>
