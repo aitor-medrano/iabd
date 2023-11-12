@@ -2050,7 +2050,7 @@
   <h1>Series temporales con MongoDB</h1>
 
 <p>Los datos almacenados como series temporales se caracterizan por su secuencia cronológica y alta frecuencia de creación. Las series temporales se emplean principalmente para la predicción y análisis de tendencias en muchos servicios financieros y aplicaciones IoT.</p>
-<p>Desde la versión 5.0, MongoDB permite crear un tipo de colección específica para este tipo de datos. Estas colecciones <a href="https://www.mongodb.com/docs/manual/core/timeseries-collections/"><em>time series</em></a> definen una estructura y emplean una serie de índices que reducen el espacio necesario y aceleran las consultas que se realizan sobre los datos.</p>
+<p>Desde la versión 5.0, <em>MongoDB</em> permite crear un tipo de colección específica para este tipo de datos. Estas colecciones <a href="https://www.mongodb.com/docs/manual/core/timeseries-collections/"><em>time series</em></a> definen una estructura y emplean una serie de índices que reducen el espacio necesario y aceleran las consultas que se realizan sobre los datos.</p>
 <p>Las colecciones de series temporales se crean de forma explícita, y no podemos convertir una colección ordinaria a serie temporal. Eso sí, podemos programar un <em>script</em> para migrar los datos de una colección normal a una serie temporal.</p>
 <h2 id="creando-una-serie-temporal">Creando una serie temporal<a class="headerlink" href="#creando-una-serie-temporal" title="Permanent link">&para;</a></h2>
 <p>A la hora de <a href="https://www.mongodb.com/docs/manual/core/timeseries/timeseries-procedures/">crear la colección</a>, necesitamos indicar los siguiente campos:</p>
@@ -2099,7 +2099,7 @@
 <p>Y obtener los datos como en una colección normal:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">serietemporal</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span><span class="w"> </span><span class="s2">&quot;timestamp&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ISODate</span><span class="p">(</span><span class="s2">&quot;2023-11-07T00:00:00.000Z&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">})</span>
 </code></pre></div>
-<p>Obtiendo el documento:</p>
+<p>Obteniendo el documento:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="kc">t</span><span class="err">imes</span><span class="kc">ta</span><span class="err">mp</span><span class="p">:</span><span class="w"> </span><span class="mi">2023-11-07</span><span class="err">T</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mf">00.000</span><span class="err">Z</span><span class="p">,</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">  </span><span class="err">me</span><span class="kc">ta</span><span class="err">da</span><span class="kc">ta</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2117,22 +2117,121 @@
 </figure>
 
 <h2 id="uso-indices">Uso índices<a class="headerlink" href="#uso-indices" title="Permanent link">&para;</a></h2>
-<p>FIXME: traducir</p>
-<p>Time series collections create and use an internal index that is not listed in the listIndexes command. However, we can manually create additional (namely, secondary) indexes if needed. MongoDB 6.0 has expanded the number of available secondary indexes, including compound indexes, partial indexes with $in, $or, or $geoWithin, and 2dsphere indexes.</p>
-<p>Usually, time series collections use cases refer to data that we insert once, read many times, but rarely get updated. We would rarely need to update a weather sensor reading from last week unless we wanted to check with other sources and update our readings with the correct values.</p>
-<p>Due to their unique nature, update and delete operations in a time series type of collection are constrained. Updates and deletes need to operate with multi:true and justOne:false to affect multiple documents, and the query to update or delete might only match the metaField subdocument fields. We can only modify the metaField subdocument using the update command, and the update cannot be an upsert operation as this would create a new document instead of updating an existing one. Transactions cannot write into time series collections.</p>
-<p>Time series collections use the zstd compression algorithm instead of the default snappy “for generic purpose” collections. This is configurable at collection creation time using the block_compressor=snappy|zlib|zstd parameter.</p>
-<p>We can define the storageEngine, indexOptionDefaults, collation, and writeConcern parameters for a time series collection in the same way as a general-purpose collection.</p>
+<p>Las colecciones de series temporales crean y utilizan un indice interno. Además, si fuera necesario, podemos crear índices adicionales, a los que se les conoce como índices secundarios.</p>
+<p>Las colecciones de series temporales se asocian a casos de uso donde los datos se insertan una vez, se leen muchas veces y raramente se actualizan. </p>
+<p>Es por ello, que las operaciones de modificación y borrado en las series temporales necesitan del operador <code>{multi:true}</code> y <code>{justOne:false}</code> para aplicarse sobre múltiples documentos, y la consulta a modificar o borrar sólo debe hacerlo sobre los campos del subdocumento del atributo <code>metaField</code>. Así pues, sólo podemos modificar el subdocumento del campo <code>metaField</code> y no podemos emplear una operación <code>upsert</code>.</p>
 <div class="admonition caution">
 <p class="admonition-title">Cuidado</p>
 <p>El tamaño máximo de un documento en una serie temporal es de 4MB, no los 16 de un documento ordinario.</p>
 </div>
-<p>Time series are optimized for write once, read many with sporadic updates/deletes, and this reflects the limitations in updates/deletes in favor of improved read/write performance.</p>
-<p>We can shard a time series collection using timeField or metaField. In this scenario, timeField is a timestamp, so using it on its own will result in all writes going to the last shard. Therefore, it’s a good practice to combine timeField with one or more fields from metaField.</p>
-<p>In certain use cases, the time series collections can be really useful. MongoDB 6.0 is expanding on secondary and compound indexes to make them even more useful. It is also adding performance improvements in sorted queries and when fetching the most recent entry from a time series collection. In the next section, we will go through another recent addition to MongoDB from the relational database world: the views functionality.</p>
+<p>Respecto al particionado, podemos emplear <code>timeField</code> o <code>metaField</code> con claves. Si utilizamos el <code>timeField</code>, al tratarse de un <em>timestamp</em>, todas las escrituras irán a la última partición. Por lo tanto, es una buena práctica combinar el <code>timeField</code> con uno o más campos del <code>metaField</code>.</p>
 <h2 id="migrando-datos">Migrando datos<a class="headerlink" href="#migrando-datos" title="Permanent link">&para;</a></h2>
-<p>TODO: Crear una colección de serie temporal dentro de la bd <code>sample_weatherdata</code>, y migrar los datos existentes a la nueva colección.</p>
+<p>En los datos de ejemplo cargados en MongoDB, tenemos una colección con datos climáticos. Por ejemplo, uno de los documentos de <code>sample_weatherdata.data</code> es similar a:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5553a998e4b02cf7151190b8&quot;</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="nt">&quot;st&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;x+47600-047900&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="nt">&quot;ts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1984-03-05T13:00:00.000Z&quot;</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">  </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Point&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="nt">&quot;coordinates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">      </span><span class="mf">-47.9</span><span class="p">,</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">      </span><span class="mf">47.6</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="p">]</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">  </span><span class="nt">&quot;elevation&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">9999</span><span class="p">,</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">  </span><span class="nt">&quot;callLetters&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;VCSZ&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">  </span><span class="nt">&quot;qualityControlProcess&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;V020&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">  </span><span class="nt">&quot;dataSource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FM-13&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="21 "></span><span class="w">  </span><span class="nt">&quot;airTemperature&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="22 "></span><span class="w">    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-3.1</span><span class="p">,</span>
+<span class="linenos" data-linenos="23 "></span><span class="w">    </span><span class="nt">&quot;quality&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span>
+<span class="linenos" data-linenos="24 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos="25 "></span><span class="w">  </span><span class="nt">&quot;dewPoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="26 "></span><span class="w">    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">999.9</span><span class="p">,</span>
+<span class="linenos" data-linenos="27 "></span><span class="w">    </span><span class="nt">&quot;quality&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9&quot;</span>
+<span class="linenos" data-linenos="28 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos="29 "></span><span class="w">  </span><span class="nt">&quot;pressure&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="30 "></span><span class="w">    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1015.3</span><span class="p">,</span>
+<span class="linenos" data-linenos="31 "></span><span class="w">    </span><span class="nt">&quot;quality&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span>
+<span class="linenos" data-linenos="32 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos="33 "></span><span class="w">  </span><span class="nt">&quot;wind&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="34 "></span><span class="w">    </span><span class="nt">&quot;direction&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="35 "></span><span class="w">      </span><span class="nt">&quot;angle&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">999</span><span class="p">,</span>
+<span class="linenos" data-linenos="36 "></span><span class="w">      </span><span class="nt">&quot;quality&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9&quot;</span>
+<span class="linenos" data-linenos="37 "></span><span class="w">    </span><span class="p">},</span>
+<span class="linenos" data-linenos="38 "></span><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="39 "></span><span class="w">    </span><span class="nt">&quot;speed&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="40 "></span><span class="w">      </span><span class="nt">&quot;rate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">999.9</span><span class="p">,</span>
+<span class="linenos" data-linenos="41 "></span><span class="w">      </span><span class="nt">&quot;quality&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9&quot;</span>
+<span class="linenos" data-linenos="42 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos="43 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos="44 "></span><span class="w">  </span><span class="nt">&quot;visibility&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="45 "></span><span class="w">    </span><span class="nt">&quot;distance&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="46 "></span><span class="w">      </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">999999</span><span class="p">,</span>
+<span class="linenos" data-linenos="47 "></span><span class="w">      </span><span class="nt">&quot;quality&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9&quot;</span>
+<span class="linenos" data-linenos="48 "></span><span class="w">    </span><span class="p">},</span>
+<span class="linenos" data-linenos="49 "></span><span class="w">    </span><span class="nt">&quot;variability&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="50 "></span><span class="w">      </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;N&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="51 "></span><span class="w">      </span><span class="nt">&quot;quality&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9&quot;</span>
+<span class="linenos" data-linenos="52 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos="53 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos="54 "></span><span class="w">  </span><span class="nt">&quot;skyCondition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="55 "></span><span class="w">    </span><span class="nt">&quot;ceilingHeight&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="56 "></span><span class="w">      </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">99999</span><span class="p">,</span>
+<span class="linenos" data-linenos="57 "></span><span class="w">      </span><span class="nt">&quot;quality&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="58 "></span><span class="w">      </span><span class="nt">&quot;determination&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9&quot;</span>
+<span class="linenos" data-linenos="59 "></span><span class="w">    </span><span class="p">},</span>
+<span class="linenos" data-linenos="60 "></span><span class="w">    </span><span class="nt">&quot;cavok&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;N&quot;</span>
+<span class="linenos" data-linenos="61 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos="62 "></span><span class="w">  </span><span class="nt">&quot;sections&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos="63 "></span><span class="w">    </span><span class="s2">&quot;AG1&quot;</span>
+<span class="linenos" data-linenos="64 "></span><span class="w">  </span><span class="p">],</span>
+<span class="linenos" data-linenos="65 "></span><span class="w">  </span><span class="nt">&quot;precipitationEstimatedObservation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="66 "></span><span class="w">    </span><span class="nt">&quot;discrepancy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="67 "></span><span class="w">    </span><span class="nt">&quot;estimatedWaterDepth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">999</span>
+<span class="linenos" data-linenos="68 "></span><span class="w">  </span><span class="p">}</span>
+<span class="linenos" data-linenos="69 "></span><span class="p">}</span>
+</code></pre></div>
+<p>Por ejemplo, si quisiéramos trabajar con los datos de la temperatura del aire y colocarlos dentro de una serie temporal, el primero paso sería crear la colección</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">use</span><span class="w"> </span><span class="nx">iabd</span>
+<span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">createCollection</span><span class="p">(</span><span class="w"> </span><span class="s2">&quot;weatherdata&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nx">timeseries</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">        </span><span class="nx">timeField</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">        </span><span class="nx">metaField</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;metadata&quot;</span>
+<span class="linenos" data-linenos="6 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos="7 "></span><span class="p">})</span>
+</code></pre></div>
+<p>Y a continuación, </p>
+<p>Y mediante el framework de agregación, migramos los datos:</p>
 <h2 id="agregando-datos">Agregando datos<a class="headerlink" href="#agregando-datos" title="Permanent link">&para;</a></h2>
+<p>Una de las ventajas reales de utilizar series temporales viene de agregar los datos.</p>
+<p>Por ejemplo, un operador que conviene conocer es <code>$setWindowFields</code>, que permite utilizar funciones ventana con el <em>framework</em> de agregación.</p>
+<p>The real power of Time Series comes when you need to aggregate the data. With the support for Time Series collections came a number of new aggregation stages built with this kind of data in mind. That doesn’t mean that these stages only work with Time Series collections, just that they work better with time series data. For example, we have written about the $setWindowFields stage in the Studio 3T Blog using normal collections. But it can enable some powerful time series aggregations.</p>
+<p>$setWindowFields
+The problem with aggregation is that, without stashing data in variables, it regards each document in isolation. That’s where the $setWindowFields comes in as it combines some of aggregation’s $group functionality with window functions. </p>
+<p>{ 
+    "partitionBy" : { location:"$location", day: { $dayOfYear: "$timestamp" } }, 
+    "output" : { 
+        "averaged" : { 
+            "$avg" : "$temperature", 
+            "window" : { 
+                documents: [ "unbounded", "unbounded" ]
+            }
+        }
+    }
+}
+The “partitionBy” section splits and groups the data up by our meta data and, in this case by the day of the year. The “output” section then defines what output should be added to every document, based on their partition. So our first field is an “averaged” field for the temperature. This will be the average for that partition. The “window” section says use the entire partition to work out the average, “unbounded”. The result of this stage is that every document gets the average temperature for its partition added to it. </p>
+<p>Add on a $match:</p>
+<p>{
+     "$expr": { $lt: [ "$temperature", "$averaged" ] }  <br />
+}
+And now the result of the aggregation is every incident when a location had a lower than average temperature for that day.</p>
+<p>You can change that window to work with moving windows, adjusting the boundaries of the average calculation too. Or compare documents relative to each other. And if you want more than an average calculation, there’s a host of window operators including accumulators, ranking, ordering, and gap-filling.</p>
 <p>Hacer alguna consulta de agregación .. ver funciones ventana???</p>
 <p>https://learning.oreilly.com/library/view/practical-mongodb-aggregations/9781835080641/B21539_11.xhtml#_idParaDest-202</p>
 

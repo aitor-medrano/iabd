@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DELAY=25
+DELAY=10
 
 mongosh <<EOF
 var config = {
