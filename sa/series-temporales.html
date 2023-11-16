@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://aitor-medrano.github.io/iabd/sa/series-temporales.html">
       
       
+        <link rel="prev" href="pymongo.html">
+      
+      
+        <link rel="next" href="../cloud/cloud.html">
       
       
       <link rel="icon" href="../favicon.png">
@@ -298,6 +302,8 @@
       
   
   
+    
+  
   
     
     
@@ -316,16 +322,18 @@
       
         
       
+        
+      
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -339,7 +347,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             NoSQL
@@ -481,6 +489,97 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Series temporales
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="series-temporales.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Series temporales
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creando-una-serie-temporal" class="md-nav__link">
+    Creando una serie temporal
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consideraciones" class="md-nav__link">
+    Consideraciones
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migrando-datos" class="md-nav__link">
+    Migrando datos
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creando-un-grafico" class="md-nav__link">
+    Creando un gráfico
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    Referencias
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2179,8 +2278,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#uso-indices" class="md-nav__link">
-    Uso índices
+  <a href="#consideraciones" class="md-nav__link">
+    Consideraciones
   </a>
   
 </li>
@@ -2193,8 +2292,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#agregando-datos" class="md-nav__link">
-    Agregando datos
+  <a href="#creando-un-grafico" class="md-nav__link">
+    Creando un gráfico
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    Referencias
   </a>
   
 </li>
@@ -2231,7 +2337,7 @@
 
 
 
-  <h1>Series temporales con MongoDB</h1>
+  <h1>Series temporales</h1>
 
 <p>Los datos almacenados como series temporales se caracterizan por su secuencia cronológica y alta frecuencia de creación. Las series temporales se emplean principalmente para la predicción y análisis de tendencias en muchos servicios financieros y aplicaciones IoT.</p>
 <p>Desde la versión 5.0, <em>MongoDB</em> permite crear un tipo de colección específica para este tipo de datos. Estas colecciones <a href="https://www.mongodb.com/docs/manual/core/timeseries-collections/"><em>time series</em></a> definen una estructura y emplean una serie de índices que reducen el espacio necesario y aceleran las consultas que se realizan sobre los datos.</p>
@@ -2296,12 +2402,12 @@
 </code></pre></div>
 <p>Si visualizamos la colección desde <em>MongoDB Compass</em> o <em>MongoAtlas</em> veremos que aparece una pequeña leyenda informando que la colección es de tipo <em>time-series</em>:</p>
 <figure style="align: center;">
-    <img src="images/09time-series-mongoatlas.png" title="Colección de tipo Time-Series" width="600px">
+    <img src="images/09time-series-mongoatlas.png" title="Colección de tipo Time-Series">
     <figcaption>Colección de tipo Time-Series</figcaption>
 </figure>
 
-<h2 id="uso-indices">Uso índices<a class="headerlink" href="#uso-indices" title="Permanent link">&para;</a></h2>
-<p>Las colecciones de series temporales crean y utilizan un indice interno. Además, si fuera necesario, podemos crear índices adicionales, a los que se les conoce como índices secundarios.</p>
+<h2 id="consideraciones">Consideraciones<a class="headerlink" href="#consideraciones" title="Permanent link">&para;</a></h2>
+<p>Las colecciones de series temporales crean y utilizan un índice interno. Además, si fuera necesario, podemos crear índices adicionales, a los que se les conoce como índices secundarios.</p>
 <p>Las colecciones de series temporales se asocian a casos de uso donde los datos se insertan una vez, se leen muchas veces y raramente se actualizan. </p>
 <p>Es por ello, que las operaciones de modificación y borrado en las series temporales necesitan del operador <code>{multi:true}</code> y <code>{justOne:false}</code> para aplicarse sobre múltiples documentos, y la consulta a modificar o borrar sólo debe hacerlo sobre los campos del subdocumento del atributo <code>metaField</code>. Así pues, sólo podemos modificar el subdocumento del campo <code>metaField</code> y no podemos emplear una operación <code>upsert</code>.</p>
 <div class="admonition caution">
@@ -2310,7 +2416,7 @@
 </div>
 <p>Respecto al particionado, podemos emplear <code>timeField</code> o <code>metaField</code> con claves. Si utilizamos el <code>timeField</code>, al tratarse de un <em>timestamp</em>, todas las escrituras irán a la última partición. Por lo tanto, es una buena práctica combinar el <code>timeField</code> con uno o más campos del <code>metaField</code>.</p>
 <h2 id="migrando-datos">Migrando datos<a class="headerlink" href="#migrando-datos" title="Permanent link">&para;</a></h2>
-<p>En los datos de ejemplo cargados en MongoDB, tenemos una colección con datos climáticos. Por ejemplo, uno de los documentos de <code>sample_weatherdata.data</code> es similar a:</p>
+<p>En los datos de ejemplo cargados en <em>MongoDB</em>, tenemos una colección con datos climáticos. Por ejemplo, uno de los documentos de <code>sample_weatherdata.data</code> es similar a:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5553a998e4b02cf7151190b8&quot;</span>
@@ -2383,41 +2489,161 @@
 </code></pre></div>
 <p>Por ejemplo, si quisiéramos trabajar con los datos de la temperatura del aire y colocarlos dentro de una serie temporal, el primero paso sería crear la colección</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">use</span><span class="w"> </span><span class="nx">iabd</span>
-<span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">createCollection</span><span class="p">(</span><span class="w"> </span><span class="s2">&quot;weatherdata&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">createCollection</span><span class="p">(</span><span class="w"> </span><span class="s2">&quot;ts_weather&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nx">timeseries</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos" data-linenos="4 "></span><span class="w">        </span><span class="nx">timeField</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="5 "></span><span class="w">        </span><span class="nx">metaField</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;metadata&quot;</span>
 <span class="linenos" data-linenos="6 "></span><span class="w">    </span><span class="p">}</span>
 <span class="linenos" data-linenos="7 "></span><span class="p">})</span>
 </code></pre></div>
-<p>Y a continuación, </p>
-<p>Y mediante el framework de agregación, migramos los datos:</p>
-<h2 id="agregando-datos">Agregando datos<a class="headerlink" href="#agregando-datos" title="Permanent link">&para;</a></h2>
-<p>Una de las ventajas reales de utilizar series temporales viene de agregar los datos.</p>
-<p>Por ejemplo, un operador que conviene conocer es <code>$setWindowFields</code>, que permite utilizar funciones ventana con el <em>framework</em> de agregación.</p>
-<p>The real power of Time Series comes when you need to aggregate the data. With the support for Time Series collections came a number of new aggregation stages built with this kind of data in mind. That doesn’t mean that these stages only work with Time Series collections, just that they work better with time series data. For example, we have written about the $setWindowFields stage in the Studio 3T Blog using normal collections. But it can enable some powerful time series aggregations.</p>
-<p>$setWindowFields
-The problem with aggregation is that, without stashing data in variables, it regards each document in isolation. That’s where the $setWindowFields comes in as it combines some of aggregation’s $group functionality with window functions. </p>
-<p>{ 
-    "partitionBy" : { location:"$location", day: { $dayOfYear: "$timestamp" } }, 
-    "output" : { 
-        "averaged" : { 
-            "$avg" : "$temperature", 
-            "window" : { 
-                documents: [ "unbounded", "unbounded" ]
-            }
-        }
-    }
+<p>Y a continuación, mediante el <em>framework</em> de agregación, migramos los datos que nos interesen. Por ejemplo, nos vamos a traer la temperatura del aire y la presión, así como algunos metadatos del sensor para aquellas muestras que no han superado los 100 grados de temperatura (así podríamos filtrar algunos <em>outliers</em>):</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">MongoDB &gt;= v7.0.3</label><label for="__tabbed_1_2">MongoDB &lt; 7.0.3</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>A partir de la versión 7.0.3 podemos emplear el operador <code>$out</code> para exportar los datos a una colección de tipo <em>time series</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nx">use</span><span class="w"> </span><span class="nx">sample_weatherdata</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$match</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">      </span><span class="s2">&quot;airTemperature.value&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">$lt</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="p">}</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$project</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">      </span><span class="s2">&quot;timestamp&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$ts&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">      </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">        </span><span class="s2">&quot;posicion&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$position&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">        </span><span class="s2">&quot;elevacion&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$elevation&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">        </span><span class="s2">&quot;tipo&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$type&quot;</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">      </span><span class="p">},</span><span class="w"> </span>
+<span class="linenos" data-linenos="14 "></span><span class="w">      </span><span class="s2">&quot;temp_aire&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$airTemperature.value&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">      </span><span class="s2">&quot;presion&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$pressure.value&quot;</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$out</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">      </span><span class="nx">db</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;iabd&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">      </span><span class="nx">coll</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ts_weather&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="21 "></span><span class="w">      </span><span class="nx">timeseries</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="22 "></span><span class="w">        </span><span class="nx">timeField</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="23 "></span><span class="w">        </span><span class="nx">metaField</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;metadata&quot;</span>
+<span class="linenos" data-linenos="24 "></span><span class="w">      </span><span class="p">}</span>
+<span class="linenos" data-linenos="25 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos="26 "></span><span class="w">  </span><span class="p">}</span>
+<span class="linenos" data-linenos="27 "></span><span class="p">])</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Si no, primero crearemos una colección únicamente con los datos deseados:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nx">use</span><span class="w"> </span><span class="nx">sample_weatherdata</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$match</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">      </span><span class="s2">&quot;airTemperature.value&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">$lt</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="p">}</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$project</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">      </span><span class="s2">&quot;timestamp&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$ts&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">      </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">        </span><span class="s2">&quot;posicion&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$position&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">        </span><span class="s2">&quot;elevacion&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$elevation&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">        </span><span class="s2">&quot;tipo&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$type&quot;</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">      </span><span class="p">},</span><span class="w"> </span>
+<span class="linenos" data-linenos="14 "></span><span class="w">      </span><span class="s2">&quot;temp_aire&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$airTemperature.value&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">      </span><span class="s2">&quot;presion&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$pressure.value&quot;</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$out</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ts_weather&quot;</span><span class="p">}</span>
+<span class="linenos" data-linenos="19 "></span><span class="p">])</span>
+</code></pre></div>
+<p>Y a continuación, debemos <a href="https://www.mongodb.com/docs/v6.0/core/timeseries/timeseries-migrate-data-into-timeseries-collection/#migrate-data-into-a-time-series-collection-1">exportar los datos y volver a importarlos</a>. Así pues, exportamos mediante <code>mongodump</code> desde <code>sample_weatherdata.ts_weather</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>mongodump<span class="w"> </span>--uri<span class="o">=</span><span class="s2">&quot;mongodb+srv://usuario:password@host/sample_weatherdata&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">  </span>--collection<span class="o">=</span>ts_weather
+</code></pre></div>
+<p>e importamos con <code>mongorestore</code> en <code>iabd.ts_weather</code> (que es la colección de tipo serie temporal que hemos creado en un paso anterior):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>mongorestore<span class="w"> </span>--uri<span class="o">=</span><span class="s2">&quot;mongodb+srv://usuario:password@host/iabd&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">  </span>--collection<span class="o">=</span>ts_weather<span class="w"> </span>--noIndexRestore<span class="w"> </span>--maintainInsertionOrder<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">  </span>dump/sample_weatherdata/ts_weather.bson
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Si cambiamos a la base de datos de <code>iabd</code>, podemos observar cómo se ha rellenado la colección de la serie temporal:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">use</span><span class="w"> </span><span class="nx">iabd</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="o">&lt;</span><span class="w"> </span><span class="nx">switched</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">db</span><span class="w"> </span><span class="nx">iabd</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">ts_weather</span><span class="p">.</span><span class="nx">findOne</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="o">&lt;</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="nx">timestamp</span><span class="o">:</span><span class="w"> </span><span class="mf">1984</span><span class="o">-</span><span class="mo">03</span><span class="o">-</span><span class="mo">05</span><span class="nx">T12</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="mf">.000</span><span class="nx">Z</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="nx">metadata</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">      </span><span class="nx">elevacion</span><span class="o">:</span><span class="w"> </span><span class="mf">9999</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">      </span><span class="nx">posicion</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">        </span><span class="nx">coordinates</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">          </span><span class="mf">14</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">          </span><span class="mf">36.6</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">        </span><span class="p">],</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">        </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Point&#39;</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">      </span><span class="p">},</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">      </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;FM-13&#39;</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">    </span><span class="p">},</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">    </span><span class="nx">_id</span><span class="o">:</span><span class="w"> </span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&quot;5553a998e4b02cf715119936&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">    </span><span class="nx">temp_aire</span><span class="o">:</span><span class="w"> </span><span class="mf">13</span><span class="p">,</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">    </span><span class="nx">presion</span><span class="o">:</span><span class="w"> </span><span class="mf">1008.5</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<!--
+
+## Agregando datos
+
+Una de las ventajas reales de utilizar series temporales viene de agregar los datos.
+
+!!! tip "Funciones ventana"
+    Aunque las volveremos a estudiar a lo largo del curso, mediante las funciones ventana podemos agregar datos en un rango de datos temporal.    
+
+Por ejemplo, un operador que conviene conocer es `$setWindowFields`, que permite utilizar funciones ventana con el *framework* de agregación.
+
+
+
+$setWindowFields
+The problem with aggregation is that, without stashing data in variables, it regards each document in isolation. That’s where the $setWindowFields comes in as it combines some of aggregation’s $group functionality with window functions. 
+
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span><span class="w"> </span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">&quot;partitionBy&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">callLe</span><span class="kc">tters</span><span class="p">:</span><span class="s2">&quot;$callLetters&quot;</span><span class="p">,</span><span class="w"> </span><span class="err">dia</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">$dayO</span><span class="kc">f</span><span class="err">Year</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;$ts&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span><span class="w"> </span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="nt">&quot;output&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="nt">&quot;averaged&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">      </span><span class="nt">&quot;$avg&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;$airTemperature.value&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">      </span><span class="nt">&quot;window&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">        </span><span class="err">docume</span><span class="kc">nts</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;unbounded&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;unbounded&quot;</span><span class="w"> </span><span class="p">]</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">      </span><span class="p">}</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">  </span><span class="p">}</span>
+<span class="linenos" data-linenos="11 "></span><span class="p">}</span>
+</code></pre></div>
+
+The “partitionBy” section splits and groups the data up by our meta data and, in this case by the day of the year. The “output” section then defines what output should be added to every document, based on their partition. So our first field is an “averaged” field for the temperature. This will be the average for that partition. The “window” section says use the entire partition to work out the average, “unbounded”. The result of this stage is that every document gets the average temperature for its partition added to it. 
+
+Add on a $match:
+
+{
+     "$expr": { $lt: [ "$temperature", "$averaged" ] }    
 }
-The “partitionBy” section splits and groups the data up by our meta data and, in this case by the day of the year. The “output” section then defines what output should be added to every document, based on their partition. So our first field is an “averaged” field for the temperature. This will be the average for that partition. The “window” section says use the entire partition to work out the average, “unbounded”. The result of this stage is that every document gets the average temperature for its partition added to it. </p>
-<p>Add on a $match:</p>
-<p>{
-     "$expr": { $lt: [ "$temperature", "$averaged" ] }  <br />
-}
-And now the result of the aggregation is every incident when a location had a lower than average temperature for that day.</p>
-<p>You can change that window to work with moving windows, adjusting the boundaries of the average calculation too. Or compare documents relative to each other. And if you want more than an average calculation, there’s a host of window operators including accumulators, ranking, ordering, and gap-filling.</p>
-<p>Hacer alguna consulta de agregación .. ver funciones ventana???</p>
-<p>https://learning.oreilly.com/library/view/practical-mongodb-aggregations/9781835080641/B21539_11.xhtml#_idParaDest-202</p>
+
+And now the result of the aggregation is every incident when a location had a lower than average temperature for that day.
+
+Podemos haceer que la ventana cambie ajustando los límites a datos calculados, o comparar documentos de forma relativa entre sí. Además de la media, podemos utilizar otros operadores de ventana como acumuladores, rankings, ordenación o *gap-filling*.
+-->
+
+<!--
+https://learning.oreilly.com/library/view/practical-mongodb-aggregations/9781835080641/B21539_11.xhtml#_idParaDest-202
+-->
+
+<h2 id="creando-un-grafico">Creando un gráfico<a class="headerlink" href="#creando-un-grafico" title="Permanent link">&para;</a></h2>
+<p>Si estamos trabajando con <em>MongoAtlas</em>, podemos hacer uso de <em>Graphs</em> y crear diferentes gráficos a modo de cuadro de mandos sobre la información almacenada en nuestras colecciones.</p>
+<p>Más información en <a href="https://www.mongodb.com/docs/charts/">https://www.mongodb.com/docs/charts/</a></p>
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<!--
+https://www.mongodb.com/developer/products/mongodb/preparing-tsdata-with-densify-and-fill/
+-->
+
+<ul>
+<li>Artículo sobre <a href="https://www.mongodb.com/features/mongodb-time-series-data">MongoDB Time Series Data</a></li>
+<li>Series temporales en <a href="https://www.practical-mongodb-aggregations.com/examples/time-series/time-series.html">Practical MongoDB Aggregation Book</a></li>
+</ul>
 
 
   
@@ -2482,6 +2708,44 @@ And now the result of the aggregation is every incident when a location had a lo
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="pymongo.html" class="md-footer__link md-footer__link--prev" aria-label="Anterior: MongoDB y Python">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                MongoDB y Python
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../cloud/cloud.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Cloud">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Cloud
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
