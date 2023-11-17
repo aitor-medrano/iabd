@@ -546,6 +546,19 @@
     Creando una serie temporal
   </a>
   
+    <nav class="md-nav" aria-label="Creando una serie temporal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modelos-de-ejemplo" class="md-nav__link">
+    Modelos de ejemplo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -558,6 +571,13 @@
         <li class="md-nav__item">
   <a href="#migrando-datos" class="md-nav__link">
     Migrando datos
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agregando-datos" class="md-nav__link">
+    Agregando datos
   </a>
   
 </li>
@@ -2275,6 +2295,19 @@
     Creando una serie temporal
   </a>
   
+    <nav class="md-nav" aria-label="Creando una serie temporal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modelos-de-ejemplo" class="md-nav__link">
+    Modelos de ejemplo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2287,6 +2320,13 @@
         <li class="md-nav__item">
   <a href="#migrando-datos" class="md-nav__link">
     Migrando datos
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agregando-datos" class="md-nav__link">
+    Agregando datos
   </a>
   
 </li>
@@ -2345,9 +2385,9 @@
 <h2 id="creando-una-serie-temporal">Creando una serie temporal<a class="headerlink" href="#creando-una-serie-temporal" title="Permanent link">&para;</a></h2>
 <p>A la hora de <a href="https://www.mongodb.com/docs/manual/core/timeseries/timeseries-procedures/">crear la colección</a>, necesitamos indicar los siguiente campos:</p>
 <ul>
-<li><code>timeField</code>: campo obligatorio que almacena el <em>timestamp</em> del dato. Debe ser un objeto <code>Date()</code>.</li>
-<li><code>metaField</code>: campo opcional que indica donde se almacenan los metadatos. Este campo puede contener un documento embebido o el dato único de valor.</li>
-<li><code>granularity</code>: campo opcional que ayuda a MongoDB a optimizar el almacenamiento. Sus posibles valores son <code>seconds</code>, <code>minutes</code> o <code>hours</code> y debe configurarse al valor más cercano entre dos lectura consecutivas de datos.</li>
+<li><strong><code>timeField</code></strong>: campo obligatorio que almacena el <em>timestamp</em> del dato. Debe ser un objeto <code>Date()</code>.</li>
+<li><strong><code>metaField</code></strong>: campo opcional que indica dónde se almacenan los metadatos que describen la serie. Este campo puede contener un documento embebido o el dato único de valor, y normalmente identifica al sensor. Debe ser un valor que raramente cambie de valor y se puede utilizar como la segunda dimensión para filtrar los datos (considerando que la primera será el tiempo). Este campo <code>metaField</code> va a servir para particionar los datos, de manera que aquellos documentos que tengan el mismo <code>metaField</code> estarán en la misma partición.</li>
+<li><code>granularity</code>: campo opcional que ayuda a <em>MongoDB</em> a optimizar el almacenamiento al definir la frecuencia de los datos. Sus posibles valores son <code>seconds</code> (valor por defecto que se aplica si no indicamos la granularidad), <code>minutes</code> o <code>hours</code> y debe configurarse al valor más cercano entre dos lectura consecutivas de datos. Por ejemplo, si realizásemos una lectura del sensor cada cinco minutos, la granularidad debería ser <code>minutes</code>.</li>
 <li><code>expireAfterSeconds</code>: campo opcional, indicando la cantidad de segundos a partir de la creación del dato que MongoDB esperará para borrarlo automáticamente.</li>
 </ul>
 <p>Por ejemplo, vamos a crear una colección llamada <code>serietemporal</code> indicando el campo donde estará el <em>timestamp</em> y el de los metadatos:</p>
@@ -2406,9 +2446,52 @@
     <figcaption>Colección de tipo Time-Series</figcaption>
 </figure>
 
+<h3 id="modelos-de-ejemplo">Modelos de ejemplo<a class="headerlink" href="#modelos-de-ejemplo" title="Permanent link">&para;</a></h3>
+<p>A la hora de modelar los datos, algunos modelos de datos de ejemplo posibles podrían ser:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">IoT</label><label for="__tabbed_1_2">Bolsa / Valores de acciones</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">&quot;ts&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">&quot;2021-05-20T10:24:51.303Z&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">      </span><span class="nt">&quot;sensorId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">      </span><span class="nt">&quot;region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Alicante&quot;</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">  </span><span class="nt">&quot;presionAire&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">99</span><span class="w"> </span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">  </span><span class="nt">&quot;velocidadViento&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">  </span><span class="nt">&quot;temperatura&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">      </span><span class="nt">&quot;gradosF&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">      </span><span class="nt">&quot;gradosC&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">3.8</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos="13 "></span><span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">&quot;6166df318f32e5d3ed304fc7&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="kc">t</span><span class="err">imes</span><span class="kc">ta</span><span class="err">mp</span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">&quot;2023-10-13T00:00:00.000Z&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="err">me</span><span class="kc">ta</span><span class="err">da</span><span class="kc">ta</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="kc">n</span><span class="err">ombre</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;AMZN&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="err">mo</span><span class="kc">ne</span><span class="err">da</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Dolar&#39;</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">  </span><span class="err">precio</span><span class="p">:</span><span class="w"> </span><span class="mf">142.83</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="p">},</span>
+<span class="linenos" data-linenos="10 "></span><span class="p">{</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">  </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">&quot;6166df318f32e5d3ed304fc5&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">  </span><span class="kc">t</span><span class="err">imes</span><span class="kc">ta</span><span class="err">mp</span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">&quot;2023-10-13T00:00:00.000Z&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">  </span><span class="err">me</span><span class="kc">ta</span><span class="err">da</span><span class="kc">ta</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="kc">n</span><span class="err">ombre</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;AAPL&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="err">mo</span><span class="kc">ne</span><span class="err">da</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Dolar&#39;</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">  </span><span class="err">precio</span><span class="p">:</span><span class="w"> </span><span class="mf">189.71</span>
+<span class="linenos" data-linenos="18 "></span><span class="p">},</span><span class="w"> </span>
+</code></pre></div>
+</div>
+</div>
+</div>
 <h2 id="consideraciones">Consideraciones<a class="headerlink" href="#consideraciones" title="Permanent link">&para;</a></h2>
 <p>Las colecciones de series temporales crean y utilizan un índice interno. Además, si fuera necesario, podemos crear índices adicionales, a los que se les conoce como índices secundarios.</p>
-<p>Las colecciones de series temporales se asocian a casos de uso donde los datos se insertan una vez, se leen muchas veces y raramente se actualizan. </p>
+<p>Las colecciones de series temporales se asocian a casos de uso donde los datos se insertan una vez, se leen muchas veces y raramente se actualizan.</p>
 <p>Es por ello, que las operaciones de modificación y borrado en las series temporales necesitan del operador <code>{multi:true}</code> y <code>{justOne:false}</code> para aplicarse sobre múltiples documentos, y la consulta a modificar o borrar sólo debe hacerlo sobre los campos del subdocumento del atributo <code>metaField</code>. Así pues, sólo podemos modificar el subdocumento del campo <code>metaField</code> y no podemos emplear una operación <code>upsert</code>.</p>
 <div class="admonition caution">
 <p class="admonition-title">Cuidado</p>
@@ -2497,7 +2580,7 @@
 <span class="linenos" data-linenos="7 "></span><span class="p">})</span>
 </code></pre></div>
 <p>Y a continuación, mediante el <em>framework</em> de agregación, migramos los datos que nos interesen. Por ejemplo, nos vamos a traer la temperatura del aire y la presión, así como algunos metadatos del sensor para aquellas muestras que no han superado los 100 grados de temperatura (así podríamos filtrar algunos <em>outliers</em>):</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">MongoDB &gt;= v7.0.3</label><label for="__tabbed_1_2">MongoDB &lt; 7.0.3</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">MongoDB &gt;= v7.0.3</label><label for="__tabbed_2_2">MongoDB &lt; 7.0.3</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>A partir de la versión 7.0.3 podemos emplear el operador <code>$out</code> para exportar los datos a una colección de tipo <em>time series</em>:</p>
@@ -2586,6 +2669,59 @@
 <span class="linenos" data-linenos="19 "></span><span class="w">    </span><span class="nx">presion</span><span class="o">:</span><span class="w"> </span><span class="mf">1008.5</span>
 <span class="linenos" data-linenos="20 "></span><span class="w">  </span><span class="p">}</span>
 </code></pre></div>
+<h2 id="agregando-datos">Agregando datos<a class="headerlink" href="#agregando-datos" title="Permanent link">&para;</a></h2>
+<div class="admonition tip inline end">
+<p class="admonition-title">Otros operadores de fecha</p>
+<p>Además de <code>$dateToParts</code>, podemos emplear los operadores <a href="https://www.mongodb.com/docs/v7.0/reference/operator/aggregation/hour">$hour</a>, <a href="https://www.mongodb.com/docs/v7.0/reference/operator/aggregation/week/">$week</a>, <a href="https://www.mongodb.com/docs/v7.0/reference/operator/aggregation/dayOfYear/">$dayOfYear</a>, <a href="https://www.mongodb.com/docs/v7.0/reference/operator/aggregation/year/">$year</a>, etc... sobre un campo de tipo fecha / <em>timestamp</em>.</p>
+</div>
+<p>Es muy normal agrupar los datos en rangos de fechas sobre los que realizaremos cálculos. Para ello, podemos utilizar el operador <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/"><code>$dateToParts</code></a> el cual recibe un campo <code>date</code> con un valor de tipo fecha/<em>timestamp</em>, y crea un documento con los diferentes campos por separado (año, mes, día, etc... ) mediante las propiedades <code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code>, <code>minute</code>, <code>second</code> y <code>millisecond</code>. Además, si lo necesitamos, podemos configurar también su <em>timezone</em>.</p>
+<p>Por ejemplo, sobre la colección recién importada, vamos a agrupar los datos por días y calcularemos la temperatura media del aire:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="err">db.</span><span class="kc">ts</span><span class="err">_wea</span><span class="kc">t</span><span class="err">her.aggrega</span><span class="kc">te</span><span class="err">(</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">   </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">      </span><span class="err">$projec</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">         </span><span class="err">da</span><span class="kc">te</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="hll"><span class="linenos" data-linenos=" 5 "></span><span class="w">            </span><span class="err">$da</span><span class="kc">te</span><span class="err">ToPar</span><span class="kc">ts</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">da</span><span class="kc">te</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;$timestamp&quot;</span><span class="w"> </span><span class="p">}</span>
+</span><span class="linenos" data-linenos=" 6 "></span><span class="w">         </span><span class="p">},</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">         </span><span class="kc">te</span><span class="err">mp_aire</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">      </span><span class="p">}</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">   </span><span class="p">},</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">   </span><span class="p">{</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">      </span><span class="err">$group</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">         </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">            </span><span class="err">da</span><span class="kc">te</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">               </span><span class="err">year</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;$date.year&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">               </span><span class="err">mo</span><span class="kc">nt</span><span class="err">h</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;$date.month&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">               </span><span class="err">day</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;$date.day&quot;</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">            </span><span class="p">}</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">         </span><span class="p">},</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">         </span><span class="err">avgTmp</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">$avg</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;$temp_aire&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">      </span><span class="p">}</span>
+<span class="linenos" data-linenos="21 "></span><span class="w">   </span><span class="p">}</span>
+<span class="linenos" data-linenos="22 "></span><span class="p">]</span><span class="w"> </span><span class="err">)</span>
+</code></pre></div>
+<p>Obteniendo como resultado documentos similares a:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="err">da</span><span class="kc">te</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">      </span><span class="err">year</span><span class="p">:</span><span class="w"> </span><span class="mi">1984</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">      </span><span class="err">mo</span><span class="kc">nt</span><span class="err">h</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">      </span><span class="err">day</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">  </span><span class="err">avgTmp</span><span class="p">:</span><span class="w"> </span><span class="mf">68.94788047255038</span>
+<span class="linenos" data-linenos="10 "></span><span class="p">},</span><span class="w"> </span>
+<span class="linenos" data-linenos="11 "></span><span class="p">{</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">  </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">    </span><span class="err">da</span><span class="kc">te</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">      </span><span class="err">year</span><span class="p">:</span><span class="w"> </span><span class="mi">1984</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">      </span><span class="err">mo</span><span class="kc">nt</span><span class="err">h</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">      </span><span class="err">day</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">  </span><span class="p">},</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">  </span><span class="err">avgTmp</span><span class="p">:</span><span class="w"> </span><span class="mf">65.79275964391691</span>
+<span class="linenos" data-linenos="20 "></span><span class="p">}</span>
+<span class="linenos" data-linenos="21 "></span><span class="err">...</span>
+</code></pre></div>
 <!--
 
 ## Agregando datos
@@ -2625,7 +2761,7 @@ Add on a $match:
 
 And now the result of the aggregation is every incident when a location had a lower than average temperature for that day.
 
-Podemos haceer que la ventana cambie ajustando los límites a datos calculados, o comparar documentos de forma relativa entre sí. Además de la media, podemos utilizar otros operadores de ventana como acumuladores, rankings, ordenación o *gap-filling*.
+Podemos hacer que la ventana cambie ajustando los límites a datos calculados, o comparar documentos de forma relativa entre sí. Además de la media, podemos utilizar otros operadores de ventana como acumuladores, *rankings*, ordenación o *gap-filling*.
 -->
 
 <!--
@@ -2637,11 +2773,13 @@ https://learning.oreilly.com/library/view/practical-mongodb-aggregations/9781835
 <p>Más información en <a href="https://www.mongodb.com/docs/charts/">https://www.mongodb.com/docs/charts/</a></p>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <!--
+https://www.mongodb.com/developer/products/mongodb/window-functions-and-time-series/
 https://www.mongodb.com/developer/products/mongodb/preparing-tsdata-with-densify-and-fill/
 -->
 
 <ul>
 <li>Artículo sobre <a href="https://www.mongodb.com/features/mongodb-time-series-data">MongoDB Time Series Data</a></li>
+<li>Píldora sobre <a href="https://learn.mongodb.com/courses/creating-a-time-series-collection">Creating a Time Series Collection</a></li>
 <li>Series temporales en <a href="https://www.practical-mongodb-aggregations.com/examples/time-series/time-series.html">Practical MongoDB Aggregation Book</a></li>
 </ul>
 
