@@ -2586,7 +2586,7 @@
 <p>El almacenamiento en la nube, por lo general, es más confiable, escalable y seguro que los sistemas de almacenamiento tradicionales en las instalaciones.</p>
 <p>El análisis de <em>Big Data</em>, el almacenamiento de datos, el Internet de las cosas (IoT), las bases de datos y las aplicaciones de copias de seguridad y archivo dependen de algún tipo de arquitectura de almacenamiento de datos.</p>
 <p>El almacenamiento más básico es el que incluyen las propias instancias, también conocido como el <strong>almacén de instancias</strong>, o almacenamiento efímero, es un almacenamiento temporal que se agrega a la instancia de EC2.</p>
-<p>El almacén de instancias es una buena opción para el almacenamiento temporal de información que cambia con frecuencia, como <em>buffers</em>, memorias caché, datos de pruebas y demás contenido temporal. También se puede utilizar para los datos que se replican en una flota de instancias, como un grupo de servidores web con balanceo de carga. Si las instancias se detienen, ya sea debido a un error del usuario o un problema de funcionamiento, se eliminarán los datos en el almacén de instancias.</p>
+<p>El almacén de instancias es una buena opción para el almacenamiento temporal de información que cambia con frecuencia, como <em>buffers</em>, memorias caché, datos de pruebas y demás contenido temporal que no necesita persistencia. También se puede utilizar para los datos que se replican en una flota de instancias, como un grupo de servidores web con balanceo de carga. Si las instancias se detienen, ya sea debido a un error del usuario o un problema de funcionamiento, se eliminarán los datos en el almacén de instancias.</p>
 <div class="admonition info">
 <p class="admonition-title">Almacenamiento de bloque o de objeto</p>
 <p>AWS permite almacenar los datos en bloques o como objetos. Si el almacenamiento es en bloques, los datos se almacenan por trozos (bloques), de manera si se modifica una parte de los datos, solo se ha de modificar el bloque que lo contiene. En cambio, si el almacenamiento es a nivel de objeto, una modificación implica tener que volver a actualizar el objeto entero.<br />
@@ -2615,7 +2615,7 @@ Un artículo muy interesante es <a href="https://cloudcasts.io/article/what-you-
 <ul>
 <li><em>Unidades de estado sólido (SSD)</em>: optimizadas para cargas de trabajo de transacciones que implican operaciones de lectura/escritura frecuentes de pequeño tamaño de E/S. Proporciona un equilibrio entre precio y rendimiento, y es el tipo recomendado para la mayoría de las cargas de trabajo. Los tipos existentes son <code>gp3</code> (1.000 MiB/s) y <code>gp2</code>(128-250 MiB/s) ambas con un máximo de 16.000 IOPS.</li>
 <li><em>SSD de IOPS provisionadas</em>: proporciona un rendimiento elevado con cargas de trabajo críticas, baja latencia o alto rendimiento. Los tipos existentes con <code>io2 Block Express</code> (4.000 MiB/s con un máximo 246.000 IOPS) e <code>io2</code> (1.000 MiB/s con 64.000 IOPS)</li>
-<li><em>Unidades de disco duro (HDD)</em>: optimizadas para grandes cargas de trabajo de streaming. Los tipos existentes con <code>st1</code> (500 MiB/s con 500 IOPS) y <code>sc1</code> (250 MiB/s con 250 IOPS).</li>
+<li><em>Unidades de disco duro (HDD)</em>: optimizadas para grandes cargas de trabajo de <em>streaming</em>. Los tipos existentes con <code>st1</code> (<em>Throughput Optimized HDD</em>, con 500 MiB/s y 500 IOPS) y <code>sc1</code> (<em>Cold HDD</em>, con 250 MiB/s y 250 IOPS).</li>
 </ul>
 <p>Más información sobre los diferentes volúmenes: <a href="https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/ebs-volume-types.html">https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/ebs-volume-types.html</a></p>
 <p>Para crear o configurar un volumen, dentro de las instancias EC2, en el menú lateral podemos ver las opciones de <em>Elastic Block Store</em> y el submenú <em>Volúmenes</em>:</p>
@@ -2657,6 +2657,24 @@ Un artículo muy interesante es <a href="https://cloudcasts.io/article/what-you-
 <p>Respecto al coste (<a href="https://aws.amazon.com/es/efs/pricing/">https://aws.amazon.com/es/efs/pricing/</a>), dependiendo del tipo de acceso y la administración del ciclo de vida, el acceso estándar se factura desde 0,30$ Gb/mes, mientras que si el acceso es poco frecuente, baja a 0,013$ Gb/mes más 0,01$ por transferencia y Gb/mes.</p>
 <p>Su casos de uso más comunes son para <em>Big Data</em> y análisis, flujos de trabajo de procesamiento multimedia, administración de contenido, servidores web y directorios principales.</p>
 <p>Respecto a su acceso, de manera similar al resto de servicios de almacenamiento, es un servicio completamente administrado al que se puede acceder desde la consola, una API o la CLI de AWS.</p>
+<div class="admonition info">
+<p class="admonition-title">EBS y EFS conjuntamente</p>
+<p><figure style="float: right;">
+    <img src="images/03ebs-efs.png" width="500px">
+    <figcaption>EFS compartido entre instancias</figcaption>
+</figure></p>
+<p>El siguiente gráfico muestra como pueden coexistir los diferentes servicios:</p>
+<ul>
+<li>EBS es un disco virtual</li>
+<li>El almacenamiento de instancia es un disco local</li>
+<li>EFS es una carpeta compartida en red</li>
+</ul>
+<p>Además, destacamos sus diferencias:</p>
+<ul>
+<li>Un volumen EBS va asociado a una única instancia EC2.</li>
+<li>Una unidad EFS se comparte entre varias instancias EC2, pudiendo pertenecer estas a diferentes subredes. </li>
+</ul>
+</div>
 <h2 id="amazon-s3">Amazon S3<a class="headerlink" href="#amazon-s3" title="Permanent link">&para;</a></h2>
 <p><em>S3</em> (<a href="https://aws.amazon.com/es/s3/">https://aws.amazon.com/es/s3/</a>) es un servicio de almacenamiento persistente de objetos creado para almacenar y recuperar cualquier cantidad de datos desde cualquier lugar mediante una URL: sitios web y aplicaciones móviles, aplicaciones corporativas y datos de sensores o dispositivos de Internet de las cosas (IoT) y análisis de <em>Big Data</em>.</p>
 <p>S3 es un servicio de <strong>almacenamiento a nivel de objetos</strong>, y tal como habíamos comentado, significa que además de que los datos contengan metadatos que ayudan a catalogar el objeto, si desea cambiar una parte de un archivo, tiene que realizar la modificación y luego volver a cargar todo el archivo modificado. Esto puede tener implicaciones de rendimiento y consistencia, que conviene tener en cuenta.</p>
