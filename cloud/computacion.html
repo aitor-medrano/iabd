@@ -2657,9 +2657,9 @@ Además, ofrece capacidad de cómputo segura y de tamaño ajustable en la nube. 
 <p>Puede elegir entre los siguientes tipos de AMI:</p>
 <ul>
 <li><em>Quick Start</em>: AWS ofrece una serie de AMI prediseñadas, tanto Linux como Windows, para lanzar las instancias.</li>
-<li><em>Mis AMI</em>: estas son las AMI que hemos creado nosotros, ya sea a partir de máquinas locales que hayamos creado en VmWare, VirtualBox, o una previa que hemos creado en una instancia EC2, configurado y luego exportado.</li>
+<li><em>Mis AMI</em>: estas son las AMI que hemos creado nosotros, ya sea a partir de máquinas locales mediante VmWare, VirtualBox, o una previa que hayamos creado en una instancia EC2, configurado y luego exportado.</li>
 <li><em>AWS Marketplace</em>: catálogo que incluye miles de soluciones de software creadas por empresas terceras (las cuales pueden cobrar por su uso). Estas AMI pueden ofrecer casos de uso específicos para que pueda ponerse en marcha rápidamente.</li>
-<li><em>AMI de la comunidad</em>: estas son AMI creadas por personas de todo el mundo.AWS no controla estas AMI, así que deben utilizarse bajo la propia responsabilidad, evitando su uso en entornos corporativos o de producción.</li>
+<li><em>AMI de la comunidad</em>: estas son AMI creadas por personas de todo el mundo. AWS no controla estas AMI, así que deben utilizarse bajo la propia responsabilidad, evitando su uso en entornos corporativos o de producción.</li>
 </ul>
 <div class="admonition info">
 <p class="admonition-title">Las AMI dependen de la región</p>
@@ -2675,7 +2675,7 @@ Los tipos de instancia incluyen diversas combinaciones de capacidad de CPU, memo
 
 <p>Cada tipo de instancia se ofrece en uno o más tamaños, lo cual permite escalar los recursos en función de los requisitos de la carga de trabajo de destino.</p>
 <h4 id="categorias">Categorías<a class="headerlink" href="#categorias" title="Permanent link">&para;</a></h4>
-<p>Las categorías de tipos de instancia incluyen instancias de uso general, optimizadas para informática, optimizadas para memoria, optimizadas para almacenamiento y de informática acelerada.</p>
+<p>Las categorías de <a href="https://aws.amazon.com/es/ec2/instance-types/">tipos de instancia</a> incluyen instancias de uso general, optimizadas para informática, memoria, almacenamiento y de informática acelerada.</p>
 <table>
 <thead>
 <tr>
@@ -2687,31 +2687,37 @@ Los tipos de instancia incluyen diversas combinaciones de capacidad de CPU, memo
 <tbody>
 <tr>
 <td>Uso general</td>
-<td>a1, m4, m5, t2, <strong>t3</strong></td>
+<td>a1, m4, m5, m6, t2, <strong>t3</strong>, <strong>t4g</strong></td>
 <td>Amplio</td>
 </tr>
 <tr>
 <td>Computación</td>
-<td>c5, <strong>c6</strong></td>
+<td>c5, c6, <strong>c7</strong></td>
 <td>Alto rendimiento</td>
 </tr>
 <tr>
 <td>Memoria</td>
-<td>r5, <strong>r6</strong>, x1, z1</td>
+<td>r5, r6, <strong>r7</strong>, x1, x2, z1</td>
 <td><em>Big Data</em></td>
 </tr>
 <tr>
 <td>Informática acelerada</td>
-<td>f1, g3, g4, p2, p3</td>
+<td>f1, g3, g4, g5, p3, p4, p5</td>
 <td><em>Machine Learning</em></td>
 </tr>
 <tr>
 <td>Almacenamiento</td>
-<td>d2, h1, i3</td>
+<td>d2, d3, h1, i3, i4</td>
 <td>Sistemas de archivos distribuidos</td>
 </tr>
 </tbody>
 </table>
+<p>Por ejemplo, instancias del tipo <code>r</code>, las cuales optimizan la memoria, tendrán más memoria que CPU comparada, por ejemplo, con la familia de propósito general del tipo <code>m</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Instancia graviton</p>
+<p>AWS ofrece máquinas basadas en ARM que ofrecen un mayor rendimiento con un menor consumo energético, y por tanto, un menor coste por instancia.
+Si elegimos una instancia de tipo <strong>g</strong>, como pueda ser una <em>t4g</em> o <em>m6g</em>, nuestras aplicaciones y las librerías dependientes deben soportar la arquitectura ARM64.</p>
+</div>
 <h4 id="tipos-de-instancias">Tipos de instancias<a class="headerlink" href="#tipos-de-instancias" title="Permanent link">&para;</a></h4>
 <p>Los tipos de instancias (<a href="https://aws.amazon.com/es/ec2/instance-types/">https://aws.amazon.com/es/ec2/instance-types/</a>) ofrecen <ins>familias, generaciones y tamaños</ins>. Así pues, el tipo de instancia <code>t3.large</code> referencia a la familia <code>T</code>, de la tercera generación y con un tamaño <code>large</code>.</p>
 <p>En general, los tipos de instancia que son de una generación superior son más potentes y ofrecen una mejor relación calidad/precio.</p>
@@ -2719,8 +2725,8 @@ Los tipos de instancia incluyen diversas combinaciones de capacidad de CPU, memo
 <p class="admonition-title">Comparando tipos de instancias</p>
 <p>Cuando se comparan los tamaños hay que examinar la parte del coeficiente en la categoría de tamaño. Por ejemplo, una instancia <code>t3.2xlarge</code> tiene el doble de CPU virtual y memoria que una <code>t3.xlarge</code>. A su vez, la instancia <code>t3.xlarge</code> tiene el doble de CPU virtual y memoria que una <code>t3.large</code>.</p>
 </div>
-<p>También se debe tener en cuenta que el ancho de banda de red también está vinculado al tamaño de la instancia de Amazon EC2. Si ejecutará trabajos que requieren un uso muy intensivo de la red, es posible que deba aumentar las especificaciones de la instancia para que satisfaga sus necesidades.</p>
-<p>A la hora de elegir un tipo de instancia, nos centraremos en la cantidad de núcleos, el tamaño de la memoria, el rendimiento de la red y las tecnologías de la propia CPU (si tiene habilitada GPU y FPGA)</p>
+<p>También se debe tener en cuenta que el ancho de banda de red también está vinculado al tamaño de la instancia de Amazon EC2. Si necesitamos ejecutar trabajos que requieren un uso muy intensivo de la red, es posible que necesitemos aumentar las especificaciones de la instancia.</p>
+<p>Así pues, a la hora de elegir un tipo de instancia, nos centraremos en la cantidad de núcleos, el tamaño de la memoria, el rendimiento de la red y las tecnologías de la propia CPU (si tiene habilitada GPU y FPGA)</p>
 <h3 id="paso-3-par-de-claves">Paso 3: Par de claves<a class="headerlink" href="#paso-3-par-de-claves" title="Permanent link">&para;</a></h3>
 <p>Para poner conectarnos a la instancia vía SSH y poder configurarla, necesitaremos hacerlo a través de un par de claves SSH. Así pues, el siguiente paso es elegir un <strong>par de claves</strong> existente (formato X.509), continuar sin un par de claves o crear un par de claves nuevo antes de crear y lanzar la instancia EC2.</p>
 <figure style="align: center;">
