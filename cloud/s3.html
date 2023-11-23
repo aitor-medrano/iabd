@@ -543,6 +543,8 @@
       
         
       
+        
+      
     
     
     
@@ -846,11 +848,31 @@
   
   
     <li class="md-nav__item">
-      <a href="datos.html" class="md-nav__link">
+      <a href="rds.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    RDS y DynamoDB
+    RDS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dynamodb.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DynamoDB
   </span>
   
 
@@ -2676,13 +2698,13 @@ Un artículo muy interesante es <a href="https://cloudcasts.io/article/what-you-
 </ul>
 </div>
 <h2 id="amazon-s3">Amazon S3<a class="headerlink" href="#amazon-s3" title="Permanent link">&para;</a></h2>
-<p><em>S3</em> (<a href="https://aws.amazon.com/es/s3/">https://aws.amazon.com/es/s3/</a>) es un servicio de almacenamiento persistente de objetos creado para almacenar y recuperar cualquier cantidad de datos desde cualquier lugar mediante una URL: sitios web y aplicaciones móviles, aplicaciones corporativas y datos de sensores o dispositivos de Internet de las cosas (IoT) y análisis de <em>Big Data</em>.</p>
+<p><em>Amazon Simple Storage Service</em>, más conocido como <em>S3</em> (<a href="https://aws.amazon.com/es/s3/">https://aws.amazon.com/es/s3/</a>) es un servicio de almacenamiento persistente de objetos creado para almacenar y recuperar cualquier cantidad de datos desde cualquier lugar mediante una URL: sitios web y aplicaciones móviles, aplicaciones corporativas y datos de sensores o dispositivos de Internet de las cosas (IoT) y análisis de <em>Big Data</em>.</p>
 <p>S3 es un servicio de <strong>almacenamiento a nivel de objetos</strong>, y tal como habíamos comentado, significa que además de que los datos contengan metadatos que ayudan a catalogar el objeto, si desea cambiar una parte de un archivo, tiene que realizar la modificación y luego volver a cargar todo el archivo modificado. Esto puede tener implicaciones de rendimiento y consistencia, que conviene tener en cuenta.</p>
 <p>Los datos se almacenan como objetos dentro de recursos conocidos como <strong><em>buckets</em></strong>. Los objetos pueden ser prácticamente cualquier archivo de datos, como imágenes, videos o registros del servidor.</p>
 <p>Es una solución administrada de almacenamiento en la nube que se diseñó para brindar un escalado sin problemas, ofreciendo 99,99% de <strong>disponibilidad</strong> (4 nueves) y 99,999999999% (11 nueves) de <strong>durabilidad</strong>. Además de poder almacenar prácticamente todos los objetos que deseemos (capacidad de almacenamiento casi ilimitado) dentro de un <em>bucket</em> (cada objeto puede ocupar hasta un máximo de 5TB), S3 permite realizar operaciones de escritura, lectura y eliminación de los objetos almacenados en el bucket. Los nombres de los <em>buckets</em> son universales y deben ser <ins>únicos</ins> entre todos los nombres de <em>buckets</em> existentes en Amazon S3.</p>
 <p>De forma predeterminada, en Amazon S3 los datos se almacenan de forma redundante en varias instalaciones y en diferentes dispositivos de cada instalación.</p>
 <figure style="align: center;">
-    <img src="images/03s3replicacion.png" width="500">
+    <img src="images/03s3replicacion.png" alt="Replicación en S3" width="600px">
     <figcaption>Replicación en S3</figcaption>
 </figure>
 
@@ -2710,7 +2732,7 @@ Un artículo muy interesante es <a href="https://cloudcasts.io/article/what-you-
 <p class="admonition-title">Política de ciclo de vida</p>
 <p>Una <strong>política de ciclo de vida</strong> define qué va a pasar con los datos partiendo de su almacenamiento masivo en S3 estándar, pasando a uso poco frecuente y seguidamente a Glacier y finalmente para su eliminación, en base a plazos o métricas y reduciendo costes de forma automática.</p>
 <p><figure style="align: center;">
-    <img src="images/03politicaCicloVida.png">
+    <img src="images/03politicaCicloVida.png" alt="Política de ciclo de vida" width="800px">
     <figcaption>Política de ciclo de vida</figcaption>
 </figure></p>
 <p>Para ello, se puede monitorizar un bucket completo, un prefijo o una etiqueta de objeto, de manera que podamos evaluar los patrones de acceso y ajustar la política de ciclo de vida.</p>
@@ -2725,7 +2747,7 @@ Un artículo muy interesante es <a href="https://cloudcasts.io/article/what-you-
 <p>Podemos controlar el acceso a cada bucket mediante mecanismos de control de acceso (<em>ACL</em>) que pueden aplicarse tanto a objetos individuales como a los <em>buckets</em>, es decir, quién puede crear, eliminar y enumerar objetos en el bucket. También podemos obtener registros de acceso al bucket y a sus objetos, además de elegir la región geográfica donde <em>Amazon S3</em> almacenará el bucket y su contenido. Para cargar los datos (como fotos, vídeos o documentos), primero hemos de crear un bucket en una región de AWS y, a continuación, cargar casi cualquier cantidad de objetos en el bucket (los objetos pueden ocupar hasta 5TB).</p>
 <h4 id="creando-un-bucket">Creando un bucket<a class="headerlink" href="#creando-un-bucket" title="Permanent link">&para;</a></h4>
 <figure style="float: right;">
-    <img src="images/03s3severo8a.png" width="450">
+    <img src="images/03s3severo8a.png" alt="Creamos el bucket" width="450">
     <figcaption>Creamos el bucket</figcaption>
 </figure>
 
@@ -2831,8 +2853,8 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#u
 <p>Cuando hemos visto los metadatos de un objeto, hemos podido observar que cada objeto contiene un atributo versión. El servicio S3 permite almacenar un histórico con todas las <a href="https://docs.aws.amazon.com/es_es/AmazonS3/latest/userguide/Versioning.html">versiones</a> de un objeto, y poder conservar, recuperar y restaurar todas las versiones de los objetos almacenados en un <em>bucket</em>.</p>
 <p>Para ello, el primer paso es habilitar el <a href="https://docs.aws.amazon.com/es_es/AmazonS3/latest/userguide/versioning-workflows.html">control del versiones</a> para el bucket. Para ello, bien mediante la consola, en las propiedades del <em>bucket</em> habilitamos el <em>Control de versiones</em>:</p>
 <figure>
-    <img src="images/03s3severo8a-versioning.png">
-    <figcaption>Haciendo el bucket público</figcaption>
+    <img src="images/03s3severo8a-versioning.png" alt="Habilitando el control de versiones">
+    <figcaption>Habilitando el control de versiones</figcaption>
 </figure>
 
 <p>Si en vez de la consola, lo queremos habilitar desde el CLI, utilizaremos el siguiente comando:</p>
@@ -2895,8 +2917,8 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#u
 <p>Ahora, al recuperar un objeto, siempre recuperará la última versión. Pero, ¿y si queremos una versión diferente?</p>
 <p>Desde la consola, al seleccionar un archivo, en la pestaña <em>Versiones</em>, podemos hacer click en la versión deseada y descargarla:</p>
 <figure>
-    <img src="images/03s3severo8a-recuperar-version.png">
-    <figcaption>Haciendo el bucket público</figcaption>
+    <img src="images/03s3severo8a-recuperar-version.png" alt="Visualizando las versiones">
+    <figcaption>Visualizando las versiones</figcaption>
 </figure>
 
 <p>O mediante AWS CLI, indicando la versión mediante <code>--version-id</code> y poniendo como último parámetro el nombre del fichero de destino:</p>
@@ -2912,7 +2934,7 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#u
 <p>A continuación subiremos nuestro archivo <a href="resources/siteEstatico.zip">siteEstatico.zip</a> descomprimido al <em>bucket</em>.</p>
 <p>Para que la web sea visible, tenemos que modificar los permisos para que no bloquee el acceso público. Así pues, en la pestaña de permisos del <em>bucket</em> deshabilitamos todas las opciones.</p>
 <figure>
-    <img src="images/03bucketPermisos.png" alt="Haciendo el bucket público">
+    <img src="images/03bucketPermisos.png" alt="Haciendo el bucket público" width="800px">
     <figcaption>Haciendo el bucket público</figcaption>
 </figure>
 
@@ -2937,7 +2959,7 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#u
 </div>
 <div class="tabbed-block">
 <p><figure>
-    <img src="images/03s3-policy-editor.png">
+    <img src="images/03s3-policy-editor.png" alt="Editor de políticas" width="800px">
     <figcaption>Editor de políticas</figcaption>
 </figure></p>
 </div>
@@ -2945,7 +2967,7 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#u
 </div>
 <p>Tras ello, sólo nos queda configurar el <em>bucket</em> como un sitio web. Para ello, en las propiedades, en la parte final de la página, tenemos la opción de <em>Alojamiento de sitios web estáticos</em>, la cual debemos habilitar y posteriormente nos mostrará la URL de acceso a nuestro sitio web, en nuestro caso en <a href="http://severo8a-web.s3-website-us-east-1.amazonaws.com/">http://severo8a-web.s3-website-us-east-1.amazonaws.com/</a></p>
 <figure>
-    <img src="images/03s3-sitioweb.png">
+    <img src="images/03s3-sitioweb.png" alt="Sitio Web público" width="1000px">
     <figcaption>Sitio Web público</figcaption>
 </figure>
 
@@ -2984,7 +3006,7 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html#u
 <p>Los datos que hemos cargado en el ejemplo están relacionados con trayectos de taxis.
 1. El campo <code>VendorID</code> tiene dos posibles valores: 1 y 2: ¿Cuantos viajes han hecho los <em>vendor</em> de tipo 1?
 2. Cuando el campo <code>payment_type</code> tiene el valor 1, está indicando que el pago se ha realizado mediante tarjeta de crédito. A su vez, el campo <code>total_amount</code> almacena el coste total de cada viaje ¿Cuantos viajes se han realizado y cuanto han recaudado los trayectos que se han pagado mediante tarjeta de crédito?</p>
-<p>Para transformar el tipo de un campo, se emplea la función <code>cast</code> .Por ejemplo si queremos que interprete el campo total como de tipo float haríamos <code>cast(s.total as float)</code> o si fuera entero como <code>cast(s.total as int)</code>.</p>
+<p>Para transformar el tipo de un campo, se emplea la función <strong><code>cast</code></strong> .Por ejemplo si queremos que interprete el campo total como de tipo float haríamos <code>cast(s.total as float)</code> o si fuera entero como <code>cast(s.total as int)</code>.</p>
 <p><!-- SELECT count(*), sum(cast(s.total_amount as float)) FROM s3object s WHERE s.payment_type='1' --> </p>
 <p>Puedes probar también con los datos almacenados en un <a href="resources/labS3.csv.gz">fichero comprimido</a>.</p>
 </div>
