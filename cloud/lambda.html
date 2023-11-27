@@ -2779,8 +2779,29 @@
 <span class="linenos" data-linenos="2 "></span><span class="w"> </span><span class="nt">&quot;body&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{\&quot;_id\&quot;: {\&quot;$oid\&quot;: \&quot;5c8eccc1caa187d17ca6ed18\&quot;}, \&quot;city\&quot;: \&quot;ACMAR\&quot;, \&quot;zip\&quot;: \&quot;35004\&quot;, \&quot;loc\&quot;: {\&quot;y\&quot;: 33.584132, \&quot;x\&quot;: 86.51557}, \&quot;pop\&quot;: 6055, \&quot;state\&quot;: \&quot;AL\&quot;}&quot;</span><span class="p">}</span>
 </code></pre></div>
 <p>Más información en la <a href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html">documentación oficial</a>.</p>
-<!-- Podemos también crear una URL para la función para poder acceder a la función via una petición HTTP -->
+<h4 id="funcion-publica">Función pública<a class="headerlink" href="#funcion-publica" title="Permanent link">&para;</a></h4>
+<p>Mediante Lambda, podemos hacer que cualquier funcione sea accesible via una URL.</p>
+<p>Esto lo podemos hacer al crear la función, en la configuración avanzada, marcando la opción <em>Habilitar URL de la función</em>, o una vez creada, en la pestaá Configuración, en la opción <em>URL de función</em>, donde al activarla elegiremos los permisos:</p>
+<figure style="align: center;">
+    <img src="images/04lambda-02url-config.png" alt="Habilitando la URL a la función" width="600px">
+    <figcaption>Habilitando la URL a la función</figcaption>
+</figure>
 
+<p>Tras crearla, tanto en la misma opción, como en el resumen de la función, aparecerá la URL de la función, la cual siempre contendrá <code>lambda-url</code> en mitad del dominio y terminará con <code>on.aws</code>:</p>
+<figure style="align: center;">
+    <img src="images/04lambda-02url-link.png" alt="URL a la función Lambda" width="800px">
+    <figcaption>URL a la función Lambda</figcaption>
+</figure>
+
+<p>Y si accedemos, veremos el resultado de la llamada a <em>MongoDB</em>:</p>
+<figure style="align: center;">
+    <img src="images/04lambda-02url-browser.png" alt="Comprobando el resultado en el navegador" width="600px">
+    <figcaption>Comprobando el resultado en el navegador</figcaption>
+</figure>
+
+<p>Si hubiéramos querido crear la URL para la función mediante AWS CLI necesitaríamos utilizar el parámetro <a href="https://docs.aws.amazon.com/cli/latest/reference/lambda/create-function-url-config.html"><code>lambda create-function-url-config</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>lambda<span class="w"> </span>create-function-url-config<span class="w"> </span>--function-name<span class="w"> </span>consultaMongoDB<span class="w"> </span>--auth-type<span class="w"> </span>NONE
+</code></pre></div>
 <!--
 ### Caso de uso 3: de S3 a MongoDB
 
@@ -2911,6 +2932,7 @@ Nosotros, como desarrolladores, sólo deberemos cargar el código, elegir el tip
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">uri</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MONGODB_URI&quot;</span><span class="p">]</span>
 </code></pre></div>
+<p>Comprueba el funcionamiento de la función tanto desde la consola de AWS, del AWS CLI como accediendo mediante una URL, y adjunta una captura de cada resultado.</p>
 </li>
 </ol>
 
