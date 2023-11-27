@@ -1,0 +1,3144 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Repaso a los servicios de computación que ofrece AWS, centrándonos en EC2 (creando instancias tanto desde la consola como mediante AWS CLI) y AWS Lambda.">
+      
+      
+      
+        <link rel="canonical" href="https://aitor-medrano.github.io/iabd/cloud/lambda.html">
+      
+      
+        <link rel="prev" href="ec2.html">
+      
+      
+        <link rel="next" href="rds.html">
+      
+      
+      <link rel="icon" href="../favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.7">
+    
+    
+      
+        <title>Funciones serverless mediante AWS Lambda. - Inteligencia Artificial y Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.4b4a2bd9.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.356b1318.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function n(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],n("js",new Date),n("config","G-VKM8BDY6KT"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){this.value&&n("event","search",{search_term:this.value})}),document$.subscribe(function(){var a=document.forms.feedback;if(void 0!==a)for(var e of a.querySelectorAll("[type=submit]"))e.addEventListener("click",function(e){e.preventDefault();var t=document.location.pathname,e=this.getAttribute("data-md-value");n("event","feedback",{page:t,data:e}),a.firstElementChild.disabled=!0;e=a.querySelector(".md-feedback__note [data-md-value='"+e+"']");e&&(e.hidden=!1)}),a.hidden=!1}),location$.subscribe(function(e){n("config","G-VKM8BDY6KT",{page_path:e.pathname})})});var e=document.createElement("script");e.async=!0,e.src="https://www.googletagmanager.com/gtag/js?id=G-VKM8BDY6KT",document.getElementById("__analytics").insertAdjacentElement("afterEnd",e)}</script>
+  
+    <script>var consent;"undefined"==typeof __md_analytics||(consent=__md_get("__consent"))&&consent.analytics&&__md_analytics()</script>
+  
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Funciones serverless mediante AWS Lambda. - Inteligencia Artificial y Big Data" >
+      
+        <meta  property="og:description"  content="Repaso a los servicios de computación que ofrece AWS, centrándonos en EC2 (creando instancias tanto desde la consola como mediante AWS CLI) y AWS Lambda." >
+      
+        <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/cloud/lambda.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://aitor-medrano.github.io/iabd/cloud/lambda.html" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Funciones serverless mediante AWS Lambda. - Inteligencia Artificial y Big Data" >
+      
+        <meta  name="twitter:description"  content="Repaso a los servicios de computación que ofrece AWS, centrándonos en EC2 (creando instancias tanto desde la consola como mediante AWS CLI) y AWS Lambda." >
+      
+        <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/cloud/lambda.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#aws-lambda" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-header__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Inteligencia Artificial y Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Funciones serverless mediante AWS Lambda.
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo noche"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo noche" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo día"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo día" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-nav__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    Inteligencia Artificial y Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inicio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2324.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Planning 23/24
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    NoSQL
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            NoSQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/nosql.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Almacenamiento de datos. NoSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/mongo.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MongoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/modelado.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modelado documental
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/agregaciones.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Agregaciones en MongoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/rendimiento.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rendimiento
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/replicacion.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Replicación y particionado
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/pymongo.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MongoDB y Python
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/series-temporales.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Series temporales
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Cloud Computing
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cloud Computing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cloud.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="aws.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AWS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="s3.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    S3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ec2.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EC2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Lambda
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="lambda.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Lambda
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#aws-lambda" class="md-nav__link">
+    AWS Lambda
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Lambda">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creando-una-funcion" class="md-nav__link">
+    Creando una función
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#precios" class="md-nav__link">
+    Precios
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restricciones" class="md-nav__link">
+    Restricciones
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caso-de-uso-1-comprobar-web" class="md-nav__link">
+    Caso de uso 1: Comprobar web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caso-de-uso-2-desde-cero" class="md-nav__link">
+    Caso de uso 2: Desde cero
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-elastic-beanstalk" class="md-nav__link">
+    AWS Elastic Beanstalk
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    Referencias
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    Actividades
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="rds.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dynamodb.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DynamoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="escalado.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Escalado y Monitorización
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="emr.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EMR
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="athena.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Athena
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ingeniería de Datos
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Ingeniería de Datos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/arq.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Arquitecturas Big Data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/etl.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ingesta de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/formatos.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Formatos de datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ecosistema Hadoop
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Ecosistema Hadoop
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hadoop.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hadoop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hdfs.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HDFS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/sqoop.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sqoop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/flume.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flume
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hive.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Spark
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Spark
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/spark.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ecosistema
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/rdd.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDD
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/dataframeAPI.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataFrames API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/agregaciones.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Agregaciones
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/catalog.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark JDBC
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/deltalake.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Delta Lake
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/streaming.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Streaming I
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/join-window.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Streaming II
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../dataflow/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Flujo de datos
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Flujo de datos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/nifi1.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nifi I
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/nifi2.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nifi II
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/kafka1.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kafka I
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/kafka2.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kafka II
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/airflow.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Airflow
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../pia/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    PIA
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            PIA
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_2" id="__nav_9_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Lara 22/23
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_2">
+            <span class="md-nav__icon md-icon"></span>
+            Lara 22/23
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/01presentacion.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Presentación
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/02requisitos.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prototipado
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/03visitaVK.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Visita IES Victoria Kent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/04almacenamiento.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Almacenamiento datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/05audio.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Almacenamiento audio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_3" id="__nav_9_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Lara 23/24
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_3">
+            <span class="md-nav__icon md-icon"></span>
+            Lara 23/24
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/21conociendo.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conociendo Lara
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/22captura.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Capturando audios
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_4" id="__nav_9_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Autoponic 22/23
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_4">
+            <span class="md-nav__icon md-icon"></span>
+            Autoponic 22/23
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/06autoponic.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Presentación
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/07navarrosantafe.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Visita IES Navarro Santafé
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/08timeseries.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Almacenamiento datos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_5" id="__nav_9_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Autoponic 23/24
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_5">
+            <span class="md-nav__icon md-icon"></span>
+            Autoponic 23/24
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/23autoponic.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conociendo Autoponic
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tags.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tags
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../blog/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Blog
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_2" id="__nav_11_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Archivo
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archivo
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/archive/2023.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2023
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_3" id="__nav_11_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Categorías
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categorías
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/noticias.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Noticias
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/noviembre.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Noviembre
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/2023.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2023
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/octubre.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Octubre
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/septiembre.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Septiembre
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#aws-lambda" class="md-nav__link">
+    AWS Lambda
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Lambda">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creando-una-funcion" class="md-nav__link">
+    Creando una función
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#precios" class="md-nav__link">
+    Precios
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restricciones" class="md-nav__link">
+    Restricciones
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caso-de-uso-1-comprobar-web" class="md-nav__link">
+    Caso de uso 1: Comprobar web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caso-de-uso-2-desde-cero" class="md-nav__link">
+    Caso de uso 2: Desde cero
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-elastic-beanstalk" class="md-nav__link">
+    AWS Elastic Beanstalk
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    Referencias
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    Actividades
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+<nav class="md-tags" >
+  
+    
+    
+    
+      <a href="../tags.html#cloud" class="md-tag">Cloud</a>
+    
+  
+    
+    
+    
+      <a href="../tags.html#aws" class="md-tag">AWS</a>
+    
+  
+    
+    
+    
+      <a href="../tags.html#aws-lambda" class="md-tag">AWS Lambda</a>
+    
+  
+    
+    
+    
+      <a href="../tags.html#bda-ra2" class="md-tag">BDA RA2</a>
+    
+  
+</nav>
+
+
+
+  <h1>Lambda</h1>
+
+<h2 id="aws-lambda">AWS Lambda<a class="headerlink" href="#aws-lambda" title="Permanent link">&para;</a></h2>
+<p>La informática <em>serverless</em> permite crear y ejecutar aplicaciones y servicios sin aprovisionar ni administrar servidores, es decir, los servidores siguen existiendo pero son invisibles para los desarrolladores de servicios.</p>
+<p><em>AWS Lambda</em> (<a href="https://aws.amazon.com/es/lambda/">https://aws.amazon.com/es/lambda/</a>) es un servicio de informática sin servidor que proporciona tolerancia a errores y escalado automático, y que se factura por el tiempo de ejecución (cantidad de milisegundos por el número de invocaciones a la función). Para ello, permite la ejecución de código en el servidor con soporte para múltiples lenguajes (Java, C#, Python, Go, ...) sin necesidad de configurar una instancia EC2.</p>
+<div class="admonition info inline end">
+<p class="admonition-title">Otras plataformas serverless</p>
+<p>Si no trabajamos con AWS, podemos utilizar las <a href="https://cloud.google.com/functions"><em>Google Cloud Functions</em></a> o las <a href="https://azure.microsoft.com/es-es/products/functions"><em>Azure Functions</em></a>.</p>
+</div>
+<p>De esta manera, no tenemos que preocuparnos de elegir el tipo de instancia, es decir, no tenemos que pensar en cantidades de procesadores o memoria necesaria, ni instalar actualizaciones del sistema operativo o gestionar las conexiones remotas.</p>
+<p>Respecto al pago, no tendremos que pagar por infraestructura cuando el código no se ejecuta, sabiendo que sólo se va a ejecutar cuando nosotros queramos.</p>
+<p>Los pasos para desarrollar una función serverless son:</p>
+<ol>
+<li>Codificar la funcionalidad en nuestro lenguaje de programación preferido.</li>
+<li>Subir el código y las dependencias (como librerías o módulos)</li>
+<li>Crear la función determinando el entorno de ejecución</li>
+<li>Invocar la función para ejecutar el código en la nube.</li>
+</ol>
+<p>Por último, definimos como <em>origen de eventos</em> a un servicio de AWS (<em>S3</em>, <em>DynamoDB</em>, <em>Elastic Load Balancing</em>...) o una aplicación creada por un desarrollador que desencadena la ejecución de una función de Lambda. Además, podemos encadenar funciones <em>Lambda</em> para flujos de trabajo mediante <em>AWS Step Functions</em>.</p>
+<h3 id="creando-una-funcion">Creando una función<a class="headerlink" href="#creando-una-funcion" title="Permanent link">&para;</a></h3>
+<p>Al crear una función <em>Lambda</em>, primero le asignaremos un nombre a la función. Tras  elegir el entorno de ejecución (versión de Python, Node.js, etc...), hemos de elegir el rol de ejecución (en el caso de <em>AWS Academy</em>, elegimos el rol <strong><em>LabRole</em></strong>), mediante un permiso de IAM, dependiendo de los servicios con los que tenga que interactuar...(al menos el rol <code>AWSLambdaBasicExecutionRole</code> y <code>AWSLambdaVPCAccessExecutionRole</code>).</p>
+<p>Respecto a la configuración de la función, deberemos:</p>
+<ul>
+<li>Agregar un desencadenador / origen de evento.</li>
+<li>Agregar el código de la función.</li>
+<li>Especificar la cantidad de memoria en MB que se asignará a la función (de 128MB a 3008MB)</li>
+<li>Si queremos, podemos configurar las variables del entorno, la descripción, el tiempo de espera, la VPC específica en la que se debe ejecutar la función, las etiquetas que desea utilizar y otros ajustes.</li>
+</ul>
+<figure style="align: center;">
+    <img src="images/04lambda.png" width="600px" alt="Ejemplo de función Lambda">
+    <figcaption>Ejemplo de función Lambda</figcaption>
+</figure>
+
+<div class="admonition tip">
+<p class="admonition-title">Cargando código</p>
+<p>Además de poder utilizar el IDE que ofrece AWS, podemos subir nuestras propias funciones en formato zip o desde S3. El fichero que contiene las funciones por defecto se llamará <code>lambda_function</code> y el manejador <code>def_handler</code>. Si queremos cambiar alguno de esos nombres, hay que editar el controlador en la configuración en tiempo de ejecución de la función.</p>
+</div>
+<h3 id="precios">Precios<a class="headerlink" href="#precios" title="Permanent link">&para;</a></h3>
+<p>Ya hemos comentado que AWS Lambda no tiene costes asociados a la infraestructura en sí, si no a la ejecución de las funciones. Así pues, el coste de AWS Lambda va a depender directamente de tres elementos:</p>
+<ul>
+<li>Cantidad de invocaciones de las funciones, siendo el primer millón de peticiones realizadas cada mes gratuitas, y posteriormente, $0.0000002 por petición.</li>
+<li>Tiempo de ejecución empleado, siendo los primeros 400 000 GB/segundos de tiempo de computación al mes gratuitos, y posteriormente 0,0000166667 USD por cada GB/segundo</li>
+<li>Memoria reservada para la ejecución, pudiendo reservar desde 128 MB a 10.240 MB en incrementos de 1 MB, siendo el precio de los 128 MB de $0,0000000021.</li>
+</ul>
+<p>Si nuestras aplicaciones no tienen un volumen elevadísimo de peticiones y el gasto de tiempo y memoria es normal, el uso de AWS Lambda puede reducir muchísimos los costes de su despliegue.</p>
+<p>Más información en <a href="https://aws.amazon.com/es/lambda/pricing/">https://aws.amazon.com/es/lambda/pricing/</a></p>
+<h3 id="restricciones">Restricciones<a class="headerlink" href="#restricciones" title="Permanent link">&para;</a></h3>
+<p>Las restricciones más destacables son:</p>
+<ul>
+<li>Permite hasta 1000 ejecuciones simultáneas en una única región.</li>
+<li>La cantidad máxima de memoria que se puede asignar para una sola función Lambda es de 3008 MB.</li>
+<li>El tiempo de ejecución máximo para una función <em>Lambda</em> es de 15 minutos.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Consejos de uso</p>
+<ul>
+<li>Tratar las funciones como <em>stateless</em></li>
+<li>Incluir sólo lo necesario, minimizando las dependencias</li>
+<li>Reutilizar el entorno de ejecución temporal (fragmento de código que queda fuera del manejador)</li>
+<li>Incluir sentencias de log</li>
+<li>Utilizar variables de entorno, por ejemplo, para el nombre de los <em>buckets</em> o cadenas de conexión.</li>
+</ul>
+</div>
+<h3 id="caso-de-uso-1-comprobar-web">Caso de uso 1: Comprobar web<a class="headerlink" href="#caso-de-uso-1-comprobar-web" title="Permanent link">&para;</a></h3>
+<p>Vamos a comprobar el estado de salud de una web utilizando una de las plantillas que ofrece AWS Lambda.</p>
+<div class="admonition info inline end">
+<p class="admonition-title">Cloudwatch</p>
+<p>Si quieres más información sobre <em>Cloudwatch</em>, te recomiendo consultar la sesión sobre <a href="escalado.html#monitorización">Monitorización</a>.</p>
+</div>
+<p>Vamos a emplear <a href="https://aws.amazon.com/es/eventbridge/">EventBridge</a> para crear eventos que disparen la función Lambda, por ejemplo cada minuto tal como haría un comando <code>cron</code>, y publicaremos el resultado en <a href="https://aws.amazon.com/es/cloudwatch/">CloudWatch</a> para inspeccionar las métricas y monitorizar los recursos, pudiendo crear una alarma que nos envíe un mail cuando la web se haya caído.</p>
+<h4 id="creando-la-funcion">Creando la función<a class="headerlink" href="#creando-la-funcion" title="Permanent link">&para;</a></h4>
+<p>Así pues, vamos a crear una nueva función, y utilizaremos un nuevo proyecto de tipo <em>Schedule a periodic check of any URL</em>, le pondremos un nombre a la función y elegiremos el rol <em>LabRole</em> (ya lo tenemos creado en la cuenta <em>AWS Academy</em>):</p>
+<figure style="align: center;">
+    <img src="images/04lambda-01checkAitorMedrano.png" alt="Proyecto Schedule a periodic check of any URL" width="700px">
+    <figcaption>Proyecto Schedule a periodic check of any URL</figcaption>
+</figure>
+
+<p>A continuación, más abajo, configuraremos EventBridge para crear una nueva regla, ya sea mediante una expresión <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html">cron</a> o un valor periódico mediante una expresión <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-rate-expressions.html"><code>rate</code></a> (en nuestro caso, como queremos que para este ejercicio se ejecute cada minuto, hemos empleado <code>rate(1 minute)</code>):</p>
+<figure style="align: center;">
+    <img src="images/04lambda-01eventbridge.png" alt="Programando el evento cada minuto" width="700px">
+    <figcaption>Programando el evento cada minuto</figcaption>
+</figure>
+
+<p>Y por último, mediante variables de entorno, introducimos los valores de la web a comprobar y el texto a buscar:</p>
+<figure style="align: center;">
+    <img src="images/04lambda-01varenv.png" alt="Variables de entorno" width="700px">
+    <figcaption>Variables de entorno</figcaption>
+</figure>
+
+<p>Tras crear la función, podemos ver un resumen gráfico, donde aparece el desencadenador de EventBridge y la función creada:</p>
+<figure style="align: center;">
+    <img src="images/04lambda-01checkAitorMedrano-resumen.png" alt="Resumen de la función Lambda creada" width="800px">
+    <figcaption>Resumen de la función Lambda creada</figcaption>
+</figure>
+
+<h4 id="comprobando-si-funciona">Comprobando si funciona<a class="headerlink" href="#comprobando-si-funciona" title="Permanent link">&para;</a></h4>
+<p>Para comprobar el resultado, podemos emplear la pestaña de <em>Monitorear</em> y comprobar el resultado de los cuadros <em>Invocations</em>, donde podemos ver la cantidad de peticiones realizadas, <em>Duration</em>, con el tiempo empleado por cada llamada y <em>Error count and success</em> que es la que nos va a indicar cuantas comprobaciones han sido exitosas o no</p>
+<p>En nuestro caso, hemos esperado un rato para que se ejecuten varias llamadas, y el resultado es el siguiente:</p>
+<figure style="align: center;">
+    <img src="images/04lambda-01monitorear.png" alt="Monitorizando AWS Lambda" width="800px">
+    <figcaption>Monitorizando AWS Lambda</figcaption>
+</figure>
+
+<p>Si queremos ver los ficheros de log creados, pulsamos sobre el botón <em>Ver registros de Cloudwatch</em> y una vez cargado, hacemos <em>click</em> sobre el último registro de eventos, comprobaremos los mensajes  (puedes buscar la cadena <code>Check passed!</code>):</p>
+<figure style="align: center;">
+    <img src="images/04lambda-01cloudwatch.png" alt="Log de la función Lambda en Cloudwatch" width="800px">
+    <figcaption>Log de la función Lambda en Cloudwatch</figcaption>
+</figure>
+
+<h4 id="creando-una-alarma">Creando una alarma<a class="headerlink" href="#creando-una-alarma" title="Permanent link">&para;</a></h4>
+<p>Y si falla, ¿cómo me entero? Para ello, podemos crear una alarma en <em>CloudWatch</em>. Para ello, en el menú lateral de <em>Cloudwath</em>, en <em>Todas las alarmas</em>, seleccionamos <em>Crear alarma</em>.</p>
+<p>El primer paso es elegir la métrica que va a monitorizar. En nuestro caso:</p>
+<ol>
+<li>
+<p>Elegiremos la métrica <em>Lambda</em></p>
+<p><figure style="align: center;">
+    <img src="images/04lambda-01cloudwatch-metrica.png" alt="Seleccionamos la métrica Lambda en Cloudwatch" width="800px">
+    <figcaption>Seleccionamos la métrica Lambda en Cloudwatch</figcaption>
+</figure></p>
+</li>
+<li>
+<p>Seleccionamos por <em>Nombre de función</em></p>
+</li>
+<li>
+<p>Buscamos el nombre de nuestra función (en mi caso <code>checkAitorMedrano</code>) y la métrica de <em>error</em>:</p>
+<p><figure style="align: center;">
+    <img src="images/04lambda-01cloudwatch-metrica-error.png" alt="Configuramos la métrica de error" width="800px">
+    <figcaption>Configuramos la métrica de error</figcaption>
+</figure></p>
+<p>En el gráfico podemos observar como todos los valores obtenidos son 0, lo que implica que no haya fallado nunca.</p>
+<div class="admonition info">
+<p class="admonition-title">Otras métricas</p>
+<p>Además del valor <em>error</em>, podemos monitorizar otras propiedades, destacando:</p>
+<ul>
+<li><em>Invocations</em>: cantidad de llamadas a la función, sean exitosas o no.</li>
+<li><em>Duration</em>: tiempo empleado en ejecutar la función</li>
+<li><em>Throttles</em>: cantidad de llamadas que no han podido ser atendidas por superar el límite configurado en AWS Lambda.</li>
+</ul>
+<p>Se recomienda siempre crear alarmas sobre las propiedades <em>errors</em> y <em>throttles</em> para vigilar el correcto funcionamiento.</p>
+</div>
+</li>
+<li>
+<p>Tras añadir la métrica, nos centramos en configurar la alarma. Para ello, vamos a cambiar el cálculo a la suma, y una condición de mayor que 0:</p>
+<p><figure style="align: center;">
+    <img src="images/04lambda-01cloudwatch-alarma.png" alt="Configuramos la alarma" width="800px">
+    <figcaption>Configuramos la alarma</figcaption>
+</figure></p>
+</li>
+<li>
+<p>A continuación, vamos a crear una acción para cuando salte la alarma. Así pues, seleccionamos <em>En modo alarma</em>, y creamos un nuevo tema <em>SNS</em> que va a recibir una notificación cuando salte la alarma al detectar un error en los últimos 5 minutos. Para el tema, le ponemos un nombre y le indicamos un email que notificará cuando salte la alarma:</p>
+<p><figure style="align: center;">
+    <img src="images/04lambda-01cloudwatch-alarma-sns.png" alt="Configuramos la acción de la alarma" width="800px">
+    <figcaption>Configuramos la acción de la alarma</figcaption>
+</figure></p>
+<p>Tras crear el tema, pulsamos <em>Siguiente</em>.</p>
+</li>
+<li>
+<p>Le ponemos nombre a la alarma (<code>checkAitorMedranoAlarm</code>) y una descripción.</p>
+</li>
+<li>Visualizamos el resumen y finalmente creamos definitivamente la alarma.</li>
+</ol>
+<div class="admonition caution">
+<p class="admonition-title">Confirmar la suscripción al email</p>
+<p>Antes de poder ejecutar la alarma, es conveniente acceder a nuestro email y confirmar la suscripción al tema SNS.</p>
+</div>
+<p>Para comprobar la alarma, volvemos a la función Lambda y modificamos la variable de entorno <em>expected</em>, y le ponemos un valor que no existe en la página, como por ejemplo, <em>Lambda</em>.</p>
+<figure style="align: center;">
+    <img src="images/04lambda-01varenv-lambda.png" alt="Provocamos que salte la alarma" width="800px">
+    <figcaption>Provocamos que salte la alarma</figcaption>
+</figure>
+
+<p>Y al cabo de unos minutos, recibiremos un email similar al siguiente donde podemos ver el nombre de la alarma y el motivo de que sale, así como su fecha:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>You are receiving this email because your Amazon CloudWatch Alarm &quot;checkAitorMedranoAlarm&quot;
+<span class="linenos" data-linenos=" 2 "></span>in the US East (N. Virginia) region has entered the ALARM state, because
+<span class="linenos" data-linenos=" 3 "></span>&quot;Threshold Crossed: 1 out of the last 1 datapoints [1.0 (26/11/23 17:54:00)] 
+<span class="linenos" data-linenos=" 4 "></span>was greater than the threshold (0.0) (minimum 1 datapoint for OK -&gt; ALARM transition).&quot;
+<span class="linenos" data-linenos=" 5 "></span>at &quot;Sunday 26 November, 2023 17:59:02 UTC&quot;.
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span>View this alarm in the AWS Management Console:
+<span class="linenos" data-linenos=" 8 "></span>https://us-east-1.console.aws.amazon.com/cloudwatch/deeplink.js?region=us-east-1#alarmsV2:alarm/checkAitorMedranoAlarm
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span>Alarm Details:
+<span class="hll"><span class="linenos" data-linenos="11 "></span>- Name:                       checkAitorMedranoAlarm
+</span><span class="linenos" data-linenos="12 "></span>- Description:                # Alarma en la web aitormedrano.github.io
+<span class="linenos" data-linenos="13 "></span>
+<span class="linenos" data-linenos="14 "></span>Parece que se ha producido un error y no se ha podido acceder a la web
+<span class="linenos" data-linenos="15 "></span>- State Change:               OK -&gt; ALARM
+<span class="linenos" data-linenos="16 "></span>- Reason for State Change:    Threshold Crossed: 1 out of the last 1 datapoints [1.0 (26/11/23 17:54:00)]
+<span class="linenos" data-linenos="17 "></span>                              was greater than the threshold (0.0) (minimum 1 datapoint for OK -&gt; ALARM transition).
+<span class="hll"><span class="linenos" data-linenos="18 "></span>- Timestamp:                  Sunday 26 November, 2023 17:59:02 UTC
+</span><span class="linenos" data-linenos="19 "></span>- AWS Account:                402638836504
+<span class="linenos" data-linenos="20 "></span>- Alarm Arn:                  arn:aws:cloudwatch:us-east-1:402638836504:alarm:checkAitorMedranoAlarm
+<span class="linenos" data-linenos="21 "></span>
+<span class="linenos" data-linenos="22 "></span>Threshold:
+<span class="hll"><span class="linenos" data-linenos="23 "></span>- The alarm is in the ALARM state when the metric is GreaterThanThreshold 0.0 for at least 1
+</span><span class="hll"><span class="linenos" data-linenos="24 "></span>  of the last 1 period(s) of 300 seconds.
+</span><span class="linenos" data-linenos="25 "></span>
+<span class="linenos" data-linenos="26 "></span>Monitored Metric:
+<span class="linenos" data-linenos="27 "></span>- MetricNamespace:                     AWS/Lambda
+<span class="linenos" data-linenos="28 "></span>- MetricName:                          Errors
+<span class="linenos" data-linenos="29 "></span>- Dimensions:                          [FunctionName = checkAitorMedrano]
+<span class="linenos" data-linenos="30 "></span>- Period:                              300 seconds
+<span class="linenos" data-linenos="31 "></span>- Statistic:                           Sum
+<span class="linenos" data-linenos="32 "></span>- Unit:                                not specified
+<span class="linenos" data-linenos="33 "></span>- TreatMissingData:                    missing
+</code></pre></div>
+<h3 id="caso-de-uso-2-desde-cero">Caso de uso 2: Desde cero<a class="headerlink" href="#caso-de-uso-2-desde-cero" title="Permanent link">&para;</a></h3>
+<p>Para este caso, vamos a emplear la crear una función que acceda a <em>MongoDB</em> y nos devuelva un documento.</p>
+<p>Para ello, vamos a crear en local, un archivo con el código a ejecutar. Primero crearemos una carpeta <code>code</code>, y dentro de ella, colocaremos este fragmento de código dentro de un archivo nombrado <a href="resources/lambda/code/lambda_function.py"><code>lambda_function.py</code></a>, y contendrá una función <code>lambda_handler</code>:</p>
+<div class="highlight"><span class="filename">code/lambda_function.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">bson.json_util</span> <span class="kn">import</span> <span class="n">dumps</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s1">&#39;mongodb+srv://iabd:iabdiabd@cluster0.dfaz5er.mongodb.net&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="n">un_doc</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">sample_training</span><span class="o">.</span><span class="n">zips</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>   
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span>    <span class="k">return</span> <span class="p">{</span>
+<span class="linenos" data-linenos="11 "></span>        <span class="s1">&#39;statusCode&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+<span class="linenos" data-linenos="12 "></span>        <span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="n">dumps</span><span class="p">(</span><span class="n">un_doc</span><span class="p">)</span>
+<span class="linenos" data-linenos="13 "></span>    <span class="p">}</span>
+</code></pre></div>
+<p>Como puedes observar, vamos a trabajar con los datos que hemos utilizado en las sesiones de <a href="../sa/mongo.html">MongoDB</a>, y utilizaremos PyMongo para acceder a <em>MongoDB</em> desde <em>Python</em>.</p>
+<h4 id="creando-un-zip">Creando un zip<a class="headerlink" href="#creando-un-zip" title="Permanent link">&para;</a></h4>
+<div class="admonition tip inline end">
+<p class="admonition-title">Sin Docker</p>
+<p>Si no queremos usar <em>Docker</em>, deberíamos crearnos un entorno virtual, e instalar las librerías. A continuación, comprimir el archivo con el código y el entorno virtual en un zip.</p>
+<p>Más información en la <a href="https://docs.aws.amazon.com/lambda/latest/dg/python-package.html#python-package-create-dependencies">documentación oficial</a>.</p>
+</div>
+<p>El siguiente paso es encapsular la función dentro de un zip que contenga las dependencias (librerías) que utiliza nuestra función. Para ello, vamos a hacer uso de <em>Docker</em> para simplificar el proceso.</p>
+<p>Para ello, creamos un <a href="resources/lambda/dockerfile"><code>dockerfile</code></a> que crea la estructura de carpetas necesarias e instala las dependencias:</p>
+<div class="highlight"><span class="filename">dockerfile</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:20.04</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="k">RUN</span><span class="w"> </span>mkdir<span class="w"> </span><span class="k">function</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="k">RUN</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="k">function</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="k">COPY</span><span class="w"> </span>code/lambda_function.py<span class="w"> </span><span class="k">function</span>/lambda_function.py
+<span class="linenos" data-linenos=" 5 "></span><span class="k">WORKDIR</span><span class="w"> </span><span class="s">/function</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update
+<span class="linenos" data-linenos=" 7 "></span><span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>python3-pip<span class="w"> </span>-y
+<span class="linenos" data-linenos=" 8 "></span><span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>zip<span class="w"> </span>-y
+<span class="linenos" data-linenos=" 9 "></span><span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-t<span class="w"> </span>.<span class="w"> </span>pymongo
+<span class="linenos" data-linenos="10 "></span><span class="k">RUN</span><span class="w"> </span>zip<span class="w"> </span>-r<span class="w"> </span>linux-lambda.zip<span class="w"> </span>*
+</code></pre></div>
+<p>A continuación, debemos ejecutar una serie de comandos:</p>
+<ol>
+<li>
+<p>Creamos la imagen</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>lambda_mongo<span class="w"> </span>.
+</code></pre></div>
+</li>
+<li>
+<p>Creamos una contenedor temporal</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>create<span class="w"> </span>-ti<span class="w"> </span>--name<span class="w"> </span>tempforzip<span class="w"> </span>lambda_mongo
+</code></pre></div>
+</li>
+<li>
+<p>Sacamos el zip del contendor temporal</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>cp<span class="w"> </span>tempforzip:/function/linux-lambda.zip<span class="w"> </span>linux-lambda.zip
+</code></pre></div>
+</li>
+<li>
+<p>Borramos el contenedor temporal</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>tempforzip
+</code></pre></div>
+</li>
+</ol>
+<p>Una vez tenemos el archivo <a href="resources/lambda/linux-lambda.zip">linux-lambda.zip</a> ya estamos listos para crear nuestra nueva función.</p>
+<h4 id="cargando-codigo">Cargando código<a class="headerlink" href="#cargando-codigo" title="Permanent link">&para;</a></h4>
+<p>Así pues, vamos a crear una función desde cero (seleccionaremos <em>Python</em> como lenguaje y el <code>LabRole</code> como rol existente de ejecución):</p>
+<figure style="align: center;">
+    <img src="images/04lambda-02create.png" alt="Creando una función desde cero" width="700px">
+    <figcaption>Creando una función desde cero</figcaption>
+</figure>
+
+<p>Una vez creada, en la pestaña <em>Código</em>, pulsaremos sobre el desplegable <em>Carga desde</em> para poder seleccionar el archivo zip recién creado.</p>
+<figure style="align: center;">
+    <img src="images/04lambda-02load-zip.png" alt="Cargando un zip con código" width="700px">
+    <figcaption>Cargando un zip con código</figcaption>
+</figure>
+
+<p>Al hacerlo, se sustituirá el código fuente y podremos probar mediante el botón azul <em>Test</em>:</p>
+<figure style="align: center;">
+    <img src="images/04lambda-02test.png" alt="Probando el acceso a MongoDB" width="800px">
+    <figcaption>Probando el acceso a MongoDB</figcaption>
+</figure>
+
+<p>Al ejecutarlo, veremos que aparece un documento con los datos de un código postal, además de ver el tiempo que ha tardado (85 ms), y la memoria empleada (59MB).</p>
+<h4 id="invocando-mediante-aws-cli">Invocando mediante AWS CLI<a class="headerlink" href="#invocando-mediante-aws-cli" title="Permanent link">&para;</a></h4>
+<p>Si queremos invocar una función desde AWS CLI utilizaremos el comando <a href="https://docs.aws.amazon.com/es_es/lambda/latest/dg/API_Invoke.html"><code>aws lambda invoke</code></a>, tanto para hacer llamadas <a href="https://docs.aws.amazon.com/lambda/latest/dg/invocation-sync.html">síncronas</a> como <a href="https://docs.aws.amazon.com/lambda/latest/dg/invocation-async.html">asíncronas</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>lambda<span class="w"> </span>invoke<span class="w"> </span>--function-name<span class="w"> </span>consultaMongoDB<span class="w"> </span>--cli-binary-format<span class="w"> </span>raw-in-base64-out<span class="w"> </span>response.json
+</code></pre></div>
+<p>Si comprobamos el contenido del archivo <code>response.json</code> generado, obtendremos algo similar a:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<span class="linenos" data-linenos="2 "></span><span class="w"> </span><span class="nt">&quot;body&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{\&quot;_id\&quot;: {\&quot;$oid\&quot;: \&quot;5c8eccc1caa187d17ca6ed18\&quot;}, \&quot;city\&quot;: \&quot;ACMAR\&quot;, \&quot;zip\&quot;: \&quot;35004\&quot;, \&quot;loc\&quot;: {\&quot;y\&quot;: 33.584132, \&quot;x\&quot;: 86.51557}, \&quot;pop\&quot;: 6055, \&quot;state\&quot;: \&quot;AL\&quot;}&quot;</span><span class="p">}</span>
+</code></pre></div>
+<p>Más información en la <a href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html">documentación oficial</a>.</p>
+<!-- Podemos también crear una URL para la función para poder acceder a la función via una petición HTTP -->
+
+<!--
+### Caso de uso 3: de S3 a MongoDB
+
+Para este caso de uso, vamos a crear una función que inserte en *MongoDB* los datos de los archivos subidos a un *bucket* de S3.
+
+Para ello, creamos una nueva función a partir del proyecto *GetS3Object* mediante Python, que permite obtener los metadatos del archivo actualizado.
+
+En el desencadenador S3, vamos a elegir el *bucket* que creamos en la sesión anterior (`s3severo8a-cli`), y en los tipos de eventos, por ejemplo, seleccionamos *All objects create events*:
+
+<figure style="align: center;">
+    <img src="images/04lambda-03s3desencadenador.png" alt="Configuramos el desencadenador de S3" width="800px">
+    <figcaption>Configuramos el desencadenador de S3</figcaption>
+</figure>
+
+Si nos fijamos en el código fuente creado, veremos que utiliza *boto3* para acceder al *bucket*, el cual recibe sus datos del parámetro `event`:
+
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">urllib.parse</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="linenos" data-linenos=" 4 "></span>
+<span class="linenos" data-linenos=" 5 "></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Loading function&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="hll"><span class="linenos" data-linenos=" 7 "></span><span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
+</span><span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span><span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="linenos" data-linenos="10 "></span>    <span class="c1">#print(&quot;Received event: &quot; + json.dumps(event, indent=2))</span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span>    <span class="c1"># Get the object from the event and show its content type</span>
+<span class="hll"><span class="linenos" data-linenos="13 "></span>    <span class="n">bucket</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s1">&#39;Records&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;s3&#39;</span><span class="p">][</span><span class="s1">&#39;bucket&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+</span><span class="linenos" data-linenos="14 "></span>    <span class="n">key</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">unquote_plus</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;Records&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;s3&#39;</span><span class="p">][</span><span class="s1">&#39;object&#39;</span><span class="p">][</span><span class="s1">&#39;key&#39;</span><span class="p">],</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos="15 "></span>    <span class="k">try</span><span class="p">:</span>
+<span class="linenos" data-linenos="16 "></span>        <span class="n">response</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+<span class="linenos" data-linenos="17 "></span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CONTENT TYPE: &quot;</span> <span class="o">+</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;ContentType&#39;</span><span class="p">])</span>
+<span class="linenos" data-linenos="18 "></span>        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;ContentType&#39;</span><span class="p">]</span>
+<span class="linenos" data-linenos="19 "></span>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="linenos" data-linenos="20 "></span>        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="linenos" data-linenos="21 "></span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error getting object </span><span class="si">{}</span><span class="s1"> from bucket </span><span class="si">{}</span><span class="s1">. Make sure they exist and your bucket is in the same region as this function.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">bucket</span><span class="p">))</span>
+<span class="linenos" data-linenos="22 "></span>        <span class="k">raise</span> <span class="n">e</span>
+</code></pre></div>
+
+#### Probando
+
+Primero vamos a probar la función desde el entorno Lambda. Para ello, pulsamos sobre el botón azul *Test*.
+
+La primera vez nos pedirá crear un nuevo evento. Este evento, en este caso, ya está completado con una plantilla que contiene unos datos de ejemplo similares a los que nos enviaría S3 al saltar unos de los eventos configurados previamente (al añadir un archivo o modificar uno existente, por ejemplo).
+
+Tras guardar el evento nuevo, volvemos a pulsar sobre el botón de Test, y comprobamos el resultado y vemos que ha dado error, ya que no tenemos permiso para acceder al *bucket* indicado en la prueba. Así pues, vamos a modificar los datos de la prueba para poner valores que sí que existan en nuestro *bucket*:
+
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">&quot;Records&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">      </span><span class="nt">&quot;eventVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">      </span><span class="nt">&quot;eventSource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;aws:s3&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">      </span><span class="nt">&quot;awsRegion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">      </span><span class="nt">&quot;eventTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1970-01-01T00:00:00.000Z&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">      </span><span class="nt">&quot;eventName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ObjectCreated:Put&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">      </span><span class="nt">&quot;userIdentity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">        </span><span class="nt">&quot;principalId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EXAMPLE&quot;</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">      </span><span class="p">},</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">      </span><span class="nt">&quot;requestParameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">        </span><span class="nt">&quot;sourceIPAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;127.0.0.1&quot;</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">      </span><span class="p">},</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">      </span><span class="nt">&quot;responseElements&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">        </span><span class="nt">&quot;x-amz-request-id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EXAMPLE123456789&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">        </span><span class="nt">&quot;x-amz-id-2&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EXAMPLE123/5678abcdefghijklambdaisawesome/mnopqrstuvwxyzABCDEFGH&quot;</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">      </span><span class="p">},</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">      </span><span class="nt">&quot;s3&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">        </span><span class="nt">&quot;s3SchemaVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="21 "></span><span class="w">        </span><span class="nt">&quot;configurationId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;testConfigRule&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="22 "></span><span class="w">        </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="hll"><span class="linenos" data-linenos="23 "></span><span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3severo8a-cli&quot;</span><span class="p">,</span>
+</span><span class="linenos" data-linenos="24 "></span><span class="w">          </span><span class="nt">&quot;ownerIdentity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="25 "></span><span class="w">            </span><span class="nt">&quot;principalId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EXAMPLE&quot;</span>
+<span class="linenos" data-linenos="26 "></span><span class="w">          </span><span class="p">},</span>
+<span class="hll"><span class="linenos" data-linenos="27 "></span><span class="w">          </span><span class="nt">&quot;arn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:s3:::s3severo8a-cli&quot;</span>
+</span><span class="linenos" data-linenos="28 "></span><span class="w">        </span><span class="p">},</span>
+<span class="linenos" data-linenos="29 "></span><span class="w">        </span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="hll"><span class="linenos" data-linenos="30 "></span><span class="w">          </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;labS3.csv&quot;</span><span class="p">,</span>
+</span><span class="linenos" data-linenos="31 "></span><span class="w">          </span><span class="nt">&quot;size&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1024</span><span class="p">,</span>
+<span class="linenos" data-linenos="32 "></span><span class="w">          </span><span class="nt">&quot;eTag&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0123456789abcdef0123456789abcdef&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="33 "></span><span class="w">          </span><span class="nt">&quot;sequencer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0A1B2C3D4E5F678901&quot;</span>
+<span class="linenos" data-linenos="34 "></span><span class="w">        </span><span class="p">}</span>
+<span class="linenos" data-linenos="35 "></span><span class="w">      </span><span class="p">}</span>
+<span class="linenos" data-linenos="36 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos="37 "></span><span class="w">  </span><span class="p">]</span>
+<span class="linenos" data-linenos="38 "></span><span class="p">}</span>
+</code></pre></div>
+
+Si volvemos a ejecutar la prueba, ahora sí que nos mostrará la información relativa a la prueba:
+
+<figure style="align: center;">
+    <img src="images/04lambda-03test.png" alt="Test sobre S3" width="800px">
+    <figcaption>Test sobre S3</figcaption>
+</figure>
+
+#### Conectando con MongoDB
+
+Antes de nada, vamos a crear una variable de entorno, donde vamos a guardar la cadena de conexión a nuestro servidor de Mongo Atlas.
+
+<figure style="align: center;">
+    <img src="images/04lambda-03varenv.png" alt="Variable de entorno con la cadena de conexión a MongoDB" width="700px">
+    <figcaption>Variable de entorno con la cadena de conexión a MongoDB</figcaption>
+</figure>
+-->
+
+<h2 id="aws-elastic-beanstalk">AWS Elastic Beanstalk<a class="headerlink" href="#aws-elastic-beanstalk" title="Permanent link">&para;</a></h2>
+<p><em>AWS ElasticBeanstalk</em> es un servicio PaaS que facilita la implementación, el escalado y la administración de aplicaciones y servicios web con rapidez.
+Nosotros, como desarrolladores, sólo deberemos cargar el código, elegir el tipo de instancia y de base de datos, configurar y ajustar el escalador automático. <em>Beanstalk</em> automáticamente administra la implementación, desde el aprovisionamiento de capacidad, el balanceo de carga y el escalado automático hasta la monitorización del estado de las aplicaciones. Al mismo tiempo, si queremos, podemos mantener el control total de los recursos de AWS que alimentan la aplicación y acceder a los recursos subyacentes en cualquier momento.</p>
+<figure style="align: center;">
+    <img src="images/04beanstalk.png" width=600>
+    <figcaption>Ejemplo de despliegue con Beanstalk</figcaption>
+</figure>
+
+<p>Es compatible con Java, .NET, PHP, Node.js, Python, Ruby, Go y Docker, y se despliegan en servidores como Apache, Nginx o IIS.</p>
+<p>No se aplican cargos por utilizar <em>ElasticBeanstalk</em>, solo se paga por los recursos que AWS utilice (instancia, base de datos, almacenamiento S3, etc...)</p>
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://aws.amazon.com/es/lambda/">Funciones Lambda en AWS</a></li>
+<li><a href="https://www.manning.com/books/amazon-web-services-in-action-third-edition">Amazon Web Services in Action, Third Edition</a></li>
+</ul>
+<h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<ol>
+<li>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 1p) Realiza el caso de uso 1, pero con otra URL y cadena. Adjunta capturas de pantalla del código fuente, de las variables de entorno, de las métricas capturadas tras más de 10 minutos, así como del resultado de la activación de la alarma donde te envíe un mail a tu cuenta de correo electrónico.</li>
+<li>
+<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 1p) Realiza el caso de uso 2, pero modifícalo para que tanto la URI de MongoDB como el nombre de la colección los obtenga de variables de entorno configuradas en la función.</p>
+<p>Puede que tengas que añadir código similar al siguiente fragmento para leer las variables:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">uri</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MONGODB_URI&quot;</span><span class="p">]</span>
+</code></pre></div>
+</li>
+</ol>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        <a href='https://ko-fi.com/T6T8GWT9N' title='Invítame a un café en ko-fi.com' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Invítame a un café en ko-fi.com' /></a>
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="Me encantan estos apuntes" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81Z"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="Los apuntes son mejorables" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14Z"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              Gracias por tu tiempo. Si quieres me puedes <a href='https://ko-fi.com/T6T8GWT9N'>invitar a un café en ko-fi</a>.
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              ¡Gracias por tu colaboración! Ayúdame a mejorar los apuntes enviándome un mail a <a href="mailto:a.medrano@edu.gva.es">a.medrano@edu.gva.es</a> con tus comentarios.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="ec2.html" class="md-footer__link md-footer__link--prev" aria-label="Anterior: EC2">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                EC2
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="rds.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: RDS">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                RDS
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2023-2024 Aitor Medrano - Licencia CC BY-NC-SA
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://aitor-medrano.github.io/" target="_blank" rel="noopener" title="aitor-medrano.github.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2m-5.15 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56M14.34 14H9.66c-.1-.66-.16-1.32-.16-2 0-.68.06-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2M12 19.96c-.83-1.2-1.5-2.53-1.91-3.96h3.82c-.41 1.43-1.08 2.76-1.91 3.96M8 8H5.08A7.923 7.923 0 0 1 9.4 4.44C8.8 5.55 8.35 6.75 8 8m-2.92 8H8c.35 1.25.8 2.45 1.4 3.56A8.008 8.008 0 0 1 5.08 16m-.82-2C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2M12 4.03c.83 1.2 1.5 2.54 1.91 3.97h-3.82c.41-1.43 1.08-2.77 1.91-3.97M18.92 8h-2.95a15.65 15.65 0 0 0-1.38-3.56c1.84.63 3.37 1.9 4.33 3.56M12 2C6.47 2 2 6.5 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2Z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/aitormedrano" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:<a.medrano@edu.gva.es>" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l217.6 163.2c11.4 8.5 27 8.5 38.4 0l217.6-163.2c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48H48zM0 176v208c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V176L294.4 339.2a63.9 63.9 0 0 1-76.8 0L0 176z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+  
+    
+  
+
+
+
+
+  
+
+
+<h4>Consentimiento de cookie</h4>
+<p>Esta página de apuntes utiliza cookies para reconocer las visitas, medir la efectividad de la documentación y averiguar si encuentras aquello que buscas o cómo has llegado a estos apuntes. Con tu consentimiento, me ayudas a mejorar estos materiales.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+      
+      
+        
+        
+      
+      <li class="task-list-item">
+        <label class="task-list-control">
+          <input type="checkbox" name="analytics" checked>
+          <span class="task-list-indicator"></span>
+          Google Analytics
+        </label>
+      </li>
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Aceptar</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Gestionar cookies</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.aecac24b.min.js"></script>
+      
+    
+  </body>
+</html>
