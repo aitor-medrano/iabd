@@ -2548,13 +2548,14 @@
 <li>Personalización del sistema de administración de bases de datos relacionales (en este caso, es mejor instalar por nuestra cuenta el SGBD que necesitemos en una instancia EC2).</li>
 </ul>
 <h3 id="costes">Costes<a class="headerlink" href="#costes" title="Permanent link">&para;</a></h3>
-<p>El <a href="https://aws.amazon.com/es/rds/pricing/">coste</a> se calcula en base al tiempo de ejecución (calculado en horas) así como las características de la base de datos. Las características de la base de datos varían según el motor, el <a href="https://aws.amazon.com/es/rds/instance-types/">tipo de instancia</a> y su cantidad, así como la clase de memoria de la base de datos.</p>
+<p>Claramente, el coste de RDS va a ser superior al coste de la infraestructura que utiliza. Aún así, hemos de tener en cuenta las ventajas de ahorrarnos el mantenimiento y las tareas asociadas que normalmente realiza un administrador de bases de datos (DBA).</p>
+<p>Su <a href="https://aws.amazon.com/es/rds/pricing/">coste</a> se calcula en base al tiempo de ejecución (calculado en horas) así como las características de la base de datos, como pueden ser el motor, el <a href="https://aws.amazon.com/es/rds/instance-types/">tipo de instancia</a> y su cantidad, así como la clase de memoria de la base de datos.</p>
 <p>Otros gastos asociados son:</p>
 <ul>
 <li>almacenamiento aprovisionado: el almacenamiento para copias de seguridad de hasta el 100% del almacenamiento de nuestra base de datos activa es gratuito. Una vez que se termina la instancia de base de datos, el almacenamiento para copias de seguridad se factura por GB por mes.</li>
 <li>cantidad de solicitudes de entrada y de salida.</li>
 </ul>
-<p>Aunque se recomienda utilizar la <a href="https://calculator.aws/#/addService">calculadora de costes</a> para afinar en el presupuesto, por ejemplo, una base de datos con MariaDB con una instancia <code>db.m4.large</code> con 2 procesadores y 8GB de RAM, en una única AZ, con un porcentaje de utilización del 100%  y 30GB para almacenar los datos, cuesta alrededor de 131$ mensuales. En cambio si la cambiamos por dos instancias más potentes, como puede ser la <code>db.m4.4xlarge</code>, con 16 procesadores y 64 GB de RAM, en multi-AZ ya sube a unos 4.100$ al mes.</p>
+<p>Aunque se recomienda utilizar la <a href="https://calculator.aws/#/addService">calculadora de costes</a> para afinar en el presupuesto, por ejemplo, una base de datos con MariaDB con una instancia <code>db.m4.large</code> con 2 procesadores y 8GB de RAM, en una única AZ, con un porcentaje de utilización del 100% y 30GB para almacenar los datos, cuesta alrededor de 131$ mensuales. En cambio si la cambiamos por dos instancias más potentes, como puede ser la <code>db.m4.4xlarge</code>, con 16 procesadores y 64 GB de RAM, en multi-AZ ya sube a unos 4.100$ al mes.</p>
 <p>Es importante recordar que si reservamos las instancias estos costes se reducirían en proporción a 2350$ (reserva de un año) o 1526$ (reserva de tres años).</p>
 <h3 id="ejemplo-rds">Ejemplo RDS<a class="headerlink" href="#ejemplo-rds" title="Permanent link">&para;</a></h3>
 <p>A continuación vamos a hacer un ejemplo sencillo donde vamos a crear una base de datos con la información que vimos en el bloque de SQL. Para ello, crearemos una instancia de MariaDB y nos conectaremos desde <em>HeidiSQL</em>.</p>
@@ -2618,6 +2619,18 @@
 <p>A partir de esta instancia, crea una instantánea de forma manual. A continuación, restaura esta instantánea en una nueva instancia (por ejemplo, <code>instituto2</code>) de tipo <code>db.t4g.small</code>, y tras conectarte mediante <em>DBeaver</em>, comprueba que tiene los datos ya cargados. Adjunta una captura de pantalla donde se vean las características de las dos instancias.</p>
 </li>
 </ol>
+<!--
+Summary RDS
+RDS is a managed service that provides relational databases.
+You can choose between PostgreSQL, MySQL, MariaDB, Oracle Database, and Microsoft SQL Server databases. Aurora is the database engine built by Amazon.
+The fastest way to import data into an RDS database is to copy it to a virtual machine in the same region and load it into the RDS database from there.
+RDS comes with built-in backup and restore functionality allowing you to create and restore snapshots on demand as well as to restore a database to a certain point in time.
+You can control access to data with a combination of IAM policies and firewall rules and on the database level.
+You can restore an RDS database to any time in the retention period (a maximum of 35 days).
+RDS databases can be highly available. You should launch RDS databases in Multi-AZ mode for production workloads.
+Read replication can improve the performance of read-intensive workloads on an SQL database.
+CloudWatch metrics allow you to monitor your database, for example, to debug performance problems or decide when to increase or decrease the size of your database instance.
+-->
 
 
   

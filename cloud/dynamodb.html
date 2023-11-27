@@ -775,9 +775,29 @@
   
 </li>
         
-          <li class="md-nav__item">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ejemplo-dynamodb" class="md-nav__link">
     Ejemplo DynamoDB
+  </a>
+  
+    <nav class="md-nav" aria-label="Ejemplo DynamoDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creando-una-tabla" class="md-nav__link">
+    Creando una tabla
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cargando-datos" class="md-nav__link">
+    Cargando datos
   </a>
   
 </li>
@@ -2433,9 +2453,29 @@
   
 </li>
         
-          <li class="md-nav__item">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ejemplo-dynamodb" class="md-nav__link">
     Ejemplo DynamoDB
+  </a>
+  
+    <nav class="md-nav" aria-label="Ejemplo DynamoDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creando-una-tabla" class="md-nav__link">
+    Creando una tabla
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cargando-datos" class="md-nav__link">
+    Cargando datos
   </a>
   
 </li>
@@ -2606,10 +2646,10 @@
 </li>
 </ul>
 <p>Por ejemplo, una tabla donde especificamos un rendimiento garantizado de 1000 millones lecturas y 1 millón de escrituras al mes, con una coherencia eventual (es decir, que permite desorden de peticiones ) nos costará $67,17 al mes.</p>
-<h3 id="ejemplo-dynamodb">Ejemplo DynamoDB<a class="headerlink" href="#ejemplo-dynamodb" title="Permanent link">&para;</a></h3>
+<h2 id="ejemplo-dynamodb">Ejemplo DynamoDB<a class="headerlink" href="#ejemplo-dynamodb" title="Permanent link">&para;</a></h2>
 <p>A continuación vamos a crear un ejemplo donde tras crear una tabla, la cargaremos con datos para posteriormente realizar alguna consulta.</p>
 <p>Supongamos que tenemos datos relativos a un catálogo de productos, almacenados en el archivo <a href="resources/ProductCatalog.json">ProductCatalog.json</a>, el cual queremos poder consultar.</p>
-<p>Si visualizamos el primer registro podemos observar su estructura. Esta estructura es específica de <em>DynamoDB</em>, ya que indica en el primer elemento el nombre de la tabla (en nuestro caso <code>ProductCatalog</code>), y a continuación el tipo de operación (<code>PutRequest</code>):</p>
+<p>Si visualizamos el primer registro podemos observar su estructura, la cual es específica de <em>DynamoDB</em>, ya que indica en el primer elemento el nombre de la tabla (en nuestro caso <code>ProductCatalog</code>), y a continuación el tipo de operación (<code>PutRequest</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">&quot;ProductCatalog&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">        </span><span class="p">{</span>
@@ -2650,6 +2690,7 @@
 <span class="linenos" data-linenos="38 "></span><span class="w">            </span><span class="p">}</span>
 <span class="linenos" data-linenos="39 "></span><span class="w">        </span><span class="p">},</span>
 </code></pre></div>
+<h3 id="creando-una-tabla">Creando una tabla<a class="headerlink" href="#creando-una-tabla" title="Permanent link">&para;</a></h3>
 <p>Para ello, primero vamos a crear la tabla desde el interfaz web de AWS. Tras seleccionar <em>Amazon DynamoDB</em>, creamos una tabla que llamamos <code>ProductCatalog</code>, cuyo identificador será <code>Id</code> de tipo <em>número</em>. El resto de campos se crearán automáticamente al importar los datos.</p>
 <figure style="align: center;">
     <img src="images/06ddb-createTable.png" width="600">
@@ -2663,6 +2704,11 @@
 <span class="linenos" data-linenos="4 "></span><span class="w">    </span>--key-schema<span class="w"> </span><span class="nv">AttributeName</span><span class="o">=</span>Id,KeyType<span class="o">=</span>HASH<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="5 "></span><span class="w">    </span>--billing-mode<span class="w"> </span>PAY_PER_REQUEST
 </code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Nombre de las tablas</p>
+<p>En <em>DynamoDB</em> no hay concepto de base de datos, por lo tanto, todas las tablas conviven en el mismo espacio de nombres. Un buena práctica de uso es anteponer un prefijo a todas las tablas relacionadas por aplicación, por ejemplo, <code>s8a-ProductCatalog</code>.</p>
+</div>
+<h3 id="cargando-datos">Cargando datos<a class="headerlink" href="#cargando-datos" title="Permanent link">&para;</a></h3>
 <p>Para introducir los datos, podemos hacerlo de varias maneras.</p>
 <ul>
 <li>Si pulsamos sobra la tabla y luego en elementos podemos rellenar un formulario indicando el tipo de los elementos y su valor.</li>
@@ -3366,6 +3412,7 @@
 </ul>
 <!--
 TODO: Curso DynamoDB desde AWS: https://www.aws.training/Details/Curriculum?id=65583&redirect=false
+Crear función Lambda que monitorize S3 e inserte en DynamoDB
 -->
 
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
