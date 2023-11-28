@@ -2627,14 +2627,14 @@
 <li>
 <p>Tras añadir la métrica, nos centramos en configurar la alarma. Para ello, vamos a cambiar el cálculo a la suma, y una condición de mayor que 0:</p>
 <p><figure style="align: center;">
-    <img src="images/04lambda-01cloudwatch-alarma.png" alt="Configuramos la alarma" width="800px">
+    <img src="images/04lambda-01cloudwatch-alarma.png" alt="Configuramos la alarma" width="700px">
     <figcaption>Configuramos la alarma</figcaption>
 </figure></p>
 </li>
 <li>
 <p>A continuación, vamos a crear una acción para cuando salte la alarma. Así pues, seleccionamos <em>En modo alarma</em>, y creamos un nuevo tema <em>SNS</em> que va a recibir una notificación cuando salte la alarma al detectar un error en los últimos 5 minutos. Para el tema, le ponemos un nombre y le indicamos un email que notificará cuando salte la alarma:</p>
 <p><figure style="align: center;">
-    <img src="images/04lambda-01cloudwatch-alarma-sns.png" alt="Configuramos la acción de la alarma" width="800px">
+    <img src="images/04lambda-01cloudwatch-alarma-sns.png" alt="Configuramos la acción de la alarma" width="700px">
     <figcaption>Configuramos la acción de la alarma</figcaption>
 </figure></p>
 <p>Tras crear el tema, pulsamos <em>Siguiente</em>.</p>
@@ -2650,7 +2650,7 @@
 </div>
 <p>Para comprobar la alarma, volvemos a la función Lambda y modificamos la variable de entorno <em>expected</em>, y le ponemos un valor que no existe en la página, como por ejemplo, <em>Lambda</em>.</p>
 <figure style="align: center;">
-    <img src="images/04lambda-01varenv-lambda.png" alt="Provocamos que salte la alarma" width="800px">
+    <img src="images/04lambda-01varenv-lambda.png" alt="Provocamos que salte la alarma" width="700px">
     <figcaption>Provocamos que salte la alarma</figcaption>
 </figure>
 
@@ -2697,8 +2697,8 @@
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s1">&#39;mongodb+srv://iabd:iabdiabd@cluster0.dfaz5er.mongodb.net&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 5 "></span>
-<span class="linenos" data-linenos=" 6 "></span><span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="linenos" data-linenos=" 7 "></span>
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span> <span class="c1"># (1)!</span>
+</span><span class="linenos" data-linenos=" 7 "></span>
 <span class="linenos" data-linenos=" 8 "></span>    <span class="n">un_doc</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">sample_training</span><span class="o">.</span><span class="n">zips</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>   
 <span class="linenos" data-linenos=" 9 "></span>
 <span class="linenos" data-linenos="10 "></span>    <span class="k">return</span> <span class="p">{</span>
@@ -2706,6 +2706,9 @@
 <span class="linenos" data-linenos="12 "></span>        <span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="n">dumps</span><span class="p">(</span><span class="n">un_doc</span><span class="p">)</span>
 <span class="linenos" data-linenos="13 "></span>    <span class="p">}</span>
 </code></pre></div>
+<ol>
+<li>El parámetro <code>event</code> es un mapa con los datos de entrada que recibe del desencadenador. En cmabio, el parámetro <code>context</code></li>
+</ol>
 <p>Como puedes observar, vamos a trabajar con los datos que hemos utilizado en las sesiones de <a href="../sa/mongo.html">MongoDB</a>, y utilizaremos PyMongo para acceder a <em>MongoDB</em> desde <em>Python</em>.</p>
 <h4 id="creando-un-zip">Creando un zip<a class="headerlink" href="#creando-un-zip" title="Permanent link">&para;</a></h4>
 <div class="admonition tip inline end">
@@ -2905,6 +2908,8 @@ Antes de nada, vamos a crear una variable de entorno, donde vamos a guardar la c
     <img src="images/04lambda-03varenv.png" alt="Variable de entorno con la cadena de conexión a MongoDB" width="700px">
     <figcaption>Variable de entorno con la cadena de conexión a MongoDB</figcaption>
 </figure>
+
+TODO: Explicar API Gateway para crear APIs REST
 -->
 
 <h2 id="aws-elastic-beanstalk">AWS Elastic Beanstalk<a class="headerlink" href="#aws-elastic-beanstalk" title="Permanent link">&para;</a></h2>
