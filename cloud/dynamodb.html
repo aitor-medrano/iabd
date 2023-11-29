@@ -2385,11 +2385,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../blog/category/noviembre.html" class="md-nav__link">
+      <a href="../blog/category/octubre.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Noviembre
+    Octubre
   </span>
   
 
@@ -2425,11 +2425,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../blog/category/octubre.html" class="md-nav__link">
+      <a href="../blog/category/setiembre.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Octubre
+    Setiembre
   </span>
   
 
@@ -2779,7 +2779,7 @@
 <p>Cada elemento de una tabla no puede superar los 400KB.</p>
 <h2 id="infraestructura">Infraestructura<a class="headerlink" href="#infraestructura" title="Permanent link">&para;</a></h2>
 <p>AWS administra toda la infraestructura subyacente de datos y los almacena de manera redundante en varias instalaciones dentro de una región, como parte de la arquitectura tolerante a errores.</p>
-<p>El sistema particiona los datos automáticamente, distribuyendo los datos entre diferentes dispositivos de almacenamiento. No existe ningún límite práctico respecto de la cantidad de elementos que se pueden almacenar en una tabla. Por ejemplo, algunos clientes tienen tablas de producción con miles de millones de elementos.</p>
+<p>El sistema particiona los datos automáticamente, distribuyéndolos entre diferentes dispositivos de almacenamiento. No existe ningún límite práctico respecto la cantidad de elementos que se pueden almacenar en una tabla. Por ejemplo, algunos clientes tienen tablas de producción con miles de millones de elementos.</p>
 <p>Todos los datos de <em>DynamoDB</em> se almacenan en unidades SSD, y su lenguaje de consulta simple (<a href="https://partiql.org/">PartiQL</a>) permite un rendimiento de las consultas uniforme y de baja latencia. Además de escalar el almacenamiento, <em>DynamoDB</em> permite aprovisionar el volumen del rendimiento de lectura o escritura que necesita para cada tabla.</p>
 <p>También facilita el escalado automático, monitorizando la carga de la tabla e incrementando o disminuyendo el rendimiento aprovisionado de manera automática. Otras características clave son las tablas globales que permiten generar réplicas de manera automática en las regiones de AWS que elijamos, el cifrado en reposo y la visibilidad del tiempo de vida (TTL) de los elementos.</p>
 <h3 id="costes">Costes<a class="headerlink" href="#costes" title="Permanent link">&para;</a></h3>
@@ -2801,18 +2801,18 @@
 </ul>
 </li>
 </ul>
-<p>Por ejemplo, una tabla donde especificamos un rendimiento garantizado de 1000 millones lecturas y 1 millón de escrituras al mes, con una coherencia eventual (es decir, que permite desorden de peticiones ) nos costará $67,17 al mes.</p>
+<p>Por ejemplo, una tabla donde especificamos un rendimiento garantizado de 1000 millones lecturas y 1 millón de escrituras al mes, con una coherencia eventual (es decir, que permite desorden de peticiones) nos costará $67,17 al mes.</p>
 <h2 id="hola-dynamodb">Hola DynamoDB<a class="headerlink" href="#hola-dynamodb" title="Permanent link">&para;</a></h2>
 <p>A continuación vamos a crear un ejemplo donde tras crear una tabla, la cargaremos con datos para posteriormente realizar alguna consulta.</p>
 <p>Supongamos que tenemos datos relativos a un catálogo de productos, almacenados en el archivo <a href="resources/ProductCatalog.json">ProductCatalog.json</a>, el cual queremos poder consultar.</p>
 <p>Si visualizamos el primer registro podemos observar su estructura, la cual es específica de <em>DynamoDB</em>, ya que indica en el primer elemento el nombre de la tabla (en nuestro caso <code>ProductCatalog</code>), y a continuación el tipo de operación (<code>PutRequest</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">&quot;ProductCatalog&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="w">        </span><span class="p">{</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="w">            </span><span class="nt">&quot;PutRequest&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">                </span><span class="nt">&quot;Item&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="w">                    </span><span class="nt">&quot;Id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="w">                        </span><span class="nt">&quot;N&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;101&quot;</span>
+<span class="hll"><span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">&quot;ProductCatalog&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span class="linenos" data-linenos=" 3 "></span><span class="w">        </span><span class="p">{</span>
+<span class="hll"><span class="linenos" data-linenos=" 4 "></span><span class="w">            </span><span class="nt">&quot;PutRequest&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span class="linenos" data-linenos=" 5 "></span><span class="w">                </span><span class="nt">&quot;Item&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">                    </span><span class="nt">&quot;Id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// (1)!</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">                        </span><span class="nt">&quot;N&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;101&quot;</span><span class="w">  </span><span class="c1">// (2)!</span>
 <span class="linenos" data-linenos=" 8 "></span><span class="w">                    </span><span class="p">},</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="w">                    </span><span class="nt">&quot;Title&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos" data-linenos="10 "></span><span class="w">                        </span><span class="nt">&quot;S&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Book 101 Title&quot;</span>
@@ -2821,7 +2821,7 @@
 <span class="linenos" data-linenos="13 "></span><span class="w">                        </span><span class="nt">&quot;S&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;111-1111111111&quot;</span>
 <span class="linenos" data-linenos="14 "></span><span class="w">                    </span><span class="p">},</span>
 <span class="linenos" data-linenos="15 "></span><span class="w">                    </span><span class="nt">&quot;Authors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="linenos" data-linenos="16 "></span><span class="w">                        </span><span class="nt">&quot;L&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">                        </span><span class="nt">&quot;L&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">  </span><span class="c1">// (3)!</span>
 <span class="linenos" data-linenos="17 "></span><span class="w">                            </span><span class="p">{</span>
 <span class="linenos" data-linenos="18 "></span><span class="w">                                </span><span class="nt">&quot;S&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Author1&quot;</span>
 <span class="linenos" data-linenos="19 "></span><span class="w">                            </span><span class="p">}</span>
@@ -2846,6 +2846,11 @@
 <span class="linenos" data-linenos="38 "></span><span class="w">            </span><span class="p">}</span>
 <span class="linenos" data-linenos="39 "></span><span class="w">        </span><span class="p">},</span>
 </code></pre></div>
+<ol>
+<li>Nombre del campo</li>
+<li>Tipo  (<code>N</code>, numérico) y valor (<code>101</code>)</li>
+<li>Campo de tipo lista</li>
+</ol>
 <h3 id="creando-una-tabla">Creando una tabla<a class="headerlink" href="#creando-una-tabla" title="Permanent link">&para;</a></h3>
 <p>Para ello, primero vamos a crear la tabla desde el interfaz web de AWS. Tras seleccionar <em>Amazon DynamoDB</em>, creamos una tabla que llamamos <code>ProductCatalog</code>, cuyo identificador será <code>Id</code> de tipo <em>número</em>. El resto de campos se crearán automáticamente al importar los datos.</p>
 <figure style="align: center;">
