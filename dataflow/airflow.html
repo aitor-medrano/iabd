@@ -2408,6 +2408,8 @@
       
         
       
+        
+      
     
     
     
@@ -2464,11 +2466,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../blog/category/octubre.html" class="md-nav__link">
+      <a href="../blog/category/noviembre.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Octubre
+    Noviembre
   </span>
   
 
@@ -2489,6 +2491,26 @@
   
   <span class="md-ellipsis">
     2023
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/octubre.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Octubre
   </span>
   
 
@@ -2847,6 +2869,10 @@
 
 
 <h1 id="orquestacion-de-flujos-apache-airflow">Orquestación de flujos: Apache Airflow<a class="headerlink" href="#orquestacion-de-flujos-apache-airflow" title="Permanent link">&para;</a></h1>
+<p>La orquestación de datos en uno de los elementos principales en la ingeniería de datos y el despliegue de flujos de datos.</p>
+<p>Entendemos la orquestación como el proceso de coordinar muchas tareas, entre las cuales suele haber un alto grado de interdependencias, para que se ejecuten lo más rápido y eficientemente posible con una cadencia planificada.</p>
+<p>Antiguamente se utilizaba el comando <em>cron</em> para planificar los procesos, pero <em>cron</em> no permite definir dependencias entre las tareas, sólo se preocupa de la planificación temporal.</p>
+<p>Los sistemas de orquestación de flujos, además destacan por permitir monitorizar, añadir alertas o consultar el histórico de tareas realizadas.</p>
 <h2 id="pipeline-de-datos">Pipeline de datos<a class="headerlink" href="#pipeline-de-datos" title="Permanent link">&para;</a></h2>
 <p>En la sesión sobre <a href="../de/etl.html">Ingesta de datos</a> estudiamos en qué consiste un <a href="../de/etl.html#pipeline-de-datos">pipeline de datos</a> entendiéndolo como el conjunto de pasos y las tecnologías involucradas en un proceso de movimiento o procesamiento de datos.</p>
 <p>Por ejemplo, si queremos almacenar en un lago de datos las temperaturas que obtenemos de la AEMET para posteriormente crear un cuadro de mandos donde realizar algún tipo de predicción se entiende que deberemos realizar una petición REST, recuperar los datos y seleccionar los datos específicos que nos interesan y finalmente persistir los datos en el <em>data lake</em> (por ejemplo, en <em>S3</em>), para posteriormente poder leer dichos datos desde una herramienta de cuadro de mandos, como pueda ser <em>Tableau</em> o <em>PowerBI</em>.</p>
@@ -2866,7 +2892,7 @@
 <p>Si nos fijamos en el grafo de la figura lateral, tenemos una grafo que define cuatro tareas (A, B, C y D), donde una vez ha finalizado la tarea A, la B y C se pueden realizar de forma paralela, y hasta que no hayan acabado esas dos, no comenzará la tarea D.</p>
 <p>Así pues, el grafo define las dependencias entre las tareas y condiciona la ejecución de una o más tareas a la finalización de las que la preceden. Lo que no hace es grafo es saber lo que se realiza dentro de las tareas, sólo le importa el orden de ejecución, la cantidad de reintentos, si tiene un duración de caducidad (<em>timeout</em>), etc...</p>
 <h2 id="orquestacion-de-flujos-de-trabajo">Orquestación de flujos de trabajo<a class="headerlink" href="#orquestacion-de-flujos-de-trabajo" title="Permanent link">&para;</a></h2>
-<p>La planificación de los DAG antiguamente se realizaba mediante tareas cron que ejecutaban algún script que lanzaba el pipeline de datos. Conforme crecía la cantidad de pipelines era necesaria utilizar alguna herramienta que permita planificar y monitorizar los pipelines.</p>
+<p>Como hemos comentado anteriormente, la planificación de los DAG, antiguamente, se realizaba mediante tareas <em>cron</em> que ejecutaban algún <em>script</em> que lanzaba el <em>pipeline</em> de datos. Conforme crecía la cantidad de <em>pipelines</em> era necesaria utilizar alguna herramienta que permita planificar y monitorizar los <em>pipelines</em>.</p>
 <p>Las soluciones de orquestación de datos se utilizan hoy en día para:</p>
 <ul>
 <li>limpieza, organización y persistencia en un <em>data lakehouse</em></li>
