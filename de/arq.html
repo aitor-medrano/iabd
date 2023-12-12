@@ -456,7 +456,8 @@
     
   
   
-    <span class="md-status md-status--new"></span>
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
   
 
   
@@ -526,7 +527,8 @@
     
   
   
-    <span class="md-status md-status--new"></span>
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
   
 
   
@@ -661,6 +663,14 @@
     S3
   </span>
   
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
 
       </a>
     </li>
@@ -706,7 +716,8 @@
     
   
   
-    <span class="md-status md-status--new"></span>
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
   
 
   
@@ -751,6 +762,14 @@
   <span class="md-ellipsis">
     DynamoDB
   </span>
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -835,6 +854,14 @@
   <span class="md-ellipsis">
     Athena
   </span>
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
   
 
       </a>
@@ -924,6 +951,14 @@
     Arquitecturas Big Data
   </span>
   
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
 
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -934,6 +969,14 @@
   <span class="md-ellipsis">
     Arquitecturas Big Data
   </span>
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -2840,6 +2883,10 @@
 </ol>
 <h2 id="tipos-de-arquitecturas">Tipos de arquitecturas<a class="headerlink" href="#tipos-de-arquitecturas" title="Permanent link">&para;</a></h2>
 <p>Debido a que las empresas disponen de un volumen de datos cada vez mayor y la necesidad de analizarlos y obtener valor de ellos lo antes posible, surge la necesidad de definir nuevas arquitecturas para cubrir casos de uso distintos a los que había hasta el momento.</p>
+<div class="admonition info">
+<p class="admonition-title">Arquitecturas de datos</p>
+<p>En esta sesión nos estamos centrando en las arquitecturas <em>Big Data</em> y no hemos querido mezclar los conceptos con las arquitecturas de datos como puedan ser un <a href="https://manoli-iborra.github.io/BigData/apuntes14.html"><em>Data Warehouse</em></a> o un <a href="https://manoli-iborra.github.io/BigData/apuntes16.html"><em>Data Lake</em></a>.</p>
+</div>
 <p>Desde un punto de vista de la llegada de los datos y el procesamiento de los datos, las arquitecturas más comunes en estos proyectos son principalmente dos: <em>Lambda</em> y <em>Kappa</em>. La principal diferencia entre ambas son los flujos de tratamiento de datos que intervienen.</p>
 <p>Un par de conceptos que tenemos que definir antes de ver las características de ambas son el procesamiento <em>batch</em> y el procesamiento en <em>streaming</em>.</p>
 <h3 id="procesamiento-batch">Procesamiento Batch<a class="headerlink" href="#procesamiento-batch" title="Permanent link">&para;</a></h3>
@@ -2902,6 +2949,10 @@ En informática, un sistema de tiempo real es aquel que responde en un periodo d
 <li>La capa de <em>streaming</em> compensa la alta latencia de las escrituras que ocurre en la <em>serving layer</em> y solo tiene en cuenta los datos nuevos (incrementos entre los procesos batch y el momento actual).</li>
 <li>Finalmente, combinando los resultados de las <em>Batch Views</em> y de las vistas en tiempo real (<em>Real-time Views</em>), se construye la respuesta a las consultas realizadas.</li>
 </ol>
+<!--
+Lambda architecture has its share of challenges and criticisms. Managing multiple systems with different codebases is as difficult as it sounds, creating error-prone systems with code and data that are extremely difficult to reconcile.
+-->
+
 <h2 id="arquitectura-kappa">Arquitectura Kappa<a class="headerlink" href="#arquitectura-kappa" title="Permanent link">&para;</a></h2>
 <p>El término <ins>Arquitectura Kappa</ins> fue introducido en 2014 por <a href="https://blog.empathybox.com/"><em>Jay Kreps</em></a> en su artículo <a href="https://www.oreilly.com/radar/questioning-the-lambda-architecture/">Questioning the Lambda Architecture</a>. En él señala los posibles puntos débiles de la arquitectura <em>Lambda</em> y cómo solucionarlos mediante una evolución.</p>
 <p>Uno de los mayores inconveniente de la arquitectura <em>Lambda</em> es su complejidad. El procesamiento de los datos se realiza en dos caminos diferenciados, lo que conlleva duplicar la lógica de computación y la gestión de la arquitectura de ambos caminos.</p>
@@ -2925,6 +2976,10 @@ En informática, un sistema de tiempo real es aquel que responde en un periodo d
 </figure>
 
 <p>Como requisito previo a cumplir, se tiene que garantizar que los eventos se leen y almacenan en el orden en el que se han generado. De esta forma, podremos variar un procesamiento concreto partiendo de una misma versión de los datos.</p>
+<!--
+Though the original Kappa architecture article came out in 2014, we haven’t seen it widely adopted. There may be a couple of reasons for this. First, streaming itself is still a bit of a mystery for many companies; it’s easy to talk about, but harder than expected to execute. Second, Kappa architecture turns out to be complicated and expensive in practice. While some streaming systems can scale to huge data volumes, they are complex and expensive; batch storage and processing remain much more efficient and cost-effective for enormous historical datasets.
+-->
+
 <h2 id="arquitectura-por-capas">Arquitectura por capas<a class="headerlink" href="#arquitectura-por-capas" title="Permanent link">&para;</a></h2>
 <p>Además de las dos soluciones que acabamos de conocer, otra forma de diseñar las capas de una arquitectura <em>Big Data</em> consiste en separar las diferentes fases del dato en capa diferenciadas.</p>
 <p><a href="https://docs.microsoft.com/en-us/azure/architecture/data-guide/big-data/">La arquitectura por capas</a> da soporte tanto al procesamiento <em>batch</em> como por <em>streaming</em>. La arquitectura consiste en 6 capas que aseguran un flujo seguro de los datos:</p>
@@ -2946,6 +3001,10 @@ En informática, un sistema de tiempo real es aquel que responde en un periodo d
 <p>El almacenamiento de los datos y modelos lo podemos realizar mediante <em>HDFS</em> o <em>S3</em>. Dentro de una arquitectura <em>Lambda</em>, en el sistema batch, mediante algoritmos <em>MapReduce de Hadoop</em> o consultas <em>Hive</em> podemos generar modelos. Para la capa de <em>streaming</em> (tanto para Lambda como Kappa) se pueden utilizar otras tecnologías como <a href="http://storm.apache.org"><em>Apache Storm</em></a>, <a href="http://samza.apache.org"><em>Apache Samza</em></a> o <a href="https://spark.apache.org/docs/latest/streaming-programming-guide.html"><em>Spark Streaming</em></a> para modificar modelos de forma incremental.</p>
 <p>De forma alternativa, <a href="https://spark.apache.org">Apache Spark</a> se puede utilizar como plataforma común para desarrollar las capas <em>batch</em> y <em>streaming</em> de la arquitectura Lambda. De ahí su amplia aceptación y uso a día de hoy en la industria, se codifica una vez y se comparte en ambas capas</p>
 <p>La capa de <em>serving</em> se puede implementar mediante una base de datos NoSQL como pueda ser <a href="https://hbase.apache.org">Apache HBase</a>, <a href="https://www.mongodb.com">MongoDB</a>, <a href="https://redis.com">Redis</a> o <a href="https://aws.amazon.com/es/dynamodb/">AWS Dynamo DB</a>. También se pueden utilizar motores de consultas como <a href="https://drill.apache.org">Apache Drill</a> o <a href="https://prestodb.io/">Presto</a>.</p>
+<!--
+https://mattturck.com/landscape/mad2023.pdf
+-->
+
 <h2 id="principio-scv">Principio SCV<a class="headerlink" href="#principio-scv" title="Permanent link">&para;</a></h2>
 <p>Mientras que el teorema CAP tiene que ver con almacenamiento de datos distribuidos, el <a href="https://fulmanski.pl/tutorials/computer-science/big-data/processing-concepts-for-big-data/#scv_principle">principio SCV</a> está relacionado con el <strong>procesamiento distribuido de los datos</strong>.</p>
 <p>Es decir, no tiene que ver con la escritura y lectura (consistente o no) de los datos en entornos distribuidos sino con el procesamiento que se realiza sobre ellos dentro de los nodos de un sistema de procesamiento distribuido.</p>
@@ -3004,9 +3063,10 @@ Dado que en ambientes de Big Data el ser capaz de manejar grandes volúmenes de 
 </ul>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="http://www.databasetube.com/database/big-data-lambda-architecture/">Big Data Lambda Architecture - Nathan Marz</a></li>
+<li><a href="http://www.databasetube.com/database/big-data-lambda-architecture/">Big Data Lambda Architecture</a> por <em>Nathan Marz</em>.</li>
 <li><a href="https://hazelcast.com/glossary/lambda-architecture/">What Is Lambda Architecture?</a></li>
-<li><a href="https://learning.oreilly.com/library/view/fundamentals-of-data/9781098108298/">Fundamentals of Data Engineering</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/architecture/databases/guide/big-data-architectures">Big Data Architectures</a> en la documentación de Azure</li>
+<li>Libro <a href="https://learning.oreilly.com/library/view/fundamentals-of-data/9781098108298/">Fundamentals of Data Engineering</a></li>
 <li><a href="http://i2ds.org/wp-content/uploads/2020/03/arquitecturalambdavsarquitecturakappa.pdf">Arquitectura Lambda vs Arquitectura Kappa</a></li>
 <li><a href="https://www.ericsson.com/en/blog/2015/11/data-processing-architectures--lambda-and-kappa">Data processing architectures – Lambda and Kappa</a></li>
 <li><a href="https://www.interviewbit.com/blog/big-data-architecture/">Big Data Architecture – Detailed Explanation</a></li>

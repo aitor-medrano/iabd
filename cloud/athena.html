@@ -456,7 +456,8 @@
     
   
   
-    <span class="md-status md-status--new"></span>
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
   
 
   
@@ -526,7 +527,8 @@
     
   
   
-    <span class="md-status md-status--new"></span>
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
   
 
   
@@ -663,6 +665,14 @@
     S3
   </span>
   
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
 
       </a>
     </li>
@@ -708,7 +718,8 @@
     
   
   
-    <span class="md-status md-status--new"></span>
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
   
 
   
@@ -753,6 +764,14 @@
   <span class="md-ellipsis">
     DynamoDB
   </span>
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -845,6 +864,14 @@
     Athena
   </span>
   
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
 
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -855,6 +882,14 @@
   <span class="md-ellipsis">
     Athena
   </span>
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
   
 
       </a>
@@ -882,6 +917,16 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hola-athena" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hola Athena
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hola Athena">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#preparando-athena" class="md-nav__link">
     <span class="md-ellipsis">
       Preparando Athena
@@ -889,8 +934,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#creando-la-estructura" class="md-nav__link">
     <span class="md-ellipsis">
       Creando la estructura
@@ -898,13 +943,18 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#realizando-consultas" class="md-nav__link">
     <span class="md-ellipsis">
       Realizando consultas
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -995,6 +1045,14 @@
   <span class="md-ellipsis">
     Arquitecturas Big Data
   </span>
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -2554,6 +2612,16 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hola-athena" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hola Athena
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hola Athena">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#preparando-athena" class="md-nav__link">
     <span class="md-ellipsis">
       Preparando Athena
@@ -2561,8 +2629,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#creando-la-estructura" class="md-nav__link">
     <span class="md-ellipsis">
       Creando la estructura
@@ -2570,13 +2638,18 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#realizando-consultas" class="md-nav__link">
     <span class="md-ellipsis">
       Realizando consultas
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2642,20 +2715,23 @@
   <h1>Athena</h1>
 
 <p><a href="https://aws.amazon.com/es/athena">AWS Athena</a> es una herramienta <em>serverless</em> que permite realizar consultas SQL sobre datos los cuales están directamente en S3 y que provienen de fuentes dispares como bases de datos, un flujo de datos, contenido web desestructurado, etc.. Para ello, <em>Athena</em> almacena metadatos sobre las fuentes de datos, así como las consultas para poder reutilizarlas o compartirlas con otros usuarios.</p>
-<p>Con <em>Athena</em> no tenemos que provisionar recursos, únicamente pagaremos por 5$ por TB escaneado, sin tener que preocuparnos por escalar o redimensionar los recursos necesarios. Dicho de otro modo, en Athena no se almacenan los datos, los cuales suelen residir en S3</p>
+<figure style="align: center;">
+    <img src="images/07athena-aws.png" alt="Funcionamiento Athena" width="800px">
+    <figcaption>Funcionamiento Athena - https://aws.amazon.com/es/athena/</figcaption>
+</figure>
+
+<p>Con <em>Athena</em> no tenemos que provisionar recursos, únicamente pagaremos por 5$ por TB escaneado, sin tener que preocuparnos por escalar o redimensionar los recursos necesarios. Dicho de otro modo, en Athena no se almacenan los datos, los cuales suelen residir en S3.</p>
 <p>Athena se basa en Presto (<a href="https://prestodb.io/">https://prestodb.io/</a>), un motor distribuido de SQL creado por Facebook y liberado como proyecto <em>open source</em>. Tiene soporte para ANSI SQL, así como características propias de Presto como funciones geoespaciales o extensiones de consultas que permiten crear consultas mediante aproximación que estadísticamente casi son similares sobre grandes conjuntos de datos en solo una fracción de tiempo de lo que supondría una consulta real.</p>
 <h3 id="metastore">MetaStore<a class="headerlink" href="#metastore" title="Permanent link">&para;</a></h3>
 <p>Además de acceder a los datos, <em>Athena</em> necesita almacenar metadatos para que el motor SQL entienda como interpretar los datos almacenados en S3 o cualquier otro lugar. Esta información extra mapea las colecciones de ficheros u objetos S3 para construir tablas, columnas y filas, de forma similar a cómo lo realiza el <em>metastore</em> de Hive.</p>
 <p>Por ello, <em>Athena</em> trabaja con <em>metastores</em> compatibles con <em>Hive</em> incluyendo el servicio de <a href="https://docs.aws.amazon.com/glue/latest/dg/catalog-and-crawler.html">AWS Glue Data Catalog</a>.</p>
-<!--
-    The most common pieces of information that are kept in the Metastore include the following:
-
-    * A list of tables that exist
-    * The storage location of each table (for example, the S3 path or DynamoDB table name)
-    * The format of the files or objects that comprise the table (for example, CSV, Parquet, JSON)
-    * The column names and data types in each table (for example, inventory column is an integer, while revenue is a decimal (10,2))
--->
-
+<p>Los elementos que se almacenan son:</p>
+<ul>
+<li>Una lista de las tablas existentes</li>
+<li>La ruta de almacenamiento de cada tabla, ya sea la ruta en S3 o en nombre de la tabla de DynamoDB.</li>
+<li>El formato de los ficheros u objetos que contiene la tabla (por ejemplo, CSV, Parquet o JSON)</li>
+<li>El nombre de las columnas y los tipos de datos de cada tabla (por ejemplo, nombre es una cadena mientras que sueldo es un decimal (10,2))</li>
+</ul>
 <!--
 Amazon Athena is an interactive query service that makes it easy for you to
 analyze data directly in Amazon S3 using standard SQL. With a few actions in
@@ -2677,6 +2753,7 @@ Athena is serverless, so there is no infrastructure to set up or manage, and you
 Amazon Athena is a fast, cost-effective, interactive query service that makes it easy to analyze petabytes of data in S3 with no data warehouses or clusters to manage.
 -->
 
+<h2 id="hola-athena">Hola Athena<a class="headerlink" href="#hola-athena" title="Permanent link">&para;</a></h2>
 <p>En el siguiente supuesto, vamos a crear una aplicación <em>Athena</em>, definiremos una base de datos, crearemos una tabla con sus columnas y tipos de datos, y ejecutaremos consultas sencillas y compuestas.</p>
 <p>Los pasos a realizar son:</p>
 <ol>
@@ -2684,11 +2761,11 @@ Amazon Athena is a fast, cost-effective, interactive query service that makes it
 <li>Crear la tabla, mediante el asistente de crear tabla o utilizamos la sintaxis DDL de Hive.</li>
 <li>Consultar los datos, mediante SQL.</li>
 </ol>
-<h2 id="preparando-athena">Preparando Athena<a class="headerlink" href="#preparando-athena" title="Permanent link">&para;</a></h2>
+<h3 id="preparando-athena">Preparando Athena<a class="headerlink" href="#preparando-athena" title="Permanent link">&para;</a></h3>
 <p>Antes de empezar con <em>Athena</em>, necesitamos indicar un <em>bucket</em> donde almacenar los resultados de nuestras consultas. Así pues, vamos a utilizar uno de los buckets que hemos creado en sesiones anteriores.</p>
 <p>Tras acceder a <em>Athena</em>, en la pestaña de <em>Settings</em> del <em>Query Editor</em>, configuramos donde vamos a guardar los resultados:</p>
 <figure style="align: center;">
-    <img src="images/07athenaSettings.png">
+    <img src="images/07athenaSettings.png" alt="Athena - Configuración inicial">
     <figcaption>Athena - Configuración inicial</figcaption>
 </figure>
 
@@ -2701,23 +2778,23 @@ Amazon Athena is a fast, cost-effective, interactive query service that makes it
     <figcaption>Archivo de customers.csv en S3</figcaption>
 </figure></p>
 </div>
-<h2 id="creando-la-estructura">Creando la estructura<a class="headerlink" href="#creando-la-estructura" title="Permanent link">&para;</a></h2>
+<h3 id="creando-la-estructura">Creando la estructura<a class="headerlink" href="#creando-la-estructura" title="Permanent link">&para;</a></h3>
 <p>En <em>AWS Glu</em>e, o directamente en <em>Athena</em>, vamos a crear una base de datos y una tabla de forma similar a como se hace mediante <em>Hive</em>.</p>
 <p>A continuación, entramos al <em>Query editor</em>, y a lado de la sección <em>Tables and views</em>, desplegamos el menú <em>Create</em> y creamos una tabla a partir de datos S3, indicándole un nombre para la tabla, otro para la base de datos (o elegimos una existente), así como la localización en S3 de la carpeta donde se encuentren nuestros datos:</p>
 <figure style="align: center;">
-    <img src="images/07athenaCreateTable1.png">
+    <img src="images/07athenaCreateTable1.png" alt="Athena - Opción para crear la tabla a partir de S3">
     <figcaption>Athena - Opción para crear la tabla a partir de S3</figcaption>
 </figure>
 
 <p>A continuación, le indicamos que vamos a cargar los datos en una tabla de tipo Hive en formato CSV, utilizando la coma como separador de campos:</p>
 <figure style="align: center;">
-    <img src="images/07athenaCreateTable2.png">
+    <img src="images/07athenaCreateTable2.png" alt="Athena - Configuración del formato">
     <figcaption>Athena - Configuración del formato</figcaption>
 </figure>
 
 <p>Una vez tenemos el formato, debemos indicar la estructura de la tabla. </p>
 <figure style="float: right;">
-    <img src="images/07athenaCreateTable3.png" width="400">
+    <img src="images/07athenaCreateTable3.png" width="400" alt="Athena - Definición de las columnas">
     <figcaption>Athena - Definición de las columnas</figcaption>
 </figure>
 
@@ -2729,7 +2806,7 @@ Amazon Athena is a fast, cost-effective, interactive query service that makes it
 </code></pre></div>
 <p>Cuando los hayamos introducido, veremos como se han creado dichas columnas:</p>
 <figure style="align: center;">
-    <img src="images/07athenaCreateTable4.png">
+    <img src="images/07athenaCreateTable4.png" alt="Athena - Configuración del formato">
     <figcaption>Athena - Configuración del formato</figcaption>
 </figure>
 
@@ -2746,10 +2823,10 @@ Amazon Athena is a fast, cost-effective, interactive query service that makes it
 <span class="linenos" data-linenos="10 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;s3://s3severo8a/customers/&#39;</span>
 <span class="linenos" data-linenos="11 "></span><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;classification&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;csv&#39;</span><span class="p">);</span>
 </code></pre></div>
-<h2 id="realizando-consultas">Realizando consultas<a class="headerlink" href="#realizando-consultas" title="Permanent link">&para;</a></h2>
+<h3 id="realizando-consultas">Realizando consultas<a class="headerlink" href="#realizando-consultas" title="Permanent link">&para;</a></h3>
 <p>Si volvemos a la pantalla de <em>Query Editor</em>, si pinchamos sobre los tres puntos de la tabla <code>customers</code>, podemos hacer un preview de la tabla, y veremos que automáticamente realiza una consulta de tipo <em><code>select * from customers</code></em></p>
 <figure style="align: center;">
-    <img src="images/07athenaSelect.png">
+    <img src="images/07athenaSelect.png" alt="Athena - Realización de una consulta">
     <figcaption>Athena - Realización de una consulta</figcaption>
 </figure>
 
