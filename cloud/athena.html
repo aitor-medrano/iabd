@@ -2163,6 +2163,8 @@
       
         
       
+        
+      
     
     
     
@@ -2226,6 +2228,27 @@
   
   <span class="md-ellipsis">
     Node-RED
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/25villena.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Visita IES Navarro Santafé
   </span>
   
 
@@ -2717,11 +2740,12 @@
 <p><a href="https://aws.amazon.com/es/athena">AWS Athena</a> es una herramienta <em>serverless</em> que permite realizar consultas SQL sobre datos los cuales están directamente en S3 y que provienen de fuentes dispares como bases de datos, un flujo de datos, contenido web desestructurado, etc.. Para ello, <em>Athena</em> almacena metadatos sobre las fuentes de datos, así como las consultas para poder reutilizarlas o compartirlas con otros usuarios.</p>
 <figure style="align: center;">
     <img src="images/07athena-aws.png" alt="Funcionamiento Athena" width="800px">
-    <figcaption>Funcionamiento Athena - https://aws.amazon.com/es/athena/</figcaption>
+    <figcaption>Funcionamiento Athena - https://aws.amazon.com/es/athena</figcaption>
 </figure>
 
-<p>Con <em>Athena</em> no tenemos que provisionar recursos, únicamente pagaremos por 5$ por TB escaneado, sin tener que preocuparnos por escalar o redimensionar los recursos necesarios. Dicho de otro modo, en Athena no se almacenan los datos, los cuales suelen residir en S3.</p>
-<p>Athena se basa en Presto (<a href="https://prestodb.io/">https://prestodb.io/</a>), un motor distribuido de SQL creado por Facebook y liberado como proyecto <em>open source</em>. Tiene soporte para ANSI SQL, así como características propias de Presto como funciones geoespaciales o extensiones de consultas que permiten crear consultas mediante aproximación que estadísticamente casi son similares sobre grandes conjuntos de datos en solo una fracción de tiempo de lo que supondría una consulta real.</p>
+<p>Como servicio <em>serverless</em>, no hay infraestructura que aprovisionar ni gestionar, y sólo pagaremos por el volumen de datos escaneados por las consultas que ejecutemos (actualmente <a href="https://aws.amazon.com/es/athena/pricing">pagaremos</a> 5$ por TB escaneado), sin tener que preocuparnos por escalar o redimensionar los recursos necesarios, lo que implica que sea un servicio de consultas que facilita analizar petabytes de datos almacenados en S3 sin necesidad de un data warehouse o un clúster de máquinas que gestionar.</p>
+<p><em>Athena</em> escala las consultas automáticamente para ejecutarse en paralelo y obtener el resultado lo más rápido posible, incluso con grandes conjuntos de datos y consultas complejas. Conviene destacar que permite procesar datos desestructurados, semiestructurados o estructurados, soportando formatos de datos como CSV, JSON o formatos columnas como Parquet u ORC.</p>
+<p><em>Athena</em> se basa en <em>Presto</em> (<a href="https://prestodb.io/">https://prestodb.io/</a>), un motor distribuido de SQL creado por <em>Facebook</em> y liberado como proyecto <em>open source</em>. Tiene soporte para ANSI SQL, así como características propias de <em>Presto</em> como funciones geoespaciales o extensiones de consultas que permiten crear consultas mediante aproximación que estadísticamente casi son similares sobre grandes conjuntos de datos en solo una fracción de tiempo de lo que supondría una consulta real.</p>
 <h3 id="metastore">MetaStore<a class="headerlink" href="#metastore" title="Permanent link">&para;</a></h3>
 <p>Además de acceder a los datos, <em>Athena</em> necesita almacenar metadatos para que el motor SQL entienda como interpretar los datos almacenados en S3 o cualquier otro lugar. Esta información extra mapea las colecciones de ficheros u objetos S3 para construir tablas, columnas y filas, de forma similar a cómo lo realiza el <em>metastore</em> de Hive.</p>
 <p>Por ello, <em>Athena</em> trabaja con <em>metastores</em> compatibles con <em>Hive</em> incluyendo el servicio de <a href="https://docs.aws.amazon.com/glue/latest/dg/catalog-and-crawler.html">AWS Glue Data Catalog</a>.</p>
@@ -2732,27 +2756,6 @@
 <li>El formato de los ficheros u objetos que contiene la tabla (por ejemplo, CSV, Parquet o JSON)</li>
 <li>El nombre de las columnas y los tipos de datos de cada tabla (por ejemplo, nombre es una cadena mientras que sueldo es un decimal (10,2))</li>
 </ul>
-<!--
-Amazon Athena is an interactive query service that makes it easy for you to
-analyze data directly in Amazon S3 using standard SQL. With a few actions in
-the AWS Management Console, you can use Athena directly against data assets
-stored in the data lake and begin using standard SQL to run ad hoc queries and
-get results in a matter of seconds.
-Athena is serverless, so there is no infrastructure to set up or manage, and you
-only pay for the volume of data assets scanned during the queries you run.
-Athena scales automatically—executing queries in parallel—so results are fast,
-even with large datasets and complex queries. You can use Athena to process
-unstructured, semi-structured, and structured data sets. Supported data asset
-formats include CSV, JSON, or columnar data formats such as Apache Parquet
-and Apache ORC. Athena integrates with Amazon QuickSight for easy
-visualization. It can also be used with third-party reporting and business
-intelligence tools by connecting these tools to Athena with a JDBC driver.
-
-Athena is serverless, so there is no infrastructure to set up or manage, and you pay only for the queries you run. Athena scales automatically—running queries in parallel—so results are fast, even with large datasets and complex queries.
-
-Amazon Athena is a fast, cost-effective, interactive query service that makes it easy to analyze petabytes of data in S3 with no data warehouses or clusters to manage.
--->
-
 <h2 id="hola-athena">Hola Athena<a class="headerlink" href="#hola-athena" title="Permanent link">&para;</a></h2>
 <p>En el siguiente supuesto, vamos a crear una aplicación <em>Athena</em>, definiremos una base de datos, crearemos una tabla con sus columnas y tipos de datos, y ejecutaremos consultas sencillas y compuestas.</p>
 <p>Los pasos a realizar son:</p>
@@ -2852,8 +2855,8 @@ Una vez los datos están cargados, ya podemos realizar consular con AWS Athena.
 
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="https://docs.aws.amazon.com/athena/latest/ug/what-is.html">Guía de usuario de AWS Athena</a></li>
-<li><a href="https://docs.aws.amazon.com/athena/latest/ug/getting-started.html">Getting started with AWS Athena</a></li>
+<li><a href="https://docs.aws.amazon.com/es_es/athena/latest/ug/what-is.html">Guía de usuario de AWS Athena</a></li>
+<li><a href="https://docs.aws.amazon.com/es_es/athena/latest/ug/getting-started.html">Getting started with AWS Athena</a></li>
 </ul>
 
 
