@@ -13,10 +13,10 @@
         <link rel="canonical" href="https://aitor-medrano.github.io/iabd/de/formatos.html">
       
       
-        <link rel="prev" href="etl.html">
+        <link rel="prev" href="pentaho.html">
       
       
-        <link rel="next" href="pentaho.html">
+        <link rel="next" href="faker.html">
       
       
       <link rel="icon" href="../favicon.png">
@@ -898,6 +898,8 @@
       
         
       
+        
+      
     
     
     
@@ -927,6 +929,35 @@
             Ingeniería de Datos
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="de.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ingeniería de datos
+  </span>
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -969,6 +1000,35 @@
   
   <span class="md-ellipsis">
     Ingesta de datos
+  </span>
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pentaho.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pentaho
   </span>
   
 
@@ -1192,27 +1252,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="pentaho.html" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Pentaho
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -2535,6 +2574,8 @@
       
         
       
+        
+      
     
     
     
@@ -2579,6 +2620,29 @@
   
   <span class="md-ellipsis">
     2023
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/diciembre.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diciembre
   </span>
   
 
@@ -2894,6 +2958,23 @@
               <article class="md-content__inner md-typeset">
                 
                   
+  
+<nav class="md-tags" >
+  
+    
+    
+    
+      <a href="../tags.html#data-engineering" class="md-tag">Data Engineering</a>
+    
+  
+    
+    
+    
+      <a href="../tags.html#bda-ra1" class="md-tag">BDA RA1</a>
+    
+  
+</nav>
+
 
 
   <h1>Formatos de datos</h1>
@@ -2907,11 +2988,11 @@
 <li>dinámico, de manera que los programas puedan procesar y definir nuevos tipos de datos.</li>
 <li>formato de fichero <em>standalone</em> y que permita <strong>dividirlo</strong> y comprimirlo.</li>
 </ul>
-<p>Para que Hadoop/Spark o cualquier herramienta de analítica de datos pueda procesar documentos, es imprescindible que el formato del fichero permita su división en fragmentos (<em>splittable in chunks</em>).</p>
-<p>Si los clasificamos respecto al formato de almacenamiento tenemos:</p>
+<p>Para que <em>Hadoop</em>/<em>Spark</em> o cualquier herramienta de analítica de datos pueda procesar documentos, es imprescindible que el formato del fichero permita su división en fragmentos (<em>splittable in chunks</em>).</p>
+<p>Si los clasificamos respecto al formato de almacenamiento tenemos formatos de tipo:</p>
 <ul>
 <li>texto (más lentos, ocupan más pero son más expresivos y permiten su interoperabilidad): CSV, XML, JSON, etc...</li>
-<li>binarios (mejor rendimiento, ocupan menos, menos expresivos): Avro, Parquet, ORC, etc...</li>
+<li>binario (mejor rendimiento, ocupan menos, menos expresivos): Avro, Parquet, ORC, etc...</li>
 </ul>
 <p>Si comparamos los formatos más empleados a partir de las propiedades descritas tenemos:</p>
 <table>
@@ -3256,7 +3337,11 @@ https://www.xenonstack.com/blog/data-serialization-hadoop
 <p>Para el acceso HDFS hemos utilizados las extensiones <a href="https://hdfscli.readthedocs.io/en/latest/api.html#module-hdfs.ext.avro">Fastavro</a> y <a href="https://hdfscli.readthedocs.io/en/latest/api.html#module-hdfs.ext.dataframe">Pandas</a> de la librería HDFS que veremos en posteriores sesiones.</p>
 </div>
 <h3 id="comprimiendo-los-datos">Comprimiendo los datos<a class="headerlink" href="#comprimiendo-los-datos" title="Permanent link">&para;</a></h3>
+<div class="admonition question">
+<p class="admonition-title">¿Y si...</p>
 <p>¿Y sí comprimimos los datos para ocupen menos espacio en nuestro clúster y por tanto, nos cuesten menos dinero?</p>
+<p>Al comprimir los datos, además de ocupar menos espacio, la lectura de éstos será más rápida y se enviarán menos datos a través de la red, mejorando los tiempos de trabajo. Eso sí, no hemos de olvidar que comprimir y descomprimir los archivos conlleva un tiempo extra y consumo de recursos para leer o escribir los datos.</p>
+</div>
 <p><em>Fastavro</em> soporta dos tipos de compresión: <em>gzip</em> (mediante el algoritmo <code>deflate</code>) y <code>snappy</code>. <strong>Snappy</strong> es una biblioteca de compresión y descompresión de datos de gran rendimiento que se utiliza con frecuencia en proyectos Big Data, la cual hemos de instalar previamente mediante <code>pip install python-snappy</code>.</p>
 <p>Para indicar el tipo de compresión, únicamente hemos de añadir un parámetros extra con el algoritmo de compresión en la función/constructor de persistencia:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="4:3"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Fastavro y gzip</label><label for="__tabbed_4_2">AvroWriter y snappy</label><label for="__tabbed_4_3">write_dataframe y snappy</label></div>
@@ -3514,7 +3599,7 @@ https://towardsdatascience.com/understanding-apache-parquet-7197ba6462a9
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RA5075.1</abbr> / <abbr title="Se ha determinado el formato de datos adecuado para el almacenamiento.">CE5.1c</abbr> / 1p) Mediante <em>Python</em> y utilizando <em>Kaggle</em>, crea un notebook a partir de los datos del dataset de <a href="https://www.kaggle.com/datasets/yuanyuwendymu/airline-delay-and-cancellation-data-2009-2018">retrasos en los vuelos</a> y a partir de uno de los ficheros (el que más te guste) transforma los datos y persiste los siguientes archivos:</p>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se ha determinado el formato de datos adecuado para el almacenamiento.">CEBDA.1c</abbr> / 1p) Mediante <em>Python</em> y utilizando <em>Kaggle</em>, crea un notebook a partir de los datos del dataset de <a href="https://www.kaggle.com/datasets/yuanyuwendymu/airline-delay-and-cancellation-data-2009-2018">retrasos en los vuelos</a> y a partir de uno de los ficheros (el que más te guste) transforma los datos y persiste los siguientes archivos:</p>
 <ul>
 <li><code>air&lt;anyo&gt;.parquet</code>: el archivo csv en formato <em>Parquet</em>.</li>
 <li><code>air&lt;anyo&gt;.orc</code>: el archivo csv en formato <em>ORC</em>.</li>
@@ -3526,6 +3611,7 @@ https://towardsdatascience.com/understanding-apache-parquet-7197ba6462a9
 </ol>
 <!--
 Revisar: https://learning.oreilly.com/library/view/fundamentals-of-data/9781098108298/app01.html
+https://docs.aws.amazon.com/es_es/athena/latest/ug/columnar-storage.html
 -->
 
 
@@ -3607,7 +3693,7 @@ Revisar: https://learning.oreilly.com/library/view/fundamentals-of-data/97810981
       <nav class="md-footer__inner md-grid" aria-label="Pie" >
         
           
-          <a href="etl.html" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Ingesta de datos">
+          <a href="pentaho.html" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Pentaho">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -3617,20 +3703,20 @@ Revisar: https://learning.oreilly.com/library/view/fundamentals-of-data/97810981
                 Anterior
               </span>
               <div class="md-ellipsis">
-                Ingesta de datos
+                Pentaho
               </div>
             </div>
           </a>
         
         
           
-          <a href="pentaho.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Pentaho">
+          <a href="faker.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Faker">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Siguiente
               </span>
               <div class="md-ellipsis">
-                Pentaho
+                Faker
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -3647,7 +3733,7 @@ Revisar: https://learning.oreilly.com/library/view/fundamentals-of-data/97810981
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      2023-2024 Aitor Medrano - Licencia CC BY-NC-SA
+      2023-2024 Aitor Medrano - <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">Licencia CC BY-NC-SA</a>
     </div>
   
   
@@ -3679,7 +3765,7 @@ Revisar: https://learning.oreilly.com/library/view/fundamentals-of-data/97810981
       
     
     <a href="https://twitter.com/aitormedrano" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9L389.2 48zm-24.8 373.8h39.1L151.1 88h-42l255.3 333.8z"/></svg>
     </a>
   
     
