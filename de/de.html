@@ -2785,7 +2785,7 @@
 
 <div class="admonition bug">
 <p class="admonition-title">En construcción</p>
-<p>Está sesión está en desarrollo. Ten paciencia y vuelve en unos días.</p>
+<p>Esta sesión está en desarrollo. Ten paciencia y vuelve en unos días.</p>
 </div>
 <p>La ingeniería de datos construye la base para la ciencia de datos y la analítica de datos en producción.</p>
 <p>Antes del <em>Big Data</em> ya había ingeniería de datos, entendida como las operaciones necesarias para permitir el acceso a los flujos de información, mediante procesos ETL, pero con el auge del <em>Big Data</em> y la ingesta cantidad de herramientas disponibles su importancia se ha multiplicado.</p>
@@ -2825,16 +2825,16 @@ https://learning.oreilly.com/library/view/fundamentals-of-data/9781098108298/ch0
 
 <h3 id="almacenamiento">Almacenamiento<a class="headerlink" href="#almacenamiento" title="Permanent link">&para;</a></h3>
 <p>Antes de desgranar la fase de almacenamiento, es necesario conocer:</p>
-<figure style="float: right;">
-    <img src="images/05storage.png" alt="Almacenamiento de datos" width="400px">
-    <figcaption>Almacenamiento de datos</figcaption>
-</figure>
-
 <ul>
 <li>las características básicas de las tecnologías de almacenamiento físico (discos magnéticos / <strong><em>HDD</em></strong>, discos sólidos / <strong><em>SSD</em></strong>) como son la velocidad de transferencia (200-300MB/s en HDD a varios GB/s en SSD) o la cantidad de operaciones de E/S por segundo (de 50 a 500 IOPS en un HDD a decenas de miles en un SSD) así como la memoria <strong><em>RAM</em></strong>, 1000 veces más rápida que un disco SSD, con velocidades de transferencia cercanas a 100GB/s y millones de IOPS. Otros conceptos que debemos conocer son la serialización de los datos en <a href="formatos.html">formatos de archivo</a> basados en filas o columnas (como pueda ser <em>Apache Parquet</em>) y la compresión de datos.</li>
 <li>los sistemas de almacenamiento, ya sean locales o distribuidos en un NAS o en el cloud (recuerda el acrónimo <a href="../sa/nosql.html#base">BASE</a>), el <a href="../cloud/s3.html">almacenamiento de bloques o de objetos</a>, las bases de datos relaciones, los sistemas basados en cachés/memoria (por ejemplo, <a href="https://redis.io/">Redis</a>) o el sistema de archivos distribuidos de Hadoop (<a href="../hadoop/hdfs.html">HDFS</a>).</li>
 <li>las abstracciones de almacenamiento, entendida como la organización de los datos y los patrones de consulta que se construyen sobre los sistemas de almacenamiento, como son el <em>data warehouse</em> como solución <abbr title="OnLine Analytical Processing">OLAP</abbr> para datos estructurados (por ejemplo, mediante <em>AWS Redshift</em>), el lago de datos que permite almacenar en crudo cualquier tipo de dato (mediante un ecosistema <a href="../hadoop/hadoop.html"><em>Hadoop</em></a> o el uso de <a href="../cloud/s3.html"><em>S3</em></a> y diversos servicios de AWS como <a href="../cloud/athena.html"><em>Athena</em></a>) y la evolución en el <em>data lakehouse</em> que aglutine las ventajas de ambos sistemas, tanto la posibilidad de trabajar con datos no estructurados y almacenar los datos en crudo y agregados, como soporte robusto de esquemas y tablas y características tan necesarias como las modificaciones incrementales y el borrado de datos, por ejemplo, mediante productos como <a href="../spark/spark.html#databricks"><em>Databricks</em></a> mediante <a href="../spark/deltalake.html"><em>DeltaLake</em></a> o <em>Snowflake</em>.</li>
 </ul>
+<figure style="align: center;">
+    <img src="images/05storage.png" alt="Almacenamiento de datos" width="400px">
+    <figcaption>Almacenamiento de datos</figcaption>
+</figure>
+
 <div class="admonition info">
 <p class="admonition-title">Separación de computación y almacenamiento</p>
 <p>En los inicios del <em>Big Data</em> y a partir del ecosistema <em>Hadoop</em>, el objetivo era colocar los datos lo más cercano del procesamiento.
@@ -2842,12 +2842,35 @@ Sin embargo, actualmente, si utilizamos un lago de datos, los datos residen en u
 Uno de los motivos principales es la escalabilidad de los datos, así como su durabilidad y disponibilidad (vía la replicación de los mismos), tal como hace S3.</p>
 <p>Para reducir la latencia de no tener los datos cerca pero aprovechar las ventajas de la escalabilidad de los datos, se tiende a crear una separación híbrida mediante el uso de cachés de datos, por ejemplo, en AWS EMR copiando los datos de S3 al sistema de archivos de HDFS, realizando el procesamiento y volviendo a colocarlos en S3.</p>
 </div>
-<p>Sobre el almacenamiento, se realizan las siguientes fases:</p>
+<p>Sobre el almacenamiento, se realizan las fases de Ingesta, Transformación y <em>Serving</em>.</p>
+<h4 id="ingesta">Ingesta<a class="headerlink" href="#ingesta" title="Permanent link">&para;</a></h4>
+<p>La ingesta implica mover datos desde una fuente u origen al almacenamiento.</p>
+<p>Aunque esta fase la estudiaremos en detalle en la sesión <a href="etl.html">Ingesta de datos</a>, conviene citar los conceptos de:</p>
 <ul>
-<li><strong>Ingesta</strong>: implica mover datos desde una fuente u origen al almacenamiento. Aunque esta fase la estudiaremos en detalle en la sesión <a href="etl.html">Ingesta de datos</a>, conviene citar los conceptos de <em>pipeline</em> de datos, las estrategias de ingesta como <strong><em>push</em></strong> (de la fuente al destino), <strong><em>pull</em></strong> (el destino llama a la fuente), o <strong><em>poll</em></strong> (comprobaciones periódicas de la fuente), si la ingesta se basa en ventanas temporales o por cantidad (ya sean elementos o tamaño de los datos), si la ingesta se realiza mediante <em>snapshots</em> (una foto de toda la fuente de origen) o de forma incremental, si utilizamos ficheros para exportar e ingestar los datos, así como las diferencias entre ETL y ELT.</li>
-<li><strong>Transformación</strong></li>
-<li><strong><em>Serving</em></strong></li>
+<li><em>pipeline</em> de datos</li>
+<li>las estrategias de ingesta como <strong><em>push</em></strong> (de la fuente al destino), <strong><em>pull</em></strong> (el destino llama a la fuente), o <strong><em>poll</em></strong> (comprobaciones periódicas de la fuente)</li>
+<li>si la ingesta se basa en ventanas temporales o por cantidad (ya sean elementos o tamaño de los datos)</li>
+<li>si la ingesta se realiza mediante <em>snapshots</em> (una foto de toda la fuente de origen) o de forma incremental</li>
+<li>si utilizamos ficheros para exportar e ingestar los datos</li>
+<li>las diferencias entre ETL y ELT.</li>
 </ul>
+<h4 id="transformacion">Transformación<a class="headerlink" href="#transformacion" title="Permanent link">&para;</a></h4>
+<p>Fase que podemos desglosar en:</p>
+<ul>
+<li><strong>Consultas</strong>, siendo muy importante saber analizar el plan de ejecución de las consultas y cómo funciona el optimizador de consultas de cada motor. Algunas recomendaciones relacionadas con las consultas son:<ul>
+<li>Evitar el uso de <em>joins</em>, por ejemplo, persistiendo una consulta que realiza uno o varios <em>joins</em> en una nueva tabla para realizar las consultas sobre esta nueva tabla.</li>
+<li>A la hora de codificar las consultas, evitar el uso de subconsultas o tablas intermedias y utilizar <a href="https://learnsql.es/blog/cuando-debo-utilizar-una-expresion-de-tabla-comun-cte/">CTE</a> (expresiones de tabla común) para simplificar su mantenimiento.</li>
+<li>Evitar las consultas que escanean todos los datos, tanto todas las filas (<em>full scan</em>) como las columnas, filtrando o limitando los datos a recuperar y utilizando índices en el caso de utilizar un sistema que permita su uso.</li>
+<li>En el caso de consultas sobre datos en streaming, dominar los diferentes tipos de <a href="../spark/join-window.html#ventanas-deslizantes">ventanas deslizantes</a> y las <a href="../spark/join-window.html#watermarking">marcas de agua</a>.</li>
+</ul>
+</li>
+<li><strong>Modelado de datos</strong> para introducir la lógica de negocio en los datos, mediante la definición de los modelos conceptuales, lógicos y físicos, ya sean relacionales o no, así como la normalización o denormalización de las tablas resultantes. Además, conviene conocer el modelado multidimensional, ya sea la técnica de <em>Kimball</em> (mediante modelos en estrella con una tabla central de hechos y varias tablas para las dimensiones) o <em>Data Vault</em> (mediante Hubs, enlaces y satélites) para diseñar la estructura de nuestro <em>data warehouse</em> o <em>data lakehouse</em>.</li>
+<li><strong>Transformaciones</strong>, que unen el resultado de las consultas y los modelos de datos para generar valor y que podamos ver los datos transformados como una única entidad. En muchas ocasiones las consultas que necesitamos son muy costosas, accediendo a varios sistemas y tablas mediante múltiples <em>joins</em> y que tras la limpieza y agregación de los datos provocan que se rendimiento sea muy bajo (imaginad una consulta que tarde más de 20 minutos en ejecutarse). Estas consultas podemos persistirlas de forma temporal o permanente.<ul>
+<li>Es necesario tener un sistema de orquestación bien definido que ejecute las consultas y realice las transformaciones.</li>
+</ul>
+</li>
+</ul>
+<h4 id="serving"><strong><em>Serving</em></strong><a class="headerlink" href="#serving" title="Permanent link">&para;</a></h4>
 <p>Finalmente, una vez tenemos los datos, se utilizarán para analítica, ML, ...</p>
 <h3 id="areas-transversales">Áreas transversales<a class="headerlink" href="#areas-transversales" title="Permanent link">&para;</a></h3>
 <p>Además de las fases, hay una serie de destrezas y ámbitos en los que se apoya (<em>undercurrents</em>), como son:</p>
