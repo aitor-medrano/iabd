@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Apuntes sobre formatos de datos en Big Data, como son Avro, Parquet y ORC. Acceso y transformación de Avro, Parquet y ORC desde Python mediante PyArrow y Pandas.">
+        <meta name="description" content="Apuntes sobre los formatos de datos Avro, Parquet y ORC utilizados en Big Data. Acceso y conversión de Avro, Parquet y ORC desde Python.">
       
       
       
@@ -73,7 +73,7 @@
       
         <meta  property="og:title"  content="Formatos de datos en Big Data - Inteligencia Artificial y Big Data" >
       
-        <meta  property="og:description"  content="Apuntes sobre formatos de datos en Big Data, como son Avro, Parquet y ORC. Acceso y transformación de Avro, Parquet y ORC desde Python mediante PyArrow y Pandas." >
+        <meta  property="og:description"  content="Apuntes sobre los formatos de datos Avro, Parquet y ORC utilizados en Big Data. Acceso y conversión de Avro, Parquet y ORC desde Python." >
       
         <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/de/formatos.png" >
       
@@ -89,7 +89,7 @@
       
         <meta  name="twitter:title"  content="Formatos de datos en Big Data - Inteligencia Artificial y Big Data" >
       
-        <meta  name="twitter:description"  content="Apuntes sobre formatos de datos en Big Data, como son Avro, Parquet y ORC. Acceso y transformación de Avro, Parquet y ORC desde Python mediante PyArrow y Pandas." >
+        <meta  name="twitter:description"  content="Apuntes sobre los formatos de datos Avro, Parquet y ORC utilizados en Big Data. Acceso y conversión de Avro, Parquet y ORC desde Python." >
       
         <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/de/formatos.png" >
       
@@ -1092,6 +1092,21 @@
       Filas vs Columnas
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Filas vs Columnas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hablemos-de-tamano" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hablemos de tamaño
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2790,6 +2805,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Filas vs Columnas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hablemos-de-tamano" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hablemos de tamaño
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2980,6 +3010,7 @@
   <h1>Formatos de datos</h1>
 
 <p>En la primera unidad de trabajo ya vimos una pequeña introducción a los diferentes <a href="https://manoli-iborra.github.io/BigData/apuntes04.html#formato-de-datos_1">formatos de datos</a>.</p>
+<p>Conforme los datos viajan a través de los diferentes <em>pipelines</em>, los ingenieros de datos debe gestionar la serialización en diferentes formatos y ser capaces de convertir unos en otros.</p>
 <p>Las propiedades que ha de tener un formato de datos son:</p>
 <ul>
 <li>independiente del lenguaje</li>
@@ -3062,37 +3093,64 @@ https://www.xenonstack.com/blog/data-serialization-hadoop
 <li>Soporte para compresión de los datos (por ejemplo, mediante <em>Snappy</em>).</li>
 </ul>
 <h2 id="filas-vs-columnas">Filas vs Columnas<a class="headerlink" href="#filas-vs-columnas" title="Permanent link">&para;</a></h2>
-<p>Los formatos con los que estamos más familiarizados, como son CSV o JSON, se basan en filas, donde cada registro se almacena en una fila o documento. Estos formatos son más lentos en ciertas consultas y su almacenamiento no es óptimo.</p>
-<p>En un formato basado en columnas, cada fila almacena toda la información de una columna. Al basarse en columnas, ofrece mejor rendimiento para consultas de determinadas columnas y/o agregaciones, y el almacenamiento es más óptimo (como todos los datos de una columna son del mismo tipo, la compresión es mayor).</p>
+<p>Los formatos con los que estamos más familiarizados, como son CSV, XML o JSON, son <strong>formatos basados en filas</strong>, donde cada registro se almacena en una fila o documento. Estos formatos son más lentos en ciertas consultas y su almacenamiento no es óptimo.</p>
+<div class="admonition info">
+<p class="admonition-title">JSON vs JSONL</p>
+<p>Un documento JSON contiene diferentes pares de clave-valor con los elementos que lo componen ocupando varias líneas.</p>
+<p>Un tipo específico de JSON es JSON (<em>JSON Lines</em>), el cual almacena una secuencia de objetos JSON delimitando cada objeto por un saldo de línea.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">JSON</label><label for="__tabbed_1_2">JSONL</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;empleados&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="p">{</span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Carlos&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;altura&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">180</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;edad&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="p">},</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="p">{</span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Juan&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;altura&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">175</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;edad&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">No</span><span class="kc">ne</span><span class="p">}</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">  </span><span class="p">]</span>
+<span class="linenos" data-linenos="5 "></span><span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Carlos&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;altura&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">180</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;edad&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="p">}</span>
+<span class="linenos" data-linenos="2 "></span><span class="p">{</span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Juan&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;altura&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">175</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;edad&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">No</span><span class="kc">ne</span><span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>En un <strong>formato basado en columnas</strong>, cada columna se almacena en su conjunto de ficheros, es decir, cada registro almacena toda la información de una columna. Al basarse en columnas, ofrece mejor rendimiento para consultas de determinadas columnas y/o agregaciones, y el almacenamiento es más óptimo (como todos los datos de una columna son del mismo tipo, la compresión es mayor).</p>
 <p>Supongamos que tenemos los siguientes datos:</p>
 <figure style="align: center;">
-    <img src="images/04formatos-tabla.png" width="500">
+    <img src="images/04formatos-tabla.png" width="500" alt="Ejemplo de tabla">
     <figcaption>Ejemplo de tabla</figcaption>
 </figure>
 
 <p>Dependiendo del almacenamiento en filas o columnas tendríamos la siguiente representación:</p>
 <figure style="align: center;">
-    <img src="images/04formatos-filacolumna.png">
+    <img src="images/04formatos-filacolumna.png" width="800" alt="Comparación filas y columnas">
     <figcaption>Comparación filas y columnas</figcaption>
 </figure>
 
-<p>En un formato columnar los datos del mismo tipo se agrupan, lo que mejora el rendimiento de acceso y reduce el tamaño:</p>
+<p>Como hemos comentado previamente, en un formato columnar los datos del mismo tipo se agrupan, lo que mejora el rendimiento de acceso y reduce el tamaño:</p>
 <figure style="align: center;">
-    <img src="images/04formatos-column-encoding.png">
-    <figcaption>Comparación filas y columnas</figcaption>
+    <img src="images/04formatos-column-encoding.png" alt="Otra comparación entre filas y columnas">
+    <figcaption>Otra comparación entre filas y columnas</figcaption>
 </figure>
 
-<p>El artículo <a href="https://blog.openbridge.com/how-to-be-a-hero-with-powerful-parquet-google-and-amazon-f2ae0f35ee04">Apache Parquet: How to be a hero with the open-source columnar data format</a> compara un formato basado en filas, como <em>CSV</em>, con uno basado en columnas como Parquet, en base al tiempo y el coste de su lectura en AWS (por ejemplo, <em>AWS Athena</em> cobra 5$ por cada TB escaneado):</p>
+<p>El almacenamiento en columnas y la compresión también presentan algunas desventajas, ya que no podemos acceder fácilmente a registros de datos individuales. Para ello, debemos reconstruir registros leyendo datos de varios archivos de columnas.</p>
+<p>Del mismo modo, la actualización de registros supone descomprimir el archivo de columnas, modificarlo, volver a comprimirlo y escribirlo de nuevo en el almacenamiento.</p>
+<p>Para evitar reescribir columnas completas en cada actualización, las columnas se dividen en varios archivos, normalmente utilizando estrategias de particionado y <em>clustering</em> que organizan los datos según los patrones de consulta y modificación de la tabla. Aun así, la sobrecarga computacional que implica actualizar una sola fila es muy alta.</p>
+<p>Por esto, las bases de datos columnares no se adaptan bien a las cargas de trabajo transaccionales, por lo que las bases de datos transaccionales (OLTP) suelen utilizar algún tipo de almacenamiento orientado a filas o registros.</p>
+<h3 id="hablemos-de-tamano">Hablemos de tamaño<a class="headerlink" href="#hablemos-de-tamano" title="Permanent link">&para;</a></h3>
+<p>El artículo <a href="https://blog.openbridge.com/how-to-be-a-hero-with-powerful-parquet-google-and-amazon-f2ae0f35ee04">Apache Parquet: How to be a hero with the open-source columnar data format</a> compara un formato basado en filas, como <em>CSV</em>, con uno basado en columnas como <em>Parquet</em>, en base al tiempo y el coste de su lectura en AWS (por ejemplo, <em>AWS Athena</em> cobra 5$ por cada TB escaneado):</p>
 <figure style="align: center;">
-    <img src="images/04formatos-comparativa1.png">
-    <figcaption>Comparación CSV y Parquet</figcaption>
+    <img src="images/04formatos-comparativa1.webp" alt="Comparación de costes entre CSV y Parquet" width="960px">
+    <figcaption>Comparación de costes entre CSV y Parquet</figcaption>
 </figure>
 
 <p>En la tabla podemos observar como 1TB de un fichero <em>CSV</em> en texto plano pasa a ocupar sólo 130GB mediante <em>Parquet</em>, lo que provoca que las posteriores consultas tarden menos y, en consecuencia, cuesten menos.</p>
-<p>En la siguiente tabla comparamos un fichero CSV compuesto de cuatro columnas almacenado en S3 mediante tres formatos:</p>
+<p>En la siguiente tabla comparamos un fichero CSV compuesto de cuatro columnas almacenado en S3 mediante tres formatos cuando sólo nos interesa los datos de una única columna:</p>
 <figure style="align: center;">
-    <img src="images/04formatos-comparativa2.png">
-    <figcaption>Comparación filas y columnas</figcaption>
+    <img src="images/04formatos-comparativa2.png" alt="Comparación de costes por columnas entre CSV y Parquet" width="800px">
+    <figcaption>Comparación de costes por columnas entre CSV y Parquet</figcaption>
 </figure>
 
 <p>Queda claro que la elección del formato de los datos y la posibilidad de elegir el formato dependiendo de sus futuros casos de uso puede conllevar un importante ahorro en tiempo y costes.</p>
@@ -3102,8 +3160,9 @@ https://www.xenonstack.com/blog/data-serialization-hadoop
     <figcaption>Logo de Apache Avro</figcaption>
 </figure>
 
-<p><a href="https://avro.apache.org/">Apache Avro</a> es un formato de almacenamiento basado en filas para <em>Hadoop</em>, utilizado para la serialización de datos, ya que es más rápido y ocupa menos espacio que JSON, debido a que la serialización de los datos se realiza en un formato binario compacto.</p>
+<p><a href="https://avro.apache.org/">Apache Avro</a> es un formato de almacenamiento basado en filas que es más rápido y ocupa menos espacio que JSON, debido a que la serialización de los datos se realiza en un formato binario compacto, con los metadatos del esquema especificados en JSON.</p>
 <p>Tiene soporte para la compresión de bloques y es un formato que permite la división de los datos (<em>splittable</em>).</p>
+<p><em>Avro</em> es muy popular en el ecosistema de <em>Hadoop</em> y tiene soporte en la mayoría de herramientas <em>cloud</em>.</p>
 <h3 id="formato">Formato<a class="headerlink" href="#formato" title="Permanent link">&para;</a></h3>
 <p>El formato <em>Avro</em> se basa en el uso de esquemas, los cuales definen los tipos de datos y protocolos mediante JSON. Cuando los datos <code>.avro</code> son leídos siempre está presente el esquema con el que han sido escritos.</p>
 <figure style="float: right;">
@@ -3132,7 +3191,7 @@ https://www.xenonstack.com/blog/data-serialization-hadoop
 <span class="linenos" data-linenos="3 "></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>avro-python3
 </code></pre></div>
 <p>Vamos a realizar un ejemplo donde primero leemos un esquema de un archivo <em>Avro</em>, y con dicho esquema, escribiremos nuevos datos en un fichero. A continuación, abrimos el fichero escrito y leemos y mostramos los datos:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Código Python</label><label for="__tabbed_1_2">Resultado</label><label for="__tabbed_1_3">Google Colab</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Código Python</label><label for="__tabbed_2_2">Resultado</label><label for="__tabbed_2_3">Google Colab</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">avro</span>
@@ -3189,7 +3248,7 @@ https://www.xenonstack.com/blog/data-serialization-hadoop
 <span class="linenos" data-linenos="3 "></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>fastavro
 </code></pre></div>
 <p>Como podéis observar a continuación, hemos repetido el ejemplo y el código es muy similar:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Código Python</label><label for="__tabbed_2_2">Resultado</label><label for="__tabbed_2_3">Google Colab</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Código Python</label><label for="__tabbed_3_2">Resultado</label><label for="__tabbed_3_3">Google Colab</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">fastavro</span>
@@ -3242,7 +3301,7 @@ https://www.xenonstack.com/blog/data-serialization-hadoop
 <h3 id="fastavro-y-pandas">Fastavro y Pandas<a class="headerlink" href="#fastavro-y-pandas" title="Permanent link">&para;</a></h3>
 <p>Finalmente, vamos a realizar un último ejemplo con las dos librerías más utilizadas.</p>
 <p>Vamos a leer un fichero <em>CSV</em> de <a href="resources/pdi_sales.csv">ventas</a> mediante <em>Pandas</em>, y tras limpiar los datos y quedarnos únicamente con las ventas de Alemania, almacenaremos el resultado del procesamiento en <em>Avro</em>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Acceso Local</label><label for="__tabbed_3_2">Google Colab</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Acceso Local</label><label for="__tabbed_4_2">Google Colab</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -3340,11 +3399,15 @@ https://www.xenonstack.com/blog/data-serialization-hadoop
 <div class="admonition question">
 <p class="admonition-title">¿Y si...</p>
 <p>¿Y sí comprimimos los datos para ocupen menos espacio en nuestro clúster y por tanto, nos cuesten menos dinero?</p>
+<p>La compresión de datos es compleja, pero la idea básica es fácil de entender, ya que los algoritmos de compresión buscan redundancia y repetición en los datos, recodificando los datos para reducir la redundancia.</p>
 <p>Al comprimir los datos, además de ocupar menos espacio, la lectura de éstos será más rápida y se enviarán menos datos a través de la red, mejorando los tiempos de trabajo. Eso sí, no hemos de olvidar que comprimir y descomprimir los archivos conlleva un tiempo extra y consumo de recursos para leer o escribir los datos.</p>
 </div>
-<p><em>Fastavro</em> soporta dos tipos de compresión: <em>gzip</em> (mediante el algoritmo <code>deflate</code>) y <code>snappy</code>. <strong>Snappy</strong> es una biblioteca de compresión y descompresión de datos de gran rendimiento que se utiliza con frecuencia en proyectos Big Data, la cual hemos de instalar previamente mediante <code>pip install python-snappy</code>.</p>
+<p><em>Fastavro</em> soporta dos tipos de compresión: <em>gzip</em> (mediante el algoritmo <code>deflate</code>) y <code>snappy</code>. <a href="https://github.com/google/snappy"><strong>Snappy</strong></a> es una biblioteca de compresión y descompresión de datos de gran rendimiento que se utiliza con frecuencia en proyectos <em>Big Data</em>, la cual prioriza la velocidad sobre el tamaño resultante.</p>
+<p>Antes de nada la hemos de instalar mediante:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>python-snappy
+</code></pre></div>
 <p>Para indicar el tipo de compresión, únicamente hemos de añadir un parámetros extra con el algoritmo de compresión en la función/constructor de persistencia:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:3"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Fastavro y gzip</label><label for="__tabbed_4_2">AvroWriter y snappy</label><label for="__tabbed_4_3">write_dataframe y snappy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:3"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><input id="__tabbed_5_3" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Fastavro y gzip</label><label for="__tabbed_5_2">AvroWriter y snappy</label><label for="__tabbed_5_3">write_dataframe y snappy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">writer</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">schemaParseado</span><span class="p">,</span> <span class="n">records</span><span class="p">,</span> <span class="s1">&#39;deflate&#39;</span><span class="p">)</span>
@@ -3403,16 +3466,16 @@ https://www.xenonstack.com/blog/data-serialization-hadoop
     <figcaption>Logo de Apache Parquet</figcaption>
 </figure>
 
-<p><a href="https://parquet.apache.org/">Apache Parquet</a> es un formato de almacenamiento basado en columnas para <em>Hadoop</em>, con soporte para todos los frameworks de procesamiento de datos, así como lenguajes de programación. De la misma forma que <em>Avro</em>, se trata de un formato de datos auto-descriptivo, de manera que embebe el esquema o estructura de los datos con los propios datos en sí. Parquet es idóneo para analizar datasets que contienen muchas columnas, es decir, para lecturas de grandes cargas de trabajo.</p>
-<p>Tiene un ratio de compresión muy alto (mediante Snappy ronda el 75%), y además, solo se recorren las columnas necesarias en cada lectura, lo que reduce las operaciones de disco de entrada/salida.</p>
+<p><a href="https://parquet.apache.org/">Apache Parquet</a> es un formato de almacenamiento basado en columnas para <em>Hadoop</em>, con soporte para todos los frameworks de procesamiento de datos, así como lenguajes de programación. De la misma forma que <em>Avro</em>, se trata de un formato de datos auto-descriptivo, de manera que embebe el esquema o estructura de los datos con los propios datos en sí. <em>Parquet</em> es idóneo para analizar datasets que contienen muchas columnas, es decir, para lecturas de grandes cargas de trabajo.</p>
+<p>Tiene un ratio de compresión muy alto (mediante <em>Snappy</em> ronda el 75%), y además, solo se recorren las columnas necesarias en cada lectura, lo que reduce las operaciones de entrada/salida en disco.</p>
 <h3 id="formato_1">Formato<a class="headerlink" href="#formato_1" title="Permanent link">&para;</a></h3>
 <figure style="float: right;">
     <img src="images/04parquet-format.gif" width="450">
     <figcaption>Formato de un archivo Parquet</figcaption>
 </figure>
 
-<p>Cada fichero Parquet almacena los datos en binario organizados en grupos de filas. Para cada grupo de filas (<em>row group</em>), los valores de los datos se organizan en columnas, lo que facilita la compresión a nivel de columna.</p>
-<p>La columna de metadatos de un fichero Parquet se almacena al final del fichero, lo que permite que las escrituras sean rápidas con una única pasada. Los metadatos pueden incluir información como los tipos de datos, esquemas de codificación/compresión, estadísticas, nombre de los elementos, etc...</p>
+<p>Cada fichero <em>Parquet</em> almacena los datos en binario organizados en grupos de filas. Para cada grupo de filas (<em>row group</em>), los valores de los datos se organizan en columnas, lo que facilita la compresión a nivel de columna.</p>
+<p>La columna de metadatos de un fichero <em>Parquet</em> se almacena al final del fichero, lo que permite que las escrituras sean rápidas con una única pasada. Los metadatos pueden incluir información como los tipos de datos, esquemas de codificación/compresión, estadísticas, nombre de los elementos, etc...</p>
 <!--
 https://www.upsolver.com/blog/apache-parquet-why-use
 https://towardsdatascience.com/understanding-apache-parquet-7197ba6462a9
@@ -3425,7 +3488,7 @@ https://towardsdatascience.com/understanding-apache-parquet-7197ba6462a9
 </code></pre></div>
 <p><em>Apache Arrow</em> usa un tipo de estructura denominada tabla para almacenar los datos bidimensional (sería muy similar a un <em>Dataframe</em> de <em>Pandas</em>). La documentación de <em>PyArrow</em> dispone de un <a href="https://arrow.apache.org/cookbook/py/">libro de recetas</a> con ejemplos con código para los diferentes casos de uso que se nos puedan plantear.</p>
 <p>Vamos a simular el mismo ejemplo que hemos realizado previamente mediante <em>Avro</em>, y vamos a crear un fichero en formato <em>JSON</em> con empleados, y tras persistirlo en formato <em>Parquet</em>, lo vamos a recuperar:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Empleados en columnas</label><label for="__tabbed_5_2">Empleados en Filas</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Empleados en columnas</label><label for="__tabbed_6_2">Empleados en Filas</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><span class="filename">dict-parquet.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">pyarrow.parquet</span> <span class="k">as</span> <span class="nn">pq</span>
@@ -3502,12 +3565,7 @@ https://towardsdatascience.com/understanding-apache-parquet-7197ba6462a9
 </code></pre></div>
 <h3 id="parquet-y-pandas">Parquet y Pandas<a class="headerlink" href="#parquet-y-pandas" title="Permanent link">&para;</a></h3>
 <p>En el caso del uso de <em>Pandas</em> el código todavía se simplifica más.</p>
-<p>Un fragmento de código muy sencillo y que nos puede ser muy útil es cómo leer un archivo en formato <em>Parquet</em> y pasarlo a <em>Pandas</em>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">pyarrow.parquet</span> <span class="k">as</span> <span class="nn">pq</span>
-<span class="linenos" data-linenos="2 "></span><span class="n">trips</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s1">&#39;archivo.parquet&#39;</span><span class="p">)</span>
-<span class="linenos" data-linenos="3 "></span><span class="n">trips</span> <span class="o">=</span> <span class="n">trips</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
-</code></pre></div>
-<p>Si reproducimos el mismo ejemplo que hemos realizado con <em>Avro</em> tenemos que los <em>Dataframes</em> ofrecen el método <code>to_parquet</code> para exportar a un fichero <em>Parquet</em>:</p>
+<p>Si reproducimos el mismo ejemplo que hemos realizado con <em>Avro</em> tenemos que los <em>Dataframes</em> ofrecen el método <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_parquet.html"><code>to_parquet</code></a> para exportar a un fichero <em>Parquet</em>:</p>
 <div class="highlight"><span class="filename">csv-parquet.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;pdi_sales.csv&#39;</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
@@ -3517,11 +3575,14 @@ https://towardsdatascience.com/understanding-apache-parquet-7197ba6462a9
 <span class="linenos" data-linenos=" 7 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">filtro</span><span class="p">]</span>
 <span class="linenos" data-linenos=" 8 "></span>
 <span class="linenos" data-linenos=" 9 "></span><span class="c1"># A partir de un DataFrame, persistimos los datos</span>
-<span class="linenos" data-linenos="10 "></span><span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s1">&#39;sales.parquet&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos="10 "></span><span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s1">&#39;pdi_sales.parquet&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>Para leer un archivo utilizaremos el método <a href="https://pandas.pydata.org/docs/reference/api/pandas.read_parquet.html"><code>read_parquet</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df_parquet</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s2">&quot;pdi_sales.parquet&quot;</span><span class="p">)</span>
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Parquet y HDFS</p>
-<p>Si quisiéramos almacenar el archivo directamente en HDFS, necesitamos indicarle a Pandas la dirección del sistema de archivos que tenemos configurado en <code>core-site.xml</code>:</p>
+<p>Si quisiéramos almacenar el archivo directamente en HDFS, necesitamos indicarle a <em>Pandas</em> la dirección del sistema de archivos que tenemos configurado en <code>core-site.xml</code>:</p>
 <div class="highlight"><span class="filename">core-site.ml</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nt">&lt;property&gt;</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>fs.defaultFS<span class="nt">&lt;/name&gt;</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">&lt;value&gt;</span>hdfs://iabd-virtualbox:9000<span class="nt">&lt;/value&gt;</span>
@@ -3537,10 +3598,10 @@ https://towardsdatascience.com/understanding-apache-parquet-7197ba6462a9
     <figcaption>Formato de un archivo ORC</figcaption>
 </figure>
 
-<p><a href="https://orc.apache.org/">Apache ORC</a> es un formato de datos columnar optimizado para la lectura, escritura y procesamiento de datos en <em>Hive</em>. <em>ORC</em> tiene una tasa de compresión alta (utiliza <em>zlib</em>), y al basarse en <em>Hive</em>, soporta sus tipos de datos simples (<em>datetime</em>, <em>decimal</em>, etc...) y los tipos complejos (como <em>struct</em>, <em>list</em>, <em>map</em> y <em>union</em>), siendo totalmente compatible con <em>HiveQL</em>.</p>
+<p><a href="https://orc.apache.org/">Apache ORC</a> es un formato de datos columnar (<strong><em>O</em></strong><em>ptimized</em> <strong><em>R</em></strong><em>ow</em> <strong><em>C</em></strong><em>olumnar</em>) similar a <em>Parquet</em> pero optimizado para la lectura, escritura y procesamiento de datos en <em>Hive</em>. <em>ORC</em> tiene una tasa de compresión alta (utiliza <em>zlib</em>), y al basarse en <em>Hive</em>, soporta sus tipos de datos simples (<em>datetime</em>, <em>decimal</em>, etc...) y los tipos complejos (como <em>struct</em>, <em>list</em>, <em>map</em> y <em>union</em>), siendo totalmente compatible con <em>HiveQL</em>.</p>
 <p>Los fichero <em>ORC</em> se componen de tiras de datos (<em>stripes</em>), donde cada tira contiene un índice, los datos de la fila y un pie (con estadísticas como la cantidad, máximos y mínimos y la suma de cada columna convenientemente cacheadas)</p>
 <h3 id="orc-y-python">ORC y Python<a class="headerlink" href="#orc-y-python" title="Permanent link">&para;</a></h3>
-<p>Para crear archivos <em>ORC</em> y leerlos, volvemos a necesitar la librería <a href="https://arrow.apache.org/docs/python/"><em>PyArrow</em></a>.</p>
+<p>Para crear archivos <em>ORC</em> y leerlos, podemos hacerlo de nuevo desde la librería <a href="https://arrow.apache.org/docs/python/"><em>PyArrow</em></a>.</p>
 <p>Así pues, para la escritura de datos, por ejemplo, desde un <em>Dataframe</em>, haríamos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">pyarrow</span> <span class="k">as</span> <span class="nn">pa</span>
@@ -3556,13 +3617,15 @@ https://towardsdatascience.com/understanding-apache-parquet-7197ba6462a9
 <span class="hll"><span class="linenos" data-linenos="12 "></span><span class="n">table</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">preserve_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </span><span class="hll"><span class="linenos" data-linenos="13 "></span><span class="n">orc</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="s1">&#39;pdi_sales.orc&#39;</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Y si queremos leer, la propia librería de Pandas tiene su método <a href="https://pandas.pydata.org/docs/reference/api/pandas.read_orc.html"><code>read_orc</code></a>:</p>
+<p>Y si queremos usar <em>Pandas</em>, para leer un fichero ORC emplearemos el método <a href="https://pandas.pydata.org/docs/reference/api/pandas.read_orc.html"><code>read_orc</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df_orc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_orc</span><span class="p">(</span><span class="s1">&#39;pdi_sales.orc&#39;</span><span class="p">)</span>
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">to_orc</p>
-<p>Desde Pandas 1.5, a partir de un <em>DataFrame</em>, podemos persistir los datos mediante el método <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_orc.html"><code>to_orc</code></a>. El problema lo tienen <em>Google Colab</em> o <em>Kaggle</em>, que todavía no dan soporta a esa versión.</p>
-</div>
+<p>Y para persistirlo, desde la versión 1.5 de Pandas, a partir de un <em>DataFrame</em>, podemos persistir los datos mediante el método <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_orc.html"><code>to_orc</code></a>.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df_orc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_orc</span><span class="p">(</span><span class="s1">&#39;pdi_sales_pd.orc&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>Por defecto, los archivos ORC se persisten sin comprimir. Si queremos comprimirlos, debemos pasarle los parámetros mediante el atributo <code>engine_kwargs</code> mediante un diccionario:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df_orc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_orc</span><span class="p">(</span><span class="s1">&#39;pdi_sales_zlib.orc&#39;</span><span class="p">,</span> <span class="n">engine_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;compression&quot;</span><span class="p">:</span><span class="s1">&#39;zlib&#39;</span><span class="p">})</span>
+</code></pre></div>
 <h2 id="comparando-formatos">Comparando formatos<a class="headerlink" href="#comparando-formatos" title="Permanent link">&para;</a></h2>
 <p>Acabamos de ver que cada uno de los formatos tiene sus puntos fuertes.</p>
 <p>Los formatos basados en filas ofrecen un rendimiento mayor en las escrituras que en las lecturas, ya que añadir nuevos registros en más sencillo. Si sólo vamos a hacer consultas sobre un subconjunto de las columnas, entonces un formato columnas se comportará mejor, ya que no necesita recuperar los registros enteros (cosa que sí hacen los formatos basados en filas).</p>
@@ -3610,8 +3673,7 @@ https://towardsdatascience.com/understanding-apache-parquet-7197ba6462a9
 </li>
 </ol>
 <!--
-Revisar: https://learning.oreilly.com/library/view/fundamentals-of-data/9781098108298/app01.html
-https://docs.aws.amazon.com/es_es/athena/latest/ug/columnar-storage.html
+Revisar: https://docs.aws.amazon.com/es_es/athena/latest/ug/columnar-storage.html
 -->
 
 
