@@ -986,15 +986,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#aws-glue" class="md-nav__link">
-    <span class="md-ellipsis">
-      AWS Glue
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       Referencias
@@ -2812,15 +2803,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#aws-glue" class="md-nav__link">
-    <span class="md-ellipsis">
-      AWS Glue
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       Referencias
@@ -2882,7 +2864,22 @@
 </figure>
 
 <p>Como servicio <em>serverless</em>, no hay infraestructura que aprovisionar ni gestionar, y sólo pagaremos por el volumen de datos escaneados por las consultas que ejecutemos (actualmente su<a href="https://aws.amazon.com/es/athena/pricing">precio</a> es de 5$ por TB escaneado), sin tener que preocuparnos por escalar o redimensionar los recursos necesarios, lo que implica que sea un servicio de consultas que facilita analizar petabytes de datos almacenados en S3 sin necesidad de un data warehouse o un clúster de máquinas que gestionar.</p>
-<p><em>Athena</em> escala las consultas automáticamente para ejecutarse en paralelo y obtener el resultado lo más rápido posible, incluso con grandes conjuntos de datos y consultas complejas. Conviene destacar que permite procesar datos desestructurados, semiestructurados o estructurados, soportando formatos de datos como CSV, JSON, Avro o formatos columnares como Parquet u ORC, tanto en crudo como comprimidos.</p>
+<p><em>Athena</em> escala las consultas automáticamente para ejecutarse en paralelo y obtener el resultado lo más rápido posible, incluso con grandes conjuntos de datos y consultas complejas. Conviene destacar que permite procesar datos desestructurados, semiestructurados o estructurados, soportando formatos de datos como CSV, JSON, Avro o formatos columnares como <em>Parquet</em> u <em>ORC</em>, tanto en crudo como comprimidos.</p>
+<!--
+Amazon Athena is a serverless solution for using standard SQL queries to query data that exists in a data lake or in other data sources. As soon as a dataset has been written to Amazon S3 and cataloged in AWS Glue Data Catalog, users can run complex SQL queries against the data without needing to set up or manage any infrastructure.
+
+Data scientists and data analysts frequently use SQL to explore and better understand datasets that may be useful to them. Enabling these data consumers to query the data in an Amazon S3 data lake, without needing to first load the data into a traditional database system, increases productivity and flexibility for these data consumers.
+
+Many tools are designed to interface with data via SQL and these tools often connect to the SQL data source using either a JDBC or ODBC database connection. Amazon Athena enables a data consumer to query datasets in the data lake (or other connected data sources) through the AWS Management Console interface or through a JDBC or ODBC driver.
+
+Graphical SQL query tools, such as SQL Workbench, can connect to Amazon Athena via the JDBC driver, and you can programmatically connect to Amazon Athena and run SQL queries in your code through the ODBC driver.
+
+Athena Federated Query, a feature of Athena, enables you to build connectors so that Athena can query other data sources, beyond just the data in an S3 data lake. Amazon provides a number of pre-built open-source connectors for Athena, enabling you to connect Athena to sources such as Amazon DynamoDB (a NoSQL database), as well as other Amazon-managed relational database engines, and even Amazon CloudWatch Logs, a centralized logging service. Using this functionality, a data consumer can run a query using Athena that gets active orders from Amazon DynamoDB, references that data against the customer database running on PostgreSQL, and then brings in historical order data for that customer from the S3 data lake – all in a single SQL statement.
+
+At re:Invent 2022, AWS announced Amazon Athena for Apache Spark, a new functionality that enables running Apache Spark jobs with Athena. With this new feature, you can launch a Jupyter notebook from within the Athena console, and query data in the data lake using Apache Spark code.
+
+-->
+
 <h2 id="presto">Presto<a class="headerlink" href="#presto" title="Permanent link">&para;</a></h2>
 <p>Para interactuar con los datos, <em>Athena</em> se basa en <em>Presto</em> (<a href="https://prestodb.io/">https://prestodb.io/</a>), un motor distribuido de SQL creado por <em>Facebook</em> y liberado como proyecto <em>open source</em>. Tiene soporte para ANSI SQL, así como características propias de <em>Presto</em> como funciones geoespaciales o extensiones de consultas que permiten crear consultas mediante aproximación que estadísticamente casi son similares sobre grandes conjuntos de datos en solo una fracción de tiempo de lo que supondría una consulta real.</p>
 <p>Además de realizar consultas, podemos utilizar sentencias de tipo DML para manipular datos y DDL para interactuar con los metadatos del lago de datos y modificar los esquemas y propiedades de las tablas, así como modificar sus particiones.</p>
@@ -3104,23 +3101,6 @@ La virtualización de datos puede considerarse una herramienta que amplía el la
 <span class="linenos" data-linenos="7 "></span>[&#39;9&#39;, &#39;Mary&#39;, &#39;Perez&#39;]
 <span class="linenos" data-linenos="8 "></span>...
 </code></pre></div>
-<h2 id="aws-glue">AWS Glue<a class="headerlink" href="#aws-glue" title="Permanent link">&para;</a></h2>
-<p><a href="https://aws.amazon.com/es/glue/">AWS Glue</a> es la herramienta ETL completamente administrado que ofrece Amazon Web Services.</p>
-<p>Cuando el esquema de los datos es desconocido, <em>AWS Glue</em> permite inferirlo. Para ello, hemos de construir un rastreador (<em>crawler</em>) para descubrir su estructura.</p>
-<!--
-. AWS Glue builds a catalog that contains metadata about the various data sources. AWS Glue is similar to Amazon Athena in that the actual data you analyze remains in the data source. The key difference is that you can build a crawler with AWS Glue to discover the schema.
-
-### Creación
-
-### Ejecución
-
-Se puede ejecutar bajo demanda o planificar su ejecución de forma diaria, por horas, etc... Una vez lanzado, al cabo de un minuto, veremos que ha finalizado y en Base de Datos - > Tablas podremos ver la tabla que ha creado (en nuestro caso la tabla `csv`), junto con la estructura que ha inferido respecto a los datos cargados.
-
-El siguiente paso es editar el esquema y ponerle nombres significativos a los campos:
-
-Una vez los datos están cargados, ya podemos realizar consular con AWS Athena.
--->
-
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://docs.aws.amazon.com/es_es/athena/latest/ug/what-is.html">Guía de usuario de AWS Athena</a></li>
@@ -3128,6 +3108,11 @@ Una vez los datos están cargados, ya podemos realizar consular con AWS Athena.
 <li>Libro <a href="https://www.packtpub.com/product/serverless-analytics-with-amazon-athena/9781800562349">Serverless Analytics with Amazon Athena</a></li>
 <li>Libro <a href="https://www.packtpub.com/product/data-engineering-with-aws-second-edition/9781804614426">Data Engineering with AWS - Second Edition</a></li>
 </ul>
+<!--
+Después de glue, consulta sql directamente con aws wrangler
+
+https://www.linkedin.com/pulse/build-etl-pipeline-using-aws-s3-glue-athena-data-wrangler-tom-reid/
+-->
 
 
 
