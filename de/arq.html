@@ -3095,7 +3095,7 @@ En informática, un sistema de tiempo real es aquel que responde en un periodo d
 <p>Dicho de otro modo, el camino rápido tiene los datos de una pequeña ventana temporal, la cual se puede actualizar con datos más precisos provenientes de la capa <em>batch</em>.</p>
 <h3 id="paso-a-paso">Paso a paso<a class="headerlink" href="#paso-a-paso" title="Permanent link">&para;</a></h3>
 <figure style="align: center;">
-    <img src="images/01lambda.png">
+    <img src="images/01lambda.png" alt="Arquitectura Lambda">
     <figcaption>Arquitectura Lambda</figcaption>
 </figure>
 
@@ -3115,9 +3115,9 @@ Lambda architecture has its share of challenges and criticisms. Managing multipl
 <p>El término <ins>Arquitectura Kappa</ins> fue introducido en 2014 por <a href="https://blog.empathybox.com/"><em>Jay Kreps</em></a> en su artículo <a href="https://www.oreilly.com/radar/questioning-the-lambda-architecture/">Questioning the Lambda Architecture</a>. En él señala los posibles puntos débiles de la arquitectura <em>Lambda</em> y cómo solucionarlos mediante una evolución.</p>
 <p>Uno de los mayores inconveniente de la arquitectura <em>Lambda</em> es su complejidad. El procesamiento de los datos se realiza en dos caminos diferenciados, lo que conlleva duplicar la lógica de computación y la gestión de la arquitectura de ambos caminos.</p>
 <p>Lo que señala <em>Jay Kreps</em> en su propuesta es que todos los datos fluyan por un único camino, eliminando la capa <em>batch</em> y dejando solamente la capa de <em>streaming</em>. Esta capa, a diferencia de la de tipo <em>batch</em>, no tiene un comienzo ni un fin desde un punto de vista temporal y está continuamente procesando nuevos datos a medida que van llegando.</p>
-<p>Para conseguir un único camino, se sustituyen las fuentes de datos por colas de mensajes (por ejemplo, mediante una herramienta como Apache Kafka), obteniendo flujos de datos que facilitan el acceso en tiempo real, leyendo y transformando los datos de los mensajes en un formato que sea fácilmente accesible a los usuarios finales. </p>
+<p>Para conseguir un único camino, se sustituyen las fuentes de datos por colas de mensajes (por ejemplo, mediante una herramienta como <a href="../dataflow/kafka1.html">Apache Kafka</a>), obteniendo flujos de datos que facilitan el acceso en tiempo real, leyendo y transformando los datos de los mensajes en un formato que sea fácilmente accesible a los usuarios finales.</p>
 <figure style="align: center;">
-    <img src="images/01kappa-intro.png">
+    <img src="images/01kappa-intro.png" alt="Arquitectura Kappa">
     <figcaption>Arquitectura Kappa</figcaption>
 </figure>
 
@@ -3129,8 +3129,8 @@ Lambda architecture has its share of challenges and criticisms. Managing multipl
 <li>Tenemos la posibilidad de volver a lanzar un procesamiento: se puede modificar un procesamiento concreto y su configuración para variar los resultados obtenidos partiendo de los mismos datos de entrada.</li>
 </ol>
 <figure style="align: center;">
-    <img src="images/01kappa.png">
-    <figcaption>Arquitectura Kappa</figcaption>
+    <img src="images/01kappa.png" alt="Arquitectura Kappa mediante Kafka">
+    <figcaption>Arquitectura Kappa mediante Kafka</figcaption>
 </figure>
 
 <p>Como requisito previo a cumplir, se tiene que garantizar que los eventos se leen y almacenan en el orden en el que se han generado. De esta forma, podremos variar un procesamiento concreto partiendo de una misma versión de los datos.</p>
@@ -3142,7 +3142,7 @@ Though the original Kappa architecture article came out in 2014, we haven’t se
 <p>Además de las dos soluciones que acabamos de conocer, otra forma de diseñar las capas de una arquitectura <em>Big Data</em> consiste en separar las diferentes fases del <a href="de.html#ciclo-de-vida">ciclo de vida del dato</a> en capa diferenciadas.</p>
 <p><a href="https://docs.microsoft.com/en-us/azure/architecture/data-guide/big-data/">La arquitectura por capas</a> da soporte tanto al procesamiento <em>batch</em> como por <em>streaming</em>. La arquitectura consiste en 6 capas que aseguran un flujo seguro de los datos:</p>
 <figure style="align: center;">
-    <img src="images/01arquitecturasCapas.png">
+    <img src="images/01arquitecturasCapas.png" alt="Arquitectura por capas (xenonstack.com)">
     <figcaption>Arquitectura por capas (xenonstack.com)</figcaption>
 </figure>
 
@@ -3155,28 +3155,28 @@ Though the original Kappa architecture article came out in 2014, we haven’t se
 <li>Capa de <strong>visualización</strong>: también conocida como capa de presentación, es con la que interactúan los usuarios.</li>
 </ul>
 <h2 id="tecnologias">Tecnologías<a class="headerlink" href="#tecnologias" title="Permanent link">&para;</a></h2>
-<p>Por ejemplo, la ingesta de datos hacia las arquitecturas <em>Lambda</em> y <em>Kappa</em> se pueden realizar mediante un sistema de mensajería de colas <em>publish/subscribe</em> como <a href="https://kafka.apache.org">Apache Kafka</a> y/o un servicio de flujo de datos como <a href="https://nifi.apache.org/">Apache Nifi</a>.</p>
-<p>El almacenamiento de los datos y modelos lo podemos realizar mediante <em>HDFS</em> o <em>S3</em>. Dentro de una arquitectura <em>Lambda</em>, en el sistema batch, mediante algoritmos <em>MapReduce de Hadoop</em> o consultas <em>Hive</em> podemos generar modelos. Para la capa de <em>streaming</em> (tanto para Lambda como Kappa) se pueden utilizar otras tecnologías como <a href="http://storm.apache.org"><em>Apache Storm</em></a>, <a href="http://samza.apache.org"><em>Apache Samza</em></a> o <a href="https://spark.apache.org/docs/latest/streaming-programming-guide.html"><em>Spark Streaming</em></a> para modificar modelos de forma incremental.</p>
-<p>De forma alternativa, <a href="https://spark.apache.org">Apache Spark</a> se puede utilizar como plataforma común para desarrollar las capas <em>batch</em> y <em>streaming</em> de la arquitectura Lambda. De ahí su amplia aceptación y uso a día de hoy en la industria, se codifica una vez y se comparte en ambas capas</p>
-<p>La capa de <em>serving</em> se puede implementar mediante una base de datos NoSQL como pueda ser <a href="https://hbase.apache.org">Apache HBase</a>, <a href="https://www.mongodb.com">MongoDB</a>, <a href="https://redis.com">Redis</a> o <a href="https://aws.amazon.com/es/dynamodb/">AWS Dynamo DB</a>. También se pueden utilizar motores de consultas como <a href="https://drill.apache.org">Apache Drill</a> o <a href="https://prestodb.io/">Presto</a>.</p>
-<!--
-https://mattturck.com/landscape/mad2023.pdf
--->
-
+<p>Por ejemplo, la ingesta de datos hacia las arquitecturas <em>Lambda</em> y <em>Kappa</em> se pueden realizar mediante un sistema de mensajería de colas <em>publish/subscribe</em> como <a href="../dataflow/kafka1.html">Apache Kafka</a> y/o un servicio de flujo de datos como <a href="../dataflow/nifi1.html">Apache Nifi</a>.</p>
+<p>El almacenamiento de los datos y modelos lo podemos realizar mediante <em>HDFS</em> o <em>S3</em>. Dentro de una arquitectura <em>Lambda</em>, en el sistema batch, mediante algoritmos <em>MapReduce de Hadoop</em> o consultas <em>Hive</em> podemos generar modelos. Para la capa de <em>streaming</em> (tanto para Lambda como Kappa) se pueden utilizar otras tecnologías como <a href="http://storm.apache.org"><em>Apache Storm</em></a>, <a href="http://samza.apache.org"><em>Apache Samza</em></a> o <a href="../spark/streaming.html"><em>Spark Streaming</em></a> para modificar modelos de forma incremental.</p>
+<p>De forma alternativa, <a href="../spark/spark.html">Apache Spark</a> se puede utilizar como plataforma común para desarrollar las capas <em>batch</em> y <em>streaming</em> de la arquitectura <em>Lambda</em>. De ahí su amplia aceptación y uso a día de hoy en la industria, se codifica una vez y se comparte en ambas capas.</p>
+<p>La capa de <em>serving</em> se puede implementar mediante una base de datos NoSQL como pueda ser <a href="https://hbase.apache.org">Apache HBase</a>, <a href="../sa/mongo.html">MongoDB</a>, <a href="https://redis.com">Redis</a> o <a href="../cloud/dynamodb.html">AWS Dynamo DB</a>. También se pueden utilizar motores de consultas como <a href="https://drill.apache.org">Apache Drill</a> o <a href="https://prestodb.io/">Presto</a>.</p>
+<div class="admonition info">
+<p class="admonition-title">Informe Matt Turck</p>
+<p>Cada año, <em>Matt Turck</em> publica un informe con la amalgama de herramientas y tecnologías agrupadas por campo existentes en el escenario de ML, AI y Datos que recomendamos consultar: <a href="https://mattturck.com/landscape/mad2023.pdf">https://mattturck.com/landscape/mad2023.pdf</a></p>
+</div>
 <h2 id="principio-scv">Principio SCV<a class="headerlink" href="#principio-scv" title="Permanent link">&para;</a></h2>
-<p>En la sesión de NoSQL estudiamos el <a href="../sa/nosql.html#teorema-de-cap">Teorema de CAP</a>, el cual se centra en el  almacenamiento de datos distribuidos. Si nos centramos en el <strong>procesamiento distribuido de los datos</strong>, tenemos el<a href="https://fulmanski.pl/tutorials/computer-science/big-data/processing-concepts-for-big-data/#scv_principle">principio SCV</a>.</p>
+<p>En la sesión de NoSQL estudiamos el <a href="../sa/nosql.html#teorema-de-cap">Teorema de CAP</a>, el cual se centra en el  almacenamiento de datos distribuidos. Si nos centramos en el <strong>procesamiento distribuido de los datos</strong>, tenemos el <a href="https://fulmanski.pl/tutorials/computer-science/big-data/processing-concepts-for-big-data/#scv_principle">principio SCV</a>.</p>
 <p>Este principio no tiene que ver con la escritura y lectura (consistente o no) de los datos en entornos distribuidos sino con el procesamiento que se realiza sobre ellos dentro de los nodos de un sistema de procesamiento distribuido.</p>
-<p>De modo similar a lo que ocurría con el Teorema de CAP, el principio SCV establece que un sistema de procesamiento distribuido sólo puede soportar como máximo 2 de las siguientes 3 características:</p>
+<p>De modo similar a lo que ocurría con el <em>Teorema de CAP</em>, el principio SCV establece que un sistema de procesamiento distribuido sólo puede soportar como máximo 2 de las siguientes 3 características:</p>
 <ul>
 <li><strong>Velocidad</strong> (<strong><em>S</em></strong><em>peed</em>): Se refiere a cuánto tardan en procesarse los datos desde el momento en el que son recibidos en el sistema analítico. Por lo general se excluye el tiempo que se tarda en capturar los datos, considerando sólo lo que se tarda en generar la estadística o ejecutar el algoritmo en cuestión.
 Esta velocidad es más alta si estamos ante un sistema de analítica en tiempo real que si se trata de un sistema de analítica por lotes (del inglés batch).</li>
 <li><strong>Consistencia</strong> (<strong><em>C</em></strong><em>onsistency</em>): Se refiere en este caso a la precisión de los resultados de la analítica (no confundir, por lo tanto, con el significado de la C del teorema CAP).
 Tal precisión depende de si para la analítica se utilizan todos los datos disponibles (precisión alta) o de si por el contrario se emplean técnicas de muestreo para seleccionar sólo un subconjunto de los mismos con la intención de producir resultados (de menor precisión) en un menor tiempo.</li>
-<li><strong>Volumen</strong> (<strong><em>V</em></strong><em>olume</em>). Se refiere a la cantidad de datos que pueden ser procesados. Hay que tener en cuenta que en entornos de Big Data, el alto volumen de datos es una características siempre presente (una de las 5 Vs).</li>
+<li><strong>Volumen</strong> (<strong><em>V</em></strong><em>olume</em>). Se refiere a la cantidad de datos que pueden ser procesados. Hay que tener en cuenta que en entornos de <em>Big Data</em>, el alto volumen de datos es una característica siempre presente (una de las 5 Vs).</li>
 </ul>
 <p>De igual modo que hicimos al estudiar el <a href="../sa/nosql.html#teorema-de-cap">teorema CAP</a>, nos fijaremos en una serie de escenarios para mostrar que no podemos conseguir un sistema que cumpla a la vez las 3 características del principio SCV.</p>
 <figure style="float: right;">
-    <img src="images/01scv.png" width="300">
+    <img src="images/01scv.png" width="300" alt="Principio SCV">
     <figcaption>Principio SCV</figcaption>
 </figure>
 
@@ -3199,7 +3199,7 @@ Dado que en ambientes de Big Data el ser capaz de manejar grandes volúmenes de 
 <p>Una pregunta que debemos plantearnos es, ¿el análisis y el procesamiento (sus algoritmos) que vamos a realizar en las capas <em>batch</em> y <em>streaming</em> es el mismo? En ese caso la opción más acertada sería la arquitectura <em>Kappa</em>.</p>
 <p>Sin embargo, en otras ocasiones necesitaremos acceder a todo el conjunto de datos sin penalizar el rendimiento por lo que la <em>Lambda</em> puede ser más apropiada e incluso más fácil de implementar.</p>
 <p>También nos inclinaremos hacia <em>Lambda</em> si nuestros algoritmos de <em>batch</em> y <em>streaming</em> generan resultados muy distintos, como puede suceder con operaciones de procesamiento pesado o en modelos de <em>Machine Learning</em>. En estos casos, los algoritmos <em>batch</em> se pueden optimizar ya que acceden al dataset histórico completo.</p>
-<p>El decidir entre Lamba y Kappa al final es una decisión entre favorecer el rendimiento de ejecución de un proceso <em>batch</em> sobre la simplicidad de compartir código para ambas capas.</p>
+<p>El decidir entre <em>Lamba</em> y <em>Kappa</em> al final es una decisión entre favorecer el rendimiento de ejecución de un proceso <em>batch</em> sobre la simplicidad de compartir código para ambas capas.</p>
 <div class="admonition info">
 <p class="admonition-title">Casos reales</p>
 <p>Un ejemplo real de una arquitectura <em>Kappa</em> sería un sistema de geolocalización de usuarios por la cercanía a una antena de telefonía móvil. Cada vez que se aproximase a una antena que le diese cobertura se generaría un evento. Este evento se procesaría en la capa de <em>streaming</em> y serviría para pintar sobre un mapa su desplazamiento respecto a su posición anterior.</p>
