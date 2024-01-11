@@ -2862,20 +2862,24 @@
     <figcaption>Logo de AWS EMR</figcaption>
 </figure>
 
-<p><a href="https://aws.amazon.com/es/emr/">Amazon EMR</a> es un servicio de <em>Amazon Web Services</em> que permite crear clusters <em>Hadoop</em> y <em>Spark</em>, mediante el cual podemos realizar analíticas sobre datos y cargas de BI, así como transformar y mover grandes volúmenes de datos, tanto cargando como almacenando datos en servicios de AWS como S3 y DynamoDB.</p>
+<p><a href="https://aws.amazon.com/es/emr/">Amazon EMR</a> es una plataforma administrada para ejecutar los servicios del ecosistema Hadoop como <em>Apache Spark</em>, <em>Apache Hive</em>, <em>Apache Hudi</em>, <em>Apache HBase</em>, <em>Presto</em>, <em>Pig</em> y otras. <em>Amazon EMR</em> se encarga de las complejidades de implementar estas herramientas y administrar los recursos informáticos en clúster subyacentes.</p>
+<p>Así pues, EMR permite crear clusters para realizar analíticas sobre datos y cargas de BI, así como transformar y mover grandes volúmenes de datos, tanto cargando como almacenando datos en servicios de AWS como <em>S3</em> y <em>DynamoDB</em>.</p>
+<p>Al igual que muchos otros servicios de AWS, Amazon <em>EMR</em> se puede ejecutar en modo aprovisionado (indicando los tipos de instancias a emplear) o en modo <em>serverless</em>.</p>
+<figure style="align: center;">
+    <img src="images/05emr-cluster.png" alt="Cluster EMR" width="800px">
+    <figcaption>Cluster EMR</figcaption>
+</figure>
+
 <p>Para ello, utiliza una distribución propia de AWS que permite seleccionar los componentes que van a lanzarse en el cluster (Hive, Spark, Presto, etc...)</p>
 <figure style="align: center;">
-    <img src="images/05emr-services.png">
+    <img src="images/05emr-services.png" alt="Servicios Hadoop en EMR" width="900px">
     <figcaption>Servicios Hadoop en EMR</figcaption>
 </figure>
 
 <p>Ofrece elasticidad sobre el cluster, pudiendo modificar dinámicamente el dimensionamiento del cluster según necesidades, tanto hacia arriba como hacia abajo de clúster que están en ejecución.</p>
 <p>Respecto al hardware, se ejecuta sobre máquinas EC2 (IaaS), las cuales podemos configurar según necesidades. Utiliza HDFS y S3 para el almacenamiento, de manera que podemos guardar los datos de entrada y los de salida en S3, mientras que los resultados intermedios los almacenamos en HDFS.</p>
 <!--
-
-Amazon EMR provides a managed platform for running popular open-source big data processing tools, such as Apache Spark, Apache Hive, Apache Hudi, Apache HBase, Presto, Pig, and others. Amazon EMR takes care of the complexities of deploying these tools and managing the underlying clustered compute resources.
-
-Like many other AWS services, Amazon EMR can run in a provisioned mode (where you specify specific compute resources to use), or it can be run in a serverless mode.
+https://learning.oreilly.com/library/view/data-engineering-with/9781804614426/Text/Chapter_03.xhtml#_idParaDest-81
 
 With EMR provisioned mode, you can create an EMR cluster on EC2 nodes, specifying the specific instance types you want to use, and many other detailed configuration parameters (big data applications you want to deploy, automatic scaling options, networking, and more). This option provides you the most control and flexibility for cluster and application configuration, enabling you to fine-tune the performance of your applications. However, this does require you to build up expertise to understand the configuration options and their impact on application performance, such as the optimal EC2 instance type to use for different applications.
 
@@ -2898,7 +2902,6 @@ Figure 3.4: High-level overview of an EMR cluster running on EC2
 Each EMR provisioned cluster requires a master node, at least one core node (a worker node that includes local storage), and then optionally a number of task nodes (worker nodes that do not have any local storage).
 
 Having looked at how we can transform data in our data lake, let’s now look at the AWS services that enable us to orchestrate the different components of our data pipeline.
-
 -->
 
 <p>Los cluster de EMR se componen de:</p>
@@ -2920,13 +2923,13 @@ Having looked at how we can transform data in our data lake, let’s now look at
 <p>Podemos lanzar un cluster de EMR de tres formas, mediante la consola, el CLI o con un API. Vamos a centrar en el uso de la consola.</p>
 <p>A continuación, accedemos al servicio de EMR, y creamos un cluster el cual hemos llamado <code>ClusterEMRs8a</code> y le indicamos la carpeta en S3 que acabamos de crear, así como en el modo de lanzamiento elegimos <em>Clúster</em>:</p>
 <figure style="align: center;">
-    <img src="images/05emr-create.png">
+    <img src="images/05emr-create.png" width="700">
     <figcaption>Creando un clúster en EMR</figcaption>
 </figure>
 
 <p>A continuación, elegimos como tipo de instancia <code>m4.large</code> (2 CPU y 8 GiB RAM) y como par de claves <code>vockey</code>, las cuales podemos descargar desde <em>AWS Details</em> al lanzar nuestro <em>Learner Lab</em>:</p>
 <figure style="align: center;">
-    <img src="images/05emr-ec2.png">
+    <img src="images/05emr-ec2.png" width="900">
     <figcaption>Eligiendo instancias y clave SSH</figcaption>
 </figure>
 
@@ -2940,21 +2943,21 @@ Pero si queremos que sólo exista durante la ejecución de uno o más trabajos, 
 <p>En un cluster EMR, el nodo maestro es una instancia EC2 que coordina al resto de instancias EC2 que corren los nodos principales y de tareas. Este nodo expone un DNS público el cual podemos utilizar para conectarnos.</p>
 <p>Por defecto, EMR crea un grupo de seguridad para el nodo maestro el cual determina el acceso. De inicio, es grupo de seguridad no permite las conexiones SSH. Por ello, antes de poder conectarnos al cluster, necesitamos modificar el grupo de seguridad del nodo principal para permitir todo el tráfico TCP y el SSH.</p>
 <figure style="align: center;">
-    <img src="images/05emr-security-group.png">
+    <img src="images/05emr-security-group.png" width="800">
     <figcaption>Permitiendo todas las conexiones de entrada</figcaption>
 </figure>
 
 <p>De forma paralela, por defecto, EMR bloquea el arranque de los clúster que permitan las conexiones del exterior (esto nos puede pasar si al crear el clúster le asignamos un grupo de seguridad que ya teníamos creado y que permitía el tráfico entrante).</p>
 <p>Para permitir el acceso desde el exterior, podemos arrancar un clúster con el trafico cerrado, y una vez ya ha arrancado cambiar su grupo de seguridad, o en la opción de <em>Bloquear el acceso público</em> de EMR, desactivarlo:</p>
 <figure style="align: center;">
-    <img src="images/05emr-public-access.png">
+    <img src="images/05emr-public-access.png" width="900">
     <figcaption>Desactivando el bloqueo del acceso público</figcaption>
 </figure>
 
 <h2 id="conectandonos-al-cluster">Conectándonos al clúster<a class="headerlink" href="#conectandonos-al-cluster" title="Permanent link">&para;</a></h2>
 <p>Una vez arrancado, nos podemos conectar al nodo principal.</p>
 <figure style="float: right;">
-    <img src="images/05emr-cluster-started.png">
+    <img src="images/05emr-cluster-started.png" width="600">
     <figcaption>Cluster arrancado</figcaption>
 </figure>
 
@@ -3026,7 +3029,7 @@ Pero si queremos que sólo exista durante la ejecución de uno o más trabajos, 
 
 <p>Si intentamos visualizar los archivos, de igual modo, Hue no tiene bien configurado el acceso a HDFS:</p>
 <figure style="align: center;">
-    <img src="images/05emr-hue-error.png">
+    <img src="images/05emr-hue-error.png" width="800">
     <figcaption>Error al mostrar los archivos en Hue</figcaption>
 </figure>
 
@@ -3058,7 +3061,7 @@ Pero si queremos que sólo exista durante la ejecución de uno o más trabajos, 
 
 <p>Para ello, podemos activar el escalado gestionado mediante EMR o crear una política de escalado a medida. Independiente del modo, hemos de considerar que siempre hemos de tener de uno a tres nodos maestros, y que una vez creado el clúster, este número no lo podemos cambiar. Lo que sí que podemos es añadir y eliminar nodos principales o de tareas.</p>
 <figure style="align: center;">
-    <img src="images/05emr-cluster-add.png">
+    <img src="images/05emr-cluster-add.png" width="800">
     <figcaption>Añadiendo un nodo de tipo tarea</figcaption>
 </figure>
 
