@@ -3033,7 +3033,7 @@ https://learning.oreilly.com/library/view/understanding-etl/9781098159269/ch01.h
 </figure>
 
 <p>La ingesta de datos es un proceso muy importante porque la productividad de un equipo va directamente ligada a la calidad del proceso de ingesta de datos. Estos procesos deben ser flexibles y ágiles, ya que una vez puesta en marcha, los analistas y científicos de datos puedan construir un <em>pipeline</em> de datos para mover los datos a la herramienta con la que trabajen. Entendemos como <em>pipeline</em> de datos un proceso que consume datos desde un punto de origen, los limpia y los escribe en un nuevo destino.</p>
-<p>Es sin duda, el primer paso que ha de tenerse en cuenta a la hora de diseñar una arquitectura <em>Big Data</em>, para lo cual, hay que tener muy claro, no solamente el tipo y fuente de datos, sino cual es el objetivo final y qué se pretende conseguir con ellos. A la hora de diseñar un <em>pipeline</em>, se debe empezar desde el problema que negocio quiere solucionar, y retroceder con los datos hasta el origen de los mismos. Por lo tanto, en este punto, hay que realizar un análisis detallado, porque es la base para determinar las tecnologías que compondrán nuestra arquitectura <em>Big Data</em>.</p>
+<p>Es sin duda, el primer paso que ha de tenerse en cuenta a la hora de diseñar una arquitectura <em>Big Data</em>, para lo cual, hay que tener muy claro, no solamente el tipo y fuente de datos, sino cual es el objetivo final y qué se pretende conseguir con ellos. A la hora de diseñar un <em>pipeline</em>, <ins>se debe empezar desde el problema que negocio quiere solucionar</ins>, y retroceder con los datos hasta el origen de los mismos. Por lo tanto, en este punto, hay que realizar un análisis detallado, porque es la base para determinar las tecnologías que compondrán nuestra arquitectura <em>Big Data</em>.</p>
 <p>Dada la gran cantidad de datos que disponen las empresas, toda la información que generan desde diferentes fuentes se deben integrar en un único lugar, al que actualmente se le conoce como <em>data lake</em>, asegurándose que los datos sean compatibles entre sí. Gestionar tal volumen de datos puede llegar a ser un procedimiento complejo, normalmente dividido en procesos distintos y de relativamente larga duración.</p>
 <h2 id="pipeline-de-datos">Pipeline de datos<a class="headerlink" href="#pipeline-de-datos" title="Permanent link">&para;</a></h2>
 <p>Un <em>pipeline</em> es una construcción lógica que representa un proceso dividido en fases. Los pipelines de datos se caracterizan por definir el conjunto de pasos o fases y las tecnologías involucradas en un proceso de movimiento o procesamiento de datos. En su forma más simple, consisten en recoger los datos, almacenarlos y procesarlos, y construir algo útil con los datos.</p>
@@ -3057,9 +3057,9 @@ https://learning.oreilly.com/library/view/understanding-etl/9781098159269/ch01.h
 <li>
 <p>Procesamiento. Mediante una tecnología de procesamiento, que puede ser <em>streaming</em> o <em>batch</em>, leemos los datos del buffer.</p>
 </li>
-<li>Análisis y Visualización. Por ejemplo, mediante <em>Spark</em> realizamos la analítica sobre estos datos (haciendo cálculos, filtrados, agrupaciones de datos, etc...). Finalmente, podemos visualizar los resultado obtenidos o almacenarlos en una base de datos NoSQL como <em>Amazon DynamoDB</em> o un sistema de almacenamiento distribuido como <em>Amazon S3</em>.</li>
+<li>Análisis y Visualización. Por ejemplo, mediante <em>Spark</em> realizamos la analítica sobre estos datos (haciendo cálculos, filtrados, agrupaciones de datos, etc...). Finalmente, podemos visualizar los resultados obtenidos o almacenarlos en una base de datos NoSQL como <em>MongoDB</em> o <em>Amazon DynamoDB</em> o un sistema de almacenamiento distribuido como <em>Amazon S3</em>.</li>
 </ol>
-<p>Antes de realizar el análisis de los datos, va a ser muy normal tener que limpiar o normalizar los datos, ya sea porque las fuentes de datos, al ser distintas, utilicen diferentes codificaciones o nomenclaturas, o bien que haya datos sin rellenar o incorrectos. Conforme los datos avanzan a través del <em>pipeline</em>, los datos se van a transformar (por ejemplo, poniendo ceros en los campos vacíos, o rellenando los huecos con valores que aporten valor). Estas transformaciones se conocen como <em>Data Wrangling</em> (manipulación o disputa de datos), termino que engloba las acciones realizadas desde los datos en crudo hasta el estado final en el cual el dato cobra valor y sentido para los usuarios.</p>
+<p>Antes de realizar el análisis de los datos, va a ser muy normal tener que limpiar o normalizar los datos, ya sea porque las fuentes de datos, al ser distintas, utilicen diferentes codificaciones o nomenclaturas, o bien que haya datos sin rellenar o incorrectos. Conforme los datos avanzan a través del <em>pipeline</em>, los datos se van a transformar (por ejemplo, poniendo ceros en los campos vacíos, o rellenando los huecos con valores que aporten valor). Estas transformaciones se conocen como <strong><em>Data Wrangling</em></strong> (manipulación o disputa de datos), término que engloba las acciones realizadas desde los datos en crudo hasta el estado final en el cual el dato cobra valor y sentido para los usuarios.</p>
 <h3 id="pipeline-iterativo">Pipeline iterativo<a class="headerlink" href="#pipeline-iterativo" title="Permanent link">&para;</a></h3>
 <p>Este proceso de ingesta, almacenamiento, procesamiento y análisis es iterativo. Sobre una hipótesis que se nos plantee en negocio, comprobaremos los datos almacenados, y si no disponemos de la información necesaria, recogeremos nuevos datos. Estos nuevos datos pasaran por todo el <em>pipeline</em>, integrándose con los datos ya existentes. En la fase de analítica, si no obtenemos el resultado esperado, nos tocará volver a la fase de ingesta para obtener o modificar los datos recogidos, y así, de forma iterativa, hasta producir el resultado esperado.</p>
 <figure style="align: center;">
@@ -3069,11 +3069,11 @@ https://learning.oreilly.com/library/view/understanding-etl/9781098159269/ch01.h
 
 <p>Aunque a menudo se intercambian los términos de <em>pipeline</em> de datos y ETL, no significan lo mismo. Las ETLs son un caso particular de pipeline de datos que involucran las fases de extracción, transformación y carga de datos. Las pipelines de datos son cualquier proceso que involucre el movimiento de datos entre sistemas.</p>
 <h2 id="etl">ETL<a class="headerlink" href="#etl" title="Permanent link">&para;</a></h2>
-<p>Una ETL, entendida como un proceso que lleva la información de un punto A a un punto B, puede realizarse mediante diversas herramientas, scripts, Python, etc... Pero cuando nos metemos con Big Data no servirá cualquier tipo de herramienta, ya que necesitamos que sean:</p>
+<p>Una ETL, entendida como un proceso que lleva la información de un punto A a un punto B, puede realizarse mediante diversas herramientas, <em>scripts</em>, <em>Python</em>, etc... Pero cuando nos metemos con <em>Big Data</em> no servirá cualquier tipo de herramienta, ya que necesitamos que sean:</p>
 <ul>
-<li>Flexibles y soporten formatos variados (JSON, CSV, etc...)</li>
-<li>Escalables y tolerante a fallos.</li>
-<li>Dispongan de conectores a múltiples fuentes y destinos de datos.</li>
+<li>flexibles y soporten formatos variados (JSON, CSV, Parquet, etc...)</li>
+<li>escalables y tolerante a fallos.</li>
+<li>dispongan de conectores a múltiples fuentes y destinos de datos.</li>
 </ul>
 <p>Los procesos ETL, siglas de <strong>e</strong>xtracción, <strong>t</strong>ransformación y carga (<strong><em>l</em></strong><em>oad</em>), permiten a las organizaciones recopilar en un único lugar todos los datos de los que pueden disponer. Ya hemos comentado que estos datos provienen de diversas fuentes, por lo que es necesario acceder a ellos, y formatearlos para poder ser capaces de integrarlos. Además, es muy recomendable asegurar la calidad de los datos y su veracidad, para así evitar la creación de errores en los datos.</p>
 <figure style="align: center;">
@@ -3135,19 +3135,19 @@ https://learning.oreilly.com/library/view/understanding-etl/9781098159269/ch01.h
 <p>La carga debe realizarse buscando minimizar el tiempo de la transacción.</p>
 <p>Cada BBDD puede tener un sistema ideal de carga basado en:</p>
 <ul>
-<li>SQL (Oracle, SQL Server, Redshift, Postgres, Teradata, Greenplum, …)</li>
-<li>Ficheros (Postgres, Redshift, ...)</li>
-<li>Cargadores Propios (HDFS, S3, ...)</li>
+<li>SQL (<em>Oracle</em>, <em>SQL Server</em>, <em>Redshift</em>, <em>Postgres</em>, ...)</li>
+<li>Ficheros (<em>Postgres</em>, <em>Redshift</em>, ...)</li>
+<li>Cargadores Propios (<em>HDFS</em>, <em>S3</em>, ...)</li>
 </ul>
 <p>Para mejorar la carga debemos tener en cuenta la:</p>
 <ul>
-<li>Gestiones de índices</li>
-<li>Gestión de claves de distribución y particionado</li>
-<li>Tamaño de las transacciones y commit’s</li>
+<li>gestión de índices.</li>
+<li>gestión de claves de distribución y particionado.</li>
+<li>tamaño de las transacciones y <em>commits</em>.</li>
 </ul>
 <h2 id="elt">ELT<a class="headerlink" href="#elt" title="Permanent link">&para;</a></h2>
 <p>ELT cambia el orden de las siglas y se basa en extraer, cargar y transformar. Es un técnica de ingestión de datos donde los datos que se obtienen desde múltiples fuentes se colocan sin transformar directamente en un <em>data lake</em> o almacenamiento de objetos en la nube. Desde ahí, los datos se pueden transformar dependiendo de los diferentes objetivos de negocio.</p>
-<p>En principio un proceso ELT necesita menos ingenieros de datos necesarios. Con la separación de la extracción y la transformación, ELT permite que los analistas y científicos de datos realicen las transformaciones, ya sea con SQL o mediante Python. De esta manera, más departamentos se involucran en obtener y mejorar los datos.</p>
+<p>En principio un proceso ELT necesita menos ingenieros de datos necesarios. Con la separación de la extracción y la transformación, ELT permite que los analistas y científicos de datos realicen las transformaciones, ya sea con SQL o mediante <em>Python</em>. De esta manera, más departamentos se involucran en obtener y mejorar los datos.</p>
 <p>Una de las principales razones de que ELT cueste menos de implementar es que permite una mayor generalización de la información que se almacena. Los ingenieros de datos generan un <em>data lake</em> con los datos obtenidos de las fuentes de datos más populares, dejando que la transformación la realicen los expertos en el negocio. Esto también implica que los datos estén disponibles antes, ya que mediante un proceso ETL los datos no están disponibles para los usuarios hasta que se han transformado, lo que suele implicar un largo proceso de trabajo.</p>
 <p>En resumen, el mercado se está moviendo desde un desarrollo centralizado mediante ETL a uno más orientado a servicios como ELT, que permite automatizar la carga del <em>data lake</em> y la posterior codificación de los flujos de datos.</p>
 <h2 id="herramientas-etl">Herramientas ETL<a class="headerlink" href="#herramientas-etl" title="Permanent link">&para;</a></h2>
@@ -3189,7 +3189,7 @@ https://learning.oreilly.com/library/view/understanding-etl/9781098159269/ch01.h
 <li><a href="https://www.informatica.com/products/data-integration.html">Informatica Data Integration</a></li>
 </ul>
 <figure style="align: center;">
-    <img src="images/02herramientasETL.png">
+    <img src="images/02herramientasETL.png" alt="Herramientas ETL" width="800">
     <figcaption>Herramientas ETL</figcaption>
 </figure>
 
@@ -3223,7 +3223,7 @@ https://learning.oreilly.com/library/view/understanding-etl/9781098159269/ch01.h
 </figure></p>
 <p>Aunque los estudiaremos en mayor profundidad en el bloque de flujo de datos, y en especial, al trabajar con <a href="../dataflow/kafka1.html">Kafka</a> o <a href="../dataflow/nifi1.html">Nifi</a>, los sistemas de mensajería ofrecen un mecanismo de comunicación e integración entre sistemas heterogéneos mediante el paso de mensajes. Estos sistemas permiten desacoplar el envío de la recepción de los datos así como el <em>back pressure</em> por una recepción incontrolada de datos.</p>
 <p>Un caso muy común es cuando un productor envía un mensaje a una cola de mensajes que posteriormente recibe un consumidor de la cola. Cuando el consumidor recibe el mensaje, éste desaparece de la cola. También podemos emplear un bus de mensajes u otro tipo de <a href="https://www.netmentor.es/entrada/patron-productor-consumidor">patrones de mensajería</a>.</p>
-<p>Cuando utilizamos sistemas de mensajería distribuidos como Kafka se complica su funcionamiento, ya que hemos de tener en cuenta que el orden de los mensajes puede no respetarse entre diferentes colas, así como la tolerancia a fallos o su escalabilidad.</p>
+<p>Cuando utilizamos sistemas de mensajería distribuidos como <em>Kafka</em> se complica su funcionamiento, ya que hemos de tener en cuenta que el orden de los mensajes puede no respetarse entre diferentes colas, así como la tolerancia a fallos o su escalabilidad.</p>
 </div>
 <h3 id="batch-vs-streaming">Batch vs Streaming<a class="headerlink" href="#batch-vs-streaming" title="Permanent link">&para;</a></h3>
 <p>El movimiento de datos entre los orígenes y los destinos se puede hacer, tal como vimos en la sesión de <a href="arq.html#tipos-de-arquitecturas">Arquitecturas de Big Data</a>, mediante un proceso:</p>
@@ -3241,27 +3241,27 @@ https://learning.oreilly.com/library/view/understanding-etl/9781098159269/ch01.h
 <p>En el primer paso de la ingesta es el paso más pesado, por tiempo y cantidad de recursos necesarios. Es normal realizar la ingesta de flujos de datos desde cientos a miles de fuentes de datos, los cuales se obtiene a velocidades variables y en diferentes formatos.</p>
 <p>Para ello, es necesario:</p>
 <ul>
-<li>Priorizar las fuentes de datos</li>
-<li>Validar de forma individual cada fichero</li>
-<li>Enrutar cada elemento a su destino correcto.</li>
+<li>priorizar las fuentes de datos.</li>
+<li>validar de forma individual cada fichero.</li>
+<li>enrutar cada elemento a su destino correcto.</li>
 </ul>
 <p>Resumiendo, los cuatro parámetros en los que debemos centrar nuestros esfuerzos son:</p>
 <ol>
 <li><strong>Velocidad</strong> de los datos: cómo fluyen los datos entre máquinas, interacción con usuario y redes sociales, si el flujo es continuo o masivo, si la ingesta es síncrona o asíncrona.</li>
 <li><strong>Tamaño</strong> de los datos: la ingesta de múltiples fuentes puede incrementarse con el tiempo, en consecuencia, la cantidad de datos ingestados.</li>
 <li><strong>Frecuencia</strong> de los datos: <em>¿batch</em>, <em>micro-batch</em> o en "tiempo real" / <em>streaming</em>?</li>
-<li><strong>Formato</strong> de los datos: estructurado (tablas, Parquet), desestructurado (imágenes, audios, vídeos, ...) o semi-estructurado (JSON).</li>
+<li><strong>Formato</strong> de los datos: estructurado (tablas, <em>Parquet</em>), desestructurado (imágenes, audios, vídeos, ...) o semi-estructurado (<em>JSON</em>).</li>
 </ol>
 <h2 id="herramientas-de-ingesta-de-datos">Herramientas de Ingesta de datos<a class="headerlink" href="#herramientas-de-ingesta-de-datos" title="Permanent link">&para;</a></h2>
 <p>Las herramientas de ingesta de datos para ecosistemas Big Data se clasifican en los siguientes bloques:</p>
 <figure style="float: right;">
-    <img src="images/02ingestaTools.png">
+    <img src="images/02ingestaTools.png" alt="Herramientas de ingesta de datos">
     <figcaption>Herramientas de ingesta de datos</figcaption>
 </figure>
 
 <ul>
 <li><a href="https://sqoop.apache.org"><em>Apache Sqoop</em></a>: permite la transferencia bidireccional de datos entre <em>HDFS/Hive/HBase</em> y una bases de datos SQL (datos estructurados). Aunque principalmente se interactúa mediante comandos, proporciona una API Java. La estudiaremos en profundidad en la sesión sobre <a href="../hadoop/sqoop.html">Sqoop</a></li>
-<li><a href="https://flume.apache.org"><em>Apache Flume</em></a>: sistema de ingesta de datos semiestructurados o no estructurados sobre HDFS o HBase mediante una arquitectura basada en flujos de datos en streaming. La estudiaremos en profundidad en la sesión sobre <a href="../hadoop/flume.html">Flume</a></li>
+<li><a href="https://flume.apache.org"><em>Apache Flume</em></a>: sistema de ingesta de datos semiestructurados o no estructurados sobre <em>HDFS</em> o <em>HBase</em> mediante una arquitectura basada en flujos de datos en <em>streaming</em>. La estudiaremos en profundidad en la sesión sobre <a href="../hadoop/flume.html">Flume</a></li>
 <li><a href="https://nifi.apache.org"><em>Apache Nifi</em></a>: herramienta que facilita un interfaz gráfico que permite cargar datos de diferentes fuentes (tanto <em>batch</em> como <em>streaming</em>), los pasa por un flujo de procesos (mediante grafos dirigidos) para su tratamiento y transformación, y los vuelca en otra fuente. La estudiaremos en profundidad en la sesión sobre <a href="../dataflow/nifi1.html">Nifi</a></li>
 <li><a href="https://www.elastic.co/es/logstash/"><em>Elastic Logstash</em></a>: Pensada inicialmente para la ingesta de logs en <em>Elasticsearch</em>, admite entradas y salidas de diferentes tipos (incluso AWS).</li>
 <li><a href="https://aws.amazon.com/es/glue"><em>AWS Glue</em></a>: servicios gestionado para realizar tareas ETL desde la consola de AWS. Facilita el descubrimiento de datos y esquemas. También se utiliza como almacenamiento de servicios como <em>Amazon Athena</em> o <em>AWS Data Pipeline</em>.</li>
@@ -3286,9 +3286,9 @@ https://learning.oreilly.com/library/view/understanding-etl/9781098159269/ch01.h
 <li>¿Cuál va a ser el origen u orígenes de los datos? ¿Cuáles son sus características? ¿Es una aplicación, una API, un conjunto de dispositivos IoT?</li>
 <li>¿Provienen de sistemas externos o internos a nuestra empresa?</li>
 <li>¿Serán datos estructurados o datos sin estructurar?</li>
-<li>¿Cuál es el volumen de los datos? ¿A qué ritmo se generan los datos? ¿Cuantos eventos por segundo? ¿Cuantos gigabytes por hora? Analizar el volumen diario y plantear como sería la primera carga de datos.</li>
+<li>¿Cuál es el volumen de los datos? ¿A qué ritmo se generan los datos? ¿Cuántos eventos por segundo? ¿Cuántos gigabytes por hora? Analizar el volumen diario y plantear como sería la primera carga de datos.</li>
 <li>¿Existe la posibilidad de que más adelante se incorporen nuevas fuentes de datos?</li>
-<li>¿Cual es el esquema de los datos? ¿es necesario hacer un join de los datos entre varios sistemas para tener una foto completa de los datos?</li>
+<li>¿Cual es el esquema de los datos? ¿Es necesario hacer un <em>join</em> de los datos entre varios sistemas para tener una foto completa de los datos?</li>
 </ul>
 </li>
 <li>Latencia/Disponibilidad<ul>
@@ -3315,15 +3315,15 @@ https://learning.oreilly.com/library/view/understanding-etl/9781098159269/ch01.h
 </li>
 <li>Destino de los datos<ul>
 <li>¿La solución de almacenamiento es compatible con los requisitos de velocidad y latencia de lecturas y escrituras?</li>
-<li>¿Se utilizará una solución de almacenamiento pura (por ejemplo S3), o una solución compleja con soporte para consultas (por ejemplo, Snowflase o Databricks)?</li>
+<li>¿Se utilizará una solución de almacenamiento pura (por ejemplo S3), o una solución compleja con soporte para consultas (por ejemplo, <em>Snowflake</em> o <em>Databricks</em>)?</li>
 <li>¿Será necesario enviar los datos a más de un destino, por ejemplo, <em>S3</em> y <em>MongoDB</em>?</li>
 <li>¿Almacenaremos los datos con el mismo formato que los ingestamos? ¿Los almacenamos en formatos basados en filas (<em>Avro</em>) o columnares (<em>Parquet</em>)?</li>
-<li>¿Cómo se van a utilizar los datos en el destino? ¿cómo serán las consultas? ¿es necesario particionar los datos? ¿serán búsquedas aleatorias o no? ¿Utilizaremos <em>Hive</em> / <em>Pig</em> / <em>Spark</em>?</li>
+<li>¿Cómo se van a utilizar los datos en el destino? ¿Cómo serán las consultas? ¿Es necesario particionar los datos? ¿Serán búsquedas aleatorias o no? ¿Utilizaremos <em>Hive</em> / <em>Pig</em> / <em>Spark</em>?</li>
 </ul>
 </li>
 <li>Estudio de los datos<ul>
 <li>¿Se producen errores en la lectura de los datos?</li>
-<li>Calidad de los datos ¿son fiables? ¿contienen errores o valores anómalos? ¿existen duplicados?</li>
+<li>Calidad de los datos ¿Son fiables? ¿Contienen errores o valores anómalos? ¿Existen duplicados?</li>
 <li>¿Se capturan metadatos de la evolución del esquema, flujos de datos, linaje de los datos, etc..?</li>
 <li>Respecto a la seguridad de los datos, si tenemos datos sensibles o confidenciales, ¿los enmascaramos o decidimos no realizar su ingesta? ¿Conocemos los requisitos de seguridad de nuestros datos? ¿Quién tiene que acceder y en qué estado?</li>
 </ul>

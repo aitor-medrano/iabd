@@ -2984,10 +2984,10 @@
 <div class="admonition info">
 <p class="admonition-title">hadoop fs</p>
 <p><figure style="float: left; padding-right: 20px">
-    <img src="images/04hdfsdfs.png" width="250">
+    <img src="images/04hdfsdfs.png" width="250" alt="HDFS DFS">
     <figcaption>HDFS DFS</figcaption>
 </figure></p>
-<p><code>hadoop fs</code> se relaciona con un sistema de archivos genérico que puede apuntar a cualquier sistema de archivos como local, HDFS, FTP, S3, etc. En versiones anteriores se utilizaba el comando <code>hadoop dfs</code> para acceder a HDFS, pero ya quedado obsoleto en favor de <code>hdfs dfs</code>.</p>
+<p><code>hadoop fs</code> se relaciona con un sistema de archivos genérico que puede apuntar a cualquier sistema de archivos como local, HDFS, FTP, S3, etc. En versiones anteriores se utilizaba el comando <code>hadoop dfs</code> para acceder a HDFS, pero ha quedado obsoleto en favor de <strong><code>hdfs dfs</code></strong>.</p>
 </div>
 <p>En el caso concreto de interactuar con el sistema de ficheros de <em>Hadoop</em> se utiliza el comando <code>dfs</code>, el cual requiere de otro argumento (empezando con un guion) el cual será uno de los comandos Linux para interactuar con el shell. Podéis consultar la lista de comandos en la <a href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html">documentación oficial</a>.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-comandosLinux
@@ -3004,7 +3004,7 @@
 <li><code>count</code>: Cuenta el número de elementos (número de carpetas, ficheros, tamaño y ruta).</li>
 <li><code>cp</code> / <code>mv</code> / <code>rm</code>: Copia / mueve-renombra / elimina un archivo.</li>
 </ul>
-<p>Durante la realización de los ejercicios, es muy común necesitar eliminar una carpeta y todo los archivo que contiene. Para ello, podemos hacer un borrado recursivo:</p>
+<p>Durante la realización de los ejercicios, es muy común necesitar eliminar una carpeta y todo los archivos que contiene. Para ello, podemos hacer un borrado recursivo:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-rm<span class="w"> </span>-r<span class="w"> </span>/user/iabd/datos
 </code></pre></div>
 <div class="admonition question">
@@ -3028,7 +3028,7 @@
 <h2 id="namenodes-y-datanodes">Namenodes y Datanodes<a class="headerlink" href="#namenodes-y-datanodes" title="Permanent link">&para;</a></h2>
 <p>En la sesión anterior ya vimos una pequeña introducción a la arquitectura de HDFS.</p>
 <figure style="align: center;">
-    <img src="images/03hdfsArquitectura.png" width="500">
+    <img src="images/03hdfsArquitectura.png" width="600" alt="Arquitectura HDFS">
     <figcaption>Arquitectura HDFS</figcaption>
 </figure>
 
@@ -3066,14 +3066,14 @@
 <li>Guarda un <em>checksum</em> del bloque.</li>
 </ul>
 <figure style="align: center;">
-    <img src="images/03hdfsNodes.png">
+    <img src="images/03hdfsNodes.png" alt="Relación entre Namenodes y Datanodes HDFS">
     <figcaption>Relación entre Namenodes y Datanodes HDFS</figcaption>
 </figure>
 
 <h2 id="procesos-de-lectura">Procesos de lectura<a class="headerlink" href="#procesos-de-lectura" title="Permanent link">&para;</a></h2>
 <p>Vamos a revisar como fluyen los datos en un proceso de lectura entre el cliente y HDFS a partir de la siguiente imagen:</p>
 <figure style="align: center;">
-    <img src="images/04hdfs-read.png">
+    <img src="images/04hdfs-read.png" alt="Proceso de lectura" width="600">
     <figcaption>Proceso de lectura</figcaption>
 </figure>
 
@@ -3094,7 +3094,7 @@ Este diseño permite que HDFS escale de manera adecuada, ya que el tráfico de l
 <h2 id="proceso-de-escritura">Proceso de escritura<a class="headerlink" href="#proceso-de-escritura" title="Permanent link">&para;</a></h2>
 <p>El proceso de escritura en HDFS sigue un planteamiento similar. Vamos a analizar la creación, escritura y cierre de un archivo con la siguiente imagen:</p>
 <figure style="align: center;">
-    <img src="images/04hdfs-write.png">
+    <img src="images/04hdfs-write.png" alt="Proceso de escritura" width="600">
     <figcaption>Proceso de escritura</figcaption>
 </figure>
 
@@ -3102,13 +3102,13 @@ Este diseño permite que HDFS escale de manera adecuada, ya que el tráfico de l
 <li>El cliente crea el fichero mediante la llamada al método <code>create()</code> del <em>DistributedFileSystem</em>.</li>
 <li>Este realiza una llamada RPC al <em>namenode</em> para crear el fichero en el sistema de ficheros del <em>namenode</em>, sin ningún bloque asociado a él. El <em>namenode</em> realiza varias comprobaciones para asegurar que el fichero no existe previamente y que el usuario tiene los permisos necesarios para su creación. Tras ello, el <em>namenode</em> determina la forma en que va a dividir los datos en bloques y qué <em>datanodes</em> utilizará para almacenar los bloques.</li>
 <li>El <em>DistributedFileSystem</em> devuelve un <em>FSDataOutputStream</em>  el cual gestiona la comunicación con los datanodes y el <em>namenode</em> para que el cliente comience a escribir los datos de cada bloque en el <em>namenode</em> apropiado.</li>
-<li>Conforme el cliente escribe los datos, el flujo obtiene del <em>namenode</em> una lista de datanodes candidatos para almacenar las réplicas. La lista de nodos forman un <em>pipeline</em>, de manera que si el factor de replicación es 3, habrá 3 nodos en el <em>pipeline</em>. El flujo envía los paquete al primer datanode del pipeline, el cual almacena cada paquete y los reenvía al segundo datanode del <em>pipeline</em>. Y así sucesivamente con el resto de nodos del pipeline.</li>
+<li>Conforme el cliente escribe los datos, el flujo obtiene del <em>namenode</em> una lista de datanodes candidatos para almacenar las réplicas. La lista de nodos forman un <em>pipeline</em>, de manera que si el factor de replicación es 3, habrá 3 nodos en el <em>pipeline</em>. El flujo envía los paquete al primer <em>datanode</em> del pipeline, el cual almacena cada paquete y los reenvía al segundo <em>datanode</em> del <em>pipeline</em>. Y así sucesivamente con el resto de nodos del <em>pipeline</em>.</li>
 <li>Cuando todos los nodos han confirmado la recepción y almacenamiento de los paquetes, envía un paquete de confirmación al flujo.</li>
-<li>Cuando el cliente finaliza con la escritura de los datos, cierra el flujo mediante el método <code>close()</code> el cual libera los paquetes restantes al pipeline de datanodes y queda a la espera de recibir las confirmaciones. Una vez confirmado, le indica al <em>namenode</em> que la escritura se ha completado, informando de los bloques finales que conforman el fichero (puede que hayan cambiado respecto al paso 2 si ha habido algún error de escritura).</li>
+<li>Cuando el cliente finaliza con la escritura de los datos, cierra el flujo mediante el método <code>close()</code> el cual libera los paquetes restantes al <em>pipeline</em> de <em>datanodes</em> y queda a la espera de recibir las confirmaciones. Una vez confirmado, le indica al <em>namenode</em> que la escritura se ha completado, informando de los bloques finales que conforman el fichero (puede que hayan cambiado respecto al paso 2 si ha habido algún error de escritura).</li>
 </ol>
 <h2 id="hdfs-por-dentro">HDFS por dentro<a class="headerlink" href="#hdfs-por-dentro" title="Permanent link">&para;</a></h2>
 <p>HDFS utiliza de un conjunto de ficheros que gestionan los cambios que se producen en el clúster.</p>
-<p>Primero entramos en <code>$HADOOP_HOME/etc/hadoop</code> y averiguamos la carpeta de datos que tenemos configurada en <code>hdfs-site.xml</code> para el <em>namenode</em>:</p>
+<p>Para saber donde se almacenan los datos, primero hemos de entrar en <code>$HADOOP_HOME/etc/hadoop</code> y averiguar la carpeta de datos que tenemos configurada en <code>hdfs-site.xml</code> para el <em>namenode</em>:</p>
 <div class="highlight"><span class="filename">hdfs-site.xml</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nt">&lt;property&gt;</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>dfs.name.dir<span class="nt">&lt;/name&gt;</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">&lt;value&gt;</span>file:///opt/hadoop-data/hdfs/namenode<span class="nt">&lt;/value&gt;</span>
@@ -3121,7 +3121,7 @@ Este diseño permite que HDFS escale de manera adecuada, ya que el tráfico de l
 <li><code>fsimagen_000NNN</code>: <em>snapshot</em> en el tiempo del sistema de ficheros.</li>
 </ul>
 <figure align="center">
-    <img src="images/04hdfsPorDentro.png">
+    <img src="images/04hdfsPorDentro.png" alt="HDFS por dentro" width="800">
     <figcaption>HDFS por dentro</figcaption>
 </figure>
 
@@ -3242,7 +3242,7 @@ Este diseño permite que HDFS escale de manera adecuada, ya que el tráfico de l
 <p>En la sesión anterior ya vimos que podíamos acceder al interfaz gráfico de Hadoop (<a href="http://iabd-virtualbox:9870/explorer.html#/">http://iabd-virtualbox:9870/explorer.html#/</a>) y navegar por las carpetas de HDFS.</p>
 <p>Si intentamos crear una carpeta o eliminar algún archivo recibimos un mensaje del tipo <em>Permission denied: user=dr.who, access=WRITE, inode="/":iabd:supergroup:drwxr-xr-x</em>. Por defecto, los recursos via web los crea el usuario <em>dr.who</em>.</p>
 <figure style="align: center;">
-    <img src="images/04hdfs-ui-error.png">
+    <img src="images/04hdfs-ui-error.png" alt="Error al crear un directorio mediante Hadoop UI">
     <figcaption>Error al crear un directorio mediante Hadoop UI</figcaption>
 </figure>
 
@@ -3327,13 +3327,13 @@ Este diseño permite que HDFS escale de manera adecuada, ya que el tráfico de l
 </div>
 <p>Tras arrancarlo, nos dirigimos a <code>http://127.0.0.1:8000/</code>y visualizaremos el formulario de entrada, el cual entraremos con el usuario <code>iabd</code> y la contraseña <code>iabd</code>:</p>
 <figure style="align: center;">
-    <img src="images/04hue-login.png">
+    <img src="images/04hue-login.png" alt="Login en Hue" width="600">
     <figcaption>Login en Hue</figcaption>
 </figure>
 
 <p>Una vez dentro, por ejemplo, podemos visualizar e interactuar con HDFS:</p>
 <figure style="align: center;">
-    <img src="images/04hue-hdfs.png">
+    <img src="images/04hue-hdfs.png" alt="HDFS en Hue" width="800">
     <figcaption>HDFS en Hue</figcaption>
 </figure>
 
@@ -3363,7 +3363,7 @@ Este diseño permite que HDFS escale de manera adecuada, ya que el tráfico de l
 <li>
 <p>(<abbr title="Genera mecanismos de integridad de los datos, comprobando su mantenimiento en los sistemas de ficheros distribuidos y valorando la sobrecarga que conlleva en el tratamiento de los datos.">RABDA.3</abbr> / <abbr title="Se ha valorado la importancia de la calidad de los datos en los sistemas de ficheros distribuidos.">CEBDA.3a</abbr> / 0.5p) Explica paso a paso el proceso de lectura (indicando qué bloques y los <em>datanodes</em> empleados) que realiza HDFS si queremos leer el archivo <code>/logs/101213.log</code>:</p>
 <p><figure style="align: center;">
-    <img src="images/04hdfs-lectura-ejercicio.png">
+    <img src="images/04hdfs-lectura-ejercicio.png" alt="Proceso de lectura HDFS" width="600">
     <figcaption>Proceso de lectura HDFS</figcaption>
 </figure></p>
 </li>
