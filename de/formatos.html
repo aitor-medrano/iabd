@@ -3652,7 +3652,7 @@ https://towardsdatascience.com/understanding-apache-parquet-7197ba6462a9
 </code></pre></div>
 <h2 id="comparando-formatos">Comparando formatos<a class="headerlink" href="#comparando-formatos" title="Permanent link">&para;</a></h2>
 <p>Acabamos de ver que cada uno de los formatos tiene sus puntos fuertes.</p>
-<p>Los formatos basados en filas ofrecen un rendimiento mayor en las escrituras que en las lecturas, ya que añadir nuevos registros en más sencillo. Si sólo vamos a hacer consultas sobre un subconjunto de las columnas, entonces un formato columnas se comportará mejor, ya que no necesita recuperar los registros enteros (cosa que sí hacen los formatos basados en filas).</p>
+<p>Los formatos basados en filas ofrecen un rendimiento mayor en las escrituras que en las lecturas, ya que añadir nuevos registros en más sencillo. Si sólo vamos a hacer consultas sobre un subconjunto de las columnas, entonces un formato columnar se comportará mejor, ya que no necesita recuperar los registros enteros (cosa que sí hacen los formatos basados en filas).</p>
 <p>Respecto a la compresión, entendiendo que ofrece una ventaja a la hora de almacenar y transmitir la información, es útil cuando trabajamos con un gran volumen de datos. Los formatos basado en columnas ofrecen un mejor rendimiento ya que todos los datos del mismo tipo se almacenan de forma contigua lo que permite una mayor eficiencia en la compresión (además, cada tipo de columna tiene su propia codificación).</p>
 <p>Respecto a la evolución del esquema, con operaciones como añadir o eliminar columnas o cambiar su nombre, la mejor decisión es decantarse por <em>Avro</em>. Además, al tener el esquema en <em>JSON</em> facilita su gestión y permite que tengan más de un esquema.</p>
 <p>Si nuestros documentos tienen una estructura compleja compuesta por columnas anidadas y normalmente realizamos consultas sobre un subconjunto de las subcolumnas, la elección debería ser <em>Parquet</em>, por la estructura que utiliza.</p>
@@ -3689,9 +3689,9 @@ https://towardsdatascience.com/understanding-apache-parquet-7197ba6462a9
 <li>
 <p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se ha determinado el formato de datos adecuado para el almacenamiento.">CEBDA.1c</abbr> / 2p) Mediante <em>Python</em> y utilizando <em>Kaggle</em>, crea un notebook a partir de los datos del dataset de <a href="https://www.kaggle.com/datasets/yuanyuwendymu/airline-delay-and-cancellation-data-2009-2018">retrasos en los vuelos</a> y a partir de uno de los ficheros (el que más te guste) transforma los datos y persiste los siguientes archivos:</p>
 <ul>
-<li><code>air&lt;anyo&gt;.parquet</code>: el archivo csv en formato <em>Parquet</em>.</li>
-<li><code>air&lt;anyo&gt;.orc</code>: el archivo csv en formato <em>ORC</em>.</li>
-<li><code>air&lt;anyo&gt;_snappy.orc</code>: el archivo csv en formato <em>ORC</em>.</li>
+<li><code>air&lt;anyo&gt;.parquet</code>: el archivo CSV en formato <em>Parquet</em>.</li>
+<li><code>air&lt;anyo&gt;.orc</code>: el archivo CSV en formato <em>ORC</em>.</li>
+<li><code>air&lt;anyo&gt;_snappy.orc</code>: el archivo CSV en formato <em>ORC</em>.</li>
 <li><code>air&lt;anyo&gt;_small.avro</code>: la fecha (<code>FL_DATE</code>), el identificador de la aerolínea (<code>OP_CARRIER</code>) y el retraso de cada vuelo (<code>DEP_DELAY</code>) en formato <em>Avro</em></li>
 <li><code>air&lt;anyo&gt;_small.parquet</code>: con los mismos atributos pero en <em>Parquet</em>.</li>
 </ul>

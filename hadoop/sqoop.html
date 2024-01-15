@@ -2886,12 +2886,12 @@
 
 
 <h1 id="sqoop">Sqoop<a class="headerlink" href="#sqoop" title="Permanent link">&para;</a></h1>
-<p>Las dos herramientas principales utilizadas para importar/exportar datos en <em>HDFS</em> son <em>Sqoop</em> y <em>Flume</em>, las cuales vamos a estudiar a continuación.</p>
 <figure style="float: right;">
-    <img src="images/05sqoop-logo.png">
+    <img src="images/05sqoop-logo.png" alt="Logo de Apache Sqoop">
     <figcaption>Logo de Apache Sqoop</figcaption>
 </figure>
 
+<p>Las dos herramientas principales utilizadas para importar/exportar datos en <em>HDFS</em> son <em>Sqoop</em> y <a href="flume.html"><em>Flume</em></a>.</p>
 <p><em>Apache Sqoop</em> (<a href="https://sqoop.apache.org">https://sqoop.apache.org</a>) es una herramienta diseñada para transferir de forma eficiente datos crudos entre un cluster de Hadoop y un almacenamiento estructurado, como una base de datos relacional.</p>
 <div class="admonition caution">
 <p class="admonition-title">Sin continuidad</p>
@@ -2909,8 +2909,8 @@
 <li>Copiar el <a href="resources/mysql-connector-java-5.1.49-bin.jar">driver de MySQL</a> en <code>$SQOOP_HOME/lib</code></li>
 <li>Copiar la librería <a href="https://repo1.maven.org/maven2/commons-lang/commons-lang/2.6/commons-lang-2.6.jar">commons-langs-2.6</a> en <code>$SQOOP_HOME/lib</code></li>
 </ul>
-<p>Una vez configurado, podemos comprobar que funciona, por ejemplo, consultando las bases de datos que tenemos en <em>MariaDB</em> (aparecen mensajes de <em>warning</em> por no tener instalados/configurados algunos productos) mediante <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_list_databases_literal"><code>sqoop list-databases</code></a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop list-databases --connect jdbc:mysql://localhost --username=iabd --password=iabd
+<p>Una vez configurado, podemos comprobar su funcionamiento, por ejemplo, consultando las bases de datos que tenemos en <em>MariaDB</em> (aparecen mensajes de <em>warning</em> por no tener instalados/configurados algunos productos) mediante <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_list_databases_literal"><code>sqoop list-databases</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>list-databases<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost<span class="w"> </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd
 </code></pre></div>
 </div>
 <h2 id="importando-datos">Importando datos<a class="headerlink" href="#importando-datos" title="Permanent link">&para;</a></h2>
@@ -2931,7 +2931,7 @@
 
 <p>Los datos importados se almacenan en carpetas de <em>HDFS</em>, pudiendo especificar otras carpetas, así como los caracteres separadores o de terminación de registro. Además, podemos utilizar diferentes formatos, como son <em>Avro</em>, <em>ORC</em>, <em>Parquet</em>, ficheros secuenciales o de tipo texto, para almacenar los datos en <em>HDFS</em>.</p>
 <h2 id="caso-1-importando-datos-desde-mariadb">Caso 1 - Importando datos desde MariaDB<a class="headerlink" href="#caso-1-importando-datos-desde-mariadb" title="Permanent link">&para;</a></h2>
-<p>En el siguiente caso de uso vamos a importar datos que tenemos en una base de datos de MariaDB a HDFS.</p>
+<p>En el siguiente caso de uso vamos a importar datos que tenemos en una base de datos de <em>MariaDB</em> a HDFS.</p>
 <div class="admonition caution">
 <p class="admonition-title">Sqoop y las zonas horarias</p>
 <p>Cuando se lanza Sqoop captura los <em>timestamps</em> de nuestra base de datos origen y las convierte a la hora del sistema servidor por lo que tenemos que especificar en nuestra base de datos la zona horaria.</p>
@@ -2939,8 +2939,9 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>[mariabd]
 <span class="linenos" data-linenos="2 "></span>default_time_zone = &#39;Europe/Madrid&#39;
 </code></pre></div>
+<p>En nuestra máquina virtual este paso ya está realizado. </p>
 </div>
-<p>Primero, vamos a preparar nuestro entorno. Una vez conectados a <em>MariaDB</em>, creamos una base de datos que contenga una tabla con información sobre profesores:</p>
+<p>Primero, vamos a preparar nuestro entorno. Una vez conectados a <em>MariaDB</em>, por ejemplo, mediante <code>mariadb -u iabd -p</code>, creamos una base de datos que contenga una tabla con información sobre profesores:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">create</span><span class="w"> </span><span class="k">database</span><span class="w"> </span><span class="n">sqoopCaso1</span><span class="p">;</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">use</span><span class="w"> </span><span class="n">sqoopCaso1</span><span class="p">;</span>
 <span class="linenos" data-linenos="3 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">profesores</span><span class="p">(</span>
@@ -3203,7 +3204,7 @@
 <span class="linenos" data-linenos="6 "></span><span class="go">-rw-r--r--   1 iabd supergroup       1097 2021-12-15 16:14 /user/iabd/sqoop/profesores_parquet/6a803503-f3e0-4f2a-8546-a337f7f90e73.parquet</span>
 <span class="linenos" data-linenos="7 "></span><span class="go">-rw-r--r--   1 iabd supergroup       1073 2021-12-15 16:14 /user/iabd/sqoop/profesores_parquet/eda459b2-1da4-4790-b649-0f2f8b83ab06.parquet</span>
 </code></pre></div>
-<p>Podemos usar las <code>parquet-tools</code> para ver su contenido. Si la instalamos mediante <code>pip3 install parquet-tools</code> podremos acceder a ficheros locales y almacenados en S3. Si queremos acceder de forma remota via <em>HDFS</em>, podemos descargar la <a href="https://repo1.maven.org/maven2/org/apache/parquet/parquet-tools/1.11.2/parquet-tools-1.11.2.jar">versión Java</a> y utilizarla mediante <code>hadoop</code> (aunque da problemas entre las versiones de Sqoop y Parquet):</p>
+<p>Podemos usar las <code>parquet-tools</code> para ver su contenido. Si la instalamos mediante <code>pip3 install parquet-tools</code> podremos acceder a ficheros locales y almacenados en S3. Si queremos acceder de forma remota via <em>HDFS</em>, podemos descargar la <a href="https://repo1.maven.org/maven2/org/apache/parquet/parquet-tools/1.11.2/parquet-tools-1.11.2.jar">versión Java</a> y utilizarla mediante <code>hadoop</code> (aunque da problemas entre las versiones de <em>Sqoop</em> y <em>Parquet</em>):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hadoop<span class="w"> </span>jar<span class="w"> </span>parquet-tools-1.11.2.jar<span class="w"> </span>head<span class="w"> </span>-n5<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/iabd/sqoop/profesores_parquet/12205ee4-6e63-4c0d-8e64-751882d60179.parquet
 </code></pre></div>
 <p>Si queremos obtener información sobre los documentos, usaremos la opción <code>meta</code>:</p>
@@ -3230,7 +3231,7 @@
     --compression-codec org.apache.hadoop.io.compress.BZip2Codec --as-sequencefile 
 -->
 
-<p><strong>Snappy</strong> es una biblioteca de compresión y descompresión de datos de gran rendimiento que se utiliza con frecuencia en proyectos Big Data. Así pues, para utilizarlo lo indicaremos mediante el codec <code>snappy</code>:</p>
+<p>En la sesión sobre <a href="../de/formatos.html#comprimiendo-los-datos">Formatos de datos en Big Data</a>, estudiamos que <strong>Snappy</strong> es una biblioteca de compresión y descompresión de datos de gran rendimiento que se utiliza con frecuencia en proyectos <em>Big Data</em>. Así pues, para utilizarlo lo indicaremos mediante el codec <code>snappy</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
@@ -3284,7 +3285,7 @@
 <span class="linenos" data-linenos="6 "></span><span class="go">2021-12-15 19:10:59,349 INFO tool.ImportTool: (Consider saving this with &#39;sqoop job --create&#39;)</span>
 </code></pre></div>
 <h2 id="trabajando-con-hive">Trabajando con Hive<a class="headerlink" href="#trabajando-con-hive" title="Permanent link">&para;</a></h2>
-<p>Podemos importar los datos en HDFS para que luego puedan ser consultables desde <em>Hive</em>. Para ello hemos de utilizar el parámetro <code>--hive-import</code> e indicar el nombre de la base de datos mediante <code>--hive-database</code> así como la opción de <code>--create-hive-table</code> para que cree la tabla indicada en el parámetro <code>hive-table</code>.</p>
+<p>Podemos importar los datos en HDFS para que luego puedan ser consultables desde <em>Hive</em>. Para ello hemos de utilizar el parámetro <code>--hive-import</code> e indicar el nombre de la base de datos mediante <code>--hive-database</code> así como la opción de <code>--create-hive-table</code> para que cree la tabla gestionada por <em>Hive</em> indicada en el parámetro <code>hive-table</code>.</p>
 <p>Es importante destacar que ya no ponemos destino con <code>target-dir</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
