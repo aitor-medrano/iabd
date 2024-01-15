@@ -2886,14 +2886,13 @@
 
 
 <h1 id="flume">Flume<a class="headerlink" href="#flume" title="Permanent link">&para;</a></h1>
-<p>Las dos herramientas principales utilizadas para importar/exportar datos en <em>HDFS</em> son <em>Sqoop</em> y <em>Flume</em>, las cuales vamos a estudiar a continuación.</p>
 <figure style="float: right;">
     <img src="images/05flume-logo.png">
     <figcaption>Logo de Apache Flume</figcaption>
 </figure>
 
-<p>Allá por el año 2010 <em>Cloudera</em> presentó <strong><em>Flume</em></strong> que posteriormente pasó a formar parte de Apache (<a href="https://flume.apache.org/">https://flume.apache.org/</a>) como un software para tratamiento e ingesta de datos masivo, facilitando crear desarrollos complejos que permiten el tratamiento de datos en <em>streaming</em>. Inicialmente se diseñó para recolectar ficheros de log de una granja de servidores web y mover los eventos almacenados en esos ficheros a HDFS para su posterior procesamiento.</p>
-<p><em>Flume</em> funciona como un <em>buffer</em> entre los productores de datos y el destino final. Al utilizar un buffer, evitamos que un productor sature a un consumidor, sin necesidad de preocuparnos de que algún destino esté inalcanzable o inoperable (por ejemplo, en el caso de que haya caído HDFS), etc...</p>
+<p>Allá por el año 2010 <em>Cloudera</em> presentó <strong><em>Flume</em></strong> que posteriormente pasó a formar parte de <em>Apache</em> (<a href="https://flume.apache.org/">https://flume.apache.org/</a>) como un software para tratamiento e ingesta de datos masivo, facilitando crear desarrollos complejos que permiten el tratamiento de datos en <em>streaming</em>. Inicialmente se diseñó para recolectar ficheros de log de una granja de servidores web y mover los eventos almacenados en esos ficheros a HDFS para su posterior procesamiento.</p>
+<p><em>Flume</em> funciona como un <em>buffer</em> entre los productores de datos y el destino final. Al utilizar un <em>buffer</em>, evitamos que un productor sature a un consumidor, sin necesidad de preocuparnos de que algún destino esté inalcanzable o inoperable (por ejemplo, en el caso de que haya caído HDFS), etc...</p>
 <div class="admonition info">
 <p class="admonition-title">Instalación</p>
 <p>Aunque en la máquina virtual con la que trabajamos también tenemos instalado <em>Flume</em>, podemos descargar la última versión desde <a href="https://dlcdn.apache.org/flume/1.11.0/apache-flume-1.11.0-bin.tar.gz">https://dlcdn.apache.org/flume/1.11.0/apache-flume-1.11.0-bin.tar.gz</a>.</p>
@@ -2901,22 +2900,22 @@
 </div>
 <p>Algunas de sus características son:</p>
 <ul>
-<li>Diseño flexible basado en flujos de datos de transmisión.</li>
-<li>Resistente a fallos y robusto con múltiples conmutaciones por error y  mecanismos de recuperación.</li>
-<li>Lleva datos desde origen a destino: incluidos HDFS y <em>HBase</em>.</li>
+<li>diseño flexible basado en flujos de datos de transmisión.</li>
+<li>resistente a fallos y robusto con múltiples conmutaciones por error y  mecanismos de recuperación.</li>
+<li>lleva datos desde origen a destino: incluidos HDFS y <em>HBase</em>.</li>
 </ul>
 <h2 id="arquitectura">Arquitectura<a class="headerlink" href="#arquitectura" title="Permanent link">&para;</a></h2>
 <p>Su arquitectura es sencilla, y se basa en el uso de agentes que se dividen en tres componentes, los cuales podemos configurar:</p>
 <ul>
-<li><em>Source</em> (fuente): Fuente de origen de los datos, ya sea <em>Twitter</em>, <em>Kafka</em>, una petición <em>Http</em>, etc...<br />
-Las fuentes son un componente activo que recibe datos desde otra aplicación que produce datos (aunque también existen fuentes que pueden producir datos por sí mismos, cuyo objetivo es poder probar ciertos flujos de datos). Las fuentes puedes escuchar uno o más puertos de red para recibir o leer datos del sistema de archivos. Cada fuente debe conectar a al menos un canal. Una fuente puede escribir en varios canales, replicando los eventos a todos o algunos canales en base a algún criterio.</li>
-<li><em>Channel</em> (canal): la vía por donde se tratarán los datos.<br />
-Un canal es un componente pasivo que almacena los datos como un buffer. Se comportan como colas, donde las fuentes publican y los sumideros consumen los datos. Múltiples fuentes pueden escribir de forma segura en el mismo canal, y múltiples sumideros pueden leer desde el mismo canal. Sin embargo, cada sumidero sólo puede leer de un único canal. Si múltiples sumideros leen del mismo canal, sólo uno de ellos leerá el dato.</li>
-<li><em>Sink</em> (sumidero): persistencia/movimiento de los datos, a ficheros / base de datos.<br />
-Toma eventos del canal de manera continua leyendo y eliminando los eventos. A continuación, los transmite hacia el siguiente componente, ya sea a HDFS, Hive, etc... Una vez los datos han llegado al siguiente destino, el sumidero informa al canal mediante un <em>commit transaccional</em> para que elimine dichos eventos del canal.</li>
+<li><strong><em>Source</em></strong> (fuente): Fuente de origen de los datos, ya sea <em>Twitter</em>, <em>Kafka</em>, una petición <em>Http</em>, etc...<br />
+Las fuentes son un componente activo que recibe datos desde otra aplicación que produce datos (aunque también existen fuentes que pueden producir datos por sí mismos, cuyo objetivo es poder probar ciertos flujos de datos). Las fuentes pueden escuchar uno o más puertos de red para recibir o leer datos del sistema de archivos. Cada fuente debe conectar con al menos un canal. Una fuente puede escribir en varios canales, replicando los eventos a todos o algunos canales en base a un determinado criterio que definamos.</li>
+<li><strong><em>Channel</em></strong> (canal): la vía por donde se tratarán los datos.<br />
+Un canal es un componente pasivo que almacena los datos como un <em>buffer</em>. Se comportan como colas, donde las fuentes publican y los sumideros consumen los datos. Múltiples fuentes pueden escribir de forma segura en el mismo canal y múltiples sumideros pueden leer desde el mismo canal. Sin embargo, cada sumidero sólo puede leer de un único canal. Si múltiples sumideros leen del mismo canal, sólo uno de ellos leerá el dato.</li>
+<li><strong><em>Sink</em></strong> (sumidero): persistencia/movimiento de los datos, a ficheros / base de datos.<br />
+Toma eventos del canal de manera continua leyendo y eliminando los eventos. A continuación, los transmite hacia el siguiente componente, ya sea a HDFS, <em>Hive</em>, etc... Una vez los datos han llegado al siguiente destino, el sumidero informa al canal mediante un <em>commit transaccional</em> para que elimine dichos eventos del canal.</li>
 </ul>
 <figure style="align: center">
-    <img src="images/05flume-arq2.png">
+    <img src="images/05flume-arq2.png" alt="Arquitectura Flume - imagen extraída de https://www.diegocalvo.es/flume/">
     <figcaption>Arquitectura Flume - imagen extraída de https://www.diegocalvo.es/flume/</figcaption>
 </figure>
 
