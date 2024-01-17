@@ -3000,13 +3000,14 @@ Toma eventos del canal de manera continua leyendo y eliminando los eventos. A co
 <p><em>Flume</em> se complica cuando queremos utilizarlo para obtener datos de manera paralela (o multiplexada) y/o necesitamos crear nuestros propios sumideros o interceptores. Pero por lo general, su uso es sencillo y se trata de una herramienta muy recomendada como ayuda/alternativa a herramientas como <em>Pentaho</em>.</p>
 <h3 id="agentes">Agentes<a class="headerlink" href="#agentes" title="Permanent link">&para;</a></h3>
 <p>Un agente es la unidad más sencilla con la que trabaja <em>Flume</em>, permitiendo conectar un agente <em>Flume</em> a uno o más agentes, encandenándolos. Además, un agente puede recibir datos de uno o más agentes. Conectando múltiples agentes entre sí podemos crear un flujo de datos para mover datos de un lugar a otro, de aplicaciones que producen datos a HDFS, HBase o donde necesitemos.</p>
-<p>Para lanzar un tarea en <em>Flume</em>, debemos definir un agente, el cual funciona como un contenedor para alojar subcomponentes que permiten mover los datos.</p>
-<p>Estos agentes tienen cuatro partes bien diferenciadas asociadas a la arquitectura de Flume. En la primera parte, definiremos los componente del agente (<em>sources</em>, <em>channels</em> y <em>sinks</em>), y luego, para cada uno de ellos, configuraremos sus propiedades:</p>
-<ul>
-<li><strong><code>sources</code></strong>: responsables de colocar los eventos/datos en el agente</li>
-<li><strong><code>channels</code></strong>: <em>buffer</em> que almacena los eventos/datos recibidos por los <em>sources</em> hasta que un <em>sink</em> lo saca para enviarlo al siguiente destino.</li>
-<li><strong><code>sinks</code></strong>: responsable de sacar los eventos/datos del agente y reenviarlo al siguiente agente (HDFS, HBase, etc...)</li>
-</ul>
+<p>Para lanzar un tarea en <em>Flume</em>, debemos definir un agente, el cual funciona como un contenedor para alojar subcomponentes que permiten mover los datos. Para ello, debemos:</p>
+<ol>
+<li>Definir los componente del agente (<em>sources</em>, <em>channels</em> y <em>sinks</em>)</li>
+<li>Configurar las propiedades de los <strong><code>sources</code></strong>: responsables de colocar los eventos/datos en el agente</li>
+<li>Configurar las propiedades de los <strong><code>channels</code></strong>: <em>buffer</em> que almacena los eventos/datos recibidos por los <em>sources</em> hasta que un <em>sink</em> lo saca para enviarlo al siguiente destino.</li>
+<li>Configurar las propiedades de los <strong><code>sinks</code></strong>: responsable de sacar los eventos/datos del agente y reenviarlo al siguiente agente (HDFS, HBase, etc...)</li>
+<li>Unir los <em>sources</em> con los <em>sinks</em> mediante los <em>channels</em>.</li>
+</ol>
 <h3 id="evento">Evento<a class="headerlink" href="#evento" title="Permanent link">&para;</a></h3>
 <p>El evento es la unidad más pequeña del procesamiento de eventos de <em>Flume</em>. Cuando <em>Flume</em> lee una fuente de datos, envuelve una fila de datos (es decir, encuentra los saltos de línea) en un evento.</p>
 <p>Un evento es una estructura de datos que se compone de dos partes:</p>
@@ -3134,8 +3135,8 @@ También es posible que un canal alimente a varios sumideros.</p>
 <span class="linenos" data-linenos=" 8 "></span>
 <span class="linenos" data-linenos=" 9 "></span><span class="c1"># Describimos el destino</span>
 <span class="linenos" data-linenos="10 "></span><span class="na">SeqGenAgent.sinks.HDFS.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hdfs</span>
-<span class="linenos" data-linenos="11 "></span><span class="na">SeqGenAgent.sinks.HDFS.hdfs.path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hdfs://iabd-virtualbox:9000/user/iabd/flume/seqgen_data/</span>
-<span class="linenos" data-linenos="12 "></span><span class="na">SeqGenAgent.sinks.HDFS.hdfs.filePrefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">flume-caso3-seqgen</span>
+<span class="linenos" data-linenos="11 "></span><span class="na">SeqGenAgent.sinks.HDFS.hdfs.path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hdfs://iabd-virtualbox:9000/user/iabd/flume/seqgen_data</span>
+<span class="linenos" data-linenos="12 "></span><span class="na">SeqGenAgent.sinks.HDFS.hdfs.filePrefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">flume-caso1-seqgen</span>
 <span class="linenos" data-linenos="13 "></span><span class="na">SeqGenAgent.sinks.HDFS.hdfs.rollInterval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
 <span class="linenos" data-linenos="14 "></span><span class="na">SeqGenAgent.sinks.HDFS.hdfs.rollCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
 <span class="linenos" data-linenos="15 "></span><span class="na">SeqGenAgent.sinks.HDFS.hdfs.fileType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">DataStream</span>
@@ -3166,18 +3167,18 @@ También es posible que un canal alimente a varios sumideros.</p>
 </div>
 <p>Si comprobamos por ejemplo el contenido de la carpeta (<code>hdfs dfs -ls /user/iabd/flume/seqgen_data</code>) veremos que se han generado múltiples archivos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>Found 10 items
-<span class="linenos" data-linenos=" 2 "></span>-rw-r--r--   1 iabd supergroup       1402 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740933
-<span class="linenos" data-linenos=" 3 "></span>-rw-r--r--   1 iabd supergroup       1368 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740934
-<span class="linenos" data-linenos=" 4 "></span>-rw-r--r--   1 iabd supergroup       1350 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740935
-<span class="linenos" data-linenos=" 5 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740936
-<span class="linenos" data-linenos=" 6 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740937
-<span class="linenos" data-linenos=" 7 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740938
-<span class="linenos" data-linenos=" 8 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740939
-<span class="linenos" data-linenos=" 9 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740940
-<span class="linenos" data-linenos="10 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740941
-<span class="linenos" data-linenos="11 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740942
+<span class="linenos" data-linenos=" 2 "></span>-rw-r--r--   1 iabd supergroup       1402 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso1-seqgen.1640187740933
+<span class="linenos" data-linenos=" 3 "></span>-rw-r--r--   1 iabd supergroup       1368 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso1-seqgen.1640187740934
+<span class="linenos" data-linenos=" 4 "></span>-rw-r--r--   1 iabd supergroup       1350 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso1-seqgen.1640187740935
+<span class="linenos" data-linenos=" 5 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso1-seqgen.1640187740936
+<span class="linenos" data-linenos=" 6 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso1-seqgen.1640187740937
+<span class="linenos" data-linenos=" 7 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso1-seqgen.1640187740938
+<span class="linenos" data-linenos=" 8 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso1-seqgen.1640187740939
+<span class="linenos" data-linenos=" 9 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso1-seqgen.1640187740940
+<span class="linenos" data-linenos="10 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso1-seqgen.1640187740941
+<span class="linenos" data-linenos="11 "></span>-rw-r--r--   1 iabd supergroup       1280 2021-12-22 16:42 /user/iabd/flume/seqgen_data/flume-caso1-seqgen.1640187740942
 </code></pre></div>
-<p>Y si comprobamos el contenido del primero (<code>hdfs dfs -cat /user/iabd/flume/seqgen_data/flume-caso3-seqgen.1640187740933</code>) veremos como contiene la secuencia generada:</p>
+<p>Y si comprobamos el contenido del primero (<code>hdfs dfs -cat /user/iabd/flume/seqgen_data/flume-caso1-seqgen.1640187740933</code>) veremos como contiene la secuencia generada:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>0
 <span class="linenos" data-linenos="2 "></span>1
 <span class="linenos" data-linenos="3 "></span>2

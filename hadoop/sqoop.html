@@ -2925,7 +2925,7 @@
 <li>De forma paralela, cada uno de los <em>mappers</em> se encarga de cargar en <em>HDFS</em> una parte proporcional de los datos.</li>
 </ol>
 <figure style="align: center;">
-    <img src="images/05sqoop-arq.png">
+    <img src="images/05sqoop-arq.png" alt="Arquitectura de trabajo de Sqoop">
     <figcaption>Arquitectura de trabajo de Sqoop</figcaption>
 </figure>
 
@@ -2964,9 +2964,6 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>list-tables<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd
 </code></pre></div>
 <p>Y finalmente importamos los datos mediante el comando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_import_literal"><code>sqoop import</code></a>:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Comando con explicaciones</label><label for="__tabbed_1_2">Comando copiable</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\ </span><span class="c1"># (1)!</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\ </span><span class="c1"># (2)!</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\ </span><span class="c1"># (3)!</span>
@@ -2980,17 +2977,15 @@
 <li>Configuramos el destino HDFS donde se van a importar los datos.</li>
 <li>Indicamos el separador de los campos y el carácter para separar las líneas.</li>
 </ol>
-</div>
-<div class="tabbed-block">
+<!--
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/sqoopCaso1<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">    </span>--table<span class="o">=</span>profesores<span class="w"> </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="4 "></span><span class="w">    </span>--target-dir<span class="o">=</span>/user/iabd/sqoop/profesores_hdfs<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="5 "></span><span class="w">    </span>--fields-terminated-by<span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="w"> </span>--lines-terminated-by<span class="w"> </span><span class="s1">&#39;\n&#39;</span>
 </code></pre></div>
-</div>
-</div>
-</div>
+-->
+
 <p>Si queremos que en el caso de que ya exista la carpeta de destino la borre previamente, añadiremos la opción <code>--delete-target-dir</code>.</p>
 <div class="admonition danger">
 <p class="admonition-title">Unhealthy node</p>
@@ -3094,22 +3089,25 @@
 <h3 id="monitorizando-sqoop">Monitorizando Sqoop<a class="headerlink" href="#monitorizando-sqoop" title="Permanent link">&para;</a></h3>
 <p>Si accedemos al interfaz gráfico de YARN (en <code>http://iabd-virtualbox:8088/cluster</code>) podemos ver cómo aparece el proceso como realizado:</p>
 <figure style="align: center;">
-    <img src="images/05sqoop-caso1yarn.png">
+    <img src="images/05sqoop-caso1yarn.png" alt="Estado de YARN tras la importación">
     <figcaption>Estado de YARN tras la importación</figcaption>
 </figure>
 
 <p>Si accedemos al interfaz gráfico de <em>Hadoop</em> (recuerda que puedes acceder a él mediante <code>http://iabd-virtualbox:9870</code>) podremos comprobar en el directorio <code>/user/iabd/sqoop</code> que ha creado el directorio que hemos especificado junto con los siguientes archivos:</p>
 <figure style="align: center;">
-    <img src="images/05sqoop-caso1a.png">
+    <img src="images/05sqoop-caso1a.png" alt="Contenido de /user/iabd/sqoop/profesores_hdfs">
     <figcaption>Contenido de /user/iabd/sqoop/profesores_hdfs</figcaption>
 </figure>
 
 <p>Si entramos a ver los datos, podemos visualizar el contenido del primer fragmento que contiene los primeros datos de la tabla:</p>
 <figure style="align: center;">
-    <img src="images/05sqoop-caso1b.png">
+    <img src="images/05sqoop-caso1b.png" alt="Contenido de part-m-0000">
     <figcaption>Contenido de part-m-0000</figcaption>
 </figure>
 
+<p>Si queremos descargar el contenido de una carpeta de HDFS compuesta de varios archivos que contienen la información dividida, deberás emplear el parámetro <a href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html#getmerge"><code>-getmerge</code></a> más la ruta de la carpeta a descargar. Por ejemplo, si queremos descargar los datos de los profesores y almacenarlos en nuestro sistema local como <code>profesores.csv</code> haríamos (cuidado que al fusionar los archivos su tamaño puede crecer de formar considerable):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-getmerge<span class="w"> </span>/user/iabd/sqoop/profesores_hdfs<span class="w"> </span>profesores.csv
+</code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Importándolo todo</p>
 <p>Si queremos importar todas las tablas de una base de datos, podemos emplear el comando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_import_all_tables_literal"><code>sqoop import-all-tables</code></a>, en el cual ya no indicamos la tabla a importar, sino la carpeta (<code>warehouse-dir</code>) donde creará una carpeta por cada tabla que encuentra en la base de datos:</p>

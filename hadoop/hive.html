@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Apuntes sobre Apache Hive, utilizando tanto tablas internas como externas, realizando joins entre diferentes archivos HDFS. Particionado y bucketing de los datos.">
+        <meta name="description" content="Apuntes sobre Apache Hive, utilizando tablas internas y externas, realizando joins entre diferentes archivos HDFS. Particionado y bucketing de los datos.">
       
       
       
@@ -73,7 +73,7 @@
       
         <meta  property="og:title"  content="Apache Hive. Acceso a HDFS con un interfaz similar a tablas relacionales mediante SQL. - Inteligencia Artificial y Big Data" >
       
-        <meta  property="og:description"  content="Apuntes sobre Apache Hive, utilizando tanto tablas internas como externas, realizando joins entre diferentes archivos HDFS. Particionado y bucketing de los datos." >
+        <meta  property="og:description"  content="Apuntes sobre Apache Hive, utilizando tablas internas y externas, realizando joins entre diferentes archivos HDFS. Particionado y bucketing de los datos." >
       
         <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/hadoop/hive.png" >
       
@@ -89,7 +89,7 @@
       
         <meta  name="twitter:title"  content="Apache Hive. Acceso a HDFS con un interfaz similar a tablas relacionales mediante SQL. - Inteligencia Artificial y Big Data" >
       
-        <meta  name="twitter:description"  content="Apuntes sobre Apache Hive, utilizando tanto tablas internas como externas, realizando joins entre diferentes archivos HDFS. Particionado y bucketing de los datos." >
+        <meta  name="twitter:description"  content="Apuntes sobre Apache Hive, utilizando tablas internas y externas, realizando joins entre diferentes archivos HDFS. Particionado y bucketing de los datos." >
       
         <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/hadoop/hive.png" >
       
@@ -1562,6 +1562,15 @@
   <a href="#caso-de-uso-6-particionado-y-bucketing" class="md-nav__link">
     <span class="md-ellipsis">
       Caso de uso 6: Particionado y Bucketing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vistas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vistas
     </span>
   </a>
   
@@ -3262,6 +3271,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#vistas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vistas
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#funciones-ventana" class="md-nav__link">
     <span class="md-ellipsis">
       Funciones ventana
@@ -3390,8 +3408,8 @@
 </ul>
 <p>En cambio, <em>Hive</em> no es la mejor opción para consultas en tiempo real o de tipo transaccional. Además, no está diseñado para usarse con actualizaciones de valores al nivel de registro, y el soporte de SQL es limitado.</p>
 <h4 id="alternativas">Alternativas<a class="headerlink" href="#alternativas" title="Permanent link">&para;</a></h4>
-<p>Una de las alternativas más populares es <a href="https://impala.apache.org/">Apache Impala</a>, originalmente creado por Cloudera, el cual utiliza un demonio dedicado en cada <em>datanode</em> del clúster, de manera que hay un coordinador que reenvía a cada <em>datanode</em> la consulta a realizar y luego se encarga de unir los datos en el resultado final. <em>Impala</em> utiliza el <em>metastore</em> de <em>Hive</em> y soporta la mayoría de construcciones de <em>Hive</em>, con lo que la migración de un sistema a otro es sencilla.</p>
-<p>En lugar de utilizar MapReduce, aprovecha un motor de procesamiento masivo en paralelo (MPP) como el que existe en los sistemas gestores de bases de datos relacionales (RDBMS). Esta arquitectura hace que Impala sea adecuado para análisis interactivos y de baja latencia.</p>
+<p>Una de las alternativas más populares es <a href="https://impala.apache.org/">Apache Impala</a>, originalmente creado por <em>Cloudera</em>, el cual utiliza un demonio dedicado en cada <em>datanode</em> del clúster, de manera que hay un coordinador que reenvía a cada <em>datanode</em> la consulta a realizar y luego se encarga de unir los datos en el resultado final. <em>Impala</em> utiliza el <em>metastore</em> de <em>Hive</em> y soporta la mayoría de construcciones de <em>Hive</em>, con lo que la migración de un sistema a otro es sencilla.</p>
+<p>En lugar de utilizar <em>MapReduce</em>, aprovecha un motor de procesamiento masivo en paralelo (MPP) como el que existe en los sistemas gestores de bases de datos relacionales (RDBMS). Esta arquitectura hace que <em>Impala</em> sea adecuado para análisis interactivos y de baja latencia.</p>
 <!--
 https://aws.amazon.com/es/emr/faqs/#Using_Impala
 -->
@@ -3410,7 +3428,7 @@ Actualmente ha perdido uso en detrimento de <em>Hive</em>/<em>Impala</em> y de <
 <h3 id="componentes">Componentes<a class="headerlink" href="#componentes" title="Permanent link">&para;</a></h3>
 <p>A continuación podemos ver un gráfico que relaciona los diferentes componentes de <em>Hive</em> y define su arquitectura:</p>
 <figure style="align: center;">
-    <img src="images/06hive-arq.png">
+    <img src="images/06hive-arq.png" alt="Arquitectura de Apache Hive">
     <figcaption>Arquitectura de Apache Hive</figcaption>
 </figure>
 
@@ -3425,7 +3443,7 @@ Actualmente ha perdido uso en detrimento de <em>Hive</em>/<em>Impala</em> y de <
 <p>A este servidor nos conectaremos mediante la herramienta <em>Beeline</em> (Beeline CLI).</p>
 <h4 id="hive-metastore">Hive Metastore<a class="headerlink" href="#hive-metastore" title="Permanent link">&para;</a></h4>
 <p>Es el repositorio central para los metadatos de <em>Hive</em>, y se almacena en una base de datos relacional como <em>MySQL</em>, <em>PostgreSQL</em> o <em>Apache Derby</em> (embebida). Mantiene los metadatos, las tablas y sus tipos mediante <em>Hive DDL</em> (<em>Data Definition Language</em>). Además, el sistema se puede configurar para que también almacene estadísticas de las operaciones y registros de autorización para optimizar las consultas.</p>
-<p>En las últimas versiones de <em>Hive</em>, este componente se puede desplegar de forma remota e independiente, para no compartir la misma JVM con <em>HiveServer</em>. Dentro del <em>metastore</em> podemos encontrar el <em>Hive Catalog</em> (<em>HCatalog</em>), que permite acceder a sus metadatos, actuando como una API. Al poder desplegarse de forma aislada e independiente, permite que otras aplicaciones hagan uso del <em>schema</em> sin tener que desplegar el motor de consultas de Hive. En la sesión de <a href="../spark/catalog.html"><em>Spark Catalog</em></a>, veremos cómo desde una herramienta externa a <em>Hive</em>, se accede y utilizan los metadatos almacenados.</p>
+<p>En las últimas versiones de <em>Hive</em>, este componente se puede desplegar de forma remota e independiente, para no compartir la misma JVM con <em>HiveServer</em>. Dentro del <em>metastore</em> podemos encontrar el <em>Hive Catalog</em> (<em>HCatalog</em>), que permite acceder a sus metadatos, actuando como una API. Al poder desplegarse de forma aislada e independiente, permite que otras aplicaciones hagan uso del <em>schema</em> sin tener que desplegar el motor de consultas de <em>Hive</em>. En la sesión de <a href="../spark/catalog.html"><em>Spark Catalog</em></a> veremos cómo desde una herramienta externa a <em>Hive</em>, se accede y utilizan los metadatos almacenados.</p>
 <p>Así pues, al <em>Metastore</em> podremos acceder mediante <em>HiveCLI</em>, o a través del <em>Hive Server</em> mediante una conexión remota mediante <em>Beeline</em>.</p>
 <h4 id="beeline">Beeline<a class="headerlink" href="#beeline" title="Permanent link">&para;</a></h4>
 <p><em>Hive</em> incorpora <em>Beeline</em>, el cual actúa como un cliente basado en JDBC para hacer consultas por línea de comandos contra el <em>Hive Server</em>, sin necesitar las dependencias de <em>Hive</em>, mediante el comando <code>beeline</code>:</p>
@@ -4429,6 +4447,24 @@ Si las columnas de `sort by` y `distribute by` son las mismas, podemos utilizar 
 <p>Y vemos cómo aparecen 5 elementos que pertenecen a la primera partición. Si quisiéramos, por ejemplo, 10 elementos de particiones diferentes deberíamos ordenarlos de manera aleatoria:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">productos</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">rand</span><span class="p">()</span><span class="w"> </span><span class="k">limit</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
 </code></pre></div>
+<h2 id="vistas">Vistas<a class="headerlink" href="#vistas" title="Permanent link">&para;</a></h2>
+<p>Además de las estructuras físicas para almacenar los datos, podemos crear estructuras lógicas como las vistas.</p>
+<p>De la misma forma que en los sistemas de bases de datos tradicionales, mediante una vista podemos abstraer una consulta compleja que realiza diversos <em>joins</em>.</p>
+<p>Por ejemplo, si queremos volver a crear la tabla de productos pero mediante una vista que siempre muestre los datos actualizados haríamos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">productos_view</span><span class="w"> </span><span class="k">AS</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_name</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_price</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">precio</span><span class="p">,</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">category_name</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">categoria</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">categories</span><span class="w"> </span><span class="k">c</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">product_category_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">category_id</span><span class="p">)</span>
+</code></pre></div>
+<p>Tras crear la vista, podemos consultar directamente los datos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">productos_view</span><span class="w"> </span><span class="k">limit</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</code></pre></div>
+<p>Para consultar las vistas existentes, el <em>metastore</em> la almacena como una tabla de tipo <code>VIRTUAL_VIEW</code>, y por tanto, podemos obtenerlas mediante:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">show</span><span class="w"> </span><span class="n">tables</span>
+</code></pre></div>
+<p>Se queremos eliminar la vista, de forma similar a SQL, realizaríamos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">DROP</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">productos_view</span>
+</code></pre></div>
+<!-- https://cwiki.apache.org/confluence/display/Hive/Materialized+views -->
+
 <h2 id="funciones-ventana">Funciones ventana<a class="headerlink" href="#funciones-ventana" title="Permanent link">&para;</a></h2>
 <p>A continuación vamos a realizar diversas consultas utilizando las funciones ventana que soporta <em>Hive</em>. Más información en <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+WindowingAndAnalytics">https://cwiki.apache.org/confluence/display/Hive/LanguageManual+WindowingAndAnalytics</a>.</p>
 <h3 id="consultas-con-enteros-que-cuentanordenan">Consultas con enteros que cuentan/ordenan<a class="headerlink" href="#consultas-con-enteros-que-cuentanordenan" title="Permanent link">&para;</a></h3>
@@ -4745,7 +4781,6 @@ Si las columnas de `sort by` y `distribute by` son las mismas, podemos utilizar 
 2223
   Formato de las tablas: parquet, fixed file format
   Alter table
-  *Vistas*
   tablesample
   Transformación map/reduce ... ejemplo para rellenar tipos de datos complejos
   Ejemplos de particionado / bucketing ... poner resultado de las operaciones / consultas
@@ -4761,6 +4796,7 @@ Si las columnas de `sort by` y `distribute by` son las mismas, podemos utilizar 
   https://stackoverflow.com/questions/77469088/how-to-connect-image-apache-hive-with-image-apache-hadoop
   https://stackoverflow.com/questions/77084507/how-to-build-hive-as-a-service-and-metastore-using-docker-compose
 
+  REPENSAR EJERCICIOS... poner alguno opcional
 
 
 --->
