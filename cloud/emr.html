@@ -2971,47 +2971,51 @@ Pero si queremos que sólo exista durante la ejecución de uno o más trabajos, 
 
 <p>Por ejemplo, podemos conectarnos a:</p>
 <ul>
-<li>El namenode de HDFS</li>
-<li>Hue (mal traducido a Tonalidad)</li>
-<li>El interfaz de Tez</li>
-<li>O la de YARN</li>
+<li>El <em>namenode</em> de HDFS</li>
+<li><em>Hue</em> (mal traducido a Tonalidad)</li>
+<li>El interfaz de <em>Tez</em></li>
+<li>O la de <em>YARN</em></li>
 </ul>
 <div class="admonition caution">
 <p class="admonition-title">Parece que funciona pero...</p>
-<p>Una vez arrancado, a día de hoy tenemos un par de propiedades que modificar, ya que el acceso web a HDFS está bloqueado, y la ruta de HDFS en Hue está mal configurada.</p>
+<p>Una vez arrancado, a día de hoy tenemos un par de propiedades que modificar, ya que el acceso web a HDFS está bloqueado, y la ruta de HDFS en <em>Hue</em> está mal configurada.</p>
 </div>
-<p>Así pues, vamos a conectarnos vía SSH para activar el navegador web de HDFS. Con nuestras claves <code>labsuser.pem</code> descargadas, nos conectamos al clúster (recuerda poner <code>hadoop@</code> delante de la URL del namenode):</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>ssh<span class="w"> </span>-i<span class="w"> </span>labsuser.pem<span class="w"> </span>hadoop@ec2-34-232-48-47.compute-1.amazonaws.com
+<p>Así pues, vamos a conectarnos vía SSH para activar el navegador web de HDFS. Con nuestras claves <code>labsuser.pem</code> descargadas, nos conectamos al clúster (recuerda previamente configurar los permisos mediante <code>chmod 400 labsuser.pem</code> y luego poner <code>hadoop@</code> delante de la URL del <em>namenode</em>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>ssh<span class="w"> </span>-i<span class="w"> </span>labsuser.pem<span class="w"> </span>hadoop@ec2-54-164-225-241.compute-1.amazonaws.com
 </code></pre></div>
 <p>Al conectarnos, tanto EC2 como EMR nos darán la bienvenida:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>       __|  __|_  )
-<span class="linenos" data-linenos=" 2 "></span>       _|  (     /   Amazon Linux 2 AMI
-<span class="linenos" data-linenos=" 3 "></span>      ___|\___|___|
-<span class="linenos" data-linenos=" 4 "></span>
-<span class="linenos" data-linenos=" 5 "></span>https://aws.amazon.com/amazon-linux-2/
-<span class="linenos" data-linenos=" 6 "></span>22 package(s) needed for security, out of 32 available
-<span class="linenos" data-linenos=" 7 "></span>Run &quot;sudo yum update&quot; to apply all updates.
-<span class="linenos" data-linenos=" 8 "></span>
-<span class="linenos" data-linenos=" 9 "></span>EEEEEEEEEEEEEEEEEEEE MMMMMMMM           MMMMMMMM RRRRRRRRRRRRRRR    
-<span class="linenos" data-linenos="10 "></span>E::::::::::::::::::E M:::::::M         M:::::::M R::::::::::::::R   
-<span class="linenos" data-linenos="11 "></span>EE:::::EEEEEEEEE:::E M::::::::M       M::::::::M R:::::RRRRRR:::::R 
-<span class="linenos" data-linenos="12 "></span>  E::::E       EEEEE M:::::::::M     M:::::::::M RR::::R      R::::R
-<span class="linenos" data-linenos="13 "></span>  E::::E             M::::::M:::M   M:::M::::::M   R:::R      R::::R
-<span class="linenos" data-linenos="14 "></span>  E:::::EEEEEEEEEE   M:::::M M:::M M:::M M:::::M   R:::RRRRRR:::::R 
-<span class="linenos" data-linenos="15 "></span>  E::::::::::::::E   M:::::M  M:::M:::M  M:::::M   R:::::::::::RR   
-<span class="linenos" data-linenos="16 "></span>  E:::::EEEEEEEEEE   M:::::M   M:::::M   M:::::M   R:::RRRRRR::::R  
-<span class="linenos" data-linenos="17 "></span>  E::::E             M:::::M    M:::M    M:::::M   R:::R      R::::R
-<span class="linenos" data-linenos="18 "></span>  E::::E       EEEEE M:::::M     MMM     M:::::M   R:::R      R::::R
-<span class="linenos" data-linenos="19 "></span>EE:::::EEEEEEEE::::E M:::::M             M:::::M   R:::R      R::::R
-<span class="linenos" data-linenos="20 "></span>E::::::::::::::::::E M:::::M             M:::::M RR::::R      R::::R
-<span class="linenos" data-linenos="21 "></span>EEEEEEEEEEEEEEEEEEEE MMMMMMM             MMMMMMM RRRRRRR      RRRRRR
-<span class="linenos" data-linenos="22 "></span>
-<span class="linenos" data-linenos="23 "></span>[hadoop@ip-172-31-15-67 ~]$
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>   ,     #_
+<span class="linenos" data-linenos=" 2 "></span>   ~\_  ####_        Amazon Linux 2023
+<span class="linenos" data-linenos=" 3 "></span>  ~~  \_#####\
+<span class="linenos" data-linenos=" 4 "></span>  ~~     \###|
+<span class="linenos" data-linenos=" 5 "></span>  ~~       \#/ ___   https://aws.amazon.com/linux/amazon-linux-2023
+<span class="linenos" data-linenos=" 6 "></span>   ~~       V~&#39; &#39;-&gt;
+<span class="linenos" data-linenos=" 7 "></span>    ~~~         /
+<span class="linenos" data-linenos=" 8 "></span>      ~~._.   _/
+<span class="linenos" data-linenos=" 9 "></span>         _/ _/
+<span class="linenos" data-linenos="10 "></span>       _/m/&#39;
+<span class="linenos" data-linenos="11 "></span>Last login: Fri Jan 19 17:35:18 2024
+<span class="linenos" data-linenos="12 "></span>
+<span class="linenos" data-linenos="13 "></span>EEEEEEEEEEEEEEEEEEEE MMMMMMMM           MMMMMMMM RRRRRRRRRRRRRRR    
+<span class="linenos" data-linenos="14 "></span>E::::::::::::::::::E M:::::::M         M:::::::M R::::::::::::::R   
+<span class="linenos" data-linenos="15 "></span>EE:::::EEEEEEEEE:::E M::::::::M       M::::::::M R:::::RRRRRR:::::R 
+<span class="linenos" data-linenos="16 "></span>  E::::E       EEEEE M:::::::::M     M:::::::::M RR::::R      R::::R
+<span class="linenos" data-linenos="17 "></span>  E::::E             M::::::M:::M   M:::M::::::M   R:::R      R::::R
+<span class="linenos" data-linenos="18 "></span>  E:::::EEEEEEEEEE   M:::::M M:::M M:::M M:::::M   R:::RRRRRR:::::R 
+<span class="linenos" data-linenos="19 "></span>  E::::::::::::::E   M:::::M  M:::M:::M  M:::::M   R:::::::::::RR   
+<span class="linenos" data-linenos="20 "></span>  E:::::EEEEEEEEEE   M:::::M   M:::::M   M:::::M   R:::RRRRRR::::R  
+<span class="linenos" data-linenos="21 "></span>  E::::E             M:::::M    M:::M    M:::::M   R:::R      R::::R
+<span class="linenos" data-linenos="22 "></span>  E::::E       EEEEE M:::::M     MMM     M:::::M   R:::R      R::::R
+<span class="linenos" data-linenos="23 "></span>EE:::::EEEEEEEE::::E M:::::M             M:::::M   R:::R      R::::R
+<span class="linenos" data-linenos="24 "></span>E::::::::::::::::::E M:::::M             M:::::M RR::::R      R::::R
+<span class="linenos" data-linenos="25 "></span>EEEEEEEEEEEEEEEEEEEE MMMMMMM             MMMMMMM RRRRRRR      RRRRRR
+<span class="linenos" data-linenos="26 "></span>
+<span class="linenos" data-linenos="27 "></span>[hadoop@ip-172-31-61-164 ~]$
 </code></pre></div>
 <h3 id="visualizando-hdfs">Visualizando HDFS<a class="headerlink" href="#visualizando-hdfs" title="Permanent link">&para;</a></h3>
 <p>Para poder visualizar el sistema de archivos de HDFS, primero le cambiamos los permisos al <code>hdfs-site.xml</code> para poder editarlo sin problemas:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">777</span><span class="w"> </span>/etc/hadoop/conf/hdfs-site.xml
-<span class="linenos" data-linenos="2 "></span>nano<span class="w"> </span>/etc/hadoop/conf/hdfs-site.xml
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">777</span><span class="w"> </span>/usr/lib/hadoop/etc/hadoop/hdfs-site.xml
+<span class="linenos" data-linenos="2 "></span>nano<span class="w"> </span>/usr/lib/hadoop/etc/hadoop/hdfs-site.xml
 </code></pre></div>
 <p>Editamos la propiedad <code>dfs.webhdfs.enabled</code> y la ponemos a <code>true</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nt">&lt;property&gt;</span>
@@ -3022,7 +3026,7 @@ Pero si queremos que sólo exista durante la ejecución de uno o más trabajos, 
 <p>Sólo nos queda reiniciar el servicio de HDFS:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>hadoop-hdfs-namenode
 </code></pre></div>
-<p>Y ahora desde el interfaz de HDFS ya podemos navegar por las carpetas y ver el contenido:</p>
+<p>Y ahora desde el interfaz de HDFS ya podemos navegar por las carpetas y ver el contenido, por ejemplo, accediendo a <code>http://ec2-54-164-225-241.compute-1.amazonaws.com:9870</code>:</p>
 <figure style="align: center;">
     <img src="images/05emr-hdfs-ui.png">
     <figcaption>Interfaz de HDFS</figcaption>
@@ -3042,10 +3046,10 @@ Pero si queremos que sólo exista durante la ejecución de uno o más trabajos, 
 </figure>
 
 <p>Para ello, igual que hemos realizado antes, cambiamos los permisos y editamos el fichero de configuración:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">777</span><span class="w"> </span>/etc/hue/conf/hue.ini
-<span class="linenos" data-linenos="2 "></span>nano<span class="w"> </span>/etc/hue/conf/hue.ini
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">777</span><span class="w"> </span>/usr/lib/hue/desktop/conf/hue.ini
+<span class="linenos" data-linenos="2 "></span>nano<span class="w"> </span>/usr/lib/hue/desktop/conf/hue.ini
 </code></pre></div>
-<p>Y configuramos bien el puerto de acceso (debe ser 50070), dentro del grupo <code>[[hdfs_clusters]]</code> de <code>[hadoop]</code> editamos la propiedad <code>webhdfs_url</code>:</p>
+<p>Y configuramos bien el puerto de acceso (debe ser 9870), dentro del grupo <code>[[hdfs_clusters]]</code> de <code>[hadoop]</code> editamos la propiedad <code>webhdfs_url</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">webhdfs_url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">http://ip-172-31-15-67.ec2.internal:50070/webhdfs/v1</span>
 </code></pre></div>
 <p>Y reiniciamos el servicio:</p>
@@ -3101,6 +3105,39 @@ https://github.com/johnny-chivers/emrZeroToHero
 https://www.youtube.com/watch?v=v9nk6mVxJDU
 
 https://learning.oreilly.com/library/view/fundamentals-of-data/9781098108298/ch06.html#:-:text=suppose%20we%E2%80%99re%20running%20AWS%20EMR%20on%20EC2%20instances
+
+
+EMR
+
+Quitar el bloqueo de acceso público
+
+Editar el grupo de seguridad y habilitar la regla de entrada para todos los puertos y direcciones 0.0.0.0
+
+Probar que funciona el interfaz web
+
+Descargar clave labsuser.pem
+chmod 400 labsuser.pem
+
+ssh -i labsuser.pem hadoop@dsfa
+
+hdfs dfs -mkdir -p /user/iabd/sqoop
+
+sqoop import --connect jdbc:mysql://dbiabd.cpmk2esi0ldh.us-east-1.rds.amazonaws.com/retail_db    \
+    --username=admin --password=adminadmin \
+    --table=customers --driver=org.mariadb.jdbc.Driver   \
+    --target-dir=/user/iabd/sqoop/customers --as-parquetfile
+
+
+CREATE EXTERNAL TABLE customers
+(
+  custId INT,
+  fName STRING,
+  lName STRING,
+  city STRING
+)
+STORED AS PARQUET
+LOCATION '/user/iabd/sqoop/customers';
+
 -->
 
 
