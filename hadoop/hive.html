@@ -4548,7 +4548,7 @@ sqoop import --connect jdbc:mysql://localhost/retail_db --username iabd --passwo
 <span class="linenos" data-linenos="6 "></span><span class="n">PARTITIONED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">categoria</span><span class="w"> </span><span class="n">STRING</span><span class="p">)</span>
 <span class="linenos" data-linenos="7 "></span><span class="n">CLUSTERED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="n">BUCKETS</span><span class="p">;</span>
 </code></pre></div>
-<p>Y cargamos los datos con una consulta que realice un join de las tablas <code>categories</code> y <code>products</code> con particionado dinámico (recuerda activarlo mediante <code>set hive.exec.dynamic.partition.mode=nonstrict;</code>):</p>
+<p>Y cargamos los datos con una consulta que realice un join de las tablas <code>categories</code> y <code>products</code> con particionado dinámico (recuerda activarlo mediante <code>set hive.exec.dynamic.partition.mode=nonstrict;</code>), teniendo en cuenta que los datos que forman parte de la partición deben ser las últimas columnas de la consulta:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">INSERT</span><span class="w"> </span><span class="n">OVERWRITE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">productos</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="p">(</span><span class="n">categoria</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_name</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_price</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">precio</span><span class="p">,</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">category_name</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">categoria</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">categories</span><span class="w"> </span><span class="k">c</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">product_category_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">category_id</span><span class="p">);</span>
@@ -4884,7 +4884,7 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <span class="linenos" data-linenos="32 "></span>| Cobra AMP Cell Drive  | Bike &amp; Skate Shop  | 5         | 0.0    | 179.99   |
 <span class="linenos" data-linenos="33 "></span>+-----------------------+--------------------+-----------+--------+----------+
 </code></pre></div>
-<p>Las consultas que hemos visto en este caso de uso también se conocen como <strong>funciones ventana</strong>, ya que se ejecutan sobre un subconjunto de los datos. La ventana viene dada por la partición o por la posición una vez ordenados los datos.</p>
+<p>Las consultas que hemos visto en este caso de uso también se conocen como <a href="https://cwiki.apache.org/confluence/display/hive/languagemanual+windowingandanalytics"><strong>funciones ventana</strong></a>, ya que se ejecutan sobre un subconjunto de los datos. La ventana viene dada por la partición o por la posición una vez ordenados los datos.</p>
 <p>Los posibles valores son:</p>
 <ul>
 <li><code>rows between current row and unbounded following</code>: desde la fila actual hasta el final de la ventana/partición.</li>
@@ -4992,26 +4992,65 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 4p) A partir de los archivos trabajados en la sesión sobre <a href="../de/pentaho.html">Pentaho</a>, vamos a crear diversas tablas y consultas en <em>Hive</em>. Para las siguiente aactividades, se pide adjuntar tanto los scripts como comandos empleados, así como una captura de pantalla donde se vea la ejecución de las diferentes instrucciones.</p>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 4p) A partir de los archivos trabajados en la sesión sobre <a href="../de/pentaho.html">Pentaho</a>, vamos a crear diversas tablas y consultas en <em>Hive</em>. Para las siguientes actividades, se pide adjuntar tanto los scripts como comandos empleados, así como una captura de pantalla donde se vea la ejecución de las diferentes instrucciones.</p>
 <ol>
-<li>Carga los archivo <a href="../de/resources/pdi_sales.csv"><code>pdi_sales</code></a>, <a href="../de/resources/pdi_product.csv"><code>pdi_product</code></a> y <a href="../de/resources/pdi_manufacturer.csv"><code>pdi_manufacturer</code></a> en <code>/user/iabd/pdi</code>.</li>
-<li>Crea la base de datos <code>hive-iabd</code> sobre la cual realizaremos los siguientes pasos.</li>
-<li>Crea una tabla externa para cada uno de los archivos, y llámalas <code>sales</code>, <code>product</code> y <code>manufacturer</code> respectivamente con formato de <code>TEXTFILE</code> teniendo en cuenta los separados empleados en cada archivo.</li>
-<li>Crea una tabla interna llamada <code>productos</code> realizando un <em>join</em> entre las tablas <code>product</code> y <code>manufacturer</code> con formato <em>Parquet</em></li>
-<li>Crea una tabla interna llamada <code>ventas</code> realizando un <em>join</em> entre las tablas <code>sales</code> y <code>productos</code> en formato <em>ORC</em>, particiando los datos por el país de la venta.</li>
+<li>Carga los archivos <a href="../de/resources/pdi_sales.csv"><code>pdi_sales</code></a>, <a href="../de/resources/pdi_product.csv"><code>pdi_product</code></a> y <a href="../de/resources/pdi_manufacturer.csv"><code>pdi_manufacturer</code></a> en HDFS en las rutas <code>/user/iabd/pdi/sales</code>, <code>/user/iabd/pdi/product</code> y <code>/user/iabd/pdi/manufacturer</code> respectivamente.</li>
+<li>Crea la base de datos <code>hiveiabd</code> sobre la cual realizaremos los siguientes pasos.</li>
 <li>
-<p>Sobre la tabla de <code>ventas</code> recién creada, crea una vista materializada llamada <code>ventas200</code> que utilice funciones ventana y que obtenga la siguiente información siempre y cuando los clientes y sus pedidos siempre y cuando superen los 200$.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>asdf
+<p>Crea una tabla externa para cada uno de los archivos y llámalas <code>sales</code>, <code>product</code> y <code>manufacturer</code> respectivamente con formato de <code>TEXTFILE</code> teniendo en cuenta los separadores empleados en cada archivo (unos utilizan el punto y coma <code>;</code> y otros la coma <code>,</code>), la ruta de HDFS que hemos creado anteriormente y los tipos de datos necesarios (por simplicidad, el campo con la fecha de la venta gestiónala como <code>STRING</code>)</p>
+<p>Para que no coja la primera línea que contiene el nombre de las columnas, añade la propiedad <code>skip.header.line.count</code> en la creación de cada tabla;</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="p">...</span>
+<span class="linenos" data-linenos="2 "></span><span class="p">...</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="ss">&quot;skip.header.line.count&quot;</span><span class="o">=</span><span class="ss">&quot;1&quot;</span><span class="p">);</span>
 </code></pre></div>
 </li>
 <li>
-<p>Inserta un dato en la tabla <code>ventas</code> y comprueba si aparece en la vista <code>ventas200</code>.</p>
+<p>Crea una tabla interna llamada <code>productos</code> con formato <em>Parquet</em> y rellénala con el resultado de realizar un <em>join</em> entre las tablas <code>product</code> y <code>manufacturer</code>.</p>
 </li>
-<li>Provoca que la vista materializada actualice su estado y muestra cómo el dato del paso 7 ya aparece.</li>
+<li>Crea una tabla interna llamada <code>ventas</code> en formato <em>ORC</em> y rellénala con el resultado de realizar un <em>join</em> entre las tablas <code>sales</code> y <code>productos</code>, particionando los datos por el país de la venta.</li>
+<li>¿Qué aparece al ejecutar el siguiente comando <code>hdfs dfs -ls /user/hive/warehouse/hiveiabd.db/ventas</code> ?</li>
+<li>
+<p>Sobre la tabla de <code>ventas</code> recién creada, crea una vista materializada llamada <code>ventasPorFabricante</code> que obtenga la siguiente información de la recaudación obtenida por cada fabricante.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>+-----------------------------------+----------------------------------+
+<span class="linenos" data-linenos=" 2 "></span>| ventasporfabricante.manufacturer  | ventasporfabricante.recaudacion  |
+<span class="linenos" data-linenos=" 3 "></span>+-----------------------------------+----------------------------------+
+<span class="linenos" data-linenos=" 4 "></span>| Abbas                             | 8504830.70993042                 |
+<span class="linenos" data-linenos=" 5 "></span>| Aliqui                            | 4.960930444169426E7              |
+<span class="linenos" data-linenos=" 6 "></span>| Barba                             | 4145604.8580932617               |
+<span class="linenos" data-linenos=" 7 "></span>| Currus                            | 3.4098148993003845E7             |
+<span class="linenos" data-linenos=" 8 "></span>| Fama                              | 3111286.106048584                |
+<span class="linenos" data-linenos=" 9 "></span>| Leo                               | 4981597.603515625                |
+<span class="linenos" data-linenos="10 "></span>| Natura                            | 7.659636524445343E7              |
+<span class="linenos" data-linenos="11 "></span>| Palma                             | 1141784.282775879                |
+<span class="linenos" data-linenos="12 "></span>| Pirum                             | 3.0881129688156128E7             |
+<span class="linenos" data-linenos="13 "></span>| Pomum                             | 2290935.590690613                |
+<span class="linenos" data-linenos="14 "></span>| Quibus                            | 7420492.980041504                |
+<span class="linenos" data-linenos="15 "></span>| Salvus                            | 342236.4960708618                |
+<span class="linenos" data-linenos="16 "></span>| VanArsdel                         | 2.5061688651968384E8             |
+<span class="linenos" data-linenos="17 "></span>| Victoria                          | 3820327.428833008                |
+<span class="linenos" data-linenos="18 "></span>+-----------------------------------+----------------------------------+
+</code></pre></div>
+</li>
+<li>
+<p>Inserta el siguiente dato en la tabla <code>ventas</code> y comprueba si aparece en la vista <code>ventasPorFabricante</code> (fíjate en el fabricante <em>Natura</em>) y en HDFS:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">insert</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">ventas</span><span class="w"> </span><span class="k">values</span><span class="w"> </span><span class="p">(</span><span class="mi">725</span><span class="p">,</span><span class="ss">&quot;2/15/2024&quot;</span><span class="p">,</span><span class="ss">&quot;03206&quot;</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">98765432</span><span class="p">.</span><span class="mi">1</span><span class="p">,</span><span class="ss">&quot;Natura RP-13&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Rural&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Productivity&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Natura&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Spain&quot;</span><span class="p">);</span>
+</code></pre></div>
+</li>
+<li>
+<p>Provoca que la vista materializada actualice su estado y muestra cómo el dato del paso anterior ya repercute en el resultado en la vista.</p>
+</li>
+<li>
+<p>Ejecuta la siguiente consulta que utiliza funciones ventana y explica qué realiza:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="n">manufacturer</span><span class="p">,</span><span class="w"> </span><span class="n">country</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">revenue</span><span class="o">*</span><span class="n">units</span><span class="p">),</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="n">rank</span><span class="p">()</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="n">partition</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">country</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">revenue</span><span class="o">*</span><span class="n">units</span><span class="p">)</span><span class="w"> </span><span class="k">desc</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">FROM</span><span class="w"> </span><span class="n">ventas</span>
+<span class="linenos" data-linenos="4 "></span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">manufacturer</span><span class="p">,</span><span class="w"> </span><span class="n">country</span><span class="p">;</span>
+</code></pre></div>
+</li>
 </ol>
 </li>
 <li>
-<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 1p extra) A partir de la base de datos <code>retail_db</code>, importa las tablas <code>orders</code> y <code>order_items</code>, en las cuales puedes obtener la cantidad de productos que contiene un pedido. Utilizando todas las tablas que ya hemos importado en los casos anteriores, crea una tabla externa en <em>Hive</em> llamada <code>pedidos</code> utilizando 8 <em>buckets</em> con el código del cliente, que contenga:</p>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 1p extra) A partir de la base de datos <code>retail_db</code>, importa las tablas <code>orders</code> y <code>order_items</code>, en las cuales puedes obtener la cantidad de productos que contiene un pedido. Utilizando todas las tablas que ya hemos importado en los casos de uso de los apuntes, crea una tabla externa en <em>Hive</em> llamada <code>pedidos</code> utilizando 8 <em>buckets</em> con el código del cliente, que contenga:</p>
 <ul>
 <li>Código y fecha del pedido.</li>
 <li>Precio del pedido (sumando las líneas de pedido).</li>
