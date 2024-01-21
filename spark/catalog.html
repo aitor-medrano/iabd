@@ -827,12 +827,20 @@
   
   
     <li class="md-nav__item">
-      <a href="../cloud/emr.html" class="md-nav__link">
+      <a href="../cloud/athena.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    EMR
+    Athena
   </span>
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
   
 
       </a>
@@ -848,11 +856,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../cloud/athena.html" class="md-nav__link">
+      <a href="../cloud/emr.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Athena
+    EMR
   </span>
   
     
@@ -1112,6 +1120,8 @@
       
         
       
+        
+      
     
     
     
@@ -1241,17 +1251,46 @@
   
   
     <li class="md-nav__item">
-      <a href="../hadoop/hive.html" class="md-nav__link">
+      <a href="../hadoop/hive1.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Hive
+    Hive I
   </span>
   
     
   
   
     <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hive2.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive II
+  </span>
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
     </span>
   
 
@@ -3275,7 +3314,7 @@ Si queremos que se vuelvan a cargar los datos pero no se cree de nuevo la tabla 
 <span class="linenos" data-linenos=" 9 "></span><span class="c1"># [Database(name=&#39;default&#39;, description=&#39;Default Hive database&#39;, locationUri=&#39;hdfs://iabd-virtualbox:9000/user/hive/warehouse&#39;),</span>
 <span class="linenos" data-linenos="10 "></span><span class="c1">#  Database(name=&#39;iabd&#39;, description=&#39;&#39;, locationUri=&#39;hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db&#39;)]</span>
 </code></pre></div>
-<p>De manera que obtenemos las bases de datos que está utilizando actualmente (como puedes observar, son las bases de datos que hemos creado previamente en la sesión de <a href="../hadoop/hive.html">Hive</a>).</p>
+<p>De manera que obtenemos las bases de datos que está utilizando actualmente (como puedes observar, son las bases de datos que hemos creado previamente en la sesión de <a href="../hadoop/hive1.html">Hive</a>).</p>
 <p>Si queremos ver cual es nuestra base de datos activa, utilizaremos el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.currentDatabase.html"><code>currentDatabase</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">currentDatabase</span><span class="p">()</span>
 <span class="linenos" data-linenos="2 "></span><span class="c1"># &#39;default&#39;</span>
@@ -3342,7 +3381,7 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connect
 </div>
 <h4 id="tablas-externas">Tablas externas<a class="headerlink" href="#tablas-externas" title="Permanent link">&para;</a></h4>
 <p>Si queremos crear una tabla no gestionada, también conocida como tabla externa, la cual se almacena como <a href="https://spark.apache.org/docs/latest/sql-data-sources-hive-tables.html">tablas en Hive</a>, necesitamos indicar la ruta de los datos en el momento de la creación mediante la clausula <code>LOCATION</code>.</p>
-<p>Vamos a crear una tabla de clientes con los datos que tenemos almacenados en HDFS que <a href="../hadoop/hive.html#caso-de-uso-1-creación-y-borrado-de-tablas">cargamos mediante Sqoop en la sesión de Hive</a> en la ruta <code>/user/iabd/hive/customer</code>.</p>
+<p>Vamos a crear una tabla de clientes con los datos que tenemos almacenados en HDFS que <a href="../hadoop/hive1.html#caso-de-uso-1-creación-y-borrado-de-tablas">cargamos mediante Sqoop en la sesión de Hive</a> en la ruta <code>/user/iabd/hive/customer</code>.</p>
 <p>Así pues, nuestra sentencia DDL sería:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="s2">CREATE EXTERNAL TABLE IF NOT EXISTS clientese</span>

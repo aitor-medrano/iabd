@@ -13,10 +13,10 @@
         <link rel="canonical" href="https://aitor-medrano.github.io/iabd/cloud/athena.html">
       
       
-        <link rel="prev" href="emr.html">
+        <link rel="prev" href="escalado.html">
       
       
-        <link rel="next" href="../de/de.html">
+        <link rel="next" href="emr.html">
       
       
       <link rel="icon" href="../favicon.png">
@@ -826,27 +826,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="emr.html" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    EMR
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -998,6 +977,35 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="emr.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EMR
+  </span>
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
     </li>
   
 
@@ -1245,6 +1253,8 @@
       
         
       
+        
+      
     
     
     
@@ -1374,17 +1384,46 @@
   
   
     <li class="md-nav__item">
-      <a href="../hadoop/hive.html" class="md-nav__link">
+      <a href="../hadoop/hive1.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Hive
+    Hive I
   </span>
   
     
   
   
     <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hive2.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive II
+  </span>
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
     </span>
   
 
@@ -2900,7 +2939,7 @@ At re:Invent 2022, AWS announced Amazon Athena for Apache Spark, a new functiona
 <p>Para interactuar con los datos, <em>Athena</em> se basa en <em>Presto</em> (<a href="https://prestodb.io/">https://prestodb.io/</a>), un motor distribuido de SQL creado por <em>Facebook</em> y liberado como proyecto <em>open source</em>. Tiene soporte para ANSI SQL, así como características propias de <em>Presto</em> como funciones geoespaciales o extensiones de consultas que permiten crear consultas mediante aproximación que estadísticamente casi son similares sobre grandes conjuntos de datos en solo una fracción de tiempo de lo que supondría una consulta real.</p>
 <p>Además de realizar consultas, podemos utilizar sentencias de tipo DML para manipular datos y DDL para interactuar con los metadatos del lago de datos y modificar los esquemas y propiedades de las tablas, así como modificar sus particiones.</p>
 <p>Dentro de DML, es muy común utilizar sentencias <code>create-table-as-select (CTAS)</code> para crear nuevas tablas así como <code>insert into ... select</code> para añadir nuevas particiones al <em>metastore</em>, eliminando la necesidad de gestionar las particiones de forma manual.</p>
-<p>Respecto al dialecto SQL, igual que hemos visto en <a href="../hadoop/hive.html">Hive</a>, disponemos de tipos complejos como los mapas, las estructuras y los arrays/listas.</p>
+<p>Respecto al dialecto SQL, igual que hemos visto en <a href="../hadoop/hive1.html">Hive</a>, disponemos de tipos complejos como los mapas, las estructuras y los arrays/listas.</p>
 <h2 id="metastore">MetaStore<a class="headerlink" href="#metastore" title="Permanent link">&para;</a></h2>
 <p>Además de acceder a los datos, <em>Athena</em> necesita almacenar metadatos para que el motor SQL entienda como interpretar los datos almacenados en S3 o cualquier otro lugar. Esta información extra mapea las colecciones de ficheros u objetos S3 para construir tablas, columnas y filas, de forma similar a cómo lo realiza el <em>metastore</em> de <em>Hive</em>. Es decir, ofrece una vista lógica (bases de datos que contienen tablas, que consisten en filas con sus columnas) que se mapean con los ficheros físicos almacenados en S3.</p>
 <p>Por ello, <em>Athena</em> trabaja con <em>metastores</em> compatibles con <em>Hive</em> incluyendo el servicio de <a href="https://docs.aws.amazon.com/glue/latest/dg/catalog-and-crawler.html">AWS Glue Data Catalog</a>.</p>
@@ -2929,7 +2968,7 @@ At re:Invent 2022, AWS announced Amazon Athena for Apache Spark, a new functiona
 
 <div class="admonition info">
 <p class="admonition-title">Preparando los datos</p>
-<p>Los datos que vamos a consultar son los datos de los clientes de la base de datos <code>retail_db</code> que hemos utilizando en la sesión de <a href="../hadoop/hive.html">Hive</a>, los cuales hemos exportado al archivo <a href="resources/customers.csv">customers.csv</a>.</p>
+<p>Los datos que vamos a consultar son los datos de los clientes de la base de datos <code>retail_db</code> que hemos utilizando en la sesión de <a href="../hadoop/hive1.html">Hive</a>, los cuales hemos exportado al archivo <a href="resources/customers.csv">customers.csv</a>.</p>
 <p>Para poder leer estos datos, primero hemos de colocarlos en S3. En nuestro caso, hemos decidido crear una carpeta llamada <code>customers</code> dentro del <em>bucket</em> <code>s3severo8a</code>, y dentro de ella, hemos dejado el archivo con los datos:</p>
 <p><figure style="align: center;">
     <img src="images/07s3customers.png">
@@ -3209,7 +3248,7 @@ https://www.linkedin.com/pulse/build-etl-pipeline-using-aws-s3-glue-athena-data-
       <nav class="md-footer__inner md-grid" aria-label="Pie" >
         
           
-          <a href="emr.html" class="md-footer__link md-footer__link--prev" aria-label="Anterior: EMR">
+          <a href="escalado.html" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Monitorización y Escalado">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -3219,20 +3258,20 @@ https://www.linkedin.com/pulse/build-etl-pipeline-using-aws-s3-glue-athena-data-
                 Anterior
               </span>
               <div class="md-ellipsis">
-                EMR
+                Monitorización y Escalado
               </div>
             </div>
           </a>
         
         
           
-          <a href="../de/de.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Ingeniería de datos">
+          <a href="emr.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: EMR">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Siguiente
               </span>
               <div class="md-ellipsis">
-                Ingeniería de datos
+                EMR
               </div>
             </div>
             <div class="md-footer__button md-icon">

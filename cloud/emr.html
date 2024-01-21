@@ -13,10 +13,10 @@
         <link rel="canonical" href="https://aitor-medrano.github.io/iabd/cloud/emr.html">
       
       
-        <link rel="prev" href="escalado.html">
+        <link rel="prev" href="athena.html">
       
       
-        <link rel="next" href="athena.html">
+        <link rel="next" href="../de/de.html">
       
       
       <link rel="icon" href="../favicon.png">
@@ -826,6 +826,35 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="athena.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Athena
+  </span>
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -843,6 +872,14 @@
     EMR
   </span>
   
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
 
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -853,6 +890,14 @@
   <span class="md-ellipsis">
     EMR
   </span>
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
   
 
       </a>
@@ -922,6 +967,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#caso-de-uso" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caso de Uso
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso de Uso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#de-hdfs-a-s3" class="md-nav__link">
+    <span class="md-ellipsis">
+      De HDFS a S3
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#escalando" class="md-nav__link">
     <span class="md-ellipsis">
       Escalando
@@ -961,35 +1030,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="athena.html" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Athena
-  </span>
-  
-    
-  
-  
-    <span class="md-status md-status--new" title="Recién añadido">
-    </span>
-  
-
-  
-
-      </a>
     </li>
   
 
@@ -1237,6 +1277,8 @@
       
         
       
+        
+      
     
     
     
@@ -1366,17 +1408,46 @@
   
   
     <li class="md-nav__item">
-      <a href="../hadoop/hive.html" class="md-nav__link">
+      <a href="../hadoop/hive1.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Hive
+    Hive I
   </span>
   
     
   
   
     <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hive2.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive II
+  </span>
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
     </span>
   
 
@@ -2784,6 +2855,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#caso-de-uso" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caso de Uso
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso de Uso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#de-hdfs-a-s3" class="md-nav__link">
+    <span class="md-ellipsis">
+      De HDFS a S3
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#escalando" class="md-nav__link">
     <span class="md-ellipsis">
       Escalando
@@ -2866,7 +2961,7 @@
   <h1>EMR</h1>
 
 <figure style="float: right;">
-    <img src="images/05emr-logo.png" width="100">
+    <img src="images/05emr-logo.png" width="100" alt="Logo de AWS EMR">
     <figcaption>Logo de AWS EMR</figcaption>
 </figure>
 
@@ -2885,63 +2980,54 @@
 </figure>
 
 <p>Ofrece elasticidad sobre el cluster, pudiendo modificar dinámicamente el dimensionamiento del cluster según necesidades, tanto hacia arriba como hacia abajo de clúster que están en ejecución.</p>
-<p>Respecto al hardware, se ejecuta sobre máquinas EC2 (IaaS), las cuales podemos configurar según necesidades. Utiliza HDFS y S3 para el almacenamiento, de manera que podemos guardar los datos de entrada y los de salida en S3, mientras que los resultados intermedios los almacenamos en HDFS.</p>
+<p>Respecto al hardware, se ejecuta sobre máquinas EC2 (IaaS), las cuales configuraremos según necesidades. Utiliza HDFS y S3 para el almacenamiento, de manera que podemos guardar los datos de entrada y los de salida en S3, mientras que los resultados intermedios los almacenamos en HDFS.</p>
+<p>Cada cluster de EMR requiere de un nodo principal (<em>master</em>) y al menos nodo core (un nodo <em>worker</em> que incluye almacenamiento local), y opcionalmente un número de nodos tarea (nodos <em>worker</em> que no incluyen almacenamiento local).</p>
 <!--
 https://learning.oreilly.com/library/view/data-engineering-with/9781804614426/Text/Chapter_03.xhtml#_idParaDest-81
-
-With EMR provisioned mode, you can create an EMR cluster on EC2 nodes, specifying the specific instance types you want to use, and many other detailed configuration parameters (big data applications you want to deploy, automatic scaling options, networking, and more). This option provides you the most control and flexibility for cluster and application configuration, enabling you to fine-tune the performance of your applications. However, this does require you to build up expertise to understand the configuration options and their impact on application performance, such as the optimal EC2 instance type to use for different applications.
-
-Alternatively, you can select to run Spark workloads using Amazon EMR on an Elastic Kubernetes Service (EKS) cluster. If your organization already makes use of EKS to run applications, you can have EMR automatically deploy containers to run Spark workloads using the EKS compute. EMR does not provision the EKS cluster (it only provisions the Spark-based container to run on the cluster), so you are required to have an existing cluster and the skills to maintain and configure EKS.
-
-EMR Serverless provides you with an option to run certain workloads without needing to decide on and select EC2 instance types. With EMR Serverless, you can create an application that runs either Spark or Hive as the processing engine, and then select a maximum for CPU, memory, and storage for that application. You can optionally select to pre-initialize Spark drivers and workers for your application, which then creates a warm pool of workers for an application. While there is a cost to have the warm pool running, it does enable submitted jobs to start processing immediately, and you can optionally specify a timeout, after which the application will stop if idle. If you do not pre-initialize capacity, it may take a few minutes for a submitted job to run, but it is the most cost-effective way to run your jobs as you do not pay for application idle time. Once an application is running, you can submit multiple Spark jobs to the application.
-
-As discussed above, Amazon EMR can be used to run Apache Spark, and you might be wondering why AWS has multiple services (Glue and EMR) that effectively offer the same big data processing engine. While either service can be used to perform big data processing using the Apache Spark engine, there are differences from a management, integration, and cost perspective.
-
-AWS Glue requires the least amount of configuration, as you just need to specify a worker type and a maximum number of DPUs for each job and can then submit a Spark job to run. Using EMR Serverless requires a bit more configuration as you need to configure an application, and can then submit jobs to that application. However, you have more control over both the number of CPUs and the memory for each worker, and the cost for equivalent processing power is slightly lower than Glue.
-
-Amazon EMR provisioned clusters (on EC2 or EKS) require more expertise to manage but provide the most control for fine-tuning your Spark jobs. They also support a wide range of big data processing applications beyond Spark (such as Hive, Presto, and Trino) and are the lowest-cost method for running Spark jobs using a managed AWS service.
-
-One of the other differences is that AWS Glue has a number of built-in connectors, as well as a marketplace with additional connectors, that can make it easier to integrate your Spark code with external systems.
-
-The following diagram shows an EMR cluster provisioned on EC2, including some of the open-source projects that can be run on the cluster:
-
-Figure 3.4: High-level overview of an EMR cluster running on EC2
-
-Each EMR provisioned cluster requires a master node, at least one core node (a worker node that includes local storage), and then optionally a number of task nodes (worker nodes that do not have any local storage).
-
-Having looked at how we can transform data in our data lake, let’s now look at the AWS services that enable us to orchestrate the different components of our data pipeline.
 -->
 
 <p>Los cluster de EMR se componen de:</p>
 <ul>
-<li>un nodo maestro, encargado de gestionar el cluster y ejecutar los servicios de coordinación de datos.</li>
-<li>varios nodos principales, los cuales ejecutan las tareas y almacenan los datos en el clúster HDFS.</li>
-<li>nodos <em>tareas</em>, los cuales son opcionales, y no almacenan datos, y podemos añadir a un cluster para incrementar la capacidad de procesamiento (e eliminarlos una vez no los necesitamos para reducir costes).</li>
+<li>un nodo <strong>principal central</strong>, encargado de gestionar el cluster y ejecutar los servicios de coordinación de datos.</li>
+<li>varios nodos <strong>principales</strong>, los cuales ejecutan las tareas y almacenan los datos en el clúster HDFS.</li>
+<li>nodos <strong>tareas</strong>, los cuales son opcionales, y no almacenan datos, y podemos añadir a un cluster para incrementar la capacidad de procesamiento (e eliminarlos una vez no los necesitamos para reducir costes).</li>
 </ul>
 <p>A nivel de servicios, podemos definir su arquitectura en cuatro capas:</p>
 <ul>
-<li>Almacenamiento: mediante HFDS, EMR FS o el sistema de archivos local (almacenamiento de las instancias EC2).</li>
-<li>Gestor de recursos del cluster: YARN</li>
-<li>Frameworks de procesamiento de datos: Hadoop MapReduce y Apache Spark</li>
-<li>Aplicaciones: Apache Spark, Apache Hive, etc...</li>
+<li>Almacenamiento: mediante <em>HFDS</em>, <em>EMR FS</em> o el sistema de archivos local (almacenamiento de las instancias EC2).</li>
+<li>Gestor de recursos del cluster: <em>YARN</em>, <em>Tez</em>.</li>
+<li>Frameworks de procesamiento de datos: <em>Hadoop MapReduce</em> y <em>Apache Spark</em></li>
+<li>Aplicaciones: <em>Apache Spark</em>, <em>Apache Hive</em>, etc...</li>
 </ul>
 <h2 id="lanzando-emr">Lanzando EMR<a class="headerlink" href="#lanzando-emr" title="Permanent link">&para;</a></h2>
 <p>Antes de lanzar EMR, necesitamos crear un repositorio de información donde guardar los datos de entrada y salida, así como los logs que EMR genere.</p>
 <p>Para ello, en S3 generaremos un bucket al que llamaremos <code>s3severo8a-emr</code>.</p>
 <p>Podemos lanzar un cluster de EMR de tres formas, mediante la consola, el CLI o con un API. Vamos a centrar en el uso de la consola.</p>
-<p>A continuación, accedemos al servicio de EMR, y creamos un cluster el cual hemos llamado <code>ClusterEMRs8a</code> y le indicamos la carpeta en S3 que acabamos de crear, así como en el modo de lanzamiento elegimos <em>Clúster</em>:</p>
+<p>A continuación, accedemos al servicio de EMR, y creamos un cluster el cual hemos llamado <code>ClusterEMRs8a</code>, seleccionamos la última versión de EMR (en Enero de 2023 es la 7.0) y seleccionamos algunos de los paquetes ya definidos, o seleccionamos las aplicaciones en las que estamos interesados (en nuestro caso, vamos a seleccionar las aplicaciones que puedes ver en la imagen, que son los servicios que hemos trabajado en el bloque de <em>Hadoop</em>):</p>
 <figure style="align: center;">
-    <img src="images/05emr-create.png" width="700">
+    <img src="images/05emr-create-cluster.png" alt="Creando un clúster en EMR">
     <figcaption>Creando un clúster en EMR</figcaption>
 </figure>
 
-<p>A continuación, elegimos como tipo de instancia <code>m4.large</code> (2 CPU y 8 GiB RAM) y como par de claves <code>vockey</code>, las cuales podemos descargar desde <em>AWS Details</em> al lanzar nuestro <em>Learner Lab</em>:</p>
+<p>A continuación, vamos a seleccionar los tipos de instancias de nuestro clúster. Para ahorra costes, únicamente elegiremos un nodo principal y otro central (los nodos tareas como son opcionales, para este ejemplo, vamos a descartarlos). En cuanto al tipo de instancia, escogeremos las más económicas que nos permite <em>AWS Academy</em>, actualmente las instancias <code>m4.large</code> (2 CPU y 8 GiB RAM). Finalmente, escogemos el tamaño del almacenamiento del volumen EBS para las instancias EC2.</p>
 <figure style="align: center;">
-    <img src="images/05emr-ec2.png" width="900">
-    <figcaption>Eligiendo instancias y clave SSH</figcaption>
+    <img src="images/05emr-create-cluster-ec2.png" alt="Eligiendo instancias y almacenamiento">
+    <figcaption>Eligiendo instancias y almacenamiento</figcaption>
 </figure>
 
-<p>Tras darle a crear, a los 10 minutos aproximadamente, nuestro clúster estará listo para trabajar con él.</p>
+<p>Tras la configuración de las instancias, podemos definir el tamaño del clúster. Lo normal es que los clúster de EMR se compongan de un gran número de instancias (sino, más que Big Data, será Small Data y probablemente habrá mejores soluciones que EMR). En nuestro caso, para probar el servicio, con una única instancia nos es suficiente. Otras opciones es que el redimensionado del clúster los gestione AWS mediante métricas o programar nosotros el escalado mediante políticas personalizadas:</p>
+<figure style="align: center;">
+    <img src="images/05emr-create-cluster-size.png" alt="Eligiendo el tamaño del clúster">
+    <figcaption>Eligiendo el tamaño del clúster</figcaption>
+</figure>
+
+<p>De los pasos siguientes, podemos dejar los valores por defecto y bajamos hasta los ajustes de seguridad, donde elegimos el par de claves <code>vockey</code>, las cuales podemos descargar desde <em>AWS Details</em> al lanzar nuestro <em>Learner Lab</em> y luego seleccionamos los roles IAM asociados a <code>EMR_DefaultRole</code>y <code>EMR_EC2_LabRole</code> respectivamente:</p>
+<figure style="align: center;">
+    <img src="images/05emr-create-cluster-security.png" alt="Configurando la seguridad del clúster">
+    <figcaption>Configurando la seguridad del clúster</figcaption>
+</figure>
+
+<p>En el lado derecho podremos ver un resumen de las opciones seleccionadas, y tras darle a crear, a los 10 minutos aproximadamente, nuestro clúster estará listo para trabajar con él.</p>
 <div class="admonition info">
 <p class="admonition-title">Modos de lanzamiento</p>
 <p>Normalmente, cuando utilizamos un clúster para procesar analíticas, interactuar con aplicaciones de big data o procesamiento de <em>datasets</em> de forma periódica, el clúster está siempre corriendo, a no ser que lo detengamos nosotros de forma explícita.
@@ -2949,39 +3035,55 @@ Pero si queremos que sólo exista durante la ejecución de uno o más trabajos, 
 </div>
 <h2 id="preparando-al-cluster">Preparando al clúster<a class="headerlink" href="#preparando-al-cluster" title="Permanent link">&para;</a></h2>
 <p>En un cluster EMR, el nodo maestro es una instancia EC2 que coordina al resto de instancias EC2 que corren los nodos principales y de tareas. Este nodo expone un DNS público el cual podemos utilizar para conectarnos.</p>
-<p>Por defecto, EMR crea un grupo de seguridad para el nodo maestro el cual determina el acceso. De inicio, es grupo de seguridad no permite las conexiones SSH. Por ello, antes de poder conectarnos al cluster, necesitamos modificar el grupo de seguridad del nodo principal para permitir todo el tráfico TCP y el SSH.</p>
+<p>Por defecto, EMR bloquea el arranque de los clúster que permitan las conexiones del exterior (esto nos puede pasar si al crear el clúster le asignamos un grupo de seguridad que ya teníamos creado y que permitía el tráfico entrante).</p>
+<p>Para permitir el acceso desde el exterior, podemos arrancar un clúster con el trafico cerrado, y una vez ya ha arrancado desactivar la opción de <em>Bloquear el acceso público</em> de EMR:</p>
 <figure style="align: center;">
-    <img src="images/05emr-security-group.png" width="800">
-    <figcaption>Permitiendo todas las conexiones de entrada</figcaption>
+    <img src="images/05emr-public-access.png" alt="Configurando el bloqueo del acceso público">
+    <figcaption>Configurando el bloqueo del acceso público</figcaption>
 </figure>
 
-<p>De forma paralela, por defecto, EMR bloquea el arranque de los clúster que permitan las conexiones del exterior (esto nos puede pasar si al crear el clúster le asignamos un grupo de seguridad que ya teníamos creado y que permitía el tráfico entrante).</p>
-<p>Para permitir el acceso desde el exterior, podemos arrancar un clúster con el trafico cerrado, y una vez ya ha arrancado cambiar su grupo de seguridad, o en la opción de <em>Bloquear el acceso público</em> de EMR, desactivarlo:</p>
+<p>Si editamos las opciones, podemos desbloquear el acceso público:</p>
 <figure style="align: center;">
-    <img src="images/05emr-public-access.png" width="900">
+    <img src="images/05emr-public-access-activated.png" alt="Desactivando el bloqueo del acceso público">
     <figcaption>Desactivando el bloqueo del acceso público</figcaption>
 </figure>
 
-<h2 id="conectandonos-al-cluster">Conectándonos al clúster<a class="headerlink" href="#conectandonos-al-cluster" title="Permanent link">&para;</a></h2>
-<p>Una vez arrancado, nos podemos conectar al nodo principal.</p>
-<figure style="float: right;">
-    <img src="images/05emr-cluster-started.png" width="600">
-    <figcaption>Cluster arrancado</figcaption>
+<p>Por defecto, EMR crea un grupo de seguridad para el nodo maestro el cual determina el acceso. De inicio, es grupo de seguridad no permite las conexiones SSH. Por ello, antes de poder conectarnos al cluster, también necesitamos modificar el grupo de seguridad del nodo principal para permitir todo el tráfico TCP (el tráfico SSH ya está abierto por defecto).</p>
+<p>Para ello, en la pantalla de información del clúster que acabamos de crear, en la pestaña de <em>Propiedades</em>, en <em>Red y Seguridad</em>, editaremos el grupo de seguridad del nodo principal:</p>
+<figure style="align: center;">
+    <img src="images/05emr-security-group.png" alt="Seleccionando el grupo de seguridad">
+    <figcaption>Seleccionando el grupo de seguridad</figcaption>
 </figure>
 
-<p>Por ejemplo, podemos conectarnos a:</p>
+<p>Tras <em>Editar reglas de entrada</em>, permitimos todo el tráfico entrante (cuidado que esta es una práctica de seguridad muy mala, sólo lo hacemos así por comodidad):</p>
+<figure style="align: center;">
+    <img src="images/05emr-security-group-tcp.png" alt="Permitiendo todas las conexiones de entrada">
+    <figcaption>Permitiendo todas las conexiones de entrada</figcaption>
+</figure>
+
+<h2 id="conectandonos-al-cluster">Conectándonos al clúster<a class="headerlink" href="#conectandonos-al-cluster" title="Permanent link">&para;</a></h2>
+<p>Una vez arrancado, nos podemos conectar al nodo principal a algunas de las aplicaciones configuradas, por ejemplo a:</p>
 <ul>
 <li>El <em>namenode</em> de HDFS</li>
 <li><em>Hue</em> (mal traducido a Tonalidad)</li>
 <li>El interfaz de <em>Tez</em></li>
 <li>O la de <em>YARN</em></li>
 </ul>
-<div class="admonition caution">
+<figure style="align: center">
+    <img src="images/05emr-cluster-apps.png" alt="Aplicaciones accesibles">
+    <figcaption>Aplicaciones accesibles</figcaption>
+</figure>
+
+<div class="admonition warning">
 <p class="admonition-title">Parece que funciona pero...</p>
 <p>Una vez arrancado, a día de hoy tenemos un par de propiedades que modificar, ya que el acceso web a HDFS está bloqueado, y la ruta de HDFS en <em>Hue</em> está mal configurada.</p>
 </div>
 <p>Así pues, vamos a conectarnos vía SSH para activar el navegador web de HDFS. Con nuestras claves <code>labsuser.pem</code> descargadas, nos conectamos al clúster (recuerda previamente configurar los permisos mediante <code>chmod 400 labsuser.pem</code> y luego poner <code>hadoop@</code> delante de la URL del <em>namenode</em>):</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>ssh<span class="w"> </span>-i<span class="w"> </span>labsuser.pem<span class="w"> </span>hadoop@ec2-54-164-225-241.compute-1.amazonaws.com
+<div class="admonition tip inline end">
+<p class="admonition-title">Windows y SSH</p>
+<p>En el caso de <em>Windows</em>, debes utilizar <em>Putty</em> y las claves <code>ppk</code>.</p>
+</div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>ssh<span class="w"> </span>-i<span class="w"> </span>labsuser.pem<span class="w"> </span>hadoop@ec2-18-212-83-167.compute-1.amazonaws.com
 </code></pre></div>
 <p>Al conectarnos, tanto EC2 como EMR nos darán la bienvenida:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>   ,     #_
@@ -2994,7 +3096,7 @@ Pero si queremos que sólo exista durante la ejecución de uno o más trabajos, 
 <span class="linenos" data-linenos=" 8 "></span>      ~~._.   _/
 <span class="linenos" data-linenos=" 9 "></span>         _/ _/
 <span class="linenos" data-linenos="10 "></span>       _/m/&#39;
-<span class="linenos" data-linenos="11 "></span>Last login: Fri Jan 19 17:35:18 2024
+<span class="linenos" data-linenos="11 "></span>Last login: Sun Jan 21 10:08:18 2024
 <span class="linenos" data-linenos="12 "></span>
 <span class="linenos" data-linenos="13 "></span>EEEEEEEEEEEEEEEEEEEE MMMMMMMM           MMMMMMMM RRRRRRRRRRRRRRR    
 <span class="linenos" data-linenos="14 "></span>E::::::::::::::::::E M:::::::M         M:::::::M R::::::::::::::R   
@@ -3010,14 +3112,14 @@ Pero si queremos que sólo exista durante la ejecución de uno o más trabajos, 
 <span class="linenos" data-linenos="24 "></span>E::::::::::::::::::E M:::::M             M:::::M RR::::R      R::::R
 <span class="linenos" data-linenos="25 "></span>EEEEEEEEEEEEEEEEEEEE MMMMMMM             MMMMMMM RRRRRRR      RRRRRR
 <span class="linenos" data-linenos="26 "></span>
-<span class="linenos" data-linenos="27 "></span>[hadoop@ip-172-31-61-164 ~]$
+<span class="linenos" data-linenos="27 "></span>[hadoop@ip-172-31-18-133 ~]$
 </code></pre></div>
 <h3 id="visualizando-hdfs">Visualizando HDFS<a class="headerlink" href="#visualizando-hdfs" title="Permanent link">&para;</a></h3>
 <p>Para poder visualizar el sistema de archivos de HDFS, primero le cambiamos los permisos al <code>hdfs-site.xml</code> para poder editarlo sin problemas:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">777</span><span class="w"> </span>/usr/lib/hadoop/etc/hadoop/hdfs-site.xml
 <span class="linenos" data-linenos="2 "></span>nano<span class="w"> </span>/usr/lib/hadoop/etc/hadoop/hdfs-site.xml
 </code></pre></div>
-<p>Editamos la propiedad <code>dfs.webhdfs.enabled</code> y la ponemos a <code>true</code>:</p>
+<p>Editamos la propiedad <code>dfs.webhdfs.enabled</code> y la ponemos a <code>true</code> (podemos buscarla mediante CTRL + W, editarla, y luego guardar y salir mediante CTRL + X):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nt">&lt;property&gt;</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>dfs.webhdfs.enabled<span class="nt">&lt;/name&gt;</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">&lt;value&gt;</span>false<span class="nt">&lt;/value&gt;</span>
@@ -3028,20 +3130,20 @@ Pero si queremos que sólo exista durante la ejecución de uno o más trabajos, 
 </code></pre></div>
 <p>Y ahora desde el interfaz de HDFS ya podemos navegar por las carpetas y ver el contenido, por ejemplo, accediendo a <code>http://ec2-54-164-225-241.compute-1.amazonaws.com:9870</code>:</p>
 <figure style="align: center;">
-    <img src="images/05emr-hdfs-ui.png">
+    <img src="images/05emr-hdfs-ui.png" alt="Interfaz de HDFS">
     <figcaption>Interfaz de HDFS</figcaption>
 </figure>
 
 <h3 id="hue-y-hdfs">Hue y HDFS<a class="headerlink" href="#hue-y-hdfs" title="Permanent link">&para;</a></h3>
 <p>Cuando arranca Hue, la primera vez nos pide crear un usuario (en nuestro caso, hemos creado el usuario <code>iabd</code> con contraseña <code>IABDiabd1.</code>)</p>
 <figure style="align: center;">
-    <img src="images/05emr-hue-login.png">
+    <img src="images/05emr-hue-login.png" alt="Login de acceso a Hue">
     <figcaption>Login de acceso a Hue</figcaption>
 </figure>
 
-<p>Si intentamos visualizar los archivos, de igual modo, Hue no tiene bien configurado el acceso a HDFS:</p>
+<p>Si intentamos visualizar los archivos, de igual modo, <em>Hue</em> no tiene bien configurado el acceso a HDFS:</p>
 <figure style="align: center;">
-    <img src="images/05emr-hue-error.png" width="800">
+    <img src="images/05emr-hue-error.png" width="800" alt="Error al mostrar los archivos en Hue">
     <figcaption>Error al mostrar los archivos en Hue</figcaption>
 </figure>
 
@@ -3050,30 +3152,66 @@ Pero si queremos que sólo exista durante la ejecución de uno o más trabajos, 
 <span class="linenos" data-linenos="2 "></span>nano<span class="w"> </span>/usr/lib/hue/desktop/conf/hue.ini
 </code></pre></div>
 <p>Y configuramos bien el puerto de acceso (debe ser 9870), dentro del grupo <code>[[hdfs_clusters]]</code> de <code>[hadoop]</code> editamos la propiedad <code>webhdfs_url</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">webhdfs_url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">http://ip-172-31-15-67.ec2.internal:50070/webhdfs/v1</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">webhdfs_url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">http://ip-172-31-18-133.ec2.internal:9870/webhdfs/v1</span>
 </code></pre></div>
 <p>Y reiniciamos el servicio:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>hue
 </code></pre></div>
 <p>Sólo nos queda crear un carpeta para nuestro usuario en HDFS:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-mkdir<span class="w"> </span>/user/iabd
+<span class="linenos" data-linenos="2 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-chmod<span class="w"> </span><span class="m">777</span><span class="w"> </span>/user/iabd
 </code></pre></div>
-<p>Y ya podemos trabajar con Hue.</p>
+<p>Por ejemplo, podemos subir el archivo de ventas que hemos utilizado en varias sesiones, ya sea mediante el interfaz gráfico o comandos (<code>hdfs dfs -put pdi_sales.csv /user/iabd</code>), y visualizarlo desde Hue:</p>
 <figure style="align: center;">
-    <img src="images/05emr-hue-files.png">
+    <img src="images/05emr-hue-files.png" alt="Visualizando HDFS desde Hue">
     <figcaption>Visualizando HDFS desde Hue</figcaption>
 </figure>
 
+<h2 id="caso-de-uso">Caso de Uso<a class="headerlink" href="#caso-de-uso" title="Permanent link">&para;</a></h2>
+<p>Sqoop -&gt; HDFS
+Hive external table HDFS
+Hue consulta sobre Hive</p>
+<h3 id="de-hdfs-a-s3">De HDFS a S3<a class="headerlink" href="#de-hdfs-a-s3" title="Permanent link">&para;</a></h3>
+<p>Para poder trasladar la información de HDFS a S3 haremos uso de <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/UsingEMR_s3distcp.html">S3DistCp (s3-dist-cp)</a>, un herramienta open source que podemos añadirla como una paso dentro de nuestro clúster.</p>
+<div class="admonition info">
+<p class="admonition-title">Pasos</p>
+<p>sdfafsaas EXPLICAR</p>
+</div>
+<p>Antes de crear un paso, necesitamos preparar el <em>bucket</em> de S3 (puedes utilizar cualquier de los empleados en las sesiones anteriores; si no fuera el caso, crea el bucket y añade una carpeta).</p>
+<p>Así pues, vamos a añadir un paso con la siguiente información:</p>
+<ul>
+<li>Nombre: por ejemplo, <code>hdsf2s3_customers_s3iabd</code></li>
+<li>Librería: <code>command-runner.jar</code></li>
+<li>Comando: <code>s3-dist-cp --src=hdfs:///user/iabd/sqoop/customers --dest=s3://s3iabd/emr</code> (ten en cuenta las rutas de la carpeta en HDFS y el <em>bucket</em> de S3)</li>
+</ul>
+<figure style="align: center;">
+    <img src="images/05emr-add-step.png" alt="Creación de un paso en EMR">
+    <figcaption>Creación de un paso en EMR</figcaption>
+</figure>
+
+<p>En nuestro caso ha tardado 1 minuto y 50 segundos en realizar el flujo de datos de HDFS a S3. En el caso de que fallase el paso (en nuestro caso, tuvimos algún fallo con el nombre del bucket e incluso con los guiones de los parámetros), podremos consultar la salida de error. Eso sí, hay que esperar algunos minutos a que AWS actualice los logs:</p>
+<figure style="align: center;">
+    <img src="images/05emr-add-step-error.png" alt="Consulta de errores en una paso de EMR">
+    <figcaption>Consulta de errores en una paso de EMR</figcaption>
+</figure>
+
+<p>Una vez el paso se haya ejecutado exitosamente, si vamos a nuestro <em>bucket</em> veremos los archivos creados:</p>
+<figure style="align: center;">
+    <img src="images/05emr-s3.png" alt="Bucket con los datos copiados desde HDFS en EMR">
+    <figcaption>Bucket con los datos copiados desde HDFS en EMR</figcaption>
+</figure>
+
+<p>Una vez cargados los tablas en S3, podemos reproducir el caso de uso de la sesión de Athena y realizar consultas sobre los datos almacenados en el <em>bucket</em>.</p>
 <h2 id="escalando">Escalando<a class="headerlink" href="#escalando" title="Permanent link">&para;</a></h2>
 <p>Podemos ajustar el número de instancias EC2 con las que trabaja nuestro clúster de EMR, ya sea manualmente o de forma automática en respuesta a la demanda que reciba.</p>
 <figure style="align: center;">
-    <img src="images/05emr-cluster-scaling.png">
+    <img src="images/05emr-cluster-scaling.png" alt="Escalando un clúster EMR">
     <figcaption>Escalando un clúster EMR</figcaption>
 </figure>
 
 <p>Para ello, podemos activar el escalado gestionado mediante EMR o crear una política de escalado a medida. Independiente del modo, hemos de considerar que siempre hemos de tener de uno a tres nodos maestros, y que una vez creado el clúster, este número no lo podemos cambiar. Lo que sí que podemos es añadir y eliminar nodos principales o de tareas.</p>
 <figure style="align: center;">
-    <img src="images/05emr-cluster-add.png" width="800">
+    <img src="images/05emr-cluster-add.png" width="800" alt="Añadiendo un nodo de tipo tarea">
     <figcaption>Añadiendo un nodo de tipo tarea</figcaption>
 </figure>
 
@@ -3115,17 +3253,24 @@ Editar el grupo de seguridad y habilitar la regla de entrada para todos los puer
 
 Probar que funciona el interfaz web
 
+Sqoop: 1.4.7
+
 Descargar clave labsuser.pem
 chmod 400 labsuser.pem
 
 ssh -i labsuser.pem hadoop@dsfa
 
 hdfs dfs -mkdir -p /user/iabd/sqoop
-
-sqoop import --connect jdbc:mysql://dbiabd.cpmk2esi0ldh.us-east-1.rds.amazonaws.com/retail_db    \
+hdfs dfs -chmod 777 /user/iabd/sqoop
+rds-retaildb.cwlnhhfuyb7j.us-east-1.rds.amazonaws.com
+sqoop import --connect jdbc:mysql://rds-retaildb.cwlnhhfuyb7j.us-east-1.rds.amazonaws.com/retail_db    \
     --username=admin --password=adminadmin \
     --table=customers --driver=org.mariadb.jdbc.Driver   \
-    --target-dir=/user/iabd/sqoop/customers --as-parquetfile
+    --target-dir=/user/iabd/sqoop/customers \
+    --fields-terminated-by=',' --lines-terminated-by '\n' \
+    --columns "customer_id,customer_fname,customer_lname,customer_city"
+
+create database iabd;
 
 
 CREATE EXTERNAL TABLE customers
@@ -3135,8 +3280,33 @@ CREATE EXTERNAL TABLE customers
   lName STRING,
   city STRING
 )
-STORED AS PARQUET
+ROW FORMAT DELIMITED  
+FIELDS TERMINATED BY ','  
+STORED AS TEXTFILE
 LOCATION '/user/iabd/sqoop/customers';
+
+select * from customers limit 5;
+
+
+---
+
+aws s3 mb s3://s3iabd
+
+pip install pandas
+
+
+
+sudo chmod 777 /usr/lib/hadoop/etc/hadoop/core-site.xml
+nano /usr/lib/hadoop/etc/hadoop/core-site.xml
+
+import pandas as pd
+df = pd.read_csv("hdfs://ip-172-31-18-133.ec2.internal:8020/user/iabd/sqoop/customers")
+print(df.info())
+
+hdsf2s3_customers_s3iabd
+command-runner.jar
+s3-dist-cp --src=hdfs:///user/iabd/sqoop/customers --dest=s3://s3iabd/emr
+
 
 -->
 
@@ -3219,7 +3389,7 @@ LOCATION '/user/iabd/sqoop/customers';
       <nav class="md-footer__inner md-grid" aria-label="Pie" >
         
           
-          <a href="escalado.html" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Monitorización y Escalado">
+          <a href="athena.html" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Athena">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -3229,20 +3399,20 @@ LOCATION '/user/iabd/sqoop/customers';
                 Anterior
               </span>
               <div class="md-ellipsis">
-                Monitorización y Escalado
+                Athena
               </div>
             </div>
           </a>
         
         
           
-          <a href="athena.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Athena">
+          <a href="../de/de.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Ingeniería de datos">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Siguiente
               </span>
               <div class="md-ellipsis">
-                Athena
+                Ingeniería de datos
               </div>
             </div>
             <div class="md-footer__button md-icon">
