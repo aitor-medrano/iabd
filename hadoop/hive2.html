@@ -3854,7 +3854,9 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <p>Siguiendo con los archivos cargados en HDFS en la sesión anterior y la base de datos <code>hiveiabd</code>:</p>
 <ol>
-<li>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 1.5p) Crea una tabla interna llamada <code>ventas</code> en formato <em>ORC</em> y rellénala con el resultado de realizar un <em>join</em> entre las tablas <code>sales</code> y <code>productos</code>, particionando los datos por el país de la venta.<ol>
+<li>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 1.5p) Crea una tabla interna llamada <code>ventas</code> en formato <em>ORC</em> y rellénala con el resultado de realizar un <em>join</em> entre las tablas <code>sales</code> y <code>productos</code>, particionando los datos por el país de la venta.</p>
+<ol>
 <li>¿Qué aparece al ejecutar el siguiente comando <code>hdfs dfs -ls /user/hive/warehouse/hiveiabd.db/ventas</code> ?</li>
 </ol>
 </li>
@@ -3892,12 +3894,14 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 </li>
 <li>
 <p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 0.5p) Ejecuta la siguiente consulta que utiliza funciones ventana y explica qué realiza:</p>
-<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="n">manufacturer</span><span class="p">,</span><span class="w"> </span><span class="n">country</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">revenue</span><span class="o">*</span><span class="n">units</span><span class="p">),</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="n">manufacturer</span><span class="p">,</span><span class="w"> </span><span class="n">country</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">revenue</span><span class="o">*</span><span class="n">units</span><span class="p">),</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="n">rank</span><span class="p">()</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="n">partition</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">country</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">revenue</span><span class="o">*</span><span class="n">units</span><span class="p">)</span><span class="w"> </span><span class="k">desc</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="k">FROM</span><span class="w"> </span><span class="n">ventas</span>
 <span class="linenos" data-linenos="4 "></span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">manufacturer</span><span class="p">,</span><span class="w"> </span><span class="n">country</span><span class="p">;</span>
 </code></pre></div>
-4. (<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 1p) Basándote en el caso de uso 7:</p>
+</li>
+<li>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 1p) Basándote en el caso de uso 7:</p>
 <ol>
 <li>Crea un agente <em>Flume</em> que inserte datos de ventas en la ruta <code>/user/iabd/pdi/sales</code> y tras su ejecución, comprueba que los datos aparecen al realizar una consulta sobre la tabla <code>sales</code>. Para ello, crea un fichero CSV con el formato adecuado y algunos datos de muestra.</li>
 <li>¿Aparecen estos datos en la tabla <code>ventas</code>? ¿Por qué?</li>
@@ -3929,7 +3933,7 @@ En cambio, con una vista materializada, los resultados de la consulta específic
   Alter table
   tablesample
   Transformación map/reduce ... ejemplo para rellenar tipos de datos complejos
-  Ejemplos de particionado / bucketing ... poner resultado de las operaciones / consultas
+  ** Ejemplos de particionado / bucketing ... poner resultado de las operaciones / consultas
     Ejemplo Athena curso AWS DE
       https://docs.aws.amazon.com/es_es/athena/latest/ug/ctas-partitioning-and-bucketing.html
       Sobre el dataset de taxis-yellos
@@ -3942,7 +3946,8 @@ En cambio, con una vista materializada, los resultados de la consulta específic
   https://stackoverflow.com/questions/77469088/how-to-connect-image-apache-hive-with-image-apache-hadoop
   https://stackoverflow.com/questions/77084507/how-to-build-hive-as-a-service-and-metastore-using-docker-compose
 
-2324
+2425
+  Cambiar versión de Hive
   Cambiar instalación para utilizar tez o spark como motor de ejecución
 --->
 
