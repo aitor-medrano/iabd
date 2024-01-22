@@ -1415,13 +1415,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#caso-7-de-flume-a-hive" class="md-nav__link">
+  <a href="#caso-7-de-flume-a-hive-pasando-por-hdfs" class="md-nav__link">
     <span class="md-ellipsis">
-      Caso 7: De Flume a Hive
+      Caso 7: De Flume a Hive pasando por HDFS
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Caso 7: De Flume a Hive">
+    <nav class="md-nav" aria-label="Caso 7: De Flume a Hive pasando por HDFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cargamos-los-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cargamos los datos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creamos-la-tabla-externa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creamos la tabla externa
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-8-de-flume-a-hive-directamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caso 8: De Flume a Hive directamente
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso 8: De Flume a Hive directamente">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2936,13 +2969,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#caso-7-de-flume-a-hive" class="md-nav__link">
+  <a href="#caso-7-de-flume-a-hive-pasando-por-hdfs" class="md-nav__link">
     <span class="md-ellipsis">
-      Caso 7: De Flume a Hive
+      Caso 7: De Flume a Hive pasando por HDFS
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Caso 7: De Flume a Hive">
+    <nav class="md-nav" aria-label="Caso 7: De Flume a Hive pasando por HDFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cargamos-los-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cargamos los datos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creamos-la-tabla-externa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creamos la tabla externa
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-8-de-flume-a-hive-directamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caso 8: De Flume a Hive directamente
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso 8: De Flume a Hive directamente">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3330,13 +3396,102 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 </code></pre></div>
 </div>
 <p>Más información en <a href="https://cwiki.apache.org/confluence/display/Hive/Materialized+views">https://cwiki.apache.org/confluence/display/Hive/Materialized+views</a></p>
-<h2 id="caso-7-de-flume-a-hive">Caso 7: De Flume a Hive<a class="headerlink" href="#caso-7-de-flume-a-hive" title="Permanent link">&para;</a></h2>
+<h2 id="caso-7-de-flume-a-hive-pasando-por-hdfs">Caso 7: De Flume a Hive pasando por HDFS<a class="headerlink" href="#caso-7-de-flume-a-hive-pasando-por-hdfs" title="Permanent link">&para;</a></h2>
+<p>En este caso de uso, vamos a crear un agente <em>Flume</em> que realice un <em>spooling</em> de una carpeta (por ejemplo, podría estar mapeada con una carpeta enlazada a un servidor FTP) donde se van a colocar datos de clientes, y los vamos a insertar en la tabla <code>customersraw</code> mediante un <a href="https://flume.apache.org/FlumeUserGuide.html#hdfs-sink"><em>HDFS Sink</em></a>. A continuación, crearemos una vista materializada con los datos que nos interesan.</p>
+<h3 id="cargamos-los-datos">Cargamos los datos<a class="headerlink" href="#cargamos-los-datos" title="Permanent link">&para;</a></h3>
+<p>Así pues, el primer paso es crear el agente <em>Flume</em>, y colocarlo en la carpeta <code>conf</code> de <em>Flume</em>:</p>
+<div class="highlight"><span class="filename">spool-hdfs.conf</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Nombramos a los componentes del agente</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="na">SpoolHdfsAgent.sources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Spooldir</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="na">SpoolHdfsAgent.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="na">SpoolHdfsAgent.sinks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">HDFS</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># Describimos el tipo de origen</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="na">SpoolHdfsAgent.sources.Spooldir.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">spooldir</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="na">SpoolHdfsAgent.sources.Spooldir.spoolDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/iabd/hive/spoolDir</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># Describimos el destino</span>
+<span class="linenos" data-linenos="11 "></span><span class="na">SpoolHdfsAgent.sinks.HDFS.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hdfs</span>
+<span class="linenos" data-linenos="12 "></span><span class="na">SpoolHdfsAgent.sinks.HDFS.hdfs.path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hdfs://iabd-virtualbox:9000/user/iabd/flume/caso7</span>
+<span class="linenos" data-linenos="13 "></span><span class="na">SpoolHdfsAgent.sinks.HDFS.hdfs.filePrefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hive-caso7</span>
+<span class="linenos" data-linenos="14 "></span><span class="na">SpoolHdfsAgent.sinks.HDFS.hdfs.rollInterval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<span class="linenos" data-linenos="15 "></span><span class="na">SpoolHdfsAgent.sinks.HDFS.hdfs.rollCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10000</span>
+<span class="linenos" data-linenos="16 "></span><span class="na">SpoolHdfsAgent.sinks.HDFS.hdfs.fileType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">DataStream</span>
+<span class="linenos" data-linenos="17 "></span>
+<span class="linenos" data-linenos="18 "></span><span class="c1"># Describimos la configuración del canal</span>
+<span class="linenos" data-linenos="19 "></span><span class="na">SpoolHdfsAgent.channels.MemChannel.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">memory</span>
+<span class="linenos" data-linenos="20 "></span><span class="na">SpoolHdfsAgent.channels.MemChannel.capacity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100000</span>
+<span class="linenos" data-linenos="21 "></span><span class="na">SpoolHdfsAgent.channels.MemChannel.transactionCapacity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10000</span>
+<span class="linenos" data-linenos="22 "></span>
+<span class="linenos" data-linenos="23 "></span><span class="c1"># Unimos el origen y el destino a través del canal</span>
+<span class="linenos" data-linenos="24 "></span><span class="na">SpoolHdfsAgent.sources.Spooldir.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel</span>
+<span class="linenos" data-linenos="25 "></span><span class="na">SpoolHdfsAgent.sinks.HDFS.channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel</span>
+</code></pre></div>
+<p>Antes de ejecutarlo, vamos a crear la carpeta en HDFS:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-mkdir<span class="w"> </span>-r<span class="w"> </span>/user/iabd/flume/caso7
+</code></pre></div>
+<p>Y a continuación, ejecutamos el agente desde <code>$FLUME_HOME</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./bin/flume-ng<span class="w"> </span>agent<span class="w"> </span>--conf<span class="w"> </span>./conf/<span class="w"> </span>--conf-file<span class="w"> </span>./conf/spool-hdfs.conf<span class="w"> </span>--name<span class="w"> </span>SpoolHdfsAgent
+</code></pre></div>
+<p>Tras copiar el archivo <a href="resources/clientes.csv"><code>clientes.csv</code></a> en <code>/home/iabd/hive/spoolDir</code>, se renombrará y se realizará la ingesta en HDFS.</p>
+<p>Si comprobamos la carpeta, vemos que se han creado múltiples archivos:</p>
+<div class="highlight"><pre><span></span><code><span class="hll"><span class="linenos" data-linenos="1 "></span>$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>flume/caso7
+</span><span class="linenos" data-linenos="2 "></span>Found<span class="w"> </span><span class="m">309</span><span class="w"> </span>items
+<span class="linenos" data-linenos="3 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1074</span><span class="w"> </span><span class="m">2024</span>-01-22<span class="w"> </span><span class="m">13</span>:04<span class="w"> </span>flume/caso7/hive-caso7.1705925066214
+<span class="linenos" data-linenos="4 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1068</span><span class="w"> </span><span class="m">2024</span>-01-22<span class="w"> </span><span class="m">13</span>:04<span class="w"> </span>flume/caso7/hive-caso7.1705925066215
+<span class="linenos" data-linenos="5 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1089</span><span class="w"> </span><span class="m">2024</span>-01-22<span class="w"> </span><span class="m">13</span>:04<span class="w"> </span>flume/caso7/hive-caso7.1705925066216
+<span class="linenos" data-linenos="6 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1075</span><span class="w"> </span><span class="m">2024</span>-01-22<span class="w"> </span><span class="m">13</span>:04<span class="w"> </span>flume/caso7/hive-caso7.1705925066217
+<span class="linenos" data-linenos="7 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1082</span><span class="w"> </span><span class="m">2024</span>-01-22<span class="w"> </span><span class="m">13</span>:04<span class="w"> </span>flume/caso7/hive-caso7.1705925066218
+<span class="linenos" data-linenos="8 "></span>...
+</code></pre></div>
+<p>Y si visualizamos uno de ellos, tenemos los datos de los clientes:</p>
+<div class="highlight"><pre><span></span><code><span class="hll"><span class="linenos" data-linenos="1 "></span>$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-head<span class="w"> </span>flume/caso7/hive-caso7.1705925066214
+</span><span class="linenos" data-linenos="2 "></span><span class="m">1</span>,Richard,Hernandez,Brownsville
+<span class="linenos" data-linenos="3 "></span><span class="m">2</span>,Mary,Barrett,Littleton
+<span class="linenos" data-linenos="4 "></span><span class="m">3</span>,Ann,Smith,Caguas
+<span class="linenos" data-linenos="5 "></span><span class="m">4</span>,Mary,Jones,San<span class="w"> </span>Marcos
+<span class="linenos" data-linenos="6 "></span><span class="m">5</span>,Robert,Hudson,Caguas
+<span class="linenos" data-linenos="7 "></span><span class="m">6</span>,Mary,Smith,Passaic
+<span class="linenos" data-linenos="8 "></span>...
+</code></pre></div>
+<h3 id="creamos-la-tabla-externa">Creamos la tabla externa<a class="headerlink" href="#creamos-la-tabla-externa" title="Permanent link">&para;</a></h3>
+<p>Cuando ya tenemos los datos en HDFS, crearemos en Hive una tabla externa en formato texto y que utiliza las comas como separadores de campo (formato CSV) que apunte a dichos datos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">clientes7</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="p">(</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="n">custId</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="n">fName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="n">lName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="n">city</span><span class="w"> </span><span class="n">STRING</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="p">)</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">DELIMITED</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">FIELDS</span><span class="w"> </span><span class="n">TERMINATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;,&#39;</span>
+<span class="linenos" data-linenos="10 "></span><span class="n">STORED</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TEXTFILE</span>
+<span class="hll"><span class="linenos" data-linenos="11 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;/user/iabd/flume/caso7&#39;</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Una vez creada, ya podemos realizar consultas sobre los datos. Por ejemplo, si ejecutamos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">clientes7</span><span class="w"> </span><span class="k">limit</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</code></pre></div>
+<p>Obtendremos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">+</span><span class="c1">-------------------+------------------+------------------+-----------------+</span>
+<span class="linenos" data-linenos="2 "></span><span class="o">|</span><span class="w"> </span><span class="n">clientes7</span><span class="p">.</span><span class="n">custid</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">clientes7</span><span class="p">.</span><span class="n">fname</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">clientes7</span><span class="p">.</span><span class="n">lname</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">clientes7</span><span class="p">.</span><span class="n">city</span><span class="w">  </span><span class="o">|</span>
+<span class="linenos" data-linenos="3 "></span><span class="o">+</span><span class="c1">-------------------+------------------+------------------+-----------------+</span>
+<span class="linenos" data-linenos="4 "></span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="n">Richard</span><span class="w">          </span><span class="o">|</span><span class="w"> </span><span class="n">Hernandez</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="n">Brownsville</span><span class="w">     </span><span class="o">|</span>
+<span class="linenos" data-linenos="5 "></span><span class="o">|</span><span class="w"> </span><span class="mi">2</span><span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="n">Mary</span><span class="w">             </span><span class="o">|</span><span class="w"> </span><span class="n">Barrett</span><span class="w">          </span><span class="o">|</span><span class="w"> </span><span class="n">Littleton</span><span class="w">       </span><span class="o">|</span>
+<span class="linenos" data-linenos="6 "></span><span class="o">|</span><span class="w"> </span><span class="mi">3</span><span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="n">Ann</span><span class="w">              </span><span class="o">|</span><span class="w"> </span><span class="n">Smith</span><span class="w">            </span><span class="o">|</span><span class="w"> </span><span class="n">Caguas</span><span class="w">          </span><span class="o">|</span>
+<span class="linenos" data-linenos="7 "></span><span class="o">|</span><span class="w"> </span><span class="mi">4</span><span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="n">Mary</span><span class="w">             </span><span class="o">|</span><span class="w"> </span><span class="n">Jones</span><span class="w">            </span><span class="o">|</span><span class="w"> </span><span class="n">San</span><span class="w"> </span><span class="n">Marcos</span><span class="w">      </span><span class="o">|</span>
+<span class="linenos" data-linenos="8 "></span><span class="o">|</span><span class="w"> </span><span class="mi">5</span><span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="n">Robert</span><span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="n">Hudson</span><span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="n">Caguas</span><span class="w">          </span><span class="o">|</span>
+<span class="linenos" data-linenos="9 "></span><span class="o">+</span><span class="c1">-------------------+------------------+------------------+-----------------+</span>
+</code></pre></div>
+<h2 id="caso-8-de-flume-a-hive-directamente">Caso 8: De Flume a Hive directamente<a class="headerlink" href="#caso-8-de-flume-a-hive-directamente" title="Permanent link">&para;</a></h2>
 <div class="admonition caution">
 <p class="admonition-title">Caso de uso no funcional</p>
 <p>Aunque en teoría está todo bien, no termina de funcionarme. Puedes leerlo para entender qué es lo que habría que hacer, pero me parece que el problema proviene de la configuración de mi máquina virtual.</p>
-<p>Tengo pendiente probarlo en EMR a ver si encuentro el fallo.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>22 ene 2024 13:39:44,464 WARN  [SinkRunner-PollingRunner-DefaultSinkProcessor] (org.apache.flume.sink.hive.HiveSink.drainOneBatch:325)
+<span class="linenos" data-linenos="2 "></span>  - Hive : Failed connecting to EndPoint {metaStoreUri=&#39;thrift://iabd-virtualbox:9083&#39;, database=&#39;iabd&#39;, table=&#39;customerstx&#39;, partitionVals=[] }
+<span class="linenos" data-linenos="3 "></span>  org.apache.flume.sink.hive.HiveWriter$ConnectException: Failed connecting to EndPoint
+<span class="linenos" data-linenos="4 "></span>    {metaStoreUri=&#39;thrift://iabd-virtualbox:9083&#39;, database=&#39;iabd&#39;, table=&#39;customerstx&#39;, partitionVals=[] }
+</code></pre></div>
 </div>
-<p>Para el último caso de uso, vamos a crear un agente <em>Flume</em> que realice un <em>spooling</em> de una carpeta (por ejemplo, podría estar mapeada con una carpeta enlazada a un servidor FTP) donde se van a colocar datos de clientes, y los vamos a insertar en la tabla <code>customerstx</code> (en formato <em>ORC</em> mediante 4 <em>buckets</em> y configurada como transaccional) <a href="#modificando-datos">creada en el caso 2</a> mediante un <a href="https://flume.apache.org/FlumeUserGuide.html#hive-sink"><em>Hive Sink</em></a>.</p>
+<p>Para el último caso de uso, vamos a crear un agente <em>Flume</em> que realice un <em>spooling</em> de una carpeta y los vamos a insertar directamente en la tabla <code>customerstx</code> (en formato <em>ORC</em> mediante 4 <em>buckets</em> y configurada como transaccional) <a href="hive1.html#modificando-datos">creada en el caso 2</a> mediante un <a href="https://flume.apache.org/FlumeUserGuide.html#hive-sink"><em>Hive Sink</em></a>.</p>
 <p>Antes de nada, vamos a comprobar cuantos datos tenemos en la tabla:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">customerstx</span><span class="p">;</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="c1">--- Resultado 12435</span>
@@ -3356,11 +3511,11 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <p>Para ello, debemos editar el archivo de configuración de <em>Hive</em> y buscar estas propiedades y modificarlas:</p>
 <div class="highlight"><span class="filename">hive-site.xml</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nt">&lt;property&gt;</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="nt">&lt;name&gt;</span>hive.metastore.uris<span class="nt">&lt;/name&gt;</span>
-<span class="linenos" data-linenos="3 "></span><span class="w">  </span><span class="nt">&lt;value&gt;</span>thrift://iabd-virtualbox:9083<span class="nt">&lt;/value&gt;</span>
-<span class="linenos" data-linenos="4 "></span><span class="nt">&lt;/property&gt;</span>
+<span class="hll"><span class="linenos" data-linenos="3 "></span><span class="w">  </span><span class="nt">&lt;value&gt;</span>thrift://iabd-virtualbox:9083<span class="nt">&lt;/value&gt;</span>
+</span><span class="linenos" data-linenos="4 "></span><span class="nt">&lt;/property&gt;</span>
 <span class="linenos" data-linenos="5 "></span><span class="nt">&lt;property&gt;</span>
-<span class="linenos" data-linenos="6 "></span><span class="w">  </span><span class="nt">&lt;name&gt;</span>hive.exec.dynamic.partition.mode<span class="nt">&lt;/name&gt;</span>
-<span class="linenos" data-linenos="7 "></span><span class="w">  </span><span class="nt">&lt;value&gt;</span>nonstrict<span class="nt">&lt;/value&gt;</span>
+<span class="hll"><span class="linenos" data-linenos="6 "></span><span class="w">  </span><span class="nt">&lt;name&gt;</span>hive.exec.dynamic.partition.mode<span class="nt">&lt;/name&gt;</span>
+</span><span class="linenos" data-linenos="7 "></span><span class="w">  </span><span class="nt">&lt;value&gt;</span>nonstrict<span class="nt">&lt;/value&gt;</span>
 <span class="linenos" data-linenos="8 "></span><span class="nt">&lt;/property&gt;</span>
 </code></pre></div>
 <p>Una vez configurado, volvemos a arrancar <em>Hive</em> mediante <code>hiveserver2</code> y a continuación, cada vez que arranquemos <em>Hive</em>, necesitamos también arrancar el <em>Metastore</em>, ya que ahora funciona como un servicio totalmente desacoplado:</p>
@@ -3368,7 +3523,7 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 </code></pre></div>
 </div>
 <h3 id="creando-el-agente">Creando el agente<a class="headerlink" href="#creando-el-agente" title="Permanent link">&para;</a></h3>
-<p>El siguiente paso es crear el agente <em>Flume</em> y colocarlo en la carpeta <code>conf</code> de <em>Flume</em>:</p>
+<p>El siguiente paso es crear el agente <em>Flume</em> y colocarlo en la carpeta <code>conf</code> de <em>Flume</em>. Destacar que debemos indicar la ruta remota del <em>Metastore</em> así como que los campos están delimitados y los nombres de sus campos:</p>
 <div class="highlight"><span class="filename">spool-hive.conf</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Nombramos a los componentes del agente</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="na">SpoolHiveAgent.sources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Spooldir</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="na">SpoolHiveAgent.channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MemChannel</span>
@@ -3379,9 +3534,9 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <span class="linenos" data-linenos=" 8 "></span><span class="na">SpoolHiveAgent.sources.Spooldir.spoolDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/iabd/hive/spoolDir</span>
 <span class="linenos" data-linenos=" 9 "></span>
 <span class="linenos" data-linenos="10 "></span><span class="c1"># Describimos el destino</span>
-<span class="linenos" data-linenos="11 "></span><span class="na">SpoolHiveAgent.sinks.Hive.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hive</span>
-<span class="linenos" data-linenos="12 "></span><span class="na">SpoolHiveAgent.sinks.Hive.hive.metastore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">thrift://iabd-virtualbox:9083</span>
-<span class="linenos" data-linenos="13 "></span><span class="na">SpoolHiveAgent.sinks.Hive.hive.database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">iabd</span>
+<span class="hll"><span class="linenos" data-linenos="11 "></span><span class="na">SpoolHiveAgent.sinks.Hive.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hive</span>
+</span><span class="hll"><span class="linenos" data-linenos="12 "></span><span class="na">SpoolHiveAgent.sinks.Hive.hive.metastore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">thrift://iabd-virtualbox:9083</span>
+</span><span class="linenos" data-linenos="13 "></span><span class="na">SpoolHiveAgent.sinks.Hive.hive.database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">iabd</span>
 <span class="linenos" data-linenos="14 "></span><span class="na">SpoolHiveAgent.sinks.Hive.hive.table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">customerstx</span>
 <span class="linenos" data-linenos="15 "></span><span class="na">SpoolHiveAgent.sinks.Hive.hive.serializer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">DELIMITED</span>
 <span class="linenos" data-linenos="16 "></span><span class="na">SpoolHiveAgent.sinks.Hive.hive.serializer.fieldnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">custid,fname,lname,city</span>
