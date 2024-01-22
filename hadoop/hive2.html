@@ -3490,6 +3490,7 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <span class="linenos" data-linenos="3 "></span>  org.apache.flume.sink.hive.HiveWriter$ConnectException: Failed connecting to EndPoint
 <span class="linenos" data-linenos="4 "></span>    {metaStoreUri=&#39;thrift://iabd-virtualbox:9083&#39;, database=&#39;iabd&#39;, table=&#39;customerstx&#39;, partitionVals=[] }
 </code></pre></div>
+<p>Si consigues que te funcione siempre puedes mandarme un email <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#97;&#46;&#109;&#101;&#100;&#114;&#97;&#110;&#111;&#64;&#101;&#100;&#117;&#46;&#103;&#118;&#97;&#46;&#101;&#115;">&#97;&#46;&#109;&#101;&#100;&#114;&#97;&#110;&#111;&#64;&#101;&#100;&#117;&#46;&#103;&#118;&#97;&#46;&#101;&#115;</a> y comentarme qué has hecho o qué debo modificar. ¡Gracias!</p>
 </div>
 <p>Para el último caso de uso, vamos a crear un agente <em>Flume</em> que realice un <em>spooling</em> de una carpeta y los vamos a insertar directamente en la tabla <code>customerstx</code> (en formato <em>ORC</em> mediante 4 <em>buckets</em> y configurada como transaccional) <a href="hive1.html#modificando-datos">creada en el caso 2</a> mediante un <a href="https://flume.apache.org/FlumeUserGuide.html#hive-sink"><em>Hive Sink</em></a>.</p>
 <p>Antes de nada, vamos a comprobar cuantos datos tenemos en la tabla:</p>
@@ -3851,14 +3852,14 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <li><a href="https://www.tutorialspoint.com/hive/index.htm">Tutorial de Hive</a> de TutorialsPoint.</li>
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<p>Siguiendo con los archivos cargados en HDFS en la sesión anterior y la base de datos <code>hiveiabd</code>:</p>
 <ol>
-<li>
-<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 4p) Siguiendo con los archivos cargados en HDFS y la base de datos <code>hiveiabd</code>:</p>
-<ol>
-<li>Crea una tabla interna llamada <code>ventas</code> en formato <em>ORC</em> y rellénala con el resultado de realizar un <em>join</em> entre las tablas <code>sales</code> y <code>productos</code>, particionando los datos por el país de la venta.</li>
+<li>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 1.5p) Crea una tabla interna llamada <code>ventas</code> en formato <em>ORC</em> y rellénala con el resultado de realizar un <em>join</em> entre las tablas <code>sales</code> y <code>productos</code>, particionando los datos por el país de la venta.<ol>
 <li>¿Qué aparece al ejecutar el siguiente comando <code>hdfs dfs -ls /user/hive/warehouse/hiveiabd.db/ventas</code> ?</li>
+</ol>
+</li>
 <li>
-<p>Sobre la tabla de <code>ventas</code> recién creada, crea una vista materializada llamada <code>ventasPorFabricante</code> que obtenga la siguiente información de la recaudación obtenida por cada fabricante.</p>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 1p) Sobre la tabla de <code>ventas</code> recién creada, crea una vista materializada llamada <code>ventasPorFabricante</code> que obtenga la siguiente información de la recaudación obtenida por cada fabricante.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>+-----------------------------------+----------------------------------+
 <span class="linenos" data-linenos=" 2 "></span>| ventasporfabricante.manufacturer  | ventasporfabricante.recaudacion  |
 <span class="linenos" data-linenos=" 3 "></span>+-----------------------------------+----------------------------------+
@@ -3878,7 +3879,7 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <span class="linenos" data-linenos="17 "></span>| Victoria                          | 3820327.428833008                |
 <span class="linenos" data-linenos="18 "></span>+-----------------------------------+----------------------------------+
 </code></pre></div>
-</li>
+<ol>
 <li>
 <p>Inserta el siguiente dato en la tabla <code>ventas</code> y comprueba si aparece en la vista <code>ventasPorFabricante</code> (fíjate en el fabricante <em>Natura</em>) y en HDFS:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">insert</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">ventas</span><span class="w"> </span><span class="k">values</span><span class="w"> </span><span class="p">(</span><span class="mi">725</span><span class="p">,</span><span class="ss">&quot;2/15/2024&quot;</span><span class="p">,</span><span class="ss">&quot;03206&quot;</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">98765432</span><span class="p">.</span><span class="mi">1</span><span class="p">,</span><span class="ss">&quot;Natura RP-13&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Rural&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Productivity&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Natura&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;Spain&quot;</span><span class="p">);</span>
@@ -3887,14 +3888,20 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <li>
 <p>Provoca que la vista materializada actualice su estado y muestra cómo el dato del paso anterior ya repercute en el resultado en la vista.</p>
 </li>
+</ol>
+</li>
 <li>
-<p>Ejecuta la siguiente consulta que utiliza funciones ventana y explica qué realiza:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="n">manufacturer</span><span class="p">,</span><span class="w"> </span><span class="n">country</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">revenue</span><span class="o">*</span><span class="n">units</span><span class="p">),</span>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 0.5p) Ejecuta la siguiente consulta que utiliza funciones ventana y explica qué realiza:</p>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="n">manufacturer</span><span class="p">,</span><span class="w"> </span><span class="n">country</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">revenue</span><span class="o">*</span><span class="n">units</span><span class="p">),</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="n">rank</span><span class="p">()</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="n">partition</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">country</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">revenue</span><span class="o">*</span><span class="n">units</span><span class="p">)</span><span class="w"> </span><span class="k">desc</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="k">FROM</span><span class="w"> </span><span class="n">ventas</span>
 <span class="linenos" data-linenos="4 "></span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">manufacturer</span><span class="p">,</span><span class="w"> </span><span class="n">country</span><span class="p">;</span>
 </code></pre></div>
-</li>
+4. (<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 1p) Basándote en el caso de uso 7:</p>
+<ol>
+<li>Crea un agente <em>Flume</em> que inserte datos de ventas en la ruta <code>/user/iabd/pdi/sales</code> y tras su ejecución, comprueba que los datos aparecen al realizar una consulta sobre la tabla <code>sales</code>. Para ello, crea un fichero CSV con el formato adecuado y algunos datos de muestra.</li>
+<li>¿Aparecen estos datos en la tabla <code>ventas</code>? ¿Por qué?</li>
+<li>En vez de la tabla <code>ventas</code>, ¿qué estructura utilizarías si queremos tener siempre los datos actualizados (se envían de forma diaria)? Implementa la solución elegida.</li>
 </ol>
 </li>
 <li>
