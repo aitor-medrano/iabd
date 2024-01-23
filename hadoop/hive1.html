@@ -3500,16 +3500,17 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customers</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="p">(</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="n">custId</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="n">fName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="n">lName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="n">fName</span><span class="w"> </span><span class="n">STRING</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">&quot;Nombre&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="n">lName</span><span class="w"> </span><span class="n">STRING</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">&quot;Apellido&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="n">city</span><span class="w"> </span><span class="n">STRING</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="p">)</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">DELIMITED</span><span class="w">  </span><span class="c1">-- (1)!</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="n">FIELDS</span><span class="w"> </span><span class="n">TERMINATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;|&#39;</span><span class="w">  </span><span class="c1">-- (2)!</span>
-<span class="linenos" data-linenos="10 "></span><span class="n">STORED</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TEXTFILE</span><span class="w">  </span><span class="c1">-- (3)!</span>
-<span class="linenos" data-linenos="11 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;/user/iabd/hive/customer&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- (4)!</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">DELIMITED</span><span class="w">  </span><span class="c1">-- (2)!</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">FIELDS</span><span class="w"> </span><span class="n">TERMINATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;|&#39;</span><span class="w">  </span><span class="c1">-- (3)!</span>
+<span class="linenos" data-linenos="10 "></span><span class="n">STORED</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TEXTFILE</span><span class="w">  </span><span class="c1">-- (4)!</span>
+<span class="linenos" data-linenos="11 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;/user/iabd/hive/customer&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- (5)!</span>
 </code></pre></div>
 <ol>
+<li>Mediante <code>COMMENT</code> le añadimos un comentario a cada campo</li>
 <li>Indica el formato de cada fila como delimitado (con un salto del línea)</li>
 <li>Los campos están separados por el carácter <code>|</code> (es el mismo que habíamos indicado en Sqoop)</li>
 <li>El contenido está almacenado en HDFS en formato texto</li>
@@ -3554,12 +3555,16 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <li>Cargando los datos directamente mediante <em>Sqoop</em> o alguna herramienta similar.</li>
 </ul>
 <h3 id="cargando-datos">Cargando datos<a class="headerlink" href="#cargando-datos" title="Permanent link">&para;</a></h3>
-<p>Para cargar datos se utiliza la sentencia <code>LOAD DATA</code>. Si quisiéramos volver a cargar los datos desde HDFS utilizaremos:</p>
+<p>Para cargar datos se utiliza la sentencia <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DML#LanguageManualDML-Loadingfilesintotables"><code>LOAD DATA</code></a>. Si quisiéramos volver a cargar los datos desde HDFS utilizaremos:</p>
+<div class="admonition warning inline end">
+<p class="admonition-title">Datos eliminados</p>
+<p>Al cargar los datos mediante <code>LOAD DATA</code> desde HDFS, los datos de origen se eliminan.</p>
+</div>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">LOAD</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="n">INPATH</span><span class="w"> </span><span class="s1">&#39;/user/iabd/hive/customer&#39;</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="n">overwrite</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
 </code></pre></div>
-<p>Si en cambio vamos a cargar los datos desde un archivo local a nuestro sistema de archivos añadiremos <code>LOCAL</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">LOAD</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="k">LOCAL</span><span class="w"> </span><span class="n">INPATH</span><span class="w"> </span><span class="s1">&#39;/home/iabd/datos&#39;</span>
+<p>Si en cambio vamos a cargar los datos desde un archivo local a nuestro sistema de archivos añadiremos la <em>keyword</em> <code>LOCAL</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">LOAD</span><span class="w"> </span><span class="k">DATA</span><span class="w"> </span><span class="k">LOCAL</span><span class="w"> </span><span class="n">INPATH</span><span class="w"> </span><span class="s1">&#39;/home/iabd/datos.csv&#39;</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="n">overwrite</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="insertando-datos">Insertando datos<a class="headerlink" href="#insertando-datos" title="Permanent link">&para;</a></h3>
@@ -3614,7 +3619,7 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <span class="linenos" data-linenos="3 "></span>set hive.exec.dynamic.partition.mode=nonstrict;
 <span class="linenos" data-linenos="4 "></span>set hive.txn.manager=org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
 </code></pre></div>
-<p>Una vez configurado, hemos de crear las tablas con el formato ORC y organizar los datos mediante <em>buckets</em> (los estudiaremos más adelante en esta <a href="#buckets">misma sesión</a>). Por ejemplo, volvemos a crear la tabla de clientes:</p>
+<p>Una vez configurado, hemos de crear las tablas con el formato ORC y organizar los datos mediante <em>buckets</em> (los estudiaremos más adelante en esta <a href="hive2.html#buckets">la siguiente sesión</a>). Por ejemplo, volvemos a crear la tabla de clientes:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customerstx</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="p">(</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="n">custId</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
@@ -3747,9 +3752,13 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <h2 id="caso-4-tabla-interna">Caso 4: Tabla interna<a class="headerlink" href="#caso-4-tabla-interna" title="Permanent link">&para;</a></h2>
 <p>Hive permite crear tablas de dos tipos:</p>
 <ul>
-<li>tabla <strong>interna</strong> o gestionada: Hive gestiona la estructura y el almacenamiento de los datos. Para ello, crea los datos en HDFS. Al borrar la tabla de <em>Hive</em>, se borra la información de HDFS.</li>
-<li>tabla <strong>externa</strong>: Hive define la estructura de los datos en el <em>metastore</em>, pero los datos ya residen previamente en HDFS. Al borrar la tabla de <em>Hive</em>, no se eliminan los datos de HDFS. Se emplea cuando compartimos datos almacenados en HDFS entre diferentes herramientas.</li>
+<li>tabla <strong>interna</strong> o gestionada (<em>managed</em>): gestiona la estructura y el almacenamiento de los datos. Para ello, si no le indicamos lo contrario, crea los datos en HDFS dentro de una carpeta propia, normalmente <code>/user/hive/warehouse</code>. Al borrar la tabla de <em>Hive</em>, se borra la información de HDFS.</li>
+<li>tabla <strong>externa</strong>: Hive define la estructura de los datos en el <em>metastore</em>, pero los datos residen HDFS, ya sea que estaban previamente o los vamos a cargar <em>a posteriori</em>. Al borrar la tabla de <em>Hive</em>, no se eliminan los datos de HDFS. Se emplea cuando compartimos datos almacenados en HDFS entre diferentes herramientas.</li>
 </ul>
+<div class="admonition info">
+<p class="admonition-title">Ejemplos realizados</p>
+<p>Todos los ejemplos realizados hasta ahora, aunque hayamos indicado una ruta externa HDFS mediante la <em>keyword</em> <code>LOCATION</code> son tablas internas. Por tanto, si eliminamos dichas tablas mediante instrucciones <code>DROP TABLE</code>, también eliminaremos los datos en HDFS.</p>
+</div>
 <p>En este caso de uso, vamos a centrarnos en una tabla interna.</p>
 <p>Supongamos el siguiente fichero con datos de empleados:</p>
 <div class="highlight"><span class="filename">empleados.txt</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Michael|Montreal,Toronto|Male,30|DB:80|Product:DeveloperLead
@@ -4078,7 +4087,7 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 </div>
 <h2 id="caso-5-tabla-externa">Caso 5: Tabla externa<a class="headerlink" href="#caso-5-tabla-externa" title="Permanent link">&para;</a></h2>
 <p>En este caso de uso vamos a repetir la misma estructura de la tabla del caso anterior, pero en esta ocasión en una tabla externa. De esta manera, al borrar la tabla de <em>Hive</em>, <strong>no</strong> se borra la información de HDFS.</p>
-<p>Para ello, únicamente hemos de añadir la palabra <code>EXTERNAL</code> a la instrucción <code>CREATE TABLE</code> y la clausula <code>LOCATION</code> para indicar la ruta de HDFS donde se encuentran los datos:</p>
+<p>Para ello, únicamente hemos de añadir la palabra <strong><code>EXTERNAL</code></strong> a la instrucción <code>CREATE TABLE</code> <strong>y</strong> la clausula <strong><code>LOCATION</code></strong> para indicar la ruta de HDFS donde se encuentran los datos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">empleados_externa</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="p">(</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="n">name</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
@@ -4172,17 +4181,10 @@ Si las columnas de `sort by` y `distribute by` son las mismas, podemos utilizar 
 
 2223
   Formato de las tablas: parquet, fixed file format
-  Alter table
+  Alter table -> https://cwiki.apache.org/confluence/display/Hive/Tutorial#Tutorial-LoadingData
+
   tablesample
   Transformación map/reduce ... ejemplo para rellenar tipos de datos complejos
-  Ejemplos de particionado / bucketing ... poner resultado de las operaciones / consultas
-    Ejemplo Athena curso AWS DE
-      https://docs.aws.amazon.com/es_es/athena/latest/ug/ctas-partitioning-and-bucketing.html
-      Sobre el dataset de taxis-yellos
-      Consultas con where por fechas sobre la tabla
-      Crear particiones por meses, y hace una consulta sobre una partición
-
-  Explicar mejor el bucketing
 
   https://hive.apache.org/developement/quickstart/
   https://stackoverflow.com/questions/77469088/how-to-connect-image-apache-hive-with-image-apache-hadoop

@@ -3325,15 +3325,77 @@ sqoop import --connect jdbc:mysql://localhost/retail_db --username iabd --passwo
 <span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="p">(</span><span class="n">categoria</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_name</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_price</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">precio</span><span class="p">,</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">category_name</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">categoria</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">categories</span><span class="w"> </span><span class="k">c</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">product_category_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">category_id</span><span class="p">);</span>
 </code></pre></div>
-<p>Si queremos comprobar cómo se han creado las particiones y los buckets, desde un terminal podemos acceder a HDFS y mostrar su contenido:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos
-<span class="linenos" data-linenos="2 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Accessories
+<p>Si queremos comprobar cómo se han creado las particiones y los buckets, desde un terminal podemos acceder a HDFS y observar cómo ha creado una carpeta por cada valor del campo <code>categoria</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="hll"><span class="linenos" data-linenos=" 1 "></span>$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos
+</span><span class="linenos" data-linenos=" 2 "></span>Found<span class="w"> </span><span class="m">52</span><span class="w"> </span>items
+<span class="linenos" data-linenos=" 3 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Accessories
+<span class="linenos" data-linenos=" 4 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>As<span class="w"> </span>Seen<span class="w"> </span>on<span class="w">  </span>TV!
+<span class="linenos" data-linenos=" 5 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Baseball<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>Softball
+<span class="linenos" data-linenos=" 6 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Basketball
+<span class="linenos" data-linenos=" 7 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Bike<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>Skate<span class="w"> </span>Shop
+<span class="linenos" data-linenos=" 8 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Boating
+<span class="linenos" data-linenos=" 9 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Boxing<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>MMA
+<span class="linenos" data-linenos="10 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Boys%27<span class="w"> </span>Apparel
+<span class="linenos" data-linenos="11 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Camping<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>Hiking
+<span class="linenos" data-linenos="12 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Cardio<span class="w"> </span>Equipment
+<span class="linenos" data-linenos="13 "></span>...
 </code></pre></div>
-<p>Si volvemos a <em>Hive</em>, ahora podemos consultar los datos:</p>
+<p>Y si entramos a una categoría concreta, sus 8 <em>buckets</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="hll"><span class="linenos" data-linenos=" 1 "></span>$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Accessories
+</span><span class="linenos" data-linenos=" 2 "></span>Found<span class="w"> </span><span class="m">8</span><span class="w"> </span>items
+<span class="linenos" data-linenos=" 3 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">        </span><span class="m">391</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:06<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Accessories/000000_0
+<span class="linenos" data-linenos=" 4 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">        </span><span class="m">464</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Accessories/000001_0
+<span class="linenos" data-linenos=" 5 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">        </span><span class="m">468</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Accessories/000002_0
+<span class="linenos" data-linenos=" 6 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">        </span><span class="m">455</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Accessories/000003_0
+<span class="linenos" data-linenos=" 7 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">        </span><span class="m">435</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Accessories/000004_0
+<span class="linenos" data-linenos=" 8 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">        </span><span class="m">453</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Accessories/000005_0
+<span class="linenos" data-linenos=" 9 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">        </span><span class="m">456</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Accessories/000006_0
+<span class="linenos" data-linenos="10 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">        </span><span class="m">469</span><span class="w"> </span><span class="m">2024</span>-01-23<span class="w"> </span><span class="m">12</span>:07<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Accessories/000007_0
+</code></pre></div>
+<p>Y si ya entramos a un <em>bucket</em> concreto:</p>
+<div class="highlight"><pre><span></span><code><span class="hll"><span class="linenos" data-linenos=" 1 "></span>$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-head<span class="w"> </span>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/productos/categoria<span class="o">=</span>Accessories/000000_0<span class="w"> </span>
+</span><span class="linenos" data-linenos=" 2 "></span>480Nike+<span class="w"> </span>Fuelband<span class="w"> </span>SE99.0
+<span class="linenos" data-linenos=" 3 "></span>488SOLE<span class="w"> </span>E25<span class="w"> </span>Elliptical999.99
+<span class="linenos" data-linenos=" 4 "></span>496SOLE<span class="w"> </span>F85<span class="w"> </span>Treadmill1799.99
+<span class="linenos" data-linenos=" 5 "></span>576Lotto<span class="w"> </span>Men<span class="s1">&#39;s Zhero Gravity V 700 TF Soccer Cle59.99</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="s1">584adidas Men&#39;</span>s<span class="w"> </span><span class="m">2014</span><span class="w"> </span>MLS<span class="w"> </span>All-Star<span class="w"> </span>Game<span class="w"> </span>Replica<span class="w"> </span>B85.0
+<span class="linenos" data-linenos=" 7 "></span>592adidas<span class="w"> </span>Youth<span class="w"> </span>Germany<span class="w"> </span>Black<span class="w"> </span>Crest<span class="w"> </span>Tee18.0
+<span class="linenos" data-linenos=" 8 "></span>888Team<span class="w"> </span>Golf<span class="w"> </span>Detroit<span class="w"> </span>Tigers<span class="w"> </span>Putter<span class="w"> </span>Grip24.99
+<span class="linenos" data-linenos=" 9 "></span>896Team<span class="w"> </span>Golf<span class="w"> </span>New<span class="w"> </span>York<span class="w"> </span>Giants<span class="w"> </span>Putter<span class="w"> </span>Grip24.99
+<span class="linenos" data-linenos="10 "></span>904Team<span class="w"> </span>Golf<span class="w"> </span>Wisconsin<span class="w"> </span>Badgers<span class="w"> </span>Putter<span class="w"> </span>Grip24.99
+</code></pre></div>
+<p>Si volvemos a <em>Beeline</em>, ahora podemos consultar los datos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">productos</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
 </code></pre></div>
-<p>Y vemos cómo aparecen 5 elementos que pertenecen a la primera partición. Si quisiéramos, por ejemplo, 10 elementos de particiones diferentes deberíamos ordenarlos de manera aleatoria:</p>
+<p>Y vemos cómo aparecen 5 elementos que pertenecen a la primera partición.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>+---------------+------------------------------------------------+-------------------+----------------------+
+<span class="linenos" data-linenos="2 "></span>| productos.id  |                productos.nombre                | productos.precio  | productos.categoria  |
+<span class="linenos" data-linenos="3 "></span>+---------------+------------------------------------------------+-------------------+----------------------+
+<span class="linenos" data-linenos="4 "></span>| 480           | Nike+ Fuelband SE                              | 99.0              | Accessories          |
+<span class="linenos" data-linenos="5 "></span>| 488           | SOLE E25 Elliptical                            | 999.99            | Accessories          |
+<span class="linenos" data-linenos="6 "></span>| 496           | SOLE F85 Treadmill                             | 1799.99           | Accessories          |
+<span class="linenos" data-linenos="7 "></span>| 576           | Lotto Men&#39;s Zhero Gravity V 700 TF Soccer Cle  | 59.99             | Accessories          |
+<span class="linenos" data-linenos="8 "></span>| 584           | adidas Men&#39;s 2014 MLS All-Star Game Replica B  | 85.0              | Accessories          |
+<span class="linenos" data-linenos="9 "></span>+---------------+------------------------------------------------+-------------------+----------------------+
+</code></pre></div>
+<p>Si quisiéramos, por ejemplo, 10 elementos de particiones diferentes deberíamos ordenarlos de manera aleatoria:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">productos</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">rand</span><span class="p">()</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+</code></pre></div>
+<p>Y ya obtendríamos datos de diferentes particiones, eso sí, con una operación más costosa computacionalmente al tener que acceder a todas las particiones y <em>buckets</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>+---------------+------------------------------------------------+-------------------+----------------------+
+<span class="linenos" data-linenos=" 2 "></span>| productos.id  |                productos.nombre                | productos.precio  | productos.categoria  |
+<span class="linenos" data-linenos=" 3 "></span>+---------------+------------------------------------------------+-------------------+----------------------+
+<span class="linenos" data-linenos=" 4 "></span>| 1330          | Nike Men&#39;s Home Game Jersey Denver Broncos Pe  | 100.0             | Fútbol               |
+<span class="linenos" data-linenos=" 5 "></span>| 29            | Nike Men&#39;s USA Away Stadium Replica Soccer Je  | 90.0              | Baseball &amp; Softball  |
+<span class="linenos" data-linenos=" 6 "></span>| 75            | Nike Women&#39;s Pro Core 3&quot; Compression Shorts    | 28.0              | Lacrosse             |
+<span class="linenos" data-linenos=" 7 "></span>| 827           | Bridgestone e6 Straight Distance NFL Seattle   | 31.99             | Electronics          |
+<span class="linenos" data-linenos=" 8 "></span>| 9             | Nike Adult Vapor Jet 3.0 Receiver Gloves       | 50.0              | Soccer               |
+<span class="linenos" data-linenos=" 9 "></span>| 976           | Columbia Women&#39;s Sandy River Shorts            | 21.99             | Hunting &amp; Shooting   |
+<span class="linenos" data-linenos="10 "></span>| 841           | SkyCaddie LINX Golf GPS Watch                  | 249.99            | Kids&#39; Golf Clubs     |
+<span class="linenos" data-linenos="11 "></span>| 307           | Garmin Forerunner 910XT with HRM               | 449.99            | Kids&#39; Golf Clubs     |
+<span class="linenos" data-linenos="12 "></span>| 213           | Exerpeutic 900XL Magnetic Recumbent Bike with  | 199.99            | Strength Training    |
+<span class="linenos" data-linenos="13 "></span>| 1071          | Pelican Apex 100 Kayak                         | 229.99            | Water Sports         |
+<span class="linenos" data-linenos="14 "></span>+---------------+------------------------------------------------+-------------------+----------------------+
 </code></pre></div>
 <h2 id="vistas">Vistas<a class="headerlink" href="#vistas" title="Permanent link">&para;</a></h2>
 <p>Además de las estructuras físicas para almacenar los datos, podemos crear estructuras lógicas como las vistas.</p>
@@ -3924,15 +3986,8 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 </li>
 </ol>
 <!--
-<https://www.analyticsvidhya.com/blog/2020/10/getting-started-with-apache-hive/>
-
-<https://www.analyticsvidhya.com/blog/2021/05/hive-a-data-warehouse-in-hadoop-framework/>
 
 2223
-  Formato de las tablas: parquet, fixed file format
-  Alter table
-  tablesample
-  Transformación map/reduce ... ejemplo para rellenar tipos de datos complejos
   ** Ejemplos de particionado / bucketing ... poner resultado de las operaciones / consultas
     Ejemplo Athena curso AWS DE
       https://docs.aws.amazon.com/es_es/athena/latest/ug/ctas-partitioning-and-bucketing.html
@@ -3942,13 +3997,11 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 
   Explicar mejor el bucketing
 
-  https://hive.apache.org/developement/quickstart/
-  https://stackoverflow.com/questions/77469088/how-to-connect-image-apache-hive-with-image-apache-hadoop
-  https://stackoverflow.com/questions/77084507/how-to-build-hive-as-a-service-and-metastore-using-docker-compose
-
 2425
   Cambiar versión de Hive
   Cambiar instalación para utilizar tez o spark como motor de ejecución
+
+  DROP partition -> ALTER TABLE pv_users DROP PARTITION (ds='2008-08-08')
 --->
 
 
