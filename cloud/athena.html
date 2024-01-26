@@ -973,6 +973,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    <span class="md-ellipsis">
+      Actividades
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2866,6 +2875,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    <span class="md-ellipsis">
+      Actividades
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2918,7 +2936,7 @@
     <figcaption>Funcionamiento Athena - https://aws.amazon.com/es/athena</figcaption>
 </figure>
 
-<p>Como servicio <em>serverless</em>, no hay infraestructura que aprovisionar ni gestionar, y sólo pagaremos por el volumen de datos escaneados por las consultas que ejecutemos (actualmente su<a href="https://aws.amazon.com/es/athena/pricing">precio</a> es de 5$ por TB escaneado), sin tener que preocuparnos por escalar o redimensionar los recursos necesarios, lo que implica que sea un servicio de consultas que facilita analizar petabytes de datos almacenados en S3 sin necesidad de un data warehouse o un clúster de máquinas que gestionar.</p>
+<p>Como servicio <em>serverless</em>, no hay infraestructura que aprovisionar ni gestionar, y sólo pagaremos por el volumen de datos escaneados por las consultas que ejecutemos (actualmente su <a href="https://aws.amazon.com/es/athena/pricing">precio</a> es de 5$ por TB escaneado), sin tener que preocuparnos por escalar o redimensionar los recursos necesarios, lo que implica que sea un servicio de consultas que facilita analizar petabytes de datos almacenados en S3 sin necesidad de un data warehouse o un clúster de máquinas que gestionar.</p>
 <p><em>Athena</em> escala las consultas automáticamente para ejecutarse en paralelo y obtener el resultado lo más rápido posible, incluso con grandes conjuntos de datos y consultas complejas. Conviene destacar que permite procesar datos desestructurados, semiestructurados o estructurados, soportando formatos de datos como CSV, JSON, Avro o formatos columnares como <em>Parquet</em> u <em>ORC</em>, tanto en crudo como comprimidos.</p>
 <!--
 Amazon Athena is a serverless solution for using standard SQL queries to query data that exists in a data lake or in other data sources. As soon as a dataset has been written to Amazon S3 and cataloged in AWS Glue Data Catalog, users can run complex SQL queries against the data without needing to set up or manage any infrastructure.
@@ -2932,7 +2950,6 @@ Graphical SQL query tools, such as SQL Workbench, can connect to Amazon Athena v
 Athena Federated Query, a feature of Athena, enables you to build connectors so that Athena can query other data sources, beyond just the data in an S3 data lake. Amazon provides a number of pre-built open-source connectors for Athena, enabling you to connect Athena to sources such as Amazon DynamoDB (a NoSQL database), as well as other Amazon-managed relational database engines, and even Amazon CloudWatch Logs, a centralized logging service. Using this functionality, a data consumer can run a query using Athena that gets active orders from Amazon DynamoDB, references that data against the customer database running on PostgreSQL, and then brings in historical order data for that customer from the S3 data lake – all in a single SQL statement.
 
 At re:Invent 2022, AWS announced Amazon Athena for Apache Spark, a new functionality that enables running Apache Spark jobs with Athena. With this new feature, you can launch a Jupyter notebook from within the Athena console, and query data in the data lake using Apache Spark code.
-
 -->
 
 <h2 id="presto">Presto<a class="headerlink" href="#presto" title="Permanent link">&para;</a></h2>
@@ -3030,10 +3047,16 @@ En <em>AWS Glue</em>, o directamente en <em>Athena</em>, vamos a crear una base 
 <span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="n">parquet_compression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;SNAPPY&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="5 "></span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
 </code></pre></div>
-<h4 id="aws-cli">AWS CLI<a class="headerlink" href="#aws-cli" title="Permanent link">&para;</a></h4>
-<p>Si hubiéramos querido utilizar el AWS CLI, también podríamos haberlo hecho mediante el comando <a href="https://awscli.amazonaws.com/v2/documentation/api/latest/reference/glue/create-database.html"><code>glue create-database</code></a>:</p>
+<!--
+#### AWS CLI
+
+Si hubiéramos querido utilizar el AWS CLI, también podríamos haberlo hecho mediante el comando [`glue create-database`](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/glue/create-database.html):
+
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>glue<span class="w"> </span>create-database<span class="w"> </span>--database-input<span class="w"> </span><span class="s2">&quot;{\&quot;Name\&quot;:\&quot;s8a_retail\&quot;}&quot;</span><span class="w"> </span>--region<span class="w"> </span>us-east-1
 </code></pre></div>
+
+-->
+
 <h3 id="realizando-consultas">Realizando consultas<a class="headerlink" href="#realizando-consultas" title="Permanent link">&para;</a></h3>
 <p>Si volvemos a la pantalla de <em>Query Editor</em>, al pinchar sobre los tres puntos de la tabla <code>customers</code>, podemos hacer un <em>preview</em> de la tabla, y veremos que automáticamente realiza una consulta de tipo <em><code>select * from customers</code></em></p>
 <figure style="align: center;">
@@ -3086,9 +3109,11 @@ En <em>AWS Glue</em>, o directamente en <em>Athena</em>, vamos a crear una base 
 <span class="linenos" data-linenos="2 "></span><span class="m">2024</span>-01-04<span class="w"> </span><span class="m">18</span>:19:37<span class="w">        </span><span class="m">346</span><span class="w"> </span>3206dcc2-ac48-4d7c-898c-92dea385dab3.csv
 <span class="linenos" data-linenos="3 "></span><span class="m">2024</span>-01-04<span class="w"> </span><span class="m">18</span>:19:37<span class="w">        </span><span class="m">197</span><span class="w"> </span>3206dcc2-ac48-4d7c-898c-92dea385dab3.csv.metadata
 </code></pre></div>
-<p>, a partir del 
-https://gist.github.com/chrisdpa-tvx/96ad6099da868bf83579fcb0d8caa00c</p>
 <!--
+
+, a partir del 
+https://gist.github.com/chrisdpa-tvx/96ad6099da868bf83579fcb0d8caa00c
+
 https://learning.oreilly.com/library/view/serverless-analytics-with/9781800562349/B16917_02_Final_SK_ePub.xhtml#_idParaDest-32
 
 Presto
@@ -3163,6 +3188,12 @@ La virtualización de datos puede considerarse una herramienta que amplía el la
 <li>Libro <a href="https://www.packtpub.com/product/serverless-analytics-with-amazon-athena/9781800562349">Serverless Analytics with Amazon Athena</a></li>
 <li>Libro <a href="https://www.packtpub.com/product/data-engineering-with-aws-second-edition/9781804614426">Data Engineering with AWS - Second Edition</a></li>
 </ul>
+<h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<ol>
+<li>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr>, <abbr title="Se ha determinado que se pueden almacenar tantos datos como se desee y decidir cómo utilizarlos más tarde.">CEBDA.2d</abbr> / 0.5p) Realiza el caso de uso de "Hola Athena".</li>
+<li>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr>, <abbr title="Se ha determinado que se pueden almacenar tantos datos como se desee y decidir cómo utilizarlos más tarde.">CEBDA.2d</abbr> / 1p) A partir de los datos de <code>orders</code> cargados desde EMR en S3, crea también una tabla en Hive y repite la consulta que recupera, para cada cliente (mostrando el id y su nombre completo), cuantos pedidos ha realizado.</li>
+<li>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 0.5p) Mediante <em>Python</em> repite la consulta del ejercicio anterior y muestra el resultado por pantalla.</li>
+</ol>
 <!--
 Después de glue, consulta sql directamente con aws wrangler
 
