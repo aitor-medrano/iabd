@@ -1386,7 +1386,7 @@
           
   
   <span class="md-ellipsis">
-    Ecosistema
+    Ecosistema Spark
   </span>
   
 
@@ -1397,7 +1397,7 @@
         
   
   <span class="md-ellipsis">
-    Ecosistema
+    Ecosistema Spark
   </span>
   
 
@@ -3081,7 +3081,7 @@
 <p>Para ello, el uso de <em>Spark</em> de la mano de <em>Python</em>, <em>NumPy</em> y <em>Pandas</em> como interfaz de la analítica es clave en el día a día de un científico/ingeniero de datos.</p>
 <p>Podemos considerar <em>Spark</em> como una navaja suiza, ya que permite trabajar con todo el ciclo del datos, desde la ingesta y la validación de los datos en <em>raw</em>, limpieza, transformación y agregación de los datos, así como la realización de un análisis exploratorio de los mismos.</p>
 <p>La versión 3.0 de <a href="https://spark.apache.org"><em>Apache Spark</em></a> se lanzó en 2020, diez años después de su nacimiento. Esta versión incluye mejoras de rendimiento (el doble en consultas adaptativas), facilidad en el uso del API de Pandas, un nuevo interfaz gráfico para el streaming que facilita el seguimiento y depuración de las consultas y ajustes de rendimiento.</p>
-<p>En la actualidad ya vamos por la versión 3.3.1 (a diciembre de 2022).</p>
+<p>En la actualidad ya vamos por la versión 3.5.0 (a fecha de enero de 2024).</p>
 <h2 id="introduccion">Introducción<a class="headerlink" href="#introduccion" title="Permanent link">&para;</a></h2>
 <figure style="float: right;">
     <img src="images/01spark-logo.png" width="200">
@@ -3206,7 +3206,7 @@ alias pysparkk='pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-v<span class="w"> </span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>:/home/jovyan/work<span class="w"> </span>-p<span class="w"> </span><span class="m">8888</span>:8888<span class="w"> </span>-p<span class="w"> </span><span class="m">4040</span>:4040<span class="w"> </span>-p<span class="w"> </span><span class="m">4041</span>:4041<span class="w"> </span>--name<span class="w"> </span>pyspark<span class="w"> </span>jupyter/pyspark-notebook
 </code></pre></div>
 <h3 id="cluster-de-spark">Clúster de Spark<a class="headerlink" href="#cluster-de-spark" title="Permanent link">&para;</a></h3>
-<p>Si queremos montar nosotros mismo un clúster de Spark, una vez tenemos todas las máquinas instaladas con <em>Java</em>, <em>Python</em> y <em>Spark</em>, debemos distinguir entre:</p>
+<p>Si queremos montar nosotros mismos un <em>clúster</em> de <em>Spark</em>, una vez tenemos todas las máquinas instaladas con <em>Java</em>, <em>Python</em> y <em>Spark</em>, debemos distinguir entre:</p>
 <ul>
 <li>
 <p>Nodo maestro/<em>driver</em> - el cual deberemos arrancar con:</p>
@@ -3223,22 +3223,22 @@ alias pysparkk='pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.
 </li>
 </ul>
 <p>Una vez arrancado, si accedemos a <code>http://ip-servidor-driver:8080</code> veremos el IU de <em>Spark</em> con los <em>workers</em> arrancados.</p>
-<p>Más información en la <a href="https://spark.apache.org/docs/3.3.1/spark-standalone.html">documentación oficial</a>.</p>
+<p>Más información en la <a href="https://spark.apache.org/docs/latest/spark-standalone.html">documentación oficial</a>.</p>
 <h3 id="uso-en-la-nube">Uso en la nube<a class="headerlink" href="#uso-en-la-nube" title="Permanent link">&para;</a></h3>
 <p>Para trabajar con <em>Spark</em> desde la nube disponemos de varias alternativas, ya sean herramientas que permiten trabajar con cuadernos <em>Jupyter</em> como pueden ser <em>Google Colab</em> o <em>Databricks</em>, o montar un clúster mediante AWS EMR (<em>Elastic MapReduce</em>) o <em>Azure HDInsight</em>.</p>
 <h4 id="google-colab">Google Colab<a class="headerlink" href="#google-colab" title="Permanent link">&para;</a></h4>
 <p>Primero nos vamos a centrar en <em>Google Colab</em>. A lo largo del curso, ya hemos empleado esta herramienta tanto en sistemas de aprendizaje como en el análisis exploratorio de los datos.</p>
-<p>Para que funcione <em>Spark</em> dentro de <em>Google Colab</em>, únicamente hemos de instalar las librerías. Se adjunta un <a href="https://gist.github.com/aitor-medrano/f180cc5672fd8eed87fe32c051e0cc80">cuaderno con ejemplo de código</a>:</p>
+<p>Para que funcione <em>Spark</em> dentro de <em>Google Colab</em>, únicamente hemos de instalar las librerías. Se adjunta un <a href="https://gist.github.com/aitor-medrano/284da4c870452af46469aedba99f7e33">cuaderno con ejemplo de código</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="gh"># 1. Instalar las dependencias</span>
 <span class="linenos" data-linenos=" 2 "></span>!apt-get install openjdk-8-jdk-headless -qq &gt; /dev/null
-<span class="linenos" data-linenos=" 3 "></span>!wget -q https://downloads.apache.org/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.tgz
-<span class="linenos" data-linenos=" 4 "></span>!tar xvf spark-3.3.1-bin-hadoop3.tgz
+<span class="linenos" data-linenos=" 3 "></span>!wget -q https://downloads.apache.org/spark/spark-3.5.0/spark-3.5.0-bin-hadoop3.tgz
+<span class="linenos" data-linenos=" 4 "></span>!tar xvf spark-3.5.0-bin-hadoop3.tgz
 <span class="linenos" data-linenos=" 5 "></span>!pip install -q pyspark
 <span class="linenos" data-linenos=" 6 "></span>
 <span class="linenos" data-linenos=" 7 "></span><span class="gh"># 2. Configurar el entorno</span>
 <span class="linenos" data-linenos=" 8 "></span>import os
 <span class="linenos" data-linenos=" 9 "></span>os.environ[&quot;JAVA_HOME&quot;] = &quot;/usr/lib/jvm/java-8-openjdk-amd64&quot;
-<span class="linenos" data-linenos="10 "></span>os.environ[&quot;SPARK_HOME&quot;] = f&quot;/content/spark-3.3.1-bin-hadoop3&quot;
+<span class="linenos" data-linenos="10 "></span>os.environ[&quot;SPARK_HOME&quot;] = f&quot;/content/spark-3.5.0-bin-hadoop3&quot;
 <span class="linenos" data-linenos="11 "></span>
 <span class="linenos" data-linenos="12 "></span><span class="gh"># 3. Cargar Pyspark</span>
 <span class="linenos" data-linenos="13 "></span>from pyspark.sql import SparkSession
@@ -3247,7 +3247,7 @@ alias pysparkk='pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.
 </code></pre></div>
 <p>El cual podemos observar cómo se ejecuta en Colab:</p>
 <figure style="align: center;">
-    <img src="images/01spark-colab.png">
+    <img src="images/01spark-colab.png" alt="Ejemplo de cuaderno en Google Colab" width="800">
     <figcaption>Ejemplo de cuaderno en Google Colab</figcaption>
 </figure>
 
@@ -3255,36 +3255,36 @@ alias pysparkk='pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.
 <p><em>Databricks</em> es una plataforma analítica de datos basada en Apache Spark desarrollada por la compañía con el mismo nombre. La empresa, creada en el 2013 por los desarrolladores principales de <em>Spark</em>, permite realizar analítica Big Data e Inteligencia Artificial con <em>Spark</em> de una forma sencilla y colaborativa.</p>
 <p><em>Databricks</em> se integra de forma transparente con <em>AWS</em>, <em>Azure</em> y <em>Google Cloud</em>. En una <a href="https://databricks.com/blog/2021/11/02/databricks-sets-official-data-warehousing-performance-record.html">entrada del blog de la empresa de noviembre de 2021</a>  anuncian un nuevo record de procesamiento que implica que su rendimiento es 3 veces superior a la competencia y con un coste menor.</p>
 <p>Para poder trabajar con <em>Databricks</em> de forma gratuita, podemos hacer uso de <a href="https://community.cloud.databricks.com/login.html">Databricks Community Edition</a>, donde podemos crear nuestros propios cuadernos <em>Jupyter</em> y trabajar con <em>Spark</em> sin necesidad de instalar nada.</p>
-<p>Para crear una cuenta gratuita, clickando sobre <em>Sign up</em>, tras rellenar los datos personales, antes de seleccionar el proveedor <em>cloud</em>, en la parte inferior, hemos de pulsar sobre <em>Get started with Community Edition</em>:</p>
+<p>Para crear una cuenta gratuita, clickando sobre <em>Sign up</em>, tras rellenar los datos personales, antes de seleccionar el proveedor <em>cloud</em>, en la parte inferior derecha, hemos de pulsar sobre <em>Get started with Community Edition</em> (botón en negro):</p>
 <figure style="align: center;">
-    <img src="images/01spark-databricks-signup.png">
+    <img src="images/01spark-databricks-signup.png" alt="Creación de una cuenta Community en Databricks" width="1024">
     <figcaption>Creación de una cuenta Community en Databricks</figcaption>
 </figure>
 
 <p>El único paso inicial tras registrarnos, es crear un clúster básico (con 15.3GB de memoria y dos núcleos) desde la opción <em>Create</em> del menú de la izquierda:</p>
 <figure style="align: center;">
-    <img src="images/01spark-databricks-cluster.png">
+    <img src="images/01spark-databricks-cluster.png" alt="Creación de un clúster en Databricks" width="800">
     <figcaption>Creación de un clúster en Databricks</figcaption>
 </figure>
 
 <p>Tras un par de minutos se habrá creado y lanzado el clúster, ya estaremos listos para crear un nuevo <em>notebook</em> y tener acceso a <em>Spark</em> directamente desde el objeto <code>spark</code>:</p>
 <figure style="align: center;">
-    <img src="images/01spark-databricks-pm.png">
+    <img src="images/01spark-databricks-pm.png" alt="Ejemplo de cuaderno en Databricks" width="960">
     <figcaption>Ejemplo de cuaderno en Databricks</figcaption>
 </figure>
 
-<p>Si queremos, podemos hacer <a href="https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93eaaa8714f173bcfc/258974416188569/67277107946785/7969755578738041/latest.html">público</a> el cuaderno y compartirlo con la comunidad.</p>
+<p>Si queremos, podemos hacer <a href="https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93eaaa8714f173bcfc/258974416188569/3948890815798328/7969755578738041/latest.html">público</a> el cuaderno y compartirlo con la comunidad.</p>
 <div class="admonition tip">
 <p class="admonition-title">Navegador de archivos DBFS</p>
 <p>Por defecto, el navegador del sistema de archivos de <em>DataBricks</em> está oculto.
-Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mismos, lo podemos activar desde: <em>Settings</em> → <em>Admin Console</em> → <em>Workspace Settings</em> → <em>Advanced</em>, y ponemos la opción <strong><em>DBFS File Browser</em></strong> a <em>Enabled</em>.</p>
+Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mismos, lo podemos activar desde el menú superior derecho: <em>Admin Settings</em> → <em>Workspace Settings</em> → <em>Advanced</em>, y ponemos la opción <strong><em>DBFS File Browser</em></strong> a <em>Enabled</em>.</p>
 </div>
 <h3 id="sparkcontext-vs-sparksession">SparkContext vs SparkSession<a class="headerlink" href="#sparkcontext-vs-sparksession" title="Permanent link">&para;</a></h3>
 <p><em>SparkContext</em> es el punto de entrada a <em>Spark</em> desde las versiones 1.x y se utiliza para crear de forma programativa RDD, acumuladores y variables <em>broadcast</em> en el clúster. Desde Spark 2.0, la mayoría de funcionalidades (métodos) disponibles en <em>SparkContext</em> también los están en <em>SparkSession</em>. Su objeto <code>sc</code> está disponible en el <em>spark-shell</em> y se puede crear de forma programativa mediante la clase <code>SparkContext</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">pyspark</span> <span class="kn">import</span> <span class="n">SparkContext</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">sc</span> <span class="o">=</span> <span class="n">SparkContext</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 </code></pre></div>
-<p><em>SparkSession</em> se introdujo en la versión 2.0 y es el punto de entrada para crear <em>RDD</em>, <em>DataFrames</em> y <em>DataSets</em>. El objeto <code>spark</code> se encuentra disponible por defecto en el <em>spark-shell</em> y se puede crear de forma programativa mediante el patrón builder de <code>SparkSession</code>.</p>
+<p><em>SparkSession</em> se introdujo en la versión 2.0 y es el punto de entrada para crear <em>RDD</em>, <em>DataFrames</em> y <em>DataSets</em>. El objeto <code>spark</code> se encuentra disponible por defecto en el <em>spark-shell</em> y se puede crear de forma programativa mediante el patrón <em>builder</em> de <code>SparkSession</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span> 
 </code></pre></div>
@@ -3320,8 +3320,8 @@ Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mi
 </code></pre></div>
 <p>A continuación podemos ver el resultado completo en su ejecución dentro de un cuaderno <em>Jupyter</em>:</p>
 <figure style="align: center;">
-    <img src="images/01spark-hello.png">
-    <figcaption>Hola Spark</figcaption>
+    <img src="images/01spark-hello.png" alt="Hola Spark en Jupyter" width="800">
+    <figcaption>Hola Spark en Jupyter</figcaption>
 </figure>
 
 <div class="admonition tip">
@@ -3387,25 +3387,25 @@ Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mi
 <p>A la hora del despliegue, se utiliza un sistema de gestión de recursos como el gestor propio de Spark (conocido como <a href="https://spark.apache.org/docs/latest/spark-standalone.html"><em>Spark Standalone</em></a>), <a href="https://spark.apache.org/docs/latest/running-on-mesos.html">Apache Mesos</a>, <a href="https://spark.apache.org/docs/latest/running-on-kubernetes.html">Kubernetes</a> o <a href="https://spark.apache.org/docs/latest/running-on-yarn.html">YARN</a> para gestionar de forma inteligente y eficiente el clúster.</p>
 <p>Los dos componentes principales del clúster son:</p>
 <ul>
-<li>el <strong>gestor de clúster</strong>: nodo maestro que sabe donde se localizan los esclavos, cuanta memoria disponen y el número de <em>cores</em> CPU de cada nodo. Su mayor responsabilidad es orquestar el trabajo asignándolo a los diferentes nodos.</li>
+<li>el <strong>gestor del clúster</strong>: nodo maestro que sabe donde se localizan los trabajadores, cuanta memoria disponen y el número de <em>cores</em> CPU de cada nodo. Su mayor responsabilidad es orquestar el trabajo asignándolo a los diferentes nodos.</li>
 <li>los nodos trabajadores (<strong><em>workers</em></strong>): cada nodo ofrece recursos (memoria, CPU, etc...) al gestor del clúster y realiza las tareas que se le asignen.</li>
 </ul>
 <h3 id="aplicaciones-spark">Aplicaciones Spark<a class="headerlink" href="#aplicaciones-spark" title="Permanent link">&para;</a></h3>
-<p>Una aplicación Spark se compone de dos partes:</p>
+<p>Una aplicación <em>Spark</em> se compone de dos partes:</p>
 <ol>
 <li>La <strong>lógica de procesamiento</strong> de los datos, la cual realizamos mediante alguna de las API que ofrece <em>Spark</em> (<em>Java</em>, <em>Scala</em>, <em>Python</em>, etc...), desde algo sencillo que realice una ETL sobre los datos a problemas más complejos que requieran múltiples iteraciones y tarden varias horas como entrenar un modelo de <em>machine learning</em>.</li>
-<li><strong>Driver</strong>: es el coordinador central encargado de interactuar con el clúster <em>Spark</em> y averiguar qué máquinas deben ejecutar la lógica de procesamiento. Para cada una de esas máquinas, el driver realiza una petición al clúster para lanzar un proceso conocido como <strong>ejecutor</strong> (<em>executor</em>). Además, el driver <em>Spark</em> es responsable de gestionar y distribuir las tareas a cada ejecutor, y si es necesario, recoger y fusionar los datos resultantes para presentarlos al usuario. Estas tareas se realizan a través de la <em>SparkSession</em>.</li>
+<li><strong>Driver</strong>: es el coordinador central encargado de interactuar con el clúster <em>Spark</em> y averiguar qué máquinas deben ejecutar la lógica de procesamiento. Para cada una de esas máquinas, el driver <em>realiza</em> una petición al clúster para lanzar un proceso conocido como <strong>ejecutor</strong> (<em>executor</em>). Además, el driver <em>Spark</em> es responsable de gestionar y distribuir las tareas a cada ejecutor, y si es necesario, recoger y fusionar los datos resultantes para presentarlos al usuario. Estas tareas se realizan a través de la <em>SparkSession</em>.</li>
 </ol>
-<p>Cada ejecutor es un proceso JVM (<em>Java Virtual Machine</em>) dedicado para una aplicación <em>Spark</em> específica. Un ejecutor vivirá tanto como dure la aplicación <em>Spark</em>, lo cual puede ser segundos, minutos o días, dependiendo de la complejidad de la aplicación. Conviene destacar que los ejecutores son elementos aislados que no se comparten entre aplicaciones <em>Spark</em>, por lo que la única manera de compartir información entre diferente ejecutores es mediante un sistema de almacenamiento externo como HDFS.</p>
+<p>Cada ejecutor es un proceso JVM (<em>Java Virtual Machine</em>) dedicado para una aplicación <em>Spark</em> específica. Un ejecutor vivirá tanto como dure la aplicación <em>Spark</em>, lo cual puede ser segundos, minutos o días, dependiendo de la complejidad de la aplicación. Conviene destacar que los ejecutores son elementos aislados que no se comparten entre aplicaciones <em>Spark</em>, por lo que la única manera de compartir información entre diferente ejecutores es mediante un sistema de almacenamiento externo como HDFS o S3.</p>
 <figure style="align: center;">
-    <img src="images/01spark-arquitectura.jpg">
+    <img src="images/01spark-arquitectura.jpg" alt="Arquitectura entre una aplicación Spark y el gestor del clúster" width="800">
     <figcaption>Arquitectura entre una aplicación Spark y el gestor del clúster</figcaption>
 </figure>
 
 <p>Así pues, <em>Spark</em> utiliza una arquitectura maestro/esclavo, donde el <em>driver</em> es el maestro, y los ejecutores los esclavos. Cada uno de estos componentes se ejecutan como un proceso independiente en el clúster <em>Spark</em>. Por lo tanto, una aplicación <em>Spark</em> se compone de un <em>driver</em> y múltiples ejecutores. Cada ejecutor realiza lo que se le pide en forma de tareas, ejecutando cada una de ellas en un núcleo CPU separado. Así es como el procesamiento paralelo acelera el tratamiento de los datos. Además, cada ejecutor, bajo petición de la lógica de la aplicación, se responsabiliza de <em>cachear</em> un fragmento de los datos en memoria y/o disco.</p>
 <p>Al lanzar una aplicación <em>Spark</em>, podemos indicar el número de ejecutores que necesita la aplicación, así como la cantidad de memoria y número de núcleos que debería tener cada ejecutor.</p>
 <figure style="align: center;">
-    <img src="images/01spark-cluster.jpg">
+    <img src="images/01spark-cluster.jpg" width="800" alt="Clúster compuesto por un driver y tres ejecutores">
     <figcaption>Clúster compuesto por un driver y tres ejecutores</figcaption>
 </figure>
 
@@ -3417,7 +3417,7 @@ Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mi
 <li><strong><em>Task</em></strong> (tarea): unidad de trabajo más pequeña que se envía a los ejecutores <em>Spark</em>. Cada escenario se compone de varias tareas. Cada una de las tareas se asigna a un único núcleo y trabaja con una única partición de los datos. Por ello, un ejecutor con 16 núcleos puede tener 16 o más tareas trabajando en 16 o más particiones en paralelo.</li>
 </ul>
 <figure style="align: center;">
-    <img src="images/01spark-driver-job-stage-task.png">
+    <img src="images/01spark-driver-job-stage-task.png" alt="Driver → Job → Stage → Task">
     <figcaption>Driver → Job → Stage → Task</figcaption>
 </figure>
 
@@ -3438,31 +3438,31 @@ Dado el cariz de <em>Python</em>, no necesitamos que los <em>Dataset</em> estén
 <span class="linenos" data-linenos="11 "></span><span class="c1"># Las transformaciones se pueden encadenar</span>
 <span class="linenos" data-linenos="12 "></span><span class="n">quijoteTxt</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">quijoteTxt</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;Quijote&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>     <span class="c1"># idem - 584</span>
 </code></pre></div>
-<p>Estudiaremos los <em>DataFrame</em> en profundidad en la <a href="dataframeAPI.html">próximas sesiones</a>.</p>
+<p>Estudiaremos los <em>DataFrame</em> en profundidad en las <a href="dataframeAPI.html">próximas sesiones</a>.</p>
 <h2 id="spark-ui">Spark UI<a class="headerlink" href="#spark-ui" title="Permanent link">&para;</a></h2>
 <p>Si accedemos a la dirección <a href="http://127.0.0.1:4040/">http://127.0.0.1:4040/</a>, veremos un interfaz gráfico donde podemos monitorizar y analizar el código <em>Spark</em> ejecutado. La barra superior muestra un menú con las opciones para visualizar los <em>jobs</em>, <em>stages</em>, el almacenamiento, el entorno y sus variables de configuración, y finalmente los ejecutores:</p>
 <figure style="align: center;">
-    <img src="images/01spark-ui.png">
+    <img src="images/01spark-ui.png" width="1024" alt="Spark Shell UI">
     <figcaption>Spark Shell UI</figcaption>
 </figure>
 
 <p>Por ejemplo, si ejecutamos el ejemplo de <a href="rdd.html#groupbykey"><code>groupByKey</code> de la siguiente sesión</a>, obtenemos el siguiente DAG:</p>
 <figure style="align: center;">
-    <img src="images/01spark-ui-dag.png">
+    <img src="images/01spark-ui-dag.png" width="1024" alt="Ejemplo de DAG">
     <figcaption>Ejemplo de DAG</figcaption>
 </figure>
 
 <p>Si pulsamos por ejemplo sobre la fase de <code>groupBy</code> obtendremos sus estadísticas de ejecución:</p>
 <figure style="align: center;">
-    <img src="images/01spark-ui-statistics.png">
+    <img src="images/01spark-ui-statistics.png" width="1024" alt="Estadísticas de una fase">
     <figcaption>Estadísticas de una fase</figcaption>
 </figure>
 
 <div class="admonition tip">
 <p class="admonition-title">Spark UI en Databricks</p>
-<p>Para acceder a la herramienta de monitorización en Databricks, una vez creado un clúster, en la opción calcular podremos seleccionar el clúster creado y en la pestaña <em>IU de Spark</em> acceder al mismo interfaz gráfico:</p>
+<p>Para acceder a la herramienta de monitorización en Databricks, una vez creado un clúster, en la opción <em>Compute</em>/Calcular podremos seleccionar el clúster creado y en la pestaña <em>IU de Spark</em> acceder al mismo interfaz gráfico:</p>
 <p><figure style="align: center;">
-    <img src="images/01spark-databricks-ui.png">
+    <img src="images/01spark-databricks-ui.png" width="1024" alt="Spark UI en Databricks">
     <figcaption>Spark UI en Databricks</figcaption>
 </figure></p>
 </div>
