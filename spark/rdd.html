@@ -3249,6 +3249,15 @@ A lo largo de estas sesiones iremos combinando ambos interfaces para conocer las
 </div>
 <h2 id="acciones">Acciones<a class="headerlink" href="#acciones" title="Permanent link">&para;</a></h2>
 <p>A continuación vamos a revisar las acciones más comunes. Puedes consultar todas las acciones disponibles en la <a href="https://spark.apache.org/docs/latest/rdd-programming-guide.html#actions">documentación oficial</a>:</p>
+<div class="admonition note">
+<p class="admonition-title">Recuerda importar el contexto</p>
+<p>Todos los ejemplos que se muestran a continuación requieren definir el contexto tal como vimos en la <a href="spark.html#sparkcontext-vs-sparksession">sesión anterior</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">sc</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span>
+</code></pre></div>
+</div>
 <h3 id="parallelize">Parallelize<a class="headerlink" href="#parallelize" title="Permanent link">&para;</a></h3>
 <p>Podemos crear RDD directamente desde cero sin necesidad de leer los datos desde un fichero. Para ello, a partir de un <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.SparkContext.html"><code>SparkContext</code></a> podemos utilizar <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.SparkContext.parallelize.html"><code>parallelize</code></a> sobre una lista.</p>
 <p>Esta acción divide una colección de elementos entre los nodos de nuestro clústers. Por ejemplo:</p>
@@ -3330,10 +3339,10 @@ A lo largo de estas sesiones iremos combinando ambos interfaces para conocer las
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">rdd</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="transformaciones">Transformaciones<a class="headerlink" href="#transformaciones" title="Permanent link">&para;</a></h2>
-<p>En <em>Spark</em>, las estructuras de datos son inmutables, de manera que una vez creadas no se pueden modificar. Para poder modificar un <em>RDD/DataFrame</em>, hace falta realizar una <a href="https://spark.apache.org/docs/latest/rdd-programming-guide.html#transformations">transformación</a>, siendo el modo de expresar la lógica de negocio mediante <em>Spark</em>.</p>
+<p>En <em>Spark</em>, las estructuras de datos son inmutables, de manera que una vez creadas no se pueden modificar. Para poder modificar un <em>RDD/DataFrame</em> hace falta realizar una <a href="https://spark.apache.org/docs/latest/rdd-programming-guide.html#transformations">transformación</a>, siendo el modo de expresar la lógica de negocio mediante <em>Spark</em>.</p>
 <p>Todas las transformaciones en <em>Spark</em> se evalúan de manera perezosa (<strong><em>lazy evaluation</em></strong>), de manera que los resultados no se computan inmediatamente, sino que se retrasa el cálculo hasta que el valor sea necesario. Para ello, se van almacenando los pasos necesarios y se ejecutan únicamente cuando una acción requiere devolver un resultado al <em>driver</em>. Este diseño facilita un mejor rendimiento (por ejemplo, imagina que tras una operación <em>map</em> se realiza un <em>reduce</em> y en vez de devolver todo el conjunto de datos tras el <em>map</em>, sólo le enviamos al <em>driver</em> el resultado de la reducción).</p>
 <p>Así pues, las acciones provocan la evaluación de todas las transformaciones previas que se habían evaluado de forma perezosa y estaban a la espera.</p>
-<p>Por defecto, cada transformación RDD/DataSet se puede recalcular cada vez que se ejecute una acción. Sin embargo, podemos persistir un RDD en memoria mediante los métodos <code>persist</code> (o <code>cache</code>), de manera que Spark mantendrá los datos para un posterior acceso más eficiente. También podemos persistir RDD en disco o replicarlo en múltiples nodos.</p>
+<p>Por defecto, cada transformación <em>RDD/DataSet</em> se puede recalcular cada vez que se ejecute una acción. Sin embargo, podemos persistir un RDD en memoria mediante los métodos <code>persist</code> (o <code>cache</code>), de manera que <em>Spark</em> mantendrá los datos para un posterior acceso más eficiente. También podemos persistir un RDD en disco o replicarlo en múltiples nodos.</p>
 <h3 id="tipos-de-transformaciones">Tipos de transformaciones<a class="headerlink" href="#tipos-de-transformaciones" title="Permanent link">&para;</a></h3>
 <p>Existen dos tipos de transformaciones, dependiendo de las dependencias entre las particiones de datos:</p>
 <ul>
@@ -3349,7 +3358,7 @@ A lo largo de estas sesiones iremos combinando ambos interfaces para conocer las
     <figcaption>Transformaciones Narrow vs Wide</figcaption>
 </figure>
 
-<p>Con las transformaciones <em>narrow</em>, <em>Spark</em> realiza un <em>pipeline</em> de las dependencias, de manera que si especificamos múltiples filtros sobre DataFrames/RDD, se realizarán todos en memoria.</p>
+<p>Con las transformaciones <em>narrow</em>, <em>Spark</em> realiza un <em>pipeline</em> de las dependencias, de manera que si especificamos múltiples filtros sobre <em>DataFrames/RDD</em>, se realizarán todos en memoria.</p>
 <p>Esto no sucede con las transformaciones <em>wide</em>, ya que al realizar un <em>shuffle</em> los resultados se persisten en disco.</p>
 <div class="admonition info">
 <p class="admonition-title">Cuidado con shuffle</p>
@@ -3357,32 +3366,48 @@ A lo largo de estas sesiones iremos combinando ambos interfaces para conocer las
 <p>Internamente, el resultado de las tareas <em>map</em> se mantienen en memoria hasta que no caben. Entonces, se ordenan en la partición destino y se persisten en un único archivo. En la fase de reducción, las tareas leen los bloques ordenados que son relevantes.</p>
 <p>Las operaciones <em>reduceByKey</em> y <em>aggregateByKey</em> son de las que más memoria consumen, al tener que crear las estructuras de datos para organizar los registros en las tareas de <em>map</em>, y luego generar los resultados agregados en la de <em>reduce</em>. Si los datos no caben en memoria, <em>Spark</em> los lleva a disco, incurriendo en operaciones adicionales de E/S en disco y del recolector de basura.</p>
 </div>
-<p>A continuación veremos las diferentes transformaciones que podemos realizar con Spark.</p>
+<p>A continuación veremos las diferentes transformaciones que podemos realizar con <em>Spark</em>.</p>
 <h2 id="transformaciones-narrow">Transformaciones <em>Narrow</em><a class="headerlink" href="#transformaciones-narrow" title="Permanent link">&para;</a></h2>
-<p>Para los siguientes ejemplo, utilizaremos el siguiente fichero de <a href="../hadoop/resources/empleados.txt">empleados.txt</a> que ya utilizamos en la sesión de <em>Hive</em>:</p>
-<div class="highlight"><span class="filename">empleados.txt</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Michael|Montreal,Toronto|Male,30|DB:80|Product:DeveloperLead
-<span class="linenos" data-linenos="2 "></span>Will|Montreal|Male,35|Perl:85|Product:Lead,Test:Lead
-<span class="linenos" data-linenos="3 "></span>Shelley|New York|Female,27|Python:80|Test:Lead,COE:Architect
-<span class="linenos" data-linenos="4 "></span>Lucy|Vancouver|Female,57|Sales:89,HR:94|Sales:Lead
+<p>Para los siguientes ejemplo, utilizaremos el siguiente fichero de <a href="../hadoop/resources/empleados.txt">empleados.txt</a> que ya utilizamos en la sesión de <em>Hive</em> con datos compuestos, que contiene para cada empleado los siguiente cinco campos:</p>
+<ul>
+<li>el nombre</li>
+<li>un array de ciudades donde trabaja separadas por coma</li>
+<li>una estructura compuesta del sexo y la edad separadas de nuevo por comas</li>
+<li>un array de mapas con sus destrezas y calificación</li>
+<li>y finalmente un array de cargos y su consiguiente array de destrezas</li>
+</ul>
+<div class="highlight"><span class="filename">empleados.txt</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">Michael</span><span class="o">|</span><span class="n">Montreal</span><span class="p">,</span><span class="n">Toronto</span><span class="o">|</span><span class="n">Male</span><span class="p">,</span><span class="mi">30</span><span class="o">|</span><span class="n">DB</span><span class="p">:</span><span class="mi">80</span><span class="o">|</span><span class="n">Product</span><span class="p">:</span><span class="n">Developer</span><span class="err"></span><span class="n">Lead</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">Will</span><span class="o">|</span><span class="n">Montreal</span><span class="o">|</span><span class="n">Male</span><span class="p">,</span><span class="mi">35</span><span class="o">|</span><span class="n">Perl</span><span class="p">:</span><span class="mi">85</span><span class="o">|</span><span class="n">Product</span><span class="p">:</span><span class="n">Lead</span><span class="p">,</span><span class="n">Test</span><span class="p">:</span><span class="n">Lead</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">Shelley</span><span class="o">|</span><span class="n">New</span> <span class="n">York</span><span class="o">|</span><span class="n">Female</span><span class="p">,</span><span class="mi">27</span><span class="o">|</span><span class="n">Python</span><span class="p">:</span><span class="mi">80</span><span class="o">|</span><span class="n">Test</span><span class="p">:</span><span class="n">Lead</span><span class="p">,</span><span class="n">COE</span><span class="p">:</span><span class="n">Architect</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">Lucy</span><span class="o">|</span><span class="n">Vancouver</span><span class="o">|</span><span class="n">Female</span><span class="p">,</span><span class="mi">57</span><span class="o">|</span><span class="n">Sales</span><span class="p">:</span><span class="mi">89</span><span class="p">,</span><span class="n">HR</span><span class="p">:</span><span class="mi">94</span><span class="o">|</span><span class="n">Sales</span><span class="p">:</span><span class="n">Lead</span>
 </code></pre></div>
 <h3 id="map">Map<a class="headerlink" href="#map" title="Permanent link">&para;</a></h3>
 <p>La transformación <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.RDD.map.html"><code>map</code></a> aplica la función recibida a cada elemento del RDD, de manera que vamos a poder añadir una nueva columna, modificar una existente, etc...</p>
-<p>Por ejemplo, si la entrada es un RDD que contiene <code>[1, 2, 3, 4, 5]</code>, al hacer <code>rdd.map(lambda x: x*2)</code> obtendríamos un nuevo RDD con <code>[2, 4, 6, 8, 10]</code>:</p>
+<p>Por ejemplo, si la entrada es un RDD que contiene <code>[1, 2, 3, 4, 5]</code>, al hacer <code>rdd.map(lambda x: x*2)</code> obtendríamos un nuevo RDD cuyos valores contiene su doble, es decir, <code>[2, 4, 6, 8, 10]</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">rdd</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">parallelize</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">resultRDD</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="n">resultRDD</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>          <span class="c1"># [2, 4, 6, 8, 10]</span>
 </code></pre></div>
-<p>Mediante la función <code>textFile</code> podemos cargar un archivo. Supongamos que tenemos cargado en Hadoop el archivo <a href="../hadoop/resources/empleados.txt">empleados.txt</a>:</p>
+<p>Mediante la función <code>textFile</code> podemos cargar un archivo. Supongamos que tenemos cargado en <em>Hadoop</em> el archivo <a href="../hadoop/resources/empleados.txt">empleados.txt</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">rddLocal</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">textFile</span><span class="p">(</span><span class="s2">&quot;empleados.txt&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">rdd</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">textFile</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/datos/empleados.txt&quot;</span><span class="p">)</span> 
 <span class="linenos" data-linenos="3 "></span><span class="n">rdd</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>                 <span class="c1"># 4 - cantidad de líneas</span>
-<span class="linenos" data-linenos="4 "></span><span class="n">resultRDD</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>    <span class="c1"># obtenemos la cantidad de caracteres cada línea</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">resultRDD</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>    <span class="c1"># obtenemos la cantidad de caracteres de cada línea</span>
 <span class="linenos" data-linenos="5 "></span><span class="n">resultRDD</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>         <span class="c1"># [61, 52, 60, 50]</span>
 </code></pre></div>
-<p>Si quisiéramos mostrar los datos de los empleados, podríamos recoger los datos del RDD y recorrerlo:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">empleados</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
-<span class="linenos" data-linenos="2 "></span><span class="k">for</span> <span class="n">empleado</span> <span class="ow">in</span> <span class="n">empleados</span><span class="p">:</span>
-<span class="linenos" data-linenos="3 "></span>    <span class="nb">print</span><span class="p">(</span><span class="n">empleado</span><span class="p">)</span>
+<p>Si sobre el fichero de empleados, realizamos un <code>split</code> para separar los campos haciendo uso de <code>map</code> mediante una función <em>lambda</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">resultMap</span> <span class="o">=</span> <span class="n">rddLocal</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">))</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">resultMap</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+</code></pre></div>
+<p>Obtenemos una lista de listas por cada fila del fichero, cada lista conteniendo los cincos campos de cada empleado:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">[[</span><span class="s1">&#39;Michael&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="2 "></span>  <span class="s1">&#39;Montreal,Toronto&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="3 "></span>  <span class="s1">&#39;Male,30&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="4 "></span>  <span class="s1">&#39;DB:80&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="5 "></span>  <span class="s1">&#39;Product:Developer</span><span class="se">\x04</span><span class="s1">Lead&#39;</span><span class="p">],</span>
+<span class="linenos" data-linenos="6 "></span> <span class="p">[</span><span class="s1">&#39;Will&#39;</span><span class="p">,</span> <span class="s1">&#39;Montreal&#39;</span><span class="p">,</span> <span class="s1">&#39;Male,35&#39;</span><span class="p">,</span> <span class="s1">&#39;Perl:85&#39;</span><span class="p">,</span> <span class="s1">&#39;Product:Lead,Test:Lead&#39;</span><span class="p">],</span>
+<span class="linenos" data-linenos="7 "></span> <span class="p">[</span><span class="s1">&#39;Shelley&#39;</span><span class="p">,</span> <span class="s1">&#39;New York&#39;</span><span class="p">,</span> <span class="s1">&#39;Female,27&#39;</span><span class="p">,</span> <span class="s1">&#39;Python:80&#39;</span><span class="p">,</span> <span class="s1">&#39;Test:Lead,COE:Architect&#39;</span><span class="p">],</span>
+<span class="linenos" data-linenos="8 "></span> <span class="p">[</span><span class="s1">&#39;Lucy&#39;</span><span class="p">,</span> <span class="s1">&#39;Vancouver&#39;</span><span class="p">,</span> <span class="s1">&#39;Female,57&#39;</span><span class="p">,</span> <span class="s1">&#39;Sales:89,HR:94&#39;</span><span class="p">,</span> <span class="s1">&#39;Sales:Lead&#39;</span><span class="p">]]</span>
 </code></pre></div>
 <h3 id="flatmap">FlatMap<a class="headerlink" href="#flatmap" title="Permanent link">&para;</a></h3>
 <p>La transformación <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.RDD.flatMap.html">flatMap</a> es muy similar a la anterior, pero en vez de devolver una lista con un elemento por cada entrada, devuelve una única lista deshaciendo las colecciones en elementos individuales:</p>
@@ -3391,26 +3416,26 @@ A lo largo de estas sesiones iremos combinando ambos interfaces para conocer las
 <span class="linenos" data-linenos="3 "></span><span class="n">resultFM</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 </code></pre></div>
 <p>Obtendríamos cada atributo separado y todos dentro de la misma lista:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">[</span><span class="err">&#39;Michael&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w"> </span><span class="err">&#39;Mo</span><span class="kc">ntreal</span><span class="p">,</span><span class="err">Toro</span><span class="kc">nt</span><span class="err">o&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="w"> </span><span class="err">&#39;Male</span><span class="p">,</span><span class="mi">30</span><span class="err">&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="w"> </span><span class="err">&#39;DB</span><span class="p">:</span><span class="mi">80</span><span class="err">&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w"> </span><span class="err">&#39;Produc</span><span class="kc">t</span><span class="p">:</span><span class="err">Developer\x</span><span class="mi">04</span><span class="err">Lead&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="w"> </span><span class="err">&#39;Will&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="w"> </span><span class="err">&#39;Mo</span><span class="kc">ntreal</span><span class="err">&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="w"> </span><span class="err">&#39;Male</span><span class="p">,</span><span class="mi">35</span><span class="err">&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="w"> </span><span class="err">&#39;Perl</span><span class="p">:</span><span class="mi">85</span><span class="err">&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos="10 "></span><span class="w"> </span><span class="err">&#39;Produc</span><span class="kc">t</span><span class="p">:</span><span class="err">Lead</span><span class="p">,</span><span class="err">Tes</span><span class="kc">t</span><span class="p">:</span><span class="err">Lead&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos="11 "></span><span class="w"> </span><span class="err">&#39;Shelley&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos="12 "></span><span class="w"> </span><span class="err">&#39;New</span><span class="w"> </span><span class="err">York&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos="13 "></span><span class="w"> </span><span class="err">&#39;Female</span><span class="p">,</span><span class="mi">27</span><span class="err">&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos="14 "></span><span class="w"> </span><span class="err">&#39;Py</span><span class="kc">t</span><span class="err">ho</span><span class="kc">n</span><span class="p">:</span><span class="mi">80</span><span class="err">&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos="15 "></span><span class="w"> </span><span class="err">&#39;Tes</span><span class="kc">t</span><span class="p">:</span><span class="err">Lead</span><span class="p">,</span><span class="err">COE</span><span class="p">:</span><span class="err">Archi</span><span class="kc">te</span><span class="err">c</span><span class="kc">t</span><span class="err">&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos="16 "></span><span class="w"> </span><span class="err">&#39;Lucy&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos="17 "></span><span class="w"> </span><span class="err">&#39;Va</span><span class="kc">n</span><span class="err">couver&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos="18 "></span><span class="w"> </span><span class="err">&#39;Female</span><span class="p">,</span><span class="mi">57</span><span class="err">&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos="19 "></span><span class="w"> </span><span class="err">&#39;Sales</span><span class="p">:</span><span class="mi">89</span><span class="p">,</span><span class="err">HR</span><span class="p">:</span><span class="mi">94</span><span class="err">&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos="20 "></span><span class="w"> </span><span class="err">&#39;Sales</span><span class="p">:</span><span class="err">Lead&#39;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">[</span><span class="s1">&#39;Michael&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 2 "></span> <span class="s1">&#39;Montreal,Toronto&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 3 "></span> <span class="s1">&#39;Male,30&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 4 "></span> <span class="s1">&#39;DB:80&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span> <span class="s1">&#39;Product:Developer</span><span class="se">\x04</span><span class="s1">Lead&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span> <span class="s1">&#39;Will&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span> <span class="s1">&#39;Montreal&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span> <span class="s1">&#39;Male,35&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span> <span class="s1">&#39;Perl:85&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="10 "></span> <span class="s1">&#39;Product:Lead,Test:Lead&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span> <span class="s1">&#39;Shelley&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="12 "></span> <span class="s1">&#39;New York&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="13 "></span> <span class="s1">&#39;Female,27&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="14 "></span> <span class="s1">&#39;Python:80&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span> <span class="s1">&#39;Test:Lead,COE:Architect&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="16 "></span> <span class="s1">&#39;Lucy&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="17 "></span> <span class="s1">&#39;Vancouver&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="18 "></span> <span class="s1">&#39;Female,57&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="19 "></span> <span class="s1">&#39;Sales:89,HR:94&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="20 "></span> <span class="s1">&#39;Sales:Lead&#39;</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="filter">Filter<a class="headerlink" href="#filter" title="Permanent link">&para;</a></h3>
 <p>Permite filtrar los elementos que cumplen una condición mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.RDD.filter.html"><code>filter</code></a>:</p>
@@ -3896,7 +3921,7 @@ broadcast variables, allows the program to efficiently send a large, read-only v
 <p>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RASBD.1</abbr> / <abbr title="Se ha extraído de forma automática información y conocimiento a partir de grandes volúmenes de datos.">CESBD.1b</abbr>) En las siguientes actividades vamos a familiarizarnos con el uso de Spark con RDD y las diferentes acciones y transformaciones disponibles.</p>
 <ol>
 <li>
-<p>(0.5p) A partir de la lista siguiente <code>['Alicante','Elche','Valencia','Madrid','Barcelona','Bilbao','Sevilla']</code>:</p>
+<p>(1p) A partir de la lista siguiente <code>['Alicante','Elche','Valencia','Madrid','Barcelona','Bilbao','Sevilla']</code>:</p>
 <ol>
 <li>Almacena sólo las ciudades que tengan la letra <code>e</code> en su nombre y muéstralas.</li>
 <li>Muestra las ciudades que tienen la letra <code>e</code> y el número de veces que aparece en cada nombre. Por ejemplo <code>('Elche', 2)</code>.</li>
@@ -3906,7 +3931,7 @@ broadcast variables, allows the program to efficiently send a large, read-only v
 </ol>
 </li>
 <li>
-<p>(0.5p) A partir de las siguientes listas:</p>
+<p>(1p) A partir de las siguientes listas:</p>
 <ul>
 <li>Inglés: <code>hello, table, angel, cat, dog, animal, chocolate, dark, doctor, hospital, computer</code></li>
 <li>Español: <code>hola, mesa, angel, gato, perro, animal, chocolate, oscuro, doctor, hospital, ordenador</code></li>
@@ -3926,7 +3951,7 @@ broadcast variables, allows the program to efficiently send a large, read-only v
 </ol>
 </li>
 <li>
-<p>(0.5p) A partir del fichero de <a href="resources/el_quijote.txt">El Quijote</a>:</p>
+<p>(0.75p) A partir del fichero de <a href="resources/el_quijote.txt">El Quijote</a>:</p>
 <ol>
 <li>Crear un RDD a partir del fichero y crea una lista con todas las palabras del documento.</li>
 <li>¿Cuantas veces aparece la palabra <code>Dulcinea</code> (independientemente de si está en mayúsculas o minúsculas)? ¿Y <code>Rocinante</code>? (86 y 120 ocurrencias respectivamente)</li>
@@ -3935,7 +3960,7 @@ broadcast variables, allows the program to efficiently send a large, read-only v
 </ol>
 </li>
 <li>
-<p>(0.5p) Dada una cadena que contiene una lista de nombres <code>Juan, Jimena, Luis, Cristian, Laura, Lorena, Cristina, Jacobo, Jorge</code>, una vez transformada la cadena en una lista y luego en un RDD:</p>
+<p>(0.75p) Dada una cadena que contiene una lista de nombres <code>Juan, Jimena, Luis, Cristian, Laura, Lorena, Cristina, Jacobo, Jorge</code>, una vez transformada la cadena en una lista y luego en un RDD:</p>
 <ol>
 <li>
 <p>Agrúpalos según su inicial, de manera que tengamos tuplas formadas por la letra inicial y todos los nombres que comienzan por dicha letra:</p>
@@ -3960,7 +3985,7 @@ broadcast variables, allows the program to efficiently send a large, read-only v
 </ol>
 </li>
 <li>
-<p>(0.5p) En una red social sobre cine, tenemos un fichero <a href="resources/ratings.txt">ratings.txt</a> compuesta por el código de la película, el código del usuario, la calificación asignada y el <em>timestamp</em> de la votación con el siguiente formato:</p>
+<p>(1p) En una red social sobre cine, tenemos un fichero <a href="resources/ratings.txt">ratings.txt</a> compuesta por el código de la película, el código del usuario, la calificación asignada y el <em>timestamp</em> de la votación con el siguiente formato:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>1::1193::5::978300760
 <span class="linenos" data-linenos="2 "></span>1::661::3::978302109
 <span class="linenos" data-linenos="3 "></span>1::914::3::978301968
@@ -3976,7 +4001,7 @@ broadcast variables, allows the program to efficiently send a large, read-only v
 <p>A continuación planteamos el siguiente proyecto para realizar en clase:</p>
 <ol>
 <li>
-<p>(2 ptos) Tenemos las calificaciones de las asignaturas de <a href="resources/notas_mates.txt">matemáticas</a>, <a href="resources/notas_ingles.txt">inglés</a> y <a href="resources/notas_fisica.txt">física</a> de los alumnos del instituto en 3 documentos de texto. A partir de estos ficheros:</p>
+<p>(2 ptos extra) Tenemos las calificaciones de las asignaturas de <a href="resources/notas_mates.txt">matemáticas</a>, <a href="resources/notas_ingles.txt">inglés</a> y <a href="resources/notas_fisica.txt">física</a> de los alumnos del instituto en 3 documentos de texto. A partir de estos ficheros:</p>
 <ol>
 <li>Crea 3 RDD de pares, uno para cada asignatura, con los alumnos y sus notas</li>
 <li>Crea un solo RDD con todas las notas</li>

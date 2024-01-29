@@ -3366,12 +3366,12 @@
 
   <h1>Pentaho</h1>
 
-<p><em>Kettle</em> es un componente de <em>Pentaho Data Integration</em> (PDI - <a href="https://www.hitachivantara.com/en-us/products/data-management-analytics/pentaho/download-pentaho.html">https://www.hitachivantara.com/en-us/products/data-management-analytics/pentaho/download-pentaho.html</a>) que a su vez contiene a <em>Spoon</em>. Mediante <em>Spoon</em> se pueden realizar procesos ETL de manera visual, de forma muy fácil y rápida, como por ejemplo:</p>
+<p><em>Kettle</em> es un componente de <em>Pentaho Data Integration</em> (PDI - <a href="https://www.hitachivantara.com/en-us/products/pentaho-plus-platform/data-integration-analytics/download-pentaho.html">https://www.hitachivantara.com/en-us/products/pentaho-plus-platform/data-integration-analytics/download-pentaho.html</a>) que a su vez contiene a <em>Spoon</em>. Mediante <em>Spoon</em> se pueden realizar procesos ETL de manera visual, de forma muy fácil y rápida, como por ejemplo:</p>
 <ul>
 <li>Conexiones a los datos.</li>
 <li>Transformaciones (filtrado, limpieza, formateado, ... y posterior almacenamiento en diferentes formatos y destinos).</li>
 <li>Inserción de fórmulas.</li>
-<li>Desarrollo de <em>data warehouses</em> con estructura en estrella (Hechos/Dimensiones)</li>
+<li>Desarrollo de <em>data warehouses</em> con modelos multidimensionales en estrella (Hechos/Dimensiones)</li>
 </ul>
 <p>Y todo esto sin necesidad de programar directamente con código y sin necesidad de instalar o configurar nada para poder empezar a usarla. Por esto, este tipo de herramientas se conocen como <ins>herramientas de metadatos</ins>, ya que trabajan a nivel de definición diciendo qué hay que hacer, pero no el detalle del cómo se hace, éste queda oculto, lo cual resulta muy interesante en la mayoría de los casos.</p>
 <figure style="align: center;">
@@ -3379,7 +3379,7 @@
     <figcaption>Pentaho - Ejemplo de flujo ETL</figcaption>
 </figure>
 
-<p>Se trata de una herramienta open source multiplataforma que también tiene su soporte comercial. La versión <em>open source</em> se puede descargar desde <a href="https://sourceforge.net/projects/pentaho/">https://sourceforge.net/projects/pentaho/</a>. En nuestro caso, vamos a trabajar con la versión 9.2 que data de agosto de 2021 (para los apuntes he trabajado indistintamente con la versión 9.1 y la 9.2, tanto en Windows como en Ubuntu).</p>
+<p>Se trata de una herramienta open source multiplataforma que también tiene su soporte comercial. La versión <em>Community</em> se puede descargar desde <a href="https://www.hitachivantara.com/en-us/products/pentaho-plus-platform/data-integration-analytics/pentaho-community-edition.html">https://www.hitachivantara.com/en-us/products/pentaho-plus-platform/data-integration-analytics/pentaho-community-edition.html</a> (no hace falta registrarse, sólo pulsar el botón rojo), seleccionando el archivo <code>pme-ce-9.4.0.0-343.zip</code>. En nuestro caso, vamos a trabajar con la versión 9.4 que data de noviembre de 2022 (para los apuntes hemos trabajado indistintamente con la versión 9.1, 9.2 y 9.4, tanto en Windows como en Ubuntu).</p>
 <p>Es importante destacar como requisito que necesitamos tener instalado en el sistema la versión 8 de Java.</p>
 <div class="admonition tip">
 <p class="admonition-title">Instalación en Ubuntu</p>
@@ -3397,7 +3397,7 @@
 </div>
 <p>Una vez descargado el archivo y tras descomprimirlo, mediante el archivo <code>spoon.bat</code> (o <code>spoon.sh</code>) lanzaremos la aplicación.</p>
 <figure style="align: center;">
-    <img src="images/pentaho/02spoon-inicio.png">
+    <img src="images/pentaho/02spoon-inicio.png" alt="Pantalla de inicio de Pentaho/Spoon">
     <figcaption>Pantalla de inicio de Pentaho/Spoon</figcaption>
 </figure>
 
@@ -3405,8 +3405,8 @@
 <p class="admonition-title">Dentro de Spoon</p>
 <p><em>Spoon</em> permite diseñar mediante un interfaz gráficos las transformaciones y trabajos que se ejecutan con las siguientes herramientas:</p>
 <ul>
-<li><strong><em>Pan</em></strong> es un motor de transformación de datos que facilita la lectura, manipulación, y escritura de datos hacia y desde varias fuentes de datos. Ejecuta archivos <code>ktr</code>.</li>
-<li><strong><em>Kitchen</em></strong> es un programa que ejecuta los trabajos (<em>jobs</em>) diseñados por Spoon en XML o en una base de datos.  Ejecuta archivos <code>kjb</code>.</li>
+<li><strong><em>Pan</em></strong> es un motor de transformación de datos que facilita la lectura, manipulación, y escritura de datos hacia y desde varias fuentes de datos. Ejecuta archivos con extensión <code>ktr</code>.</li>
+<li><strong><em>Kitchen</em></strong> es un programa que ejecuta los trabajos (<em>jobs</em>) diseñados por Spoon en XML o en una base de datos.  Ejecuta archivos con extensión <code>kjb</code>.</li>
 </ul>
 </div>
 <p>Para esta sesión, hemos planteado varios casos de uso para ir aprendiendo la herramienta mediante su uso.</p>
@@ -3419,14 +3419,14 @@
 <p>Tanto las transformaciones como las tareas, cuando se definen, se almacenan como archivos.</p>
 <p>Los elementos del interfaz son:</p>
 <figure style="align: center;">
-    <img src="images/pentaho/02spoon-interfaz.png">
+    <img src="images/pentaho/02spoon-interfaz.png" alt="Interfaz de Spoon">
     <figcaption>Interfaz de Spoon</figcaption>
 </figure>
 
 <h2 id="caso-de-uso-0">Caso de Uso 0<a class="headerlink" href="#caso-de-uso-0" title="Permanent link">&para;</a></h2>
 <p>Para familiarizarnos con el entorno, vamos a crear una transformación muy básica. Tras seleccionar <em>File -&gt; New Transformation</em>, el primer elemento que vamos a utilizar está dentro de la categoría <em>Input</em> (Entrada).</p>
 <figure style="float: right;">
-    <img src="images/pentaho/02mouseover.png">
+    <img src="images/pentaho/02mouseover.png" alt="Menú emergentez">
     <figcaption>Menú emergente</figcaption>
 </figure>
 
@@ -3434,7 +3434,7 @@
 <p>Sobre este paso, vamos a editar la información que queremos obtener. Para ello, vamos a crear una propiedad con nombre <em>Versión Pentaho</em> y seleccionaremos del desplegable la opción <em>Kettle Version</em>.</p>
 <p>A continuación, en la categoría <em>Utility</em> seleccionamos el icono <em>Write to Log</em>, y lo arrastramos al área de trabajo. Ahora conectamos la salida de <em>Get system info</em> con <em>Write to log</em>, mediante la 4ª opción del menu emergente, quedando una transformación tal como se ve en la imagen:</p>
 <figure style="align: center;">
-    <img src="images/pentaho/02caso0.png">
+    <img src="images/pentaho/02caso0.png" alt="Caso de Uso 0 - Versión de PDI">
     <figcaption>Caso de Uso 0 - Versión de PDI</figcaption>
 </figure>
 
