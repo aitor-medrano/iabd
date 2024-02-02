@@ -3507,14 +3507,45 @@ Si quieres profundizar en el tema, el siguiente artículo detalla los diferentes
 <p>Realiza las siguientes actividades empleando <em>Flume</em>:</p>
 <ol>
 <li>
-<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se han extraído y almacenado datos de diversas fuentes, para ser tratados en distintos escenarios.">CESBD.3a</abbr> y <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> / 1.5 p) Realiza el caso de uso 1 (a y b), adjuntando capturas las fuentes y los destinos empleados. En el caso de Netcat, escribe alguna frase con tu nombre.</p>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se han extraído y almacenado datos de diversas fuentes, para ser tratados en distintos escenarios.">CESBD.3a</abbr> y <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> / 1 p) Realiza el caso de uso 1 (a y b), adjuntando capturas las fuentes y los destinos empleados. En el caso de <em>Netcat</em>, escribe alguna frase con tu nombre.</p>
 </li>
 <li>
 <p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se han extraído y almacenado datos de diversas fuentes, para ser tratados en distintos escenarios.">CESBD.3a</abbr> y <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> / 1 p) Realiza el caso de uso 2, adjuntando la misma información que en el ejercicio anterior, pero cambiando la frase.</p>
 </li>
 <li>
-<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se han extraído y almacenado datos de diversas fuentes, para ser tratados en distintos escenarios.">CESBD.3a</abbr> y <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> / 1.5 p) Realiza el caso de uso 3, adjuntando capturas de todas las fuentes, incluido el archivo colocado en el <em>SpoolDir</em>.
-Una vez realizado, añade la propiedad necesaria para que los archivos de la carpeta de <em>spooling</em>, en vez de renombrarse, se eliminen automáticamente una vez procesados.</p>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se han extraído y almacenado datos de diversas fuentes, para ser tratados en distintos escenarios.">CESBD.3a</abbr> y <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> / 2 p) Con la misma arquitectura de flujos que el caso 3, define un agente que simule la ingesta de datos de usuarios compuestos de <em><code>email;password;nombre;profesion</code></em>, mediante los siguientes tres agentes:</p>
+<ol>
+<li>
+<p>Ejecuta el siguiente <a href="resources/flume-faker.py"><em>script</em></a> que genera <a href="../de/faker.html">datos sintéticos</a> mediante la librería <a href="https://faker.readthedocs.io/en/master/">Faker</a>.</p>
+<div class="highlight"><span class="filename">flume-faker.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">faker</span> <span class="kn">import</span> <span class="n">Faker</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">csv</span><span class="o">,</span> <span class="nn">time</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">fake</span> <span class="o">=</span> <span class="n">Faker</span><span class="p">(</span><span class="s1">&#39;es_ES&#39;</span><span class="p">)</span>   <span class="c1"># cambiamos el locale a español</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">num</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># secuencia para los nombres de los ficheros</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span>    <span class="n">output</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;spool/datosFaker-</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos="10 "></span>    <span class="n">mywriter</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span>    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+<span class="linenos" data-linenos="13 "></span>        <span class="n">mywriter</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">fake</span><span class="o">.</span><span class="n">free_email</span><span class="p">(),</span>
+<span class="linenos" data-linenos="14 "></span>                        <span class="n">fake</span><span class="o">.</span><span class="n">password</span><span class="p">(),</span>
+<span class="linenos" data-linenos="15 "></span>                        <span class="n">fake</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
+<span class="linenos" data-linenos="16 "></span>                        <span class="n">fake</span><span class="o">.</span><span class="n">job</span><span class="p">()])</span>
+<span class="linenos" data-linenos="17 "></span>    <span class="n">output</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos" data-linenos="18 "></span>
+<span class="linenos" data-linenos="19 "></span>    <span class="n">num</span> <span class="o">=</span> <span class="n">num</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="linenos" data-linenos="20 "></span>
+<span class="linenos" data-linenos="21 "></span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># espera 10 segundos y genera un nuevo archivo</span>
+</code></pre></div>
+</li>
+<li>
+<p>Realice un <em>spooling</em> sobre la carpeta donde se generan los datos sintéticos, teniendo en cuenta, que debes añadir la propiedad necesaria para que los archivos de la carpeta de <em>spooling</em>, en vez de renombrarse, se eliminen automáticamente una vez procesados.</p>
+</li>
+<li>Permite la entrega de usuarios de forma individual mediante <em>Netcat</em>, de manera que tecleemos los datos de cada usuario separados por <code>;</code>.</li>
+</ol>
+<p>Una vez ejecutado el agente, comprueba que se van almacenando los datos de las diferentes fuentes en HDFS de forma dinámica.</p>
 </li>
 </ol>
 <div class="admonition warning">
