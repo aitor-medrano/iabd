@@ -3694,7 +3694,7 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <span class="linenos" data-linenos="3 "></span>set hive.exec.dynamic.partition.mode=nonstrict;
 <span class="linenos" data-linenos="4 "></span>set hive.txn.manager=org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
 </code></pre></div>
-<p>Una vez configurado, hemos de crear las tablas con el formato ORC y organizar los datos mediante <em>buckets</em> (los estudiaremos más adelante en esta <a href="hive2.html#buckets">la siguiente sesión</a>). Por ejemplo, volvemos a crear la tabla de clientes:</p>
+<p>Una vez configurado, hemos de crear las tablas con el formato ORC, organizar los datos mediante <em>buckets</em> (los estudiaremos más adelante en esta <a href="hive2.html#buckets">la siguiente sesión</a>) y finalmente indicar mediante <code>TBLPROPERTIES</code> que se trata de una tabla transaccional . Por ejemplo, volvemos a crear la tabla de clientes:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customerstx</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="p">(</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="n">custId</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
@@ -3702,10 +3702,10 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="n">lName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="n">city</span><span class="w"> </span><span class="n">STRING</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="p">)</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="n">CLUSTERED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">custId</span><span class="p">)</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="n">BUCKETS</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="n">STORED</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ORC</span>
-<span class="linenos" data-linenos="10 "></span><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;transactional&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">);</span>
-</code></pre></div>
+<span class="hll"><span class="linenos" data-linenos=" 8 "></span><span class="n">CLUSTERED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">custId</span><span class="p">)</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="n">BUCKETS</span>
+</span><span class="hll"><span class="linenos" data-linenos=" 9 "></span><span class="n">STORED</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ORC</span>
+</span><span class="hll"><span class="linenos" data-linenos="10 "></span><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;transactional&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">);</span>
+</span></code></pre></div>
 <p>Una vez creada la tabla, la vamos a cargar con los datos de los clientes:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">customerstx</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>

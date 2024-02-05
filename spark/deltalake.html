@@ -1617,18 +1617,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#hablemos-con-propiedad" class="md-nav__link">
+  <a href="#fusionando-datos" class="md-nav__link">
     <span class="md-ellipsis">
-      Hablemos con propiedad
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optimizando-la-tabla" class="md-nav__link">
-    <span class="md-ellipsis">
-      Optimizando la tabla
+      Fusionando datos
     </span>
   </a>
   
@@ -3037,18 +3028,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#hablemos-con-propiedad" class="md-nav__link">
+  <a href="#fusionando-datos" class="md-nav__link">
     <span class="md-ellipsis">
-      Hablemos con propiedad
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optimizando-la-tabla" class="md-nav__link">
-    <span class="md-ellipsis">
-      Optimizando la tabla
+      Fusionando datos
     </span>
   </a>
   
@@ -3159,6 +3141,10 @@
 
   <h1>Delta Lake</h1>
 
+<div class="admonition failure">
+<p class="admonition-title">Sesión en construcción</p>
+<p>Esta sesión no está finalizada, así que mejor espera unos días y vuelve a intentarlo... En principio, la quiero tener lista para el 14 de Febrero.</p>
+</div>
 <figure style="float: right">
     <img src="images/02delta-lake-logo.png" alt="Logo de Delta Lake">
     <figcaption>Logo de Delta Lake</figcaption>
@@ -3338,7 +3324,7 @@ FIXME: https://learn.microsoft.com/es-es/azure/databricks/lakehouse/medallion
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;iabd.covid&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">AnalysisException</span><span class="p">:</span> <span class="n">A</span> <span class="n">schema</span> <span class="n">mismatch</span> <span class="n">detected</span> <span class="n">when</span> <span class="n">writing</span> <span class="n">to</span> <span class="n">the</span> <span class="n">Delta</span> <span class="n">table</span> <span class="p">(</span><span class="n">Table</span> <span class="n">ID</span><span class="p">:</span> <span class="mi">9</span><span class="n">c1b48b4</span><span class="o">-</span><span class="mi">59</span><span class="n">b8</span><span class="o">-</span><span class="mi">4712</span><span class="o">-</span><span class="n">b536</span><span class="o">-</span><span class="mi">38</span><span class="n">d4c59513dd</span><span class="p">)</span><span class="o">.</span>
 </code></pre></div>
-<p>Así pues, además de añadir los datos sobre la tabla existe, debemos indicar de forma explicita que fusione los esquemas mediante la opción <code>mergeSchema</code>:</p>
+<p>Así pues, además de añadir los datos sobre la tabla existente, debemos indicar de forma explicita que fusione los esquemas mediante la opción <code>mergeSchema</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span> \
 <span class="hll"><span class="linenos" data-linenos="2 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;mergeSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
 </span><span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;iabd.covid&quot;</span><span class="p">)</span>
@@ -3376,9 +3362,33 @@ FIXME: https://learn.microsoft.com/es-es/azure/databricks/lakehouse/medallion
 <span class="linenos" data-linenos="2 "></span><span class="c1"># [&#39;file:/opt/spark/work-dir/spark-warehouse/iabd.db/covid/part-00005-9ad5b550-8ded-4177-8d89-66bd22062e2e-c000.snappy.parquet&#39;,</span>
 <span class="linenos" data-linenos="3 "></span><span class="c1">#  &#39;file:/opt/spark/work-dir/spark-warehouse/iabd.db/covid/part-00001-50397be1-9510-4cd1-9d12-34e599a64cae-c000.snappy.parquet&#39;]</span>
 </code></pre></div>
-<h3 id="hablemos-con-propiedad">Hablemos con propiedad<a class="headerlink" href="#hablemos-con-propiedad" title="Permanent link">&para;</a></h3>
-<p>https://learning.oreilly.com/library/view/delta-lake-the/9781098151935/ch02.html#add_or_modify_table_properties</p>
-<h3 id="optimizando-la-tabla">Optimizando la tabla<a class="headerlink" href="#optimizando-la-tabla" title="Permanent link">&para;</a></h3>
+<h3 id="fusionando-datos">Fusionando datos<a class="headerlink" href="#fusionando-datos" title="Permanent link">&para;</a></h3>
+<p>Si queremos fusionar un conjunto de actualizaciones e inserciones en una tabla Delta existente, podemos emplear la sentencia <a href="https://docs.databricks.com/en/sql/language-manual/delta-merge-into.html"><code>MERGE INTO</code></a>, que recoge los datos de una tabla origen y los fusiona con la tabla Delta destino:</p>
+<p>FIXME: revisar</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="n">TEMP</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">people_updates</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">firstName</span><span class="p">,</span><span class="w"> </span><span class="n">middleName</span><span class="p">,</span><span class="w"> </span><span class="n">lastName</span><span class="p">,</span><span class="w"> </span><span class="n">gender</span><span class="p">,</span><span class="w"> </span><span class="n">birthDate</span><span class="p">,</span><span class="w"> </span><span class="n">ssn</span><span class="p">,</span><span class="w"> </span><span class="n">salary</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">VALUES</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="p">(</span><span class="mi">9999998</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Billy&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Tommie&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Luppitt&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1992-09-17T04:00:00.000+0000&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;953-38-9452&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">55250</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="p">(</span><span class="mi">9999999</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Elias&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Cyril&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Leadbetter&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1984-05-22T04:00:00.000+0000&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;906-51-2137&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">48500</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="p">(</span><span class="mi">10000000</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Joshua&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Chas&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Broggio&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1968-07-22T04:00:00.000+0000&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;988-61-6247&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">90000</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">  </span><span class="p">(</span><span class="mi">20000001</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;John&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Doe&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1978-01-14T04:00:00.000+000&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;345-67-8901&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">55500</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">  </span><span class="p">(</span><span class="mi">20000002</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Mary&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Smith&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1982-10-29T01:00:00.000+000&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;456-78-9012&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">98250</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">  </span><span class="p">(</span><span class="mi">20000003</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Jane&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Doe&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1981-06-25T04:00:00.000+000&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;567-89-0123&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">89900</span><span class="p">);</span>
+<span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span><span class="n">MERGE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">people_10m</span>
+<span class="linenos" data-linenos="12 "></span><span class="k">USING</span><span class="w"> </span><span class="n">people_updates</span>
+<span class="linenos" data-linenos="13 "></span><span class="k">ON</span><span class="w"> </span><span class="n">people_10m</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">people_updates</span><span class="p">.</span><span class="n">id</span>
+<span class="linenos" data-linenos="14 "></span><span class="k">WHEN</span><span class="w"> </span><span class="n">MATCHED</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="o">*</span>
+<span class="linenos" data-linenos="15 "></span><span class="k">WHEN</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">MATCHED</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="o">*</span><span class="p">;</span>
+</code></pre></div>
+<!--
+### Hablemos con propiedad
+
+https://learning.oreilly.com/library/view/delta-lake-the/9781098151935/ch02.html#add_or_modify_table_properties
+
+### Optimizando la tabla
+-->
+
 <h2 id="delta-lake-por-dentro">Delta Lake por dentro<a class="headerlink" href="#delta-lake-por-dentro" title="Permanent link">&para;</a></h2>
 <p>Si accedemos al sistema de archivos local, HDFS o Databricks DBFS, podemos analizar la estructura de archivos que ha utilizado para almacenar la información.</p>
 <p><em>Delta Lake</em> almacena los datos en formato <em>Parquet</em> en la ruta indicada (y si hubiéramos indicando particiones, en sus subcarpetas), y luego crea una carpeta denominada <code>_delta_log</code> donde almacena el <em>DeltaLog</em> o log transaccional en formato JSON, en el cual va registrando los cambios <em>delta</em> que se realizan sobre los datos.</p>
@@ -3551,6 +3561,8 @@ https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.youtube.com/watch?v=_pCUra3_BGA">Construir data lakes fiables con Delta Lake - Carlos del Cacho</a></li>
+<li><a href="https://delta.io/pdfs/DLTDG_ER3.pdf">Delta Lake. The definitive guide</a></li>
+<li><a href="resources/delta_lake_cheat_sheet.pdf">Delta Lake Cheat-sheet</a></li>
 <li><a href="https://learning.oreilly.com/library/view/delta-lake-up/9781098139711/">Delta Lake: Up and Running - Bennie Haelen - O'Reilly</a></li>
 <li><a href="https://www.databricks.com/wp-content/uploads/2020/08/p975-armbrust.pdf">Delta Lake: High-Performance ACID Table Storage over Cloud Object Stores</a></li>
 </ul>
