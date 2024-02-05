@@ -3324,7 +3324,7 @@
 </code></pre></div>
 <p>También podemos crear un <em>DataFrame</em> directamente desde una <em>SparkSession</em> sin crear un RDD previamente mediante el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.SparkSession.createDataFrame.html"><code>createDataFrame</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># También podemos crear un DF desde SparkSession</span>
-<span class="linenos" data-linenos="2 "></span><span class="n">dfDesdeDatos</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">datos</span><span class="p">)</span><span class="o">.</span><span class="n">toDF</span><span class="p">(</span><span class="o">*</span><span class="n">columnas</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">dfDesdeDatos</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">datos</span><span class="p">,</span> <span class="n">columnas</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="n">dfDesdeDatos</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="mostrando-los-datos">Mostrando los datos<a class="headerlink" href="#mostrando-los-datos" title="Permanent link">&para;</a></h3>
@@ -3339,7 +3339,7 @@
 <span class="linenos" data-linenos="8 "></span><span class="n">columnas</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;nombre&quot;</span><span class="p">,</span><span class="s2">&quot;apellidos&quot;</span><span class="p">,</span> <span class="s2">&quot;ciudad&quot;</span><span class="p">,</span> <span class="s2">&quot;sueldo&quot;</span><span class="p">]</span>
 <span class="linenos" data-linenos="9 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">clientes</span><span class="p">,</span> <span class="n">columnas</span><span class="p">)</span>
 </code></pre></div>
-<p>Para mostrar los datos, ya hemos visto que podemos utilizar el método <code>show</code>, al cual le podemos indicar o no la cantidad de registros a recuperar, así como si queremos que los datos se trunquen o no, o si los queremos mostrar en vertical:</p>
+<p>Para mostrar los datos podemos utilizar el método <code>show</code>, al cual le podemos indicar o no la cantidad de registros a recuperar, así como si queremos que los datos se trunquen o no, o si los queremos mostrar en vertical:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="c1"># +------+---------+------+------+</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="c1"># |nombre|apellidos|ciudad|sueldo|</span>
@@ -3450,7 +3450,7 @@
 <p>Más información en la <a href="https://spark.apache.org/docs/latest/sql-data-sources-json.html">documentación oficial</a></p>
 <div class="admonition caution">
 <p class="admonition-title">DataFrames desde JSON</p>
-<p><em>Spark</em> espera que cada documento JSON ocupe una única línea. Si cada documento ocupa más de una línea, se lo indicamos mediante la opción <code>multiline</code>:</p>
+<p><em>Spark</em> espera que cada documento JSON ocupe una única línea (JSONL). Si cada documento ocupa más de una línea, se lo indicamos mediante la opción <code>multiline</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;multiline&quot;</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;inferSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="s2">&quot;datos.json&quot;</span><span class="p">)</span>
 </code></pre></div>
 </div>
@@ -3524,9 +3524,9 @@
 <span class="linenos" data-linenos=" 9 "></span>
 <span class="linenos" data-linenos="10 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/pdi_sales_json&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Es conveniente destacar que para acceder a HDFS, únicamente hemos de indicar la URL del recurso con el prefijo <code>hdfs://</code> más el host del <em>namenode</em>.</p>
+<p>Es conveniente destacar que para acceder a HDFS, únicamente hemos de indicar la URL del recurso con el prefijo <code>hdfs://</code> más el <em>host</em> del <em>namenode</em>.</p>
 <h3 id="comprimiendo-los-datos">Comprimiendo los datos<a class="headerlink" href="#comprimiendo-los-datos" title="Permanent link">&para;</a></h3>
-<p>Para configurar el algoritmo de compresión, si los datos está en Parquet o Avro, a nivel de la sesión de Spark, podemos realizar su configuración:</p>
+<p>Para configurar el algoritmo de compresión, si los datos está en <em>Parquet</em> o <em>Avro</em>, a nivel de la sesión de Spark, podemos realizar su configuración:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">setConf</span><span class="p">(</span><span class="s2">&quot;spark.sql.parquet.compression.codec&quot;</span><span class="p">,</span><span class="s2">&quot;snappy&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">spark</span><span class="o">.</span><span class="n">setConf</span><span class="p">(</span><span class="s2">&quot;spark.sql.parquet.compression.codec&quot;</span><span class="p">,</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="n">spark</span><span class="o">.</span><span class="n">setConf</span><span class="p">(</span><span class="s2">&quot;spark.sql.avro.compression.codec&quot;</span><span class="p">,</span><span class="s2">&quot;snappy&quot;</span><span class="p">)</span>
@@ -3851,17 +3851,17 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 <span class="linenos" data-linenos="10 "></span>only showing top 5 rows
 </code></pre></div>
 <p>Normalmente, tras realizar una ordenación, es habitual quedarse con un subconjunto de los datos. Para ello, podemos utilizar la transformación <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.limit.html">limit</a>.</p>
-<p>Por ejemplo, la siguiente transformación es similar al ejemplo anterior, sólo que ahora al driver únicamente le llegan 5 registros, en vez de traerlos todos y sólo mostrar 5:</p>
+<p>Por ejemplo, la siguiente transformación es similar al ejemplo anterior, sólo que ahora al <em>driver</em> únicamente le llegan 5 registros, en vez de traerlos todos y sólo mostrar 5:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Revenue</span><span class="o">.</span><span class="n">desc</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">Units</span><span class="o">.</span><span class="n">asc</span><span class="p">())</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="anadiendo-filas">Añadiendo filas<a class="headerlink" href="#anadiendo-filas" title="Permanent link">&para;</a></h3>
 <p>La única manera de añadir filas a un <em>DataFrame</em> es creando uno nuevo que sea el resultado de unir dos <em>DataFrames</em> que compartan el mismo esquema (mismo nombres de columnas y en el mismo orden). Para ello, utilizaremos la transformación <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.union.html">union</a> que realiza la unión por el orden de las columnas:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">nuevasVenta</span> <span class="o">=</span> <span class="p">[</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">nuevasVentas</span> <span class="o">=</span> <span class="p">[</span>
 <span class="linenos" data-linenos="2 "></span>    <span class="p">(</span><span class="mi">6666</span><span class="p">,</span> <span class="s2">&quot;2022-03-24&quot;</span><span class="p">,</span> <span class="s2">&quot;03206&quot;</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mf">3333.33</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">),</span>
 <span class="linenos" data-linenos="3 "></span>    <span class="p">(</span><span class="mi">6666</span><span class="p">,</span> <span class="s2">&quot;2022-03-25&quot;</span><span class="p">,</span> <span class="s2">&quot;03206&quot;</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mf">2222.22</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">),</span>
 <span class="linenos" data-linenos="4 "></span><span class="p">]</span>
-<span class="linenos" data-linenos="5 "></span><span class="c1"># Creamos un nuevo DataFrame con las nuevas Ventas</span>
-<span class="linenos" data-linenos="6 "></span><span class="n">nvDF</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">nuevasVenta</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="c1"># Creamos un nuevo DataFrame con las nuevas ventas</span>
+<span class="linenos" data-linenos="6 "></span><span class="n">nvDF</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">nuevasVentas</span><span class="p">)</span>
 <span class="linenos" data-linenos="7 "></span><span class="c1"># Unimos los dos DataFrames</span>
 <span class="linenos" data-linenos="8 "></span><span class="n">dfUpdated</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">nvDF</span><span class="p">)</span>
 </code></pre></div>
@@ -3900,7 +3900,7 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 <ol>
 <li>Eliminar las filas que tienen valores vacíos en una o más columnas.</li>
 <li>Rellenar los valores nulos con valores que definimos nosotros.</li>
-<li>Sustituir los datos erróneos por algún valor que sepamos como gestionarlo.</li>
+<li>Sustituir los datos erróneos por algún valor que sepamos cómo gestionarlo.</li>
 </ol>
 <p>Vamos a ver cada uno de estos casos a partir del siguiente <em>dataset</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">malasVentas</span> <span class="o">=</span> <span class="p">[</span>
