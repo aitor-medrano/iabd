@@ -1598,6 +1598,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#delta-lake-por-dentro" class="md-nav__link">
+    <span class="md-ellipsis">
+      Delta Lake por dentro
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#caso-de-uso-1-covid" class="md-nav__link">
     <span class="md-ellipsis">
       Caso de Uso 1 - COVID
@@ -1625,17 +1634,17 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#delta-lake-por-dentro" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#hablemos-con-propiedad" class="md-nav__link">
     <span class="md-ellipsis">
-      Delta Lake por dentro
+      Hablemos con propiedad
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3009,6 +3018,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#delta-lake-por-dentro" class="md-nav__link">
+    <span class="md-ellipsis">
+      Delta Lake por dentro
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#caso-de-uso-1-covid" class="md-nav__link">
     <span class="md-ellipsis">
       Caso de Uso 1 - COVID
@@ -3036,17 +3054,17 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#delta-lake-por-dentro" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#hablemos-con-propiedad" class="md-nav__link">
     <span class="md-ellipsis">
-      Delta Lake por dentro
+      Hablemos con propiedad
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3273,6 +3291,75 @@ FIXME: https://learn.microsoft.com/es-es/azure/databricks/lakehouse/medallion
 <span class="linenos" data-linenos="2 "></span><span class="n">dfdeltal</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;/tmp/raw/clientes&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="n">dfdeltahdfs</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
 </code></pre></div>
+<h2 id="delta-lake-por-dentro">Delta Lake por dentro<a class="headerlink" href="#delta-lake-por-dentro" title="Permanent link">&para;</a></h2>
+<p>Si accedemos al sistema de archivos local, HDFS o Databricks DBFS, podemos analizar la estructura de archivos que ha utilizado para almacenar la información.</p>
+<p><em>Delta Lake</em> almacena los datos en formato <em>Parquet</em> en la ruta indicada (y si hubiéramos indicando particiones, en sus subcarpetas), y luego crea una carpeta denominada <code>_delta_log</code> donde almacena el <em>DeltaLog</em> o log transaccional en formato JSON, en el cual va registrando los cambios <em>delta</em> que se realizan sobre los datos.</p>
+<p>Vamos a comprobar qué datos se han almacenado en HDFS:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd@iabd-virtualbox:~/datos$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>-R<span class="w"> </span>/user/iabd/delta/raw/clientes
+<span class="linenos" data-linenos="2 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log
+<span class="linenos" data-linenos="3 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">2605</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000000.json
+<span class="linenos" data-linenos="4 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-05cb7b9c-c529-4f5e-83ab-0dc79d0422bf-c000.snappy.parquet
+</code></pre></div>
+<p>Si realizamos otra operación, por ejemplo, sobrescribimos la tabla, generará nuevos datos y otro fichero de log:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Lo comprobamos volviendo a listar los archivos almacenados:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd@iabd-virtualbox:~/datos$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>-R<span class="w"> </span>/user/iabd/delta/raw/clientes
+<span class="linenos" data-linenos="2 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log
+<span class="linenos" data-linenos="3 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">2605</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000000.json
+<span class="hll"><span class="linenos" data-linenos="4 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1592</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000001.json
+</span><span class="linenos" data-linenos="5 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-05cb7b9c-c529-4f5e-83ab-0dc79d0422bf-c000.snappy.parquet
+<span class="hll"><span class="linenos" data-linenos="6 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-1f226209-881f-4ff7-af04-6eedd64e1581-c000.snappy.parquet
+</span></code></pre></div>
+<p>Ahora vamos a añadir nuevos datos, utilizando un nuevo <em>dataframe</em> e indicando el modo de escritura con <code>append</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;customer_id&#39;</span><span class="p">,</span> <span class="s1">&#39;customer_fname&#39;</span><span class="p">,</span> <span class="s1">&#39;customer_lname&#39;</span><span class="p">]</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="n">datos</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="p">(</span><span class="mi">88888</span><span class="p">,</span> <span class="s2">&quot;Aitor&quot;</span><span class="p">,</span> <span class="s2">&quot;Medrano&quot;</span><span class="p">),</span> 
+<span class="linenos" data-linenos=" 4 "></span><span class="p">(</span><span class="mi">99999</span><span class="p">,</span> <span class="s2">&quot;Pedro&quot;</span><span class="p">,</span> <span class="s2">&quot;Casas&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="p">]</span>
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">nuevosClientes</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">datos</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1"># cambiamos el tipo a int pq por defecto le asigna long</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">nuevosClientes</span> <span class="o">=</span> <span class="n">nuevosClientes</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;customer_id&quot;</span><span class="p">,</span> <span class="n">nuevosClientes</span><span class="o">.</span><span class="n">customer_id</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">))</span>
+<span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span><span class="n">nuevosClientes</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Fusionando el esquema</p>
+<p>Si los tipos de los datos no cuadran con el esquema almacenado en DeltaLake, tendremos un error. Para habilitar que fusione los esquemas podemos indicarlo con <code>.option("mergeSchema", "true")</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">nuevosClientes</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;mergeSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<p>Ahora podemos ver como ha creado un nuevo archivo de log pero dos archivos de datos. En concreto, el archivo de log ha registrado las dos inserciones, y cada archivo de <em>Parquet</em> contiene únicamente cada uno de los registros:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd@iabd-virtualbox:~/datos$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>-R<span class="w"> </span>/user/iabd/delta/raw/clientes
+<span class="linenos" data-linenos="2 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:39<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log
+<span class="linenos" data-linenos="3 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">2605</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000000.json
+<span class="linenos" data-linenos="4 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1592</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000001.json
+<span class="hll"><span class="linenos" data-linenos="5 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1309</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:39<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000002.json
+</span><span class="linenos" data-linenos="6 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-05cb7b9c-c529-4f5e-83ab-0dc79d0422bf-c000.snappy.parquet
+<span class="linenos" data-linenos="7 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-1f226209-881f-4ff7-af04-6eedd64e1581-c000.snappy.parquet
+<span class="hll"><span class="linenos" data-linenos="8 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1035</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:39<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-b7124036-ce26-4b95-a759-080e829b8de6-c000.snappy.parquet
+</span><span class="hll"><span class="linenos" data-linenos="9 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1020</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:39<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00001-6164f53a-ca34-4b73-96ef-8d2f2cfbbb47-c000.snappy.parquet
+</span></code></pre></div>
+<p>Por ejemplo, si descargamos y visualizamos uno de los archivos de Parquet veremos sus datos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd@iabd-virtualbox:~/Descargas$<span class="w"> </span>parquet-tools<span class="w"> </span>show<span class="w"> </span>part-00000-b7124036-ce26-4b95-a759-080e829b8de6-c000.snappy.parquet<span class="w"> </span>
+<span class="linenos" data-linenos="2 "></span>+---------------+------------------+------------------+
+<span class="linenos" data-linenos="3 "></span><span class="p">|</span><span class="w">   </span>customer_id<span class="w"> </span><span class="p">|</span><span class="w"> </span>customer_fname<span class="w">   </span><span class="p">|</span><span class="w"> </span>customer_lname<span class="w">   </span><span class="p">|</span>
+<span class="linenos" data-linenos="4 "></span><span class="p">|</span>---------------+------------------+------------------<span class="p">|</span>
+<span class="linenos" data-linenos="5 "></span><span class="p">|</span><span class="w">         </span><span class="m">88888</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Aitor<span class="w">            </span><span class="p">|</span><span class="w"> </span>Medrano<span class="w">          </span><span class="p">|</span>
+<span class="linenos" data-linenos="6 "></span>+---------------+------------------+------------------+
+</code></pre></div>
+<p>Finalmente, si queremos comprobar los datos, a partir del <em>dataframe</em> que habíamos leído desde <em>HDFS</em>, podemos comprobar como los datos ya aparecen:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">dfdeltahdfs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;customer_id&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+----------------+-------------+--------------+----------------+</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1"># |customer_id|customer_fname|customer_lname|customer_email|customer_password| customer_street|customer_city|customer_state|customer_zipcode|</span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+----------------+-------------+--------------+----------------+</span>
+<span class="linenos" data-linenos="5 "></span><span class="c1"># |      99999|         Pedro|         Casas|          null|             null|            null|         null|          null|            null|</span>
+<span class="linenos" data-linenos="6 "></span><span class="c1"># |      88888|         Aitor|       Medrano|          null|             null|            null|         null|          null|            null|</span>
+<span class="linenos" data-linenos="7 "></span><span class="c1"># |      12435|         Laura|        Horton|     XXXXXXXXX|        XXXXXXXXX|5736 Honey Downs|  Summerville|            SC|           29483|</span>
+<span class="linenos" data-linenos="8 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+----------------+-------------+--------------+----------------+</span>
+<span class="linenos" data-linenos="9 "></span><span class="c1"># only showing top 3 rows</span>
+</code></pre></div>
 <h2 id="caso-de-uso-1-covid">Caso de Uso 1 - COVID<a class="headerlink" href="#caso-de-uso-1-covid" title="Permanent link">&para;</a></h2>
 <p>Vamos a cargar en una tabla Delta los datos de COVID disponibles en el repositorio de <a href="https://pandemicdatalake.blob.core.windows.net/public/curated/covid-19/bing_covid-19_data/latest/bing_covid-19_data.parquet">Bing COVID 19</a>.</p>
 <h3 id="creando-una-tabla">Creando una tabla<a class="headerlink" href="#creando-una-tabla" title="Permanent link">&para;</a></h3>
@@ -3381,83 +3468,22 @@ FIXME: https://learn.microsoft.com/es-es/azure/databricks/lakehouse/medallion
 <span class="linenos" data-linenos="14 "></span><span class="k">WHEN</span><span class="w"> </span><span class="n">MATCHED</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="o">*</span>
 <span class="linenos" data-linenos="15 "></span><span class="k">WHEN</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">MATCHED</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="o">*</span><span class="p">;</span>
 </code></pre></div>
+<h3 id="hablemos-con-propiedad">Hablemos con propiedad<a class="headerlink" href="#hablemos-con-propiedad" title="Permanent link">&para;</a></h3>
+<p>Si queremos añadir una propiedad a una tabla, podemos emplear una sentencia <code>ALTER TABLE... SET TBLPROPERTIES</code>. Por ejemplo:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="2 "></span><span class="s2">    ALTER TABLE iabd.covid</span>
+<span class="linenos" data-linenos="3 "></span><span class="s2">    SET TBLPROPERTIES (</span>
+<span class="linenos" data-linenos="4 "></span><span class="s2">        &#39;engineering.team_name&#39;=&#39;iabd&#39;</span>
+<span class="linenos" data-linenos="5 "></span><span class="s2">    )</span>
+<span class="linenos" data-linenos="6 "></span><span class="s2">    &quot;&quot;&quot;</span>
+</code></pre></div>
+<p>Con cada modificación realizada sobre la tabla, incluso sobre sus metadatos, los cambios se almacenan en el historial de la tabla</p>
 <!--
-### Hablemos con propiedad
-
-https://learning.oreilly.com/library/view/delta-lake-the/9781098151935/ch02.html#add_or_modify_table_properties
+PG 34 - https://delta.io/pdfs/DLTDG_ER3.pdf
 
 ### Optimizando la tabla
 -->
 
-<h2 id="delta-lake-por-dentro">Delta Lake por dentro<a class="headerlink" href="#delta-lake-por-dentro" title="Permanent link">&para;</a></h2>
-<p>Si accedemos al sistema de archivos local, HDFS o Databricks DBFS, podemos analizar la estructura de archivos que ha utilizado para almacenar la información.</p>
-<p><em>Delta Lake</em> almacena los datos en formato <em>Parquet</em> en la ruta indicada (y si hubiéramos indicando particiones, en sus subcarpetas), y luego crea una carpeta denominada <code>_delta_log</code> donde almacena el <em>DeltaLog</em> o log transaccional en formato JSON, en el cual va registrando los cambios <em>delta</em> que se realizan sobre los datos.</p>
-<p>Vamos a comprobar qué datos se han almacenado en HDFS:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd@iabd-virtualbox:~/datos$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>-R<span class="w"> </span>/user/iabd/delta/raw/clientes
-<span class="linenos" data-linenos="2 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log
-<span class="linenos" data-linenos="3 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">2605</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000000.json
-<span class="linenos" data-linenos="4 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-05cb7b9c-c529-4f5e-83ab-0dc79d0422bf-c000.snappy.parquet
-</code></pre></div>
-<p>Si realizamos otra operación, por ejemplo, sobrescribimos la tabla, generará nuevos datos y otro fichero de log:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>Lo comprobamos volviendo a listar los archivos almacenados:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd@iabd-virtualbox:~/datos$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>-R<span class="w"> </span>/user/iabd/delta/raw/clientes
-<span class="linenos" data-linenos="2 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log
-<span class="linenos" data-linenos="3 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">2605</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000000.json
-<span class="hll"><span class="linenos" data-linenos="4 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1592</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000001.json
-</span><span class="linenos" data-linenos="5 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-05cb7b9c-c529-4f5e-83ab-0dc79d0422bf-c000.snappy.parquet
-<span class="hll"><span class="linenos" data-linenos="6 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-1f226209-881f-4ff7-af04-6eedd64e1581-c000.snappy.parquet
-</span></code></pre></div>
-<p>Ahora vamos a añadir nuevos datos, utilizando un nuevo <em>dataframe</em> e indicando el modo de escritura con <code>append</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;customer_id&#39;</span><span class="p">,</span> <span class="s1">&#39;customer_fname&#39;</span><span class="p">,</span> <span class="s1">&#39;customer_lname&#39;</span><span class="p">]</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="n">datos</span> <span class="o">=</span> <span class="p">[</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="p">(</span><span class="mi">88888</span><span class="p">,</span> <span class="s2">&quot;Aitor&quot;</span><span class="p">,</span> <span class="s2">&quot;Medrano&quot;</span><span class="p">),</span> 
-<span class="linenos" data-linenos=" 4 "></span><span class="p">(</span><span class="mi">99999</span><span class="p">,</span> <span class="s2">&quot;Pedro&quot;</span><span class="p">,</span> <span class="s2">&quot;Casas&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="p">]</span>
-<span class="linenos" data-linenos=" 6 "></span>
-<span class="linenos" data-linenos=" 7 "></span><span class="n">nuevosClientes</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">datos</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="c1"># cambiamos el tipo a int pq por defecto le asigna long</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="n">nuevosClientes</span> <span class="o">=</span> <span class="n">nuevosClientes</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;customer_id&quot;</span><span class="p">,</span> <span class="n">nuevosClientes</span><span class="o">.</span><span class="n">customer_id</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">))</span>
-<span class="linenos" data-linenos="10 "></span>
-<span class="linenos" data-linenos="11 "></span><span class="n">nuevosClientes</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
-</code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Fusionando el esquema</p>
-<p>Si los tipos de los datos no cuadran con el esquema almacenado en DeltaLake, tendremos un error. Para habilitar que fusione los esquemas podemos indicarlo con <code>.option("mergeSchema", "true")</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">nuevosClientes</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;mergeSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
-</code></pre></div>
-</div>
-<p>Ahora podemos ver como ha creado un nuevo archivo de log pero dos archivos de datos. En concreto, el archivo de log ha registrado las dos inserciones, y cada archivo de <em>Parquet</em> contiene únicamente cada uno de los registros:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd@iabd-virtualbox:~/datos$<span class="w"> </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>-R<span class="w"> </span>/user/iabd/delta/raw/clientes
-<span class="linenos" data-linenos="2 "></span>drwxr-xr-x<span class="w">   </span>-<span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">          </span><span class="m">0</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:39<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log
-<span class="linenos" data-linenos="3 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">2605</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000000.json
-<span class="linenos" data-linenos="4 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1592</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000001.json
-<span class="hll"><span class="linenos" data-linenos="5 "></span>-rw-r--r--<span class="w">   </span><span class="m">1</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1309</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:39<span class="w"> </span>/user/iabd/delta/raw/clientes/_delta_log/00000000000000000002.json
-</span><span class="linenos" data-linenos="6 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:23<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-05cb7b9c-c529-4f5e-83ab-0dc79d0422bf-c000.snappy.parquet
-<span class="linenos" data-linenos="7 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">     </span><span class="m">251875</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:29<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-1f226209-881f-4ff7-af04-6eedd64e1581-c000.snappy.parquet
-<span class="hll"><span class="linenos" data-linenos="8 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1035</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:39<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00000-b7124036-ce26-4b95-a759-080e829b8de6-c000.snappy.parquet
-</span><span class="hll"><span class="linenos" data-linenos="9 "></span>-rw-r--r--<span class="w">   </span><span class="m">3</span><span class="w"> </span>iabd<span class="w"> </span>supergroup<span class="w">       </span><span class="m">1020</span><span class="w"> </span><span class="m">2023</span>-01-29<span class="w"> </span><span class="m">12</span>:39<span class="w"> </span>/user/iabd/delta/raw/clientes/part-00001-6164f53a-ca34-4b73-96ef-8d2f2cfbbb47-c000.snappy.parquet
-</span></code></pre></div>
-<p>Por ejemplo, si descargamos y visualizamos uno de los archivos de Parquet veremos sus datos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd@iabd-virtualbox:~/Descargas$<span class="w"> </span>parquet-tools<span class="w"> </span>show<span class="w"> </span>part-00000-b7124036-ce26-4b95-a759-080e829b8de6-c000.snappy.parquet<span class="w"> </span>
-<span class="linenos" data-linenos="2 "></span>+---------------+------------------+------------------+
-<span class="linenos" data-linenos="3 "></span><span class="p">|</span><span class="w">   </span>customer_id<span class="w"> </span><span class="p">|</span><span class="w"> </span>customer_fname<span class="w">   </span><span class="p">|</span><span class="w"> </span>customer_lname<span class="w">   </span><span class="p">|</span>
-<span class="linenos" data-linenos="4 "></span><span class="p">|</span>---------------+------------------+------------------<span class="p">|</span>
-<span class="linenos" data-linenos="5 "></span><span class="p">|</span><span class="w">         </span><span class="m">88888</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Aitor<span class="w">            </span><span class="p">|</span><span class="w"> </span>Medrano<span class="w">          </span><span class="p">|</span>
-<span class="linenos" data-linenos="6 "></span>+---------------+------------------+------------------+
-</code></pre></div>
-<p>Finalmente, si queremos comprobar los datos, a partir del <em>dataframe</em> que habíamos leído desde <em>HDFS</em>, podemos comprobar como los datos ya aparecen:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">dfdeltahdfs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;customer_id&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="linenos" data-linenos="2 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+----------------+-------------+--------------+----------------+</span>
-<span class="linenos" data-linenos="3 "></span><span class="c1"># |customer_id|customer_fname|customer_lname|customer_email|customer_password| customer_street|customer_city|customer_state|customer_zipcode|</span>
-<span class="linenos" data-linenos="4 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+----------------+-------------+--------------+----------------+</span>
-<span class="linenos" data-linenos="5 "></span><span class="c1"># |      99999|         Pedro|         Casas|          null|             null|            null|         null|          null|            null|</span>
-<span class="linenos" data-linenos="6 "></span><span class="c1"># |      88888|         Aitor|       Medrano|          null|             null|            null|         null|          null|            null|</span>
-<span class="linenos" data-linenos="7 "></span><span class="c1"># |      12435|         Laura|        Horton|     XXXXXXXXX|        XXXXXXXXX|5736 Honey Downs|  Summerville|            SC|           29483|</span>
-<span class="linenos" data-linenos="8 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+----------------+-------------+--------------+----------------+</span>
-<span class="linenos" data-linenos="9 "></span><span class="c1"># only showing top 3 rows</span>
-</code></pre></div>
 <h2 id="trabajando-con-tablas-delta">Trabajando con tablas Delta<a class="headerlink" href="#trabajando-con-tablas-delta" title="Permanent link">&para;</a></h2>
 <p>Para trabajar con tablas <em>Delta</em>, aunque podemos realizar todas las operaciones mediante <em>SQL</em>, <em>Delta Lake</em> ofrece un API para realizar modificaciones condicionales, borrados o <em>upserts</em> de datos en las tablas.</p>
 <p>Para ello, el primer paso obtener una tabla <em>delta</em> mediante el método <a href="https://docs.delta.io/latest/api/python/index.html#module-delta.tables"><code>DeltaTable.forPath</code></a>:</p>
