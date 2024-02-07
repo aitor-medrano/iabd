@@ -3177,7 +3177,7 @@
 
 <h1 id="spark-dataframes-ii">Spark DataFrames II<a class="headerlink" href="#spark-dataframes-ii" title="Permanent link">&para;</a></h1>
 <h2 id="agregaciones">Agregaciones<a class="headerlink" href="#agregaciones" title="Permanent link">&para;</a></h2>
-<p>Una vez tenemos un DataFrame, podemos realizar analítica de datos sobre el <em>dataset</em> entero, o sobre una o más columnas y aplicar una función de agregación que permita sumar, contar o calcular la media de cualquier grupo, entre otras opciones.</p>
+<p>Una vez tenemos un <em>DataFrame</em>, podemos realizar analítica de datos sobre el <em>dataset</em> entero, o sobre una o más columnas y aplicar una función de agregación que permita sumar, contar o calcular la media de cualquier grupo, entre otras opciones.</p>
 <p>Para ello, <em>PySpark</em> ofrece un amplio <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql.html#functions">conjunto de funciones</a>. En nuestro caso, vamos a realizar algunos ejemplos para practicar con las funciones más empleadas.</p>
 <h3 id="contando">Contando<a class="headerlink" href="#contando" title="Permanent link">&para;</a></h3>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">count</label><label for="__tabbed_1_2">count_distinct</label><label for="__tabbed_1_3">approx_count_distinct</label></div>
@@ -3340,8 +3340,8 @@
 <span class="linenos" data-linenos="10 "></span><span class="c1"># +-------+--------------------+--------------------+</span>
 </code></pre></div>
 <h3 id="tablas-pivote">Tablas pivote<a class="headerlink" href="#tablas-pivote" title="Permanent link">&para;</a></h3>
-<p>Las tablas pivote permite obtener un resumen de los datos a partir de columnas categóricas sobre la que realizar cálculos, tal como se hace en las hojas de cálculo con las tablas dinámicas.</p>
-<p>Por ejemplo, vamos a obtener la cantidad recaudada por las ventas de cada año por cada pais:</p>
+<p>Las tablas pivote permiten obtener un resumen de los datos a partir de columnas categóricas sobre la que realizar cálculos, tal como se hace en las hojas de cálculo con las tablas dinámicas.</p>
+<p>Por ejemplo, vamos a obtener la cantidad recaudada por las ventas de cada año por cada país:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">df</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="n">year</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s2">&quot;Revenue&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="c1"># +----------+------------------+------------------+------------------+------------------+</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="c1"># |year(Date)|            Canada|            France|           Germany|            Mexico|</span>
@@ -3368,7 +3368,7 @@
 <span class="linenos" data-linenos="11 "></span><span class="c1"># +----------+------------------+---------------+------------------+---------------+------------------+----------------+------------------+---------------+</span>
 </code></pre></div>
 <h2 id="joins">Joins<a class="headerlink" href="#joins" title="Permanent link">&para;</a></h2>
-<p>Hasta ahora todo la analítica la hemos realizado sobre un único <em>DataFrame</em>. Aunque si seguimos un proceso ELT es probable que tengamos todos los datos en un único lugar, en ocasiones necesitamos cruzar la información de dos datasets.</p>
+<p>Hasta ahora todo la analítica la hemos realizado sobre un único <em>DataFrame</em>. Aunque si seguimos un proceso ELT es probable que tengamos todos los datos en un único lugar, en ocasiones necesitamos cruzar la información de dos <em>datasets</em>.</p>
 <p>Si nos basamos en el planteamiento de una base de datos relacional, para unir dos <em>DataFrames</em> necesitamos unir la clave ajena de uno con la clave primaria del otro.</p>
 <p>Para estos ejemplos, vamos a cambiar de <em>datasets</em> y utilizar datos de vuelos de avión que han tenido algún tipo de retraso (<a href="resources/departure_delays.csv">departure_delays.csv</a>) y otro con los códigos de los aeropuertos (<a href="resources/airport-codes-na.tsv">airport-codes-na.tsv</a>).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Vuelos con retraso</label><label for="__tabbed_4_2">Códigos de aeropuertos</label></div>
@@ -3477,7 +3477,7 @@
 <span class="linenos" data-linenos="5 "></span><span class="n">df_joinp2</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>    <span class="c1"># 1361141</span>
 </code></pre></div>
 <h2 id="funciones">Funciones<a class="headerlink" href="#funciones" title="Permanent link">&para;</a></h2>
-<p>Para dominar realmente Spark, hay que tener destreza en todas las funciones existente para el tratamiento de fechas, cadenas, operaciones matemáticas, para trabajar con colecciones, etc...</p>
+<p>Para dominar realmente <em>Spark</em>, hay que tener destreza en todas las funciones existente para el tratamiento de fechas, cadenas, operaciones matemáticas, para trabajar con colecciones, etc...</p>
 <p>Además, siempre podemos crear nuestras propias funciones de usuario para ampliar el lenguaje.</p>
 <p>Aunque ya hemos utilizado algunas a lo largo de los apuntes, a continuación vamos a repasar las funciones más empleadas.</p>
 <h3 id="fechas">Fechas<a class="headerlink" href="#fechas" title="Permanent link">&para;</a></h3>
@@ -3485,7 +3485,7 @@
 <li>Si necesitamos convertir de texto a fecha: <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.to_date.html"><code>to_date</code></a>, <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.to_timestamp.html"><code>to_timestamp</code></a>, <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.unix_timestamp.html"><code>unix_timestamp</code></a></li>
 <li>Para formatear las fechas: <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.date_format.html"><code>date_format</code></a>, <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.from_unixtime.html"><code>from_unixtime</code></a> (<a href="https://spark.apache.org/docs/latest/sql-ref-datetime-pattern.html">patrones de fechas</a>)</li>
 <li>Para realizar cálculos sobre fechas: <code>datediff</code>, <code>months_between</code>, <code>last_day</code>, <code>date_add</code>, <code>date_sub</code>, <code>next_day</code></li>
-<li>Extraer un valor de una fecha: <code>year</code>, <code>month</code>, <code>weekofyear</code>, <code>dayofmonth</code>, <code>dayofyear</code>, <code>hour</code>, <code>minute</code>, <code>second</code></li>
+<li>Extraer un valor de una fecha: <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.year.html"><code>year</code></a>, <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.month.html"><code>month</code></a>, <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.weekofyear.html"><code>weekofyear</code></a>, <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.dayofmonth.html"><code>dayofmonth</code></a>, <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.dayofyear.html"><code>dayofyear</code></a>, <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.hour.html"><code>hour</code></a>, <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.minute.html"><code>minute</code></a>, <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.second.html"><code>second</code></a>.</li>
 </ul>
 <p>Más información en la <a href="https://spark.apache.org/docs/latest/sql-ref-functions-builtin.html#date-and-timestamp-functions">documentación oficial</a></p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
@@ -3522,7 +3522,7 @@
 <span class="linenos" data-linenos="8 "></span><span class="c1"># +---------------+---------------+---+---------------+---------------+</span>
 <span class="linenos" data-linenos="9 "></span><span class="c1"># only showing top 1 row</span>
 </code></pre></div>
-<p>O funciones para poner la inicial en mayúsculas (<a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.initcap.html"><code>initcap</code></a>), darle la vuelta (<a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.reverse.html"><code>reverse</code></a>), obtener su tamaño (<a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.length.html"><code>length</code></a>)o reemplazar caracteres (<a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.translate.html"><code>translate</code></a>):</p>
+<p>O funciones para poner la inicial en mayúsculas (<a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.initcap.html"><code>initcap</code></a>), darle la vuelta (<a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.reverse.html"><code>reverse</code></a>), obtener su tamaño (<a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.length.html"><code>length</code></a>) o reemplazar caracteres (<a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.translate.html"><code>translate</code></a>):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">,</span> <span class="n">initcap</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">),</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">),</span>
 <span class="linenos" data-linenos="2 "></span>          <span class="n">length</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">),</span> <span class="n">translate</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">,</span> <span class="s2">&quot;na&quot;</span><span class="p">,</span> <span class="s2">&quot;pe&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span>         <span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">trim</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Country</span><span class="p">)</span><span class="o">==</span><span class="s2">&quot;Canada&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -3546,7 +3546,7 @@
 </code></pre></div>
 <p>Otras funciones que se suelen utilizar son <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.concat.html"><code>concat</code></a> y  <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.concat.html"><code>concat_ws</code></a> para unir cadenas, <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.levenshtein.html"><code>levenshtein</code></a> para calcular la distancia entre dos cadenas, <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.lpad.html"><code>lpad</code></a> y <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.rpad.html"><code>rpad</code></a> para completar con espacios, etc... Si necesitas trabajar con expresiones regulares puedes utilizar <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.regexp_extract.html"><code>regexp_extract</code></a> para extraer parte de una cadena como <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.regexp_replace.html"><code>regexp_replace</code></a> para sustituir.</p>
 <h3 id="colecciones">Colecciones<a class="headerlink" href="#colecciones" title="Permanent link">&para;</a></h3>
-<p>Para probar las funciones que trabajan con colecciones, vamos a cambiar de <em>dataset</em> y trabajar con uno compartido por <a href="https://www.kaggle.com/datasets/yelp-dataset/yelp-dataset">Kaggle</a> con datos de negocios de Yelp que tenemos almacenados en una versión reducida en <a href="resources/yelp_academic_dataset_business.json">yelp_academic_dataset_business.json</a>. Los negocios tienen una propiedad denominada <code>categories</code> que contiene un array con las categorías de los mismos:</p>
+<p>Para probar las funciones que trabajan con colecciones, vamos a cambiar de <em>dataset</em> y trabajar con uno compartido por <a href="https://www.kaggle.com/datasets/yelp-dataset/yelp-dataset">Kaggle</a> con datos de negocios de <em>Yelp</em> que tenemos almacenados en una versión reducida en <a href="resources/yelp_academic_dataset_business.json">yelp_academic_dataset_business.json</a>. Los negocios tienen una propiedad denominada <code>categories</code> que contiene un array con las categorías de los mismos:</p>
 <div class="highlight"><span class="filename">persons.json</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="w">   </span><span class="nt">&quot;business_id&quot;</span><span class="p">:</span><span class="s2">&quot;O_X3PGhk3Y5JWVi866qlJg&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">   </span><span class="nt">&quot;full_address&quot;</span><span class="p">:</span><span class="s2">&quot;1501 W Bell Rd\nPhoenix, AZ 85023&quot;</span><span class="p">,</span>
@@ -3572,7 +3572,7 @@
 <span class="linenos" data-linenos="23 "></span><span class="w">   </span><span class="err">...</span>
 <span class="linenos" data-linenos="24 "></span><span class="p">}</span>
 </code></pre></div>
-<p>El primer paso es cargar el documento y ver el esquema leído por <em>Spark</em>:</p>
+<p>El primer paso es cargar el documento y ver el esquema inferido por <em>Spark</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;s8a-dataframes-arrays&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
@@ -3690,7 +3690,7 @@
 <span class="linenos" data-linenos="6 "></span><span class="c1">#  |    |-- tareas: array (nullable = true)</span>
 <span class="linenos" data-linenos="7 "></span><span class="c1">#  |    |    |-- element: string (containsNull = true)</span>
 </code></pre></div>
-<p>Y ahora ya podemos acceder a los datos (en el siguiente ejemplo empleamos la función <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.getItem.html"><code>getItem</code></a> para acceder a un elemento de una columna):</p>
+<p>Y ahora ya podemos acceder a los datos (en el siguiente ejemplo empleamos la función <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.getItem.html"><code>getItem</code></a> para acceder a un elemento de una columna, así como la notación punto mediante una expresión y los corchetes para recuperar un determinado elemento):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">todosDF</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;datos&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getItem</span><span class="p">(</span><span class="s2">&quot;dia&quot;</span><span class="p">),</span>
 <span class="linenos" data-linenos="2 "></span>     <span class="s2">&quot;datos.tareas&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="3 "></span>     <span class="p">(</span><span class="n">todosDF</span><span class="o">.</span><span class="n">datos</span><span class="o">.</span><span class="n">getItem</span><span class="p">(</span><span class="s2">&quot;tareas&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;tarea1&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">truncate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -3700,7 +3700,7 @@
 <span class="linenos" data-linenos="7 "></span><span class="o">|</span><span class="n">Lunes</span>    <span class="o">|</span><span class="p">[</span><span class="n">Corregir</span> <span class="n">ejercicios</span><span class="p">,</span> <span class="n">Ir</span> <span class="n">a</span> <span class="n">nadar</span><span class="p">,</span> <span class="n">Comprar</span> <span class="n">pan</span><span class="p">]</span><span class="o">|</span><span class="n">Corregir</span> <span class="n">ejercicios</span><span class="o">|</span>
 <span class="linenos" data-linenos="8 "></span><span class="o">+---------+----------------------------------------------+-------------------+</span>
 </code></pre></div>
-<p>Para terminar, si necesitamos la operación inversa, y lo que queremos es crear una representación JSON de una columna, podemos utilizar la función <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.getItem.html"><code>getItem</code></a>:</p>
+<p>Para terminar, si necesitamos la operación inversa, y lo que queremos es crear una representación JSON de una columna, podemos utilizar la función <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.to_json.html"><code>to_json</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">todosDF</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">to_json</span><span class="p">(</span><span class="s2">&quot;datos&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">truncate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span><span class="c1"># +---------------------------------------------------------------------------+</span>
 <span class="linenos" data-linenos="3 "></span><span class="c1"># |to_json(datos)                                                             |</span>
@@ -3709,7 +3709,7 @@
 <span class="linenos" data-linenos="6 "></span><span class="c1"># +---------------------------------------------------------------------------+</span>
 </code></pre></div>
 <h3 id="udf">UDF<a class="headerlink" href="#udf" title="Permanent link">&para;</a></h3>
-<p>Además de las funciones que ofrece Spark, en cualquier momento podemos crear nuestras funciones de usuario (<em>User-Defined Functions</em>) para ampliar la expresividad de Spark. Antes de utilizarlas, las hemos de definir y registrar.</p>
+<p>Además de las funciones que ofrece <em>Spark</em>, en cualquier momento podemos crear nuestras funciones de usuario (<em>User-Defined Functions</em>) para ampliar la expresividad de <em>Spark</em>. Antes de utilizarlas, las hemos de definir y registrar.</p>
 <p>Si volvemos al <em>dataset</em> de ventas, teníamos la siguiente información:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;ProductID&quot;</span><span class="p">,</span> <span class="s2">&quot;Revenue&quot;</span><span class="p">,</span> <span class="s2">&quot;Units&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;Units&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="c1"># +---------+-------+-----+</span>
@@ -3755,7 +3755,7 @@
 <div class="admonition caution">
 <p class="admonition-title">UDF y Python</p>
 <p>En un principio, se desaconseja la creación de UDF mediante <em>Python</em>, ya que su uso penaliza de forma significativa el rendimiento.
-Los ejecutores son procesos en máquinas virtuales de Java que están escritos en Java, y por ello, ejecutan código Java o Scala de forma nativa. En cambio, para <em>Python</em> tiene que ejecutar un proceso separado para ejecutar la UDF, lo que implica un coste extra para serializar y volver a deserializar los datos para cada fila del <em>dataset</em>.</p>
+Los ejecutores son procesos en máquinas virtuales de <em>Java</em> que están escritos en <em>Java</em>, y por ello, ejecutan código <em>Java</em> o <em>Scala</em> de forma nativa. En cambio, para <em>Python</em> tiene que ejecutar un proceso separado para ejecutar la UDF, lo que implica un coste extra para serializar y volver a deserializar los datos para cada fila del <em>dataset</em>.</p>
 </div>
 <h2 id="cacheando">Cacheando<a class="headerlink" href="#cacheando" title="Permanent link">&para;</a></h2>
 <p>Un <em>DataFrame</em> se puede persistir/cachear en memoria conforme necesitemos (también lo podemos hacer con los RDD). Su principal propósito es cuando vamos a acceder a un <em>DataFrame</em> una y otra vez y no necesitamos que se vuelvan a evaluar todas las operaciones (como pueden ser los algoritmos iterativos utilizados en <em>Machine Learning</em>).</p>
@@ -3930,28 +3930,28 @@ https://github.com/yukia3e/learning-spark-3/tree/master/src/sql/02_basic
 </ol>
 </li>
 <li>
-<p>(1.5p) Una vez realizada la transformación de los datos, vamos a realizar su carga y extraer información`, utilizando Spark SQL siempre que sea posible:</p>
+<p>(1.5p) Una vez realizada la transformación de los datos, vamos a realizar su carga y extraer información, utilizando <em>Spark SQL</em> siempre que sea posible:</p>
 <ol>
 <li>Almacena los datos en formato <em>Parquet</em> en la carpeta <code>salesoutput</code> particionando los datos por año y mes. Tras ejecutar esta operación, comprueba en disco la estructura de archivos creada.</li>
 <li>Sobre los datos almacenados, realiza una nueva lectura pero solo leyendo los datos de 2019 los cuales deberían estar almacenados en <code>./salesdataoutput/Year=2019</code>.</li>
 <li>
 <p>Averigua cual ha sido el mes que ha recaudado más. Para ello, deberás multiplicar el precio por la cantidad de unidades, y posteriormente, realizar alguna agregación. Sobre el resultado, crea un gráfico similar al siguiente:</p>
 <p><figure style="align: center;">
-    <img src="images/02ventas01.png">
+    <img src="images/02ventas01.png" alt="Gráfico con Ventas por mes">
     <figcaption>Ventas por mes</figcaption>
 </figure></p>
 </li>
 <li>
 <p>Obtén un gráfico con las 10 ciudades que más unidades han vendido.</p>
 <p><figure style="align: center;">
-    <img src="images/02ventas02.png">
+    <img src="images/02ventas02.png" alt="Gráfico con Ciudades con más unidades vendidas">
     <figcaption>Ciudades con más unidades vendidas</figcaption>
 </figure></p>
 </li>
 <li>
 <p>Cantidad de pedidos por Horas en las que se ha realizado un pedido que contenía al menos dos productos:</p>
 <p><figure style="align: center;">
-    <img src="images/02ventas03.png">
+    <img src="images/02ventas03.png" alt="Gráfico con Pedidos de al menos dos productos por horas">
     <figcaption>Pedidos de al menos dos productos por horas</figcaption>
 </figure></p>
 </li>
