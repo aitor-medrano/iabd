@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Apuntes y ejercicios sobre el acceso a bases de datos relacionales mediante JDBC en Spark. Uso del catálogo de Spark SQL, creación de tablas a partir de un dataframe, consulta del catálogo almacenado en el Hive Metastore.">
+        <meta name="description" content="Apuntes y ejercicios sobre el acceso a bases de datos relacionales mediante JDBC en Spark. Uso del catálogo de Spark SQL, creación de tablas y consultas al Hive Metastore.">
       
       
       
@@ -73,7 +73,7 @@
       
         <meta  property="og:title"  content="Spark JDBC y Spark Catalog. - Inteligencia Artificial y Big Data" >
       
-        <meta  property="og:description"  content="Apuntes y ejercicios sobre el acceso a bases de datos relacionales mediante JDBC en Spark. Uso del catálogo de Spark SQL, creación de tablas a partir de un dataframe, consulta del catálogo almacenado en el Hive Metastore." >
+        <meta  property="og:description"  content="Apuntes y ejercicios sobre el acceso a bases de datos relacionales mediante JDBC en Spark. Uso del catálogo de Spark SQL, creación de tablas y consultas al Hive Metastore." >
       
         <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/spark/catalog.png" >
       
@@ -89,7 +89,7 @@
       
         <meta  name="twitter:title"  content="Spark JDBC y Spark Catalog. - Inteligencia Artificial y Big Data" >
       
-        <meta  name="twitter:description"  content="Apuntes y ejercicios sobre el acceso a bases de datos relacionales mediante JDBC en Spark. Uso del catálogo de Spark SQL, creación de tablas a partir de un dataframe, consulta del catálogo almacenado en el Hive Metastore." >
+        <meta  name="twitter:description"  content="Apuntes y ejercicios sobre el acceso a bases de datos relacionales mediante JDBC en Spark. Uso del catálogo de Spark SQL, creación de tablas y consultas al Hive Metastore." >
       
         <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/spark/catalog.png" >
       
@@ -3449,11 +3449,11 @@ Si queremos que se vuelvan a cargar los datos pero no se cree de nuevo la tabla 
 <span class="linenos" data-linenos="5 "></span><span class="c1"># Defines the backing SQL catalog for the Spark session.</span>
 <span class="hll"><span class="linenos" data-linenos="6 "></span><span class="na">spark.sql.catalogImplementation</span><span class="w"> </span><span class="s">hive</span>
 </span></code></pre></div>
-<p>Si hubiésemos querido que las bases de datos que creemos desde Spark también lo hicieran dentro de HDFS (que sería lo recomendable), deberíamos indicar la ruta:</p>
+<p>Si hubiésemos querido que las bases de datos que creemos desde <em>Spark</em> también lo hicieran dentro de HDFS (que sería lo recomendable, pero en nuestro caso implicaría tener que arrancar también los servicios de <em>Hadoop</em> al utilizar <em>Spark</em>, y por cuestiones de RAM hemos decidido desacoplarlo), deberíamos indicar la ruta:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">spark.sql.warehouse.dir</span><span class="w"> </span><span class="s">hdfs://iabd-virtualbox:9000/user/hive/warehouse/</span>
 </code></pre></div>
 <h4 id="accediendo-al-catalogo">Accediendo al catálogo<a class="headerlink" href="#accediendo-al-catalogo" title="Permanent link">&para;</a></h4>
-<p>A partir de la sesión de <em>Spark</em>, podemos acceder al objeto <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/catalog.html"><code>catalog</code></a> que contiene un conjunto de métodos para interactuar con él.</p>
+<p>A partir de la sesión de <em>Spark</em>, podemos acceder al objeto <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/catalog.html"><code>catalog</code></a> que contiene un conjunto de métodos para interactuar con los metadatos.</p>
 <p>Podemos comprobar su uso mediante una consulta a <code>show databases</code> o accediendo al método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.listDatabases.html"><code>listDatabases()</code></a> del <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/catalog.html"><code>catalog</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;show databases&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="c1"># +---------+</span>
@@ -3608,7 +3608,7 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connect
 </code></pre></div>
 <h3 id="spark-y-el-metastore">Spark y el Metastore<a class="headerlink" href="#spark-y-el-metastore" title="Permanent link">&para;</a></h3>
 <p>Para comprender cómo se almacenan los metadatos de las bases de datos y las tablas gestionadas es importante conocer donde se almacenan los metadatos.</p>
-<p>Si abrimos un terminal y accedemos al MySQL de nuestra máquina virtual, podemos ver todas las tablas que utiliza el Hive Metastore:</p>
+<p>Si abrimos un terminal y accedemos al servidor de <em>MySQL</em> de nuestra máquina virtual, podemos ver todas las tablas que utiliza el <em>Hive Metastore</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="hll"><span class="linenos" data-linenos=" 1 "></span>$<span class="w"> </span>mysql<span class="w"> </span>-uiabd<span class="w"> </span>-piabd
 </span><span class="linenos" data-linenos=" 2 "></span>Welcome<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>MariaDB<span class="w"> </span>monitor.<span class="w">  </span>Commands<span class="w"> </span>end<span class="w"> </span>with<span class="w"> </span><span class="p">;</span><span class="w"> </span>or<span class="w"> </span><span class="se">\g</span>.
 <span class="linenos" data-linenos=" 3 "></span>Your<span class="w"> </span>MariaDB<span class="w"> </span>connection<span class="w"> </span>id<span class="w"> </span>is<span class="w"> </span><span class="m">143</span>
