@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.1">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.8">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.45e1311d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.f2e4d321.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -3154,7 +3154,7 @@
 <span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 </code></pre></div>
 <p>El siguiente paso es configurar la conexión a la base de datos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://localhost/retail_db&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">url_iabd</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://localhost/retail_db&quot;</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">propiedades</span> <span class="o">=</span> <span class="p">{</span>
 <span class="linenos" data-linenos="3 "></span>    <span class="s2">&quot;driver&quot;</span><span class="p">:</span> <span class="s2">&quot;com.mysql.cj.jdbc.Driver&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="4 "></span>    <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;iabd&quot;</span><span class="p">,</span>
@@ -3197,12 +3197,12 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>iabd-mysql<span class="w"> </span>mysql<span class="w"> </span>-h<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>-P<span class="w"> </span><span class="m">3306</span><span class="w"> </span>-uiabd<span class="w"> </span>-piabd<span class="w"> </span>retail_db<span class="w"> </span>&lt;<span class="w"> </span>create_db.sql
 </code></pre></div>
 <p>A partir de aquí, es importante destacar que la <em>url</em> de conexión a la base de datos, en vez de acceder a <code>localhost</code>, lo hace al nombre del contenedor <code>iabd-mysql</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://iabd-mysql/retail_db&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">url_iabd</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://iabd-mysql/retail_db&quot;</span>
 </code></pre></div>
 </div>
 <h3 id="leyendo-datos">Leyendo datos<a class="headerlink" href="#leyendo-datos" title="Permanent link">&para;</a></h3>
 <p>Para finalmente cargar los datos mediante el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameReader.jdbc.html"><code>read.jdbc</code></a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">jdbc</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>\
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">jdbc</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url_iabd</span><span class="p">,</span>\
 <span class="linenos" data-linenos="2 "></span>    <span class="n">table</span><span class="o">=</span><span class="s2">&quot;customers&quot;</span><span class="p">,</span>\
 <span class="linenos" data-linenos="3 "></span>    <span class="n">properties</span><span class="o">=</span><span class="n">propiedades</span><span class="p">)</span> 
 </code></pre></div>
@@ -3298,7 +3298,7 @@
 <span class="linenos" data-linenos="12 "></span><span class="c1"># 12435</span>
 <span class="hll"><span class="linenos" data-linenos="13 "></span><span class="n">jdbcSelectDF</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jdbc&quot;</span><span class="p">)</span> \
 </span><span class="linenos" data-linenos="14 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;driver&quot;</span><span class="p">,</span> <span class="s2">&quot;com.mysql.cj.jdbc.Driver&quot;</span><span class="p">)</span> \
-<span class="linenos" data-linenos="15 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;jdbc:mysql://iabd-mysql&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="15 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">url_iabd</span><span class="p">)</span> \
 <span class="linenos" data-linenos="16 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="s2">&quot;retail_db.clientes&quot;</span><span class="p">)</span> \
 <span class="hll"><span class="linenos" data-linenos="17 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
 </span><span class="linenos" data-linenos="18 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
@@ -3309,7 +3309,7 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">jdbcSelectDF</span><span class="o">.</span><span class="n">write</span> \
 <span class="linenos" data-linenos="2 "></span>    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jdbc&quot;</span><span class="p">)</span> \
 <span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;driver&quot;</span><span class="p">,</span> <span class="s2">&quot;com.mysql.cj.jdbc.Driver&quot;</span><span class="p">)</span> \
-<span class="linenos" data-linenos="4 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;jdbc:mysql://localhost/retail_db&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="4 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">url_iabd</span><span class="p">)</span> \
 <span class="linenos" data-linenos="5 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="s2">&quot;clientes2&quot;</span><span class="p">)</span> \
 <span class="linenos" data-linenos="6 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
 <span class="linenos" data-linenos="7 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
@@ -3367,9 +3367,9 @@ Si queremos que se vuelvan a cargar los datos pero no se cree de nuevo la tabla 
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Instalación driver Java</p>
-<p>Para que funcione correctamente, en nuestro caso, tenemos que descargar el <a href="resources/mongo-java-driver-3.12.12.jar">driver <em>Java</em> de <em>MongoDB</em></a> y colocarlo en la carpeta <code>/opt/spark-3.3.1/jars</code></p>
+<p>Para que funcione correctamente, si partes desde una instalación propia de <em>Spark</em>, debes descargar el <a href="resources/mongo-java-driver-3.12.12.jar">driver <em>Java</em> de <em>MongoDB</em></a> y colocarlo en la carpeta <code>/opt/spark-3.3.1/jars</code></p>
 </div>
-<p>Una vez recuperada la sesión de <em>Spark</em>, a la hora de leer datos le debemos indicar que el formato es <code>mongodb</code> y a continuación configurar tanto la <code>connection.uri</code>, como los parámetros <code>database</code>y <code>collection</code> con la URL, base de datos y colección a la que queremos acceder:</p>
+<p>Una vez recuperada la sesión de <em>Spark</em>, a la hora de leer datos le debemos indicar que el formato es <code>mongodb</code> y a continuación configurar tanto la <code>connection.uri</code> (si queremos acceder a la base de datos local usaremos como cadena de conexión <code>mongodb://127.0.0.1:27017</code>), como los parámetros <code>database</code>y <code>collection</code> con la base de datos y colección a la que queremos acceder:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="n">mongo_spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 3 "></span>
@@ -3394,6 +3394,10 @@ Si queremos que se vuelvan a cargar los datos pero no se cree de nuevo la tabla 
 <span class="linenos" data-linenos="22 "></span><span class="c1"># |63629b950e8c3f48d...|   3| James Bond 003|</span>
 <span class="linenos" data-linenos="23 "></span><span class="c1"># ...</span>
 </code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">MongoDB en local</p>
+<p>Si quieres utilizar el <em>MongoDB</em> instalado en la máquina virtual (es la versión 4.4), debes arrancarlo mediante <code>mongod</code> y luego puedes arrancar un cliente mediante <code>mongosh</code>.</p>
+</div>
 <p>Del mismo modo, para escribir utilizamos el método <code>write</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># Añadimos un atributo nuevo</span>
 <span class="linenos" data-linenos="2 "></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">col</span>
@@ -3971,10 +3975,10 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connect
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      <script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
       
     
   </body>
