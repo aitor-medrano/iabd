@@ -4307,18 +4307,15 @@ Si las columnas de `sort by` y `distribute by` son las mismas, podemos utilizar 
 </code></pre></div>
 </li>
 <li>
-<p>(1p) Crea una tabla transaccional llamada <code>productx</code> en formato ORC con la misma estructura que la tabla de <code>product</code>.</p>
+<p>(1.5p) Crea una tabla transaccional llamada <code>productx</code> en formato ORC con la misma estructura que la tabla de <code>product</code>.</p>
 <ol>
 <li>Cárgala con los datos de la tabla <code>product</code> y comprueba cuantos registros tiene.</li>
 <li>Elimina todos los registros de la tabla <code>productx</code> cuya categoría sea <code>Mix</code> y comprueba cuanto registros tiene ahora.</li>
-<li>Recupera todos los registros de la tabla <code>productx</code> de la categoría <code>Urban</code> y guarda el resultado en HDFS en la carpeta <code>/user/iabd/pdi/productx</code>.</li>
-<li>¿En qué ruta de HDFS se almacenan los datos de las tablas internas? ¿Cómo lo has averiguado?</li>
+<li>Recupera todos los registros de la tabla <code>productx</code> de la categoría <code>Urban</code> y guarda el resultado en HDFS en la carpeta <code>/user/iabd/pdi/productx</code> utilizando la coma como separador de campos.</li>
+<li>¿En qué ruta de HDFS se almacenan los datos de las tablas internas? ¿Y en concreto de la tabla <code>productx</code>? ¿Cómo lo has averiguado?</li>
 </ol>
 </li>
-<li>(1p) Crea una tabla interna llamada <code>productos</code> con formato <em>Parquet</em> que contengan todas las columnas de las tablas <code>product</code> y <code>manufacturer</code> (sin repetidos).<ol>
-<li>Rellena la tabla <code>productos</code> con el resultado de realizar un <em>join</em> entre las tablas <code>product</code> y <code>manufacturer</code>.</li>
-</ol>
-</li>
+<li>(0.5p) Crea una tabla interna llamada <code>productos</code> con formato <em>Parquet</em> que contengan todas las columnas de las tablas <code>product</code> y <code>manufacturer</code> (sin repetidos) y rellénala con el resultado de realizar un <em>join</em> entre las tablas <code>product</code> y <code>manufacturer</code>.</li>
 <li>(1p) Crea una tabla externa llamada <code>productext</code> con la misma estructura que la tabla <code>product</code> pero cuyos datos referencien <code>/user/iabd/pdi/productext</code>.<ol>
 <li>Ejecuta una consulta y comprueba que la tabla está vacía.</li>
 <li>Copia el archivo de <code>/user/iabd/pdi/productx</code> a <code>/user/iabd/pdi/productext</code> y vuelve a realizar la consulta.</li>
