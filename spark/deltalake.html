@@ -3885,10 +3885,6 @@ Si nos fijamos, nuestra vista no contiene todas las columnas de la tabla <code>c
 </code></pre></div>
 <p>Con cada modificación realizada sobre la tabla, incluso sobre sus metadatos, los cambios se almacenan en el historial de la tabla.</p>
 <!--
-### Optimizando la tabla
--->
-
-<!--
 FIXME: continuar 
 https://docs.delta.io/latest/delta-update.html#language-python
 https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.html#:-:text=Upserting%20change%20data%20to%20a%20table%20using%20merge()
@@ -3922,8 +3918,8 @@ https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.
 FIXME: comprobar que funciona si la estructura no es la misma
 -->
 
-<p>Si queremos consultas los metadatos de la tabla creada y comprobar la partición:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">DeltaTable</span><span class="o">.</span><span class="n">forName</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span><span class="s2">&quot;iabd.covid_por_fecha&quot;</span><span class="p">)</span>
+<p>Si queremos consultar los metadatos de la tabla creada y comprobar la partición:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">DeltaTable</span><span class="o">.</span><span class="n">forName</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s2">&quot;iabd.covid_por_fecha&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span>    <span class="o">.</span><span class="n">detail</span><span class="p">()</span>
 <span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">toJSON</span><span class="p">()</span>
 <span class="linenos" data-linenos="4 "></span>    <span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
@@ -4022,7 +4018,7 @@ https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.
 <li><a href="https://books.japila.pl/delta-lake-internals/features/">The Internals of Delta Lake</a></li>
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
-<p>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RASBD.1</abbr> / <abbr title="Se ha extraído de forma automática información y conocimiento a partir de grandes volúmenes de datos.">CESBD.1b</abbr> y <abbr title="Se ha construido un conjunto de datos complejos y se han relacionado entre sí.">CESBD.1d</abbr>) En las siguientes actividades vamos a familiarizarnos con el uso del API de <em>Spark JDBC</em>, el acceso al catálogo y <em>DeltaLake</em>.</p>
+<p>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RASBD.1</abbr> / <abbr title="Se ha extraído de forma automática información y conocimiento a partir de grandes volúmenes de datos.">CESBD.1b</abbr> y <abbr title="Se ha construido un conjunto de datos complejos y se han relacionado entre sí.">CESBD.1d</abbr>) En las siguientes actividades vamos a practicar con el uso de <em>DeltaLake</em>.</p>
 <ol>
 <li>
 <p>(2p) A partir de los <a href="agregaciones.html#actividades">ejercicios 3 y 4 de la sesión anterior</a> donde tras consumir unos datos de ventas, realizábamos una limpieza de los datos, renombrábamos columnas y posteriormente una serie de agregaciones para visualizar en gráficos el resultado, vamos ae crear diversas tablas en <em>Delta Lake</em> siguiendo la arquitectura <em>Medallion</em>. Así pues:</p>
@@ -4036,7 +4032,7 @@ https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.
 <p>(1p) Tras una auditoria, hemos descubierto que había un libro oculto de contabilidad con ciertas ventas que no habían sido registradas en el sistema. Así pues, crea datos ficticios extra de ventas para el año 2019, colócalo en la capa <em>raw</em>, y a continuación, actualiza los datos del resto de tablas.</p>
 </li>
 <li>
-<p>(1p) Obtén el histórico de la capa raw y las tablas <em>gold</em>. Recupera la primer versión de la tabla que obtiene mejor recaudación mensual de 2019 y compara su contenido con el actual.</p>
+<p>(1p) Obtén el histórico de la capa <em>raw</em> y las tablas <em>gold</em>. Recupera la primer versión de la tabla que obtiene mejor recaudación mensual de 2019 y compara su contenido con el actual.</p>
 </li>
 </ol>
 <!--
