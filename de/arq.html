@@ -3179,7 +3179,7 @@
 
 
 <h1 id="arquitecturas-big-data">Arquitecturas Big Data<a class="headerlink" href="#arquitecturas-big-data" title="Permanent link">&para;</a></h1>
-<p>Ya sabemos en qué consiste Big Data, y que dentro de sus 5V, dos de las más importantes son el <em>volumen</em> y la <em>velocidad</em>. Para cumplir con estas necesidades, necesitamos una infraestructura que dote a nuestras aplicaciones de toda la potencia y robustez necesarias.</p>
+<p>Ya sabemos en qué consiste Big Data y que, dentro de sus 5V, dos de las más importantes son el <em>volumen</em> y la <em>velocidad</em>. Para cumplir con estas necesidades, necesitamos una infraestructura que dote a nuestras aplicaciones de toda la potencia y robustez necesarias.</p>
 <p>Una arquitectura de <em>Big Data</em> se diseña para manejar la ingesta, el procesamiento y el análisis de los datos que son demasiado grandes o complejos para un sistema tradicional de base de datos.</p>
 <p>Entendemos el concepto de arquitectura de datos como el diseño de los sistemas que dan soporte a las necesidades de los datos en una empresa, facilitando su evolución y mantenimiento.</p>
 <p>En esta sesión no vamos a profundizar en ninguna tecnología concreta, ya que el <em>stack</em> de herramientas es muy amplio y en constante crecimiento. A lo largo del curso iremos conociendo las distintas herramientas y aprenderemos cómo y cuándo utilizarlas.</p>
@@ -3202,7 +3202,7 @@
 <ol>
 <li>Elegir los componentes comunes con sumo cuidado, como pueden ser el almacenamiento de los objetos, el control de versiones, las herramientas de monitorización y orquestación, o los motores de procesamiento.</li>
 <li>Planificar para el fallo. El CTO de AWS, <em>Werner Vogels</em>, tiene una <a href="https://thenextweb.com/news/werner-vogels-everything-fails-all-the-time">cita</a> muy apropiada: <em>"Everything fails, all the time."</em> (todo falla, sin parar). Por ello, hemos de tener en cuenta la disponibilidad y confiabilidad de los sistemas, así como los <a href="https://www.acronis.com/es-es/blog/posts/rto-rpo/">objetivos de tiempos (RTO) y objetivo de puntos (RPO) de recuperación</a>.</li>
-<li>Definir la arquitectura para la escalabilidad, tanto hacía arriba como hacía abajo, es decir, que sea elástica (incluso en algunos caso, como pueden ser los sistemas <em>serverless</em>, llegar hasta cero).</li>
+<li>Definir la arquitectura para la escalabilidad, tanto hacía arriba como hacía abajo, es decir, que sea elástica (incluso en algunos casos, como pueden ser los sistemas <em>serverless</em>, llegar hasta cero).</li>
 <li>La arquitectura está viva, por lo tanto, siempre debe evolucionar de la mano de los cambios tecnológicos y de negocio.</li>
 <li>Buscar el bajo acoplamiento entre sistemas, por ejemplo, con paso de mensajes o uso de microservicios mediante APIs REST, de manera que, dada una necesidad, podamos substituir un componente por otro. El bajo acoplamiento permite modificar un componente sin necesidad de pensar en sus dependencias.</li>
 <li>Facilitar volver a un punto anterior deshaciendo una decisión errónea (y que sea reversible), siguiendo el principio de las <a href="https://tandemsd.com/es/la-incertidumbre-y-las-dos-puertas-de-jeff-bezos/">dos puertas</a> de <em>Jeff Bezos</em>.</li>
@@ -3219,7 +3219,7 @@
 <h3 id="procesamiento-batch">Procesamiento Batch<a class="headerlink" href="#procesamiento-batch" title="Permanent link">&para;</a></h3>
 <p><em>Batch</em> hace referencia a un proceso en el que intervienen un conjunto de datos y que tiene un inicio y un fin en el tiempo. También se le conoce como procesamiento por lotes y se ejecuta sin control directo del usuario.</p>
 <p>Por ejemplo, si tenemos un conjunto de datos muy grande con múltiples relaciones, puede llevarnos del orden de horas ejecutar las consultas que necesita el cliente, y por tanto, no se pueden ejecutar en tiempo real y necesitan de algoritmos paralelos (como por ejemplo, <em>Map Reduce</em>). En estos casos, los resultados se almacenan en un lugar diferente al de origen para posteriores consultas.</p>
-<p>Otro ejemplo, si tenemos una aplicación que muestra el total de casos COVID que hay en cada ciudad, en vez de realizar el cálculo sobre el conjunto completo de los datos, podemos realizar una serie de operaciones que hagan esos cálculos y los almacenen en tablas temporales (por ejemplo, mediante <code>INSERT ... SELECT</code>), de manera que si queremos volver a realizar la consulta sobre todos los datos, accederíamos a los datos ya calculados de la tabla temporal. El problema es que este cálculo necesita actualizarse, por ejemplo, de manera diaria, y de ahí que haya que rehacer todas las tablas temporales.</p>
+<p>Otro ejemplo, si tenemos una aplicación que muestra el total de casos COVID que hay en cada ciudad, en vez de realizar el cálculo sobre el conjunto completo de los datos, podemos realizar una serie de operaciones que hagan esos cálculos y los almacenen en tablas temporales (por ejemplo, mediante <code>INSERT ... SELECT</code>), de manera que, si queremos volver a realizar la consulta sobre todos los datos, accederíamos a los datos ya calculados de la tabla temporal. El problema es que este cálculo necesita actualizarse, por ejemplo, de manera diaria, y de ahí que haya que rehacer todas las tablas temporales.</p>
 <p>Es el procesamiento que se ha realizado desde los inicios del trabajo con datos, tanto a nivel de bases de datos como con <em>Data Warehouses</em>.</p>
 <p>De la mano del procesamiento <em>batch</em> se ha implantado el ecosistema <em>Hadoop</em> con todas las herramientas que abarcan un proceso ETL (extracción, transformación y carga de los datos). Estos conceptos los trabajaremos más adelante.</p>
 <h3 id="procesamiento-en-streaming">Procesamiento en Streaming<a class="headerlink" href="#procesamiento-en-streaming" title="Permanent link">&para;</a></h3>
@@ -3245,7 +3245,7 @@ En informática, un sistema de tiempo real es aquel que responde en un periodo d
 <p class="admonition-title">Linaje de los datos</p>
 <p>Indica las transformaciones que ha sufrido un dato, desde el origen hasta el estado actual, incluyendo las combinaciones con otros datos o el cambio del dato en sí a lo largo de su ciclo de vida.</p>
 </div>
-<p>Así pues, este capa opera sobre el conjunto completo y permite que el sistema produzca los resultados más precisos. Sin embargo, esto conlleva un coste de alta latencia debido a los requisitos de tiempo de computación.</p>
+<p>Así pues, esta capa opera sobre el conjunto completo y permite que el sistema produzca los resultados más precisos. Sin embargo, esto conlleva un coste de alta latencia debido a los requisitos de tiempo de computación.</p>
 </li>
 <li>
 <p>Capa de <strong>streaming</strong> / <em>speed</em>: sirve para ofrecer resultados con muy baja latencia, cercano al tiempo real. Este capa recibe los datos y realiza modificaciones incrementales sobre los resultados de la capa <em>batch</em>. Gracias a los algoritmos incrementales implementados en esta capa, se consigue reducir el coste computacional de manera considerable, a coste de perder algo de precisión.</p>
@@ -3305,7 +3305,7 @@ En informática, un sistema de tiempo real es aquel que responde en un periodo d
 </table>
 </div>
 <p>Los datos que fluyen por la capa de velocidad/<em>streaming</em> tienen la restricción de latencia que impone la propia capa para poder procesar los datos todo lo rápido que sea posible. Normalmente, este requisito choca con la precisión de los datos. Por ejemplo, en un escenario IoT donde se leen un gran número de sensores de temperatura que envían datos de telemetría, la capa de velocidad se puede utilizar para procesar una ventana temporal de los datos que entran (por ejemplo, los diez primeros segundos de cada minuto).</p>
-<p>Los datos que fluyen por el camino lento, no están sujeto a los mismos requisitos de latencia, lo que permite una mayor precisión computacional sobre grandes conjuntos de datos, que pueden conllevar mucho tiempo de procesamiento.</p>
+<p>Los datos que fluyen por el camino lento no están sujetos a los mismos requisitos de latencia, lo que permite una mayor precisión computacional sobre grandes conjuntos de datos, que pueden conllevar mucho tiempo de procesamiento.</p>
 <p>Finalmente, ambos caminos, el lento y el rápido, convergen en las aplicaciones analíticas del cliente. Si el cliente necesita información constante (cercana al tiempo real) aunque menos precisa, obtendrá los datos del camino rápido. Si no, lo hará a partir de los datos de la capa <em>batch</em>.</p>
 <p>Dicho de otro modo, el camino rápido tiene los datos de una pequeña ventana temporal, la cual se puede actualizar con datos más precisos provenientes de la capa <em>batch</em>.</p>
 <h3 id="paso-a-paso">Paso a paso<a class="headerlink" href="#paso-a-paso" title="Permanent link">&para;</a></h3>
@@ -3328,7 +3328,7 @@ Lambda architecture has its share of challenges and criticisms. Managing multipl
 
 <h2 id="arquitectura-kappa">Arquitectura Kappa<a class="headerlink" href="#arquitectura-kappa" title="Permanent link">&para;</a></h2>
 <p>El término <ins>Arquitectura Kappa</ins> fue introducido en 2014 por <a href="https://blog.empathybox.com/"><em>Jay Kreps</em></a> en su artículo <a href="https://www.oreilly.com/radar/questioning-the-lambda-architecture/">Questioning the Lambda Architecture</a>. En él señala los posibles puntos débiles de la arquitectura <em>Lambda</em> y cómo solucionarlos mediante una evolución.</p>
-<p>Uno de los mayores inconveniente de la arquitectura <em>Lambda</em> es su complejidad. El procesamiento de los datos se realiza en dos caminos diferenciados, lo que conlleva duplicar la lógica de computación y la gestión de la arquitectura de ambos caminos.</p>
+<p>Uno de los mayores inconvenientes de la arquitectura <em>Lambda</em> es su complejidad. El procesamiento de los datos se realiza en dos caminos diferenciados, lo que conlleva duplicar la lógica de computación y la gestión de la arquitectura de ambos caminos.</p>
 <p>Lo que señala <em>Jay Kreps</em> en su propuesta es que todos los datos fluyan por un único camino, eliminando la capa <em>batch</em> y dejando solamente la capa de <em>streaming</em>. Esta capa, a diferencia de la de tipo <em>batch</em>, no tiene un comienzo ni un fin desde un punto de vista temporal y está continuamente procesando nuevos datos a medida que van llegando.</p>
 <p>Para conseguir un único camino, se sustituyen las fuentes de datos por colas de mensajes (por ejemplo, mediante una herramienta como <a href="../dataflow/kafka1.html">Apache Kafka</a>), obteniendo flujos de datos que facilitan el acceso en tiempo real, leyendo y transformando los datos de los mensajes en un formato que sea fácilmente accesible a los usuarios finales.</p>
 <figure style="align: center;">
@@ -3339,7 +3339,7 @@ Lambda architecture has its share of challenges and criticisms. Managing multipl
 <p>Podemos decir que sus cuatro pilares principales son los siguientes:</p>
 <ol>
 <li>Todo es un <em>stream</em>: las operaciones <em>batch</em> son un subconjunto de las operaciones de <em>streaming</em>, por lo que todo puede ser tratado como un <em>stream</em>.</li>
-<li>Los datos de partida no se modifican: los datos se almacenan sin ser transformados, por tanto son inmutables, y las vistas se derivan de ellos. Un estado concreto puede ser recalculado puesto que la información de origen no se modifica.</li>
+<li>Los datos de partida no se modifican: los datos se almacenan sin ser transformados, por tanto, son inmutables, y las vistas se derivan de ellos. Un estado concreto puede ser recalculado puesto que la información de origen no se modifica.</li>
 <li>Solo existe un flujo de procesamiento: puesto que mantenemos un solo flujo, el código, el mantenimiento y la actualización del sistema se ven reducidos considerablemente.</li>
 <li>Tenemos la posibilidad de volver a lanzar un procesamiento: se puede modificar un procesamiento concreto y su configuración para variar los resultados obtenidos partiendo de los mismos datos de entrada.</li>
 </ol>
@@ -3409,7 +3409,7 @@ Dado que en ambientes de Big Data el ser capaz de manejar grandes volúmenes de 
 -->
 
 <h2 id="casos-de-uso">Casos de uso<a class="headerlink" href="#casos-de-uso" title="Permanent link">&para;</a></h2>
-<p>¿Qué arquitectura se adapta mejor a los requerimientos que nos traslada el cliente? <em>¿Lambda</em> o <em>Kappa</em>? ¿Cuál encaja mejor en nuestro modelo de negocio?.</p>
+<p>¿Qué arquitectura se adapta mejor a los requerimientos que nos traslada el cliente? <em>¿Lambda</em> o <em>Kappa</em>? ¿Cuál encaja mejor en nuestro modelo de negocio?</p>
 <p>Depende. La arquitectura <em>Lambda</em> es más versátil y es capaz de cubrir un mayor número de casos, muchos de ellos que requieren incluso procesamiento en tiempo real.</p>
 <p>Una pregunta que debemos plantearnos es, ¿el análisis y el procesamiento (sus algoritmos) que vamos a realizar en las capas <em>batch</em> y <em>streaming</em> es el mismo? En ese caso la opción más acertada sería la arquitectura <em>Kappa</em>.</p>
 <p>Sin embargo, en otras ocasiones necesitaremos acceder a todo el conjunto de datos sin penalizar el rendimiento por lo que la <em>Lambda</em> puede ser más apropiada e incluso más fácil de implementar.</p>
@@ -3453,9 +3453,10 @@ Dado que en ambientes de Big Data el ser capaz de manejar grandes volúmenes de 
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 2p) Contesta a las siguientes preguntas justificando tus respuestas:<ol>
-<li>En una arquitectura <em>Lambda</em>, ¿cómo consigue la capa de streaming mostrar la más información más rápida que la de batch? ¿A coste de qué se consigue la velocidad?</li>
-<li>Indica las diferencias en cantidad de datos y tiempo entre el procesamiento <em>batch</em> y en <em>streaming</em>.</li>
+<li>En una arquitectura <em>Lambda</em>, ¿cómo consigue la capa de <em>streaming</em> mostrar la información más rápida que la de <em>batch</em>? ¿A coste de qué se consigue la velocidad?</li>
+<li>Indica las diferencias respecto al volumen de datos y tiempo entre el procesamiento <em>batch</em> y en <em>streaming</em>.</li>
 <li>Respecto al procesamiento <em>batch</em>/<em>streaming</em> ¿Por qué <em>Spark</em> es una de las herramientas más utilizadas a día de hoy?</li>
+<li>En sistemas IoT se envían muchísimos datos y a gran velocidad. Según el principio SCV ¿cómo se soluciona la consistencia?</li>
 </ol>
 </li>
 </ol>
