@@ -3423,13 +3423,13 @@
 <li>La <strong>clave de partición y de ordenamiento</strong>, también conocidas como clave principal compuesta, ya que está formada por dos atributos.</li>
 </ul>
 <figure style="align: center;">
-    <img src="images/06ddb-claves.png" width="600">
+    <img src="images/06ddb-claves.png" width="600" alt="Claves">
     <figcaption>Claves</figcaption>
 </figure>
 
 <p>A medida que aumenta el volumen de datos, la clave principal particiona e indexa los datos de la tabla. Podemos recuperar los datos de una tabla de <em>DynamoDB</em> de dos formas distintas, bien por la clave y hacer una consulta directa, o utilizar un escaneo de todos los elementos en busca de aquello que coincida con el parámetro de búsqueda.</p>
 <figure style="align: center;">
-    <img src="images/06ddb-particiones.png" width="600">
+    <img src="images/06ddb-particiones.png" width="600" alt="Consultas por clave o escaneo">
     <figcaption>Consultas por clave o escaneo</figcaption>
 </figure>
 
@@ -3520,8 +3520,8 @@
 <h3 id="creando-una-tabla">Creando una tabla<a class="headerlink" href="#creando-una-tabla" title="Permanent link">&para;</a></h3>
 <p>Para ello, primero vamos a crear la tabla desde el interfaz web de AWS. Tras seleccionar <em>Amazon DynamoDB</em>, creamos una tabla que llamamos <code>ProductCatalog</code>, cuyo identificador será <code>Id</code> de tipo <em>número</em>. El resto de campos se crearán automáticamente al importar los datos.</p>
 <figure style="align: center;">
-    <img src="images/06ddb-createTable.png" width="600">
-    <figcaption>Creando la tabla</figcaption>
+    <img src="images/06ddb-createTable.png" width="600" alt="Creando la tabla en DynamoDB">
+    <figcaption>Creando la tabla en DynamoD</figcaption>
 </figure>
 
 <p>También podíamos haber creado la tabla mediante el comando <a href="https://awscli.amazonaws.com/v2/documentation/api/latest/reference/dynamodb/create-table.html">create-table</a> de AWS CLI:</p>
@@ -3558,7 +3558,7 @@
 <li>
 <p>También podemos cargar los datos en S3, y realizar una <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/S3DataImport.HowItWorks.html">importación desde S3</a>, pero el formato del documento es diferente, admitiendo datos en CSV, un formato de JSON multilínea específico de DynamoDB (compuestos de documentos <code>Item</code>) o un formato propietario como <a href="https://amzn.github.io/ion-docs/">Amazon Ion</a>. Así pues, primero cargaremos <a href="resources/ProductCatalogS3.json">ProductCatalogS3.json</a> en S3, y a continuación realizamos la importación.</p>
 <p><figure style="align: center;">
-    <img src="images/06ddb-import-s3.png" width="600">
+    <img src="images/06ddb-import-s3.png" width="600" alt="Importación en DynamoDB desde S3">
     <figcaption>Importación en DynamoDB desde S3</figcaption>
 </figure></p>
 <p>Tras indicar el archivo, deberemos indicar los datos de creación de la nueva tabla (es decir, no permite importar datos sobre una tabla ya existente previamente).</p>
@@ -3566,8 +3566,8 @@
 </ul>
 <p>Si volvemos a la consola web, tras entrar en la tabla y pulsar en <em>Ver elementos</em> veremos los datos ya introducidos.</p>
 <figure style="align: center;">
-    <img src="images/06ddb-elementos.png" width="600">
-    <figcaption>Ver elementos</figcaption>
+    <img src="images/06ddb-elementos.png" width="600" alt="Ver elementos en DynamoDB">
+    <figcaption>Ver elementos en DynamoDB</figcaption>
 </figure>
 
 <p>Si queremos consultar información de la tabla mediante el comando <a href="https://awscli.amazonaws.com/v2/documentation/api/latest/reference/dynamodb/describe-table.html">describe-table</a> de AWS CLI, ejecutaremos:</p>
@@ -3781,7 +3781,7 @@
 <p>En el apartado anterior hemos estudiado que podemos realizar consultas sobre <em>DynamoDB</em> haciendo uso de un subconjunto de SQL conocido como PartiQL. En los siguientes ejemplos vamos a mostrar cómo realizar las operaciones vía el API de <em>DynamoDb</em> y mediante <em>PartiQL</em>.</p>
 <p>Para todas las consultas realizadas mediante PartiQL utilizaremos el método <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/execute_statement.html"><code>execute_statement</code></a>.</p>
 <h3 id="un-documento-por-la-clave">Un documento por la clave<a class="headerlink" href="#un-documento-por-la-clave" title="Permanent link">&para;</a></h3>
-<p>Cuando recuperemos documentos por su clave, utilizaremos el método <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/table/get_item.html"><code>get_item</code></a>, pásandole la <code>Key</code> con la clave para encontrar el documento y si queremos una <code>ProjectionExpression</code> para proyectar los resultados. Por ejemplo, si queremos recuperar la película <em>Interstellar</em> de 2014 haremos:</p>
+<p>Cuando recuperemos documentos por su clave, utilizaremos el método <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/table/get_item.html"><code>get_item</code></a>, pasándole la <code>Key</code> con la clave para encontrar el documento y si queremos una <code>ProjectionExpression</code> para proyectar los resultados. Por ejemplo, si queremos recuperar la película <em>Interstellar</em> de 2014 haremos:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Mediante <code>get_item</code></label><label for="__tabbed_2_2">Mediante <code>get_item</code> con excepciones</label><label for="__tabbed_2_3">Mediante PartiQL</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -4150,9 +4150,9 @@
 <span class="hll"><span class="linenos" data-linenos="38 "></span><span class="nb">object</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">Body</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">json_data</span><span class="p">))</span>
 </span></code></pre></div>
 <h3 id="de-rds-a-dynamodb">De RDS a DynamoDB<a class="headerlink" href="#de-rds-a-dynamodb" title="Permanent link">&para;</a></h3>
-<p>Para este caso de uso, vamos a crear una nueva tabla en DynamoDB a la que llamaremos <code>SeveroClientes</code> y le pondremos como clave de particionado el campo <code>Id</code> de tipo numérico y como clave de ordenamiento el <code>Zip</code> de tipo texto.</p>
+<p>Para este caso de uso, vamos a crear una nueva tabla en <em>DynamoDB</em> a la que llamaremos <code>SeveroClientes</code> y le pondremos como clave de particionado el campo <code>Id</code> de tipo numérico y como clave de ordenamiento el <code>Zip</code> de tipo texto.</p>
 <figure style="align: center;">
-    <img src="images/06ddSeveroClientes.png">
+    <img src="images/06ddSeveroClientes.png" alt="Creación de la tabla SeveroClientes">
     <figcaption>Creación de la tabla SeveroClientes</figcaption>
 </figure>
 
@@ -4231,8 +4231,8 @@ Crear función Lambda que monitorize S3 e inserte en DynamoDB
 <li>
 <p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha determinado la importancia de los sistemas de almacenamiento para depositar y procesar grandes cantidades de cualquier tipo de datos rápidamente.">CEBDA.2a</abbr> / 1.5p) Mediante <em>Python</em> y utilizando la base de datos de <code>retail_db</code> creada en la sesión de RDS:</p>
 <ol>
-<li>Exporta los datos de la tabla <code>products</code> y cargarla en S3 (en un <em>bucket</em> que contenga tus iniciales en el nombre del <em>bucket</em>), de forma similar al caso de uso 4.</li>
-<li>Desde el archivo recién cargado en S3, importa los datos en <em>DynamoDB</em> de forma similar al caso de uso 3.</li>
+<li>Exporta los datos de la tabla <code>products</code> y cárgalos en S3 (en un <em>bucket</em> que contenga tus iniciales en el nombre del <em>bucket</em>), de forma similar al caso de uso 4.</li>
+<li>Desde el archivo recién cargado en S3, importa los datos en <em>DynamoDB</em> de forma similar al caso de uso 3, y comprueba que aparecen.</li>
 </ol>
 </li>
 <li>
