@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.8">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.1">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.f2e4d321.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.45e1311d.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -2877,6 +2877,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hola-glue" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hola Glue
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ejecucion" class="md-nav__link">
     <span class="md-ellipsis">
       Ejecución
@@ -2950,7 +2959,8 @@
 <p><a href="https://aws.amazon.com/es/glue/">AWS Glue</a> es la herramienta ETL serverless completamente administrada que ofrece <em>Amazon Web Services</em>, con la cual podemos crear soluciones basadas en código tanto para la ingesta como para la transformación de los datos.</p>
 <p><em>AWS Glue</em> incluye un amplio conjunto de conectores tanto para los servicios AWS (<em>RDS</em>, <em>S3</em>, <em>Redshift</em>, etc...) como para servicios de terceros (<em>MongoDB</em>, <em>MongoDB Atlas</em>, conectores JDBC, etc...)</p>
 <p>Cuando el esquema de los datos es desconocido, <em>AWS Glue</em> permite inferirlo. Para ello, hemos de construir un rastreador (<em>crawler</em>) para descubrir su estructura.</p>
-<p>AWS crea un catálogo que contiene metadatos sobre las diferentes fuentes de datos (compatible con el <em>Hive Catalog</em>). <em>AWS Glue</em> es similar a <em>Amazon Athena</em> en que los datos permanecen en la fuente de datos.</p>
+<p>Con esa información, <em>Glue</em> crea un catálogo que contiene metadatos sobre las diferentes fuentes de datos (compatible con el <em>Hive Catalog</em>). <em>AWS Glue</em> es similar a <em>Amazon Athena</em> en que los datos permanecen en la fuente de datos.</p>
+<p>Finalmente, <em>Glue</em> simplifica la orquestación de las ETL, permitiendo ejecutar miles de jobs en <em>workflows</em> y desarrollar y administrar los <em>jobs</em> de forma visual.</p>
 <h2 id="componentes">Componentes<a class="headerlink" href="#componentes" title="Permanent link">&para;</a></h2>
 <p><em>AWS Glue</em> tiene varios componentes que podrían haberse dividido en varios servicios independientes, pero suelen trabajar todos juntos, por lo que AWS los ha agrupado en la familia <em>AWS Glue</em>.</p>
 <figure style="align: center;">
@@ -2975,22 +2985,29 @@
 <h3 id="glue-data-catalog">Glue Data Catalog<a class="headerlink" href="#glue-data-catalog" title="Permanent link">&para;</a></h3>
 <p>AWS Glue también incluye un <a href="https://docs.aws.amazon.com/glue/latest/dg/catalog-and-crawler.html">catálogo de datos</a> para almacenar los metadatos que puede utilizarse para proporcionar una vista lógica de los datos almacenados físicamente en la capa de almacenamiento.</p>
 <p>Este catálogo es compatible con el <em>metastore Hive</em>, lo que significa que puede utilizarse con cualquier sistema que pueda trabajar con un metastore Hive</p>
-<p>Los objetos (como bases de datos y tablas) del catálogo se pueden referenciar directamente desde el código ETL. Además, cada tabla del catálogo contiene metadatos, como los títulos de las columnas y los tipos de datos de cada columna una referencia a la ubicación en S3 de los datos que componen esa tabla, y detalles sobre el formato del archivo (como CSV).</p>
-<p>Dentro del ecosistema de AWS, varios servicios pueden utilizar AWS Glue Data Catalog. Por ejemplo, Amazon Athena utiliza AWS Glue Data Catalog para permitir a los usuarios ejecutar consultas SQL directamente en los datos de Amazon S3, y Amazon EMR y el motor ETL de AWS Glue lo utilizan para permitir a los usuarios hacer referencia a objetos del catálogo (como bases de datos y tablas) directamente en su código ETL.</p>
+<p>Los objetos (como bases de datos y tablas) del catálogo se pueden referenciar directamente desde el código ETL. Además, cada tabla del catálogo contiene metadatos, como los títulos de las columnas y los tipos de datos de cada columna, una referencia a la ubicación en S3 de los datos que componen esa tabla, y detalles sobre el formato del archivo (como CSV).</p>
+<p>Dentro del ecosistema de AWS, varios servicios pueden utilizar <em>AWS Glue Data Catalog</em>. Por ejemplo, <em>Amazon Athena</em> lo utiliza para permitir a los usuarios ejecutar consultas SQL directamente en los datos de <em>Amazon S3</em>, y <em>Amazon EMR</em> y el motor ETL de <em>AWS Glue</em> lo utilizan para permitir a los usuarios hacer referencia a objetos del catálogo (como bases de datos y tablas) directamente desde su código ETL.</p>
 <h3 id="glue-crawlers">Glue crawlers<a class="headerlink" href="#glue-crawlers" title="Permanent link">&para;</a></h3>
-<p>Los rastreadores (<a href="https://docs.aws.amazon.com/glue/latest/dg/add-crawler.html"><em>crawlers</em></a>) de AWS Glue son procesos que examinan una fuente de datos (como una ruta en un bucket de S3) e infieren automáticamente el esquema y otra información sobre esa fuente, rellenando automáticamente el catálogo de datos de <em>AWS Glue</em> con la información relevante.</p>
-<p>Por ejemplo, podemos dirigir un rastreador de AWS Glue a la ubicación de S3 donde DMS replicó la tabla de <em>customers</em> de nuestra base de datos <em>retail_db</em>. Cuando ejecutamos <em>Glue Crawler</em>, se examina una parte de cada uno de los archivos del origen, identifica el tipo de archivo (<em>CSV</em> o <em>Parquet</em>), utiliza un clasificador para inferir el esquema del archivo (encabezados y tipos de columnas) y, a continuación, añade esa información a una base de datos en el <em>Glue Data Catalog</em>.</p>
+<p>Los rastreadores (<a href="https://docs.aws.amazon.com/glue/latest/dg/add-crawler.html"><em>crawlers</em></a>) de <em>AWS Glue</em> son procesos que examinan una fuente de datos (como una ruta en un bucket de S3) e infieren automáticamente el esquema y otra información sobre esa fuente, rellenando automáticamente el catálogo de datos con la información relevante.</p>
+<p>Por ejemplo, podemos dirigir un rastreador de AWS Glue a la ubicación de S3 donde hemos exportado los datos de la tabla de <em>customers</em> de nuestra base de datos <em>retail_db</em>. Cuando ejecutamos <em>Glue Crawler</em>, se examina una parte de cada uno de los archivos del origen, identifica el tipo de archivo (<em>CSV</em> o <em>Parquet</em>), utiliza un clasificador para inferir el esquema del archivo (encabezados y tipos de columnas) y, a continuación, añade esa información a una base de datos en el <em>Glue Data Catalog</em>.</p>
 <figure style="align: center;">
     <img src="images/08glue-crawler-catalog.png" alt="AWS Glue Crawler" width="800px">
     <figcaption>AWS Glue Crawler</figcaption>
 </figure>
 
 <p>El uso de <em>crawlers</em> es opcional, ya que podemos añadir bases de datos y tablas a <em>Glue Data Catalog</em> utilizando la API de Glue o mediante sentencias SQL en <em>Athena</em>.</p>
+<p>Si queremos que el crawler se conecte directamente a otros servicios, haremos uso de conexiones que también almacenaremos en el catálogo de Glue.</p>
 <!--
 ## Creación
 
 -->
 
+<h2 id="hola-glue">Hola Glue<a class="headerlink" href="#hola-glue" title="Permanent link">&para;</a></h2>
+<p>Nos vamos a conectar a la bd de <code>orders</code> que tenemos creada en RDS en la base de datos <code>retail_db</code>, y mediante un Glue Crawler, creamos una tabla en el catálogo de Glue.</p>
+<p>Además, con otro crawler, leeremos el archivo customers.csv que tenemos en S3.</p>
+<p>Finalmente, crearemos una tabla resultante en Glue con el join de ambas tablas.</p>
+<p>FIXME: continuar y replicar ejemplo</p>
+<p>https://youtu.be/pbKnfjjVsx4?si=0F6lSdjDq-7vVfM1&amp;t=364</p>
 <h2 id="ejecucion">Ejecución<a class="headerlink" href="#ejecucion" title="Permanent link">&para;</a></h2>
 <p>Se puede ejecutar bajo demanda o planificar su ejecución de forma diaria, por horas, etc... Una vez lanzado, al cabo de un minuto, veremos que ha finalizado y si en el menú lateral seleccionamos <em>Base de Datos -&gt; Tablas</em> podremos ver la tabla que ha creado (en nuestro caso la tabla <code>csv</code>), junto con la estructura que ha inferido respecto a los datos cargados.</p>
 <p>El siguiente paso es editar el esquema y ponerle nombres significativos a los campos:</p>
@@ -3006,6 +3023,8 @@ Coger ejemplo de labS3.csv ... leer el archivo, cambiar los tipos del esquema, y
 O crear tres buckets, con los archivos de pdi, y hacer un join en una única tabla
 
 Hacer un crawler sobre una carpeta S3 y luego crear el esquema en el catalog
+
+https://medium.com/@milton32sanabria/construyendo-un-etl-en-aws-glue-6601309be3cb
 -->
 
 
@@ -3201,10 +3220,10 @@ Hacer un crawler sobre una carpeta S3 y luego crear el esquema en el catalog
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
       
     
   </body>
