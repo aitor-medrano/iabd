@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.1">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.8">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.45e1311d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.f2e4d321.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -2888,9 +2888,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#hola-glue" class="md-nav__link">
+  <a href="#hola-glue-crawler" class="md-nav__link">
     <span class="md-ellipsis">
-      Hola Glue
+      Hola Glue Crawler
     </span>
   </a>
   
@@ -2909,15 +2909,6 @@
   <a href="#hola-databrew" class="md-nav__link">
     <span class="md-ellipsis">
       Hola DataBrew
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ejecucion" class="md-nav__link">
-    <span class="md-ellipsis">
-      Ejecución
     </span>
   </a>
   
@@ -3000,41 +2991,35 @@
 <p>A continuación, vamos a examinar los componentes principales de <em>Glue</em> relacionados con el procesamiento de datos.</p>
 <h3 id="glue-etl-jobs">Glue ETL jobs<a class="headerlink" href="#glue-etl-jobs" title="Permanent link">&para;</a></h3>
 <p><em>Glue</em> permite trabajar con diferentes motores de integración mediante <em>Python</em>, <em>Spark</em> y <em>Ray</em> para el procesamiento de datos almacenados en diferentes fuentes como S3 o RDS y registrados en el <em>AWS Glue Data Catalog</em>.</p>
-<p>Las diferentes tareas ETL se facturan por DPUs (<em>Data Processing Units</em>) utilizadas y la cantidad de tiempo empleado en la ejecución (de forma similar a <em>AWS Lambda</em>)</p>
+<p>Las diferentes tareas ETL se facturan por DPUs (<em>Data Processing Units</em>) utilizadas y la cantidad de tiempo empleado en la ejecución (de forma similar a <em>AWS Lambda</em>). Aproximadamente, y dependiendo de la tecnología, cada DPU cuesta 0,44$ por hora. Más información en la <a href="https://aws.amazon.com/es/glue/pricing/">página oficial de precios de AWS Glue</a>.</p>
 <p>La siguiente imagen muestra una posible configuración de DPUs, con dos de los motores <em>Glue</em> (un único nodo <em>Python</em> mediante <em>shell</em> a la izquierda, y un cluster de nodos <em>Spark</em> a la derecha):</p>
 <figure style="align: center;">
-    <img src="images/08glue.png" alt="Glue Python shell and Glue Spark engines" width="700px">
-    <figcaption>Glue Python shell and Glue Spark engines</figcaption>
+    <img src="images/08glue.png" alt="Un shell de Python en Glue Python y un clúster de Spark" width="700px">
+    <figcaption>Un shell de Python en Glue Python y un clúster de Spark</figcaption>
 </figure>
 
 <h3 id="glue-databrew">Glue DataBrew<a class="headerlink" href="#glue-databrew" title="Permanent link">&para;</a></h3>
 <p><a href="https://aws.amazon.com/es/glue/features/databrew/">AWS Glue DataBrew</a> es un herramienta visual de transformación de datos que nos permite aplicar transformaciones a los datos de forma visual, sin necesidad de escribir o administrar código (<em>serverless</em>).</p>
-<p>Incluye más de 250 transformaciones de datos integradas, que se pueden ensamblar fácilmente de forma gráfica para crear una receta de DataBrew, lo que permite aplicar varias transformaciones a un conjunto de datos.</p>
+<p>Incluye más de 250 transformaciones de datos integradas, que se pueden ensamblar fácilmente de forma gráfica para crear una receta de <em>DataBrew</em>, lo que permite aplicar varias transformaciones a un conjunto de datos, como por ejemplo, limpiar y normalizar datos, eliminar o sustituir valores nulos, estandarizar columnas de fecha y hora para que se ajusten a un estándar, crear codificaciones, etc...</p>
 <p><em>DataBrew</em> incluye funcionalidades tanto para la elaboración de perfiles de datos (recopilación de estadísticas sobre las distintas columnas del conjunto de datos) como para la supervisión de la calidad de los datos. También incluye muchos tipos diferentes de transformaciones, como el formateo de datos, la ofuscación de datos personales, la división o unión de columnas, la conversión de zonas horarias, la detección y eliminación de valores atípicos, etc...</p>
-<!--
-WS Glue DataBrew es una herramienta visual de preparación de datos que permite a los usuarios limpiar y normalizar datos sin escribir código, para reducir el tiempo que se tarda en preparar datos para análisis y aprendizaje automático (ML) en hasta un 80 % en comparación con la preparación de datos convencional basada en código actual. Puede elegir entre más de 250 transformaciones prediseñadas para automatizar tareas de preparación de datos, como filtrar anomalías, convertir datos a formatos estándar y corregir valores no válidos, sin necesidad de escribir código
--->
-
-<p>Similar a <a href="https://azure.microsoft.com/es-es/products/data-factory">Azure Data Factory</a> o <a href="https://cloud.google.com/dataflow/">Google DataFlow</a>, o PowerQuery dentro de PowerBI</p>
-<p>Herramienta no-code</p>
-<p>Limpie y normalice datos con más de 250 transformaciones integradas
-Elimine o sustituya valores nulos, estandarice columnas de fecha y hora para que se ajusten a un estándar y cree codificaciones. Además, combine, dinamice, divida o una datos, y cree agregados.</p>
-<p>Trabaje con muestras representativas de datos para determinar las transformaciones adecuadas que son necesarias.</p>
-<p>Cree y experimente con recetas mediante uno o varios pasos de transformación
-Cada transformación se agrega como un paso para crear recetas.</p>
-<p>Guarde, publique y versione recetas para compartirlas con otros colaboradores.</p>
-<p>Los componentes de <em>DataBrew</em> son:</p>
+<div class="admonition info">
+<p class="admonition-title">Alternativas</p>
+<p>Existen multitud herramientas similares, como por ejemplo, <a href="https://azure.microsoft.com/es-es/products/data-factory">Azure Data Factory</a>, <a href="https://cloud.google.com/dataflow/">Google DataFlow</a>, o <a href="https://learn.microsoft.com/es-es/power-query/power-query-ui">PowerQuery</a> dentro de <a href="https://www.microsoft.com/es-es/power-platform/products/power-bi">PowerBI</a></p>
+</div>
+<p>Los diferentes componentes de <em>DataBrew</em> son:</p>
 <ul>
 <li>Proyecto</li>
-<li>Conjunto de datos (dataset), que se almacenan en S3.</li>
-<li>Receta (<em>receipt</em>)</li>
+<li>Conjunto de datos (<em>dataset</em>), que se almacenan en S3.</li>
+<li>Receta (<em>receipt</em>), compuestas de uno o varios pasos de transformación. Estas recetas se pueden guardar, publicar, crear versiones, etc... y compartirlas con otros.</li>
 <li>Trabajo (<em>job</em>), el cual se puede orquestar mediante <em>Step Functions</em>.</li>
 </ul>
+<p>Los trabajos de <em>DataBrew</em> cuestan 1$ por sesión y luego 0,48$ por hora de nodo empleado.</p>
 <h3 id="glue-data-catalog">Glue Data Catalog<a class="headerlink" href="#glue-data-catalog" title="Permanent link">&para;</a></h3>
 <p>AWS Glue también incluye un <a href="https://docs.aws.amazon.com/glue/latest/dg/catalog-and-crawler.html">catálogo de datos</a> para almacenar los metadatos que puede utilizarse para proporcionar una vista lógica de los datos almacenados físicamente en la capa de almacenamiento.</p>
 <p>Este catálogo es compatible con el <em>metastore Hive</em>, lo que significa que puede utilizarse con cualquier sistema que pueda trabajar con un metastore Hive</p>
 <p>Los objetos (como bases de datos y tablas) del catálogo se pueden referenciar directamente desde el código ETL. Además, cada tabla del catálogo contiene metadatos, como los títulos de las columnas y los tipos de datos de cada columna, una referencia a la ubicación en S3 de los datos que componen esa tabla, y detalles sobre el formato del archivo (como CSV).</p>
 <p>Dentro del ecosistema de AWS, varios servicios pueden utilizar <em>AWS Glue Data Catalog</em>. Por ejemplo, <em>Amazon Athena</em> lo utiliza para permitir a los usuarios ejecutar consultas SQL directamente en los datos de <em>Amazon S3</em>, y <em>Amazon EMR</em> y el motor ETL de <em>AWS Glue</em> lo utilizan para permitir a los usuarios hacer referencia a objetos del catálogo (como bases de datos y tablas) directamente desde su código ETL.</p>
+<p>El primer millón de datos almacenado en el catálogo es gratis, y a partir ahí, se cobra 1$ por cada 100.000 objetos que superen el millón. También se cobra por las solicitudes realizadas, siendo gratis el primer millón de cada mes y luego 1$ más por cada millón más.</p>
 <h3 id="glue-crawlers">Glue crawlers<a class="headerlink" href="#glue-crawlers" title="Permanent link">&para;</a></h3>
 <p>Los rastreadores (<a href="https://docs.aws.amazon.com/glue/latest/dg/add-crawler.html"><em>crawlers</em></a>) de <em>AWS Glue</em> son procesos que examinan una fuente de datos (como una ruta en un bucket de S3) e infieren automáticamente el esquema y otra información sobre esa fuente, rellenando automáticamente el catálogo de datos con la información relevante.</p>
 <p>Por ejemplo, podemos dirigir un rastreador de AWS Glue a la ubicación de S3 donde hemos exportado los datos de la tabla de <em>customers</em> de nuestra base de datos <em>retail_db</em>. Cuando ejecutamos <em>Glue Crawler</em>, se examina una parte de cada uno de los archivos del origen, identifica el tipo de archivo (<em>CSV</em> o <em>Parquet</em>), utiliza un clasificador para inferir el esquema del archivo (encabezados y tipos de columnas) y, a continuación, añade esa información a una base de datos en el <em>Glue Data Catalog</em>.</p>
@@ -3045,21 +3030,28 @@ Cada transformación se agrega como un paso para crear recetas.</p>
 
 <p>El uso de <em>crawlers</em> es opcional, ya que podemos añadir bases de datos y tablas a <em>Glue Data Catalog</em> utilizando la API de Glue o mediante sentencias SQL en <em>Athena</em>.</p>
 <p>Si queremos que el crawler se conecte directamente a otros servicios, haremos uso de conexiones que también almacenaremos en el catálogo de Glue.</p>
+<h2 id="hola-glue-crawler">Hola Glue Crawler<a class="headerlink" href="#hola-glue-crawler" title="Permanent link">&para;</a></h2>
+<p>Nos vamos a conectar a la bd de <code>orders</code> que tenemos creada en RDS en la base de datos <code>retail_db</code>, y mediante un Glue Crawler, creamos una tabla en el catálogo de Glue.</p>
 <!--
-## Creación
+RDS.. para que funcione, hace falta un VPC endpoint con S3: https://stackoverflow.com/questions/77226387/why-awss-glue-connections-need-a-vpc-s3-endpoint
 
+https://www.youtube.com/watch?v=dQnRP6X8QAU
+
+https://www.youtube.com/watch?v=Ly2kiDLyvhU
+
+https://www.bluetab.net/es/bluetab/
 -->
 
-<h2 id="hola-glue">Hola Glue<a class="headerlink" href="#hola-glue" title="Permanent link">&para;</a></h2>
-<p>Nos vamos a conectar a la bd de <code>orders</code> que tenemos creada en RDS en la base de datos <code>retail_db</code>, y mediante un Glue Crawler, creamos una tabla en el catálogo de Glue.</p>
-<p>RDS.. para que funcione, hace falta un VPC endpoint con S3: https://stackoverflow.com/questions/77226387/why-awss-glue-connections-need-a-vpc-s3-endpoint</p>
-<p>https://www.youtube.com/watch?v=dQnRP6X8QAU</p>
-<p>https://www.youtube.com/watch?v=Ly2kiDLyvhU</p>
-<p>https://www.bluetab.net/es/bluetab/</p>
 <p>Además, con otro crawler, leeremos el archivo customers.csv que tenemos en S3.</p>
 <p>Finalmente, crearemos una tabla resultante en Glue con el join de ambas tablas.</p>
 <p>FIXME: continuar y replicar ejemplo</p>
-<p>https://youtu.be/pbKnfjjVsx4?si=0F6lSdjDq-7vVfM1&amp;t=364</p>
+<p>Se puede ejecutar bajo demanda o planificar su ejecución de forma diaria, por horas, etc... Una vez lanzado, al cabo de un minuto, veremos que ha finalizado y si en el menú lateral seleccionamos <em>Base de Datos -&gt; Tablas</em> podremos ver la tabla que ha creado (en nuestro caso la tabla <code>csv</code>), junto con la estructura que ha inferido respecto a los datos cargados.</p>
+<p>El siguiente paso es editar el esquema y ponerle nombres significativos a los campos:</p>
+<p>Una vez los datos están cargados, ya podemos realizar consular con AWS Athena.</p>
+<!--
+https://youtu.be/pbKnfjjVsx4?si=0F6lSdjDq-7vVfM1&t=364
+-->
+
 <!--
 ## Caso 1 - s3://noaa-ghcn-pds/csv/by_year/
 -->
@@ -3069,32 +3061,43 @@ Cada transformación se agrega como un paso para crear recetas.</p>
 -->
 
 <h2 id="hola-gluestudio">Hola GlueStudio<a class="headerlink" href="#hola-gluestudio" title="Permanent link">&para;</a></h2>
-<p>Crear una ETL visual</p>
+<p>Mediate GlueStudio vamos a crear una ETL visual de forma similar a como hemos realizado con <a href="../de/pentaho.html">Pentaho</a>. Vamos a cargar en S3 los archivos de ventas y productos, y vamos a realizar un join para cargar los datos en una nueva tabla que almacenaremos en el catálogo.</p>
 <h2 id="hola-databrew">Hola DataBrew<a class="headerlink" href="#hola-databrew" title="Permanent link">&para;</a></h2>
-<p>Crear proyecto de muestra
-Datos de descubrimiento de fármacos de ChEMBL</p>
-<p>Transformaciones
-1. Borrar columna: la última -&gt; crea un paso
-2. Filtrar por un campo: curated_by = Autocurated
-3. Gestión de nulo: missing -&gt; assay_organism -&gt; Null por unknown
-4. Añadir columna mes, sobre el campo fecha -&gt; MONTHNAME
-5. Publicar la receta
-6. Crear un job a partir de la receta
-7. Elegir dataset y guardar resultado:
-    * csv
-    * parquet - particionado por nombre de mes</p>
-<ol start="8">
-<li>Ver un gráfico con el linaje de los datos</li>
+<p>En este caso, vamos a crear un proyecto de muestra a partir de los datos de descubrimiento de fármacos de <a href="https://www.ebi.ac.uk/chembl/">ChEMBL</a>:</p>
+<p>A continuación vamos a realizar un conjunto de transformaciones:</p>
+<!--
+Continuar: https://geekflare.com/es/aws-glue/
+-->
+
+<ol>
+<li>Borrar columna: la última -&gt; crea un paso</li>
+<li>Filtrar por un campo: curated_by = Autocurated</li>
+<li>Gestión de nulo: missing -&gt; assay_organism -&gt; Null por unknown</li>
+<li>Añadir columna mes, sobre el campo fecha -&gt; MONTHNAME</li>
+<li>Publicar la receta</li>
+<li>Crear un job a partir de la receta</li>
+<li>
+<p>Elegir dataset y guardar resultado:</p>
+<ul>
+<li>csv</li>
+<li>parquet - particionado por nombre de mes</li>
+</ul>
+</li>
+<li>
+<p>Ver un gráfico con el linaje de los datos</p>
+</li>
 <li>Para planificar, schedule</li>
 </ol>
-<p>HAcer otro ejemplo con nuestro conjunto de datos</p>
-<p>Comentar que se pueden crear cuadernos que se codifican con Spark</p>
-<p>FIXME: continuar https://www.youtube.com/live/Ly2kiDLyvhU?si=kCK4CRAH9OZF4UTD&amp;t=3201</p>
-<p>https://www.edlitera.com/blog/posts/aws-glue-databrew</p>
-<h2 id="ejecucion">Ejecución<a class="headerlink" href="#ejecucion" title="Permanent link">&para;</a></h2>
-<p>Se puede ejecutar bajo demanda o planificar su ejecución de forma diaria, por horas, etc... Una vez lanzado, al cabo de un minuto, veremos que ha finalizado y si en el menú lateral seleccionamos <em>Base de Datos -&gt; Tablas</em> podremos ver la tabla que ha creado (en nuestro caso la tabla <code>csv</code>), junto con la estructura que ha inferido respecto a los datos cargados.</p>
-<p>El siguiente paso es editar el esquema y ponerle nombres significativos a los campos:</p>
-<p>Una vez los datos están cargados, ya podemos realizar consular con AWS Athena.</p>
+<!--
+Hacer otro ejemplo con nuestro conjunto de datos
+
+Comentar que se pueden crear cuadernos que se codifican con Spark
+-->
+
+<!--
+https://www.edlitera.com/blog/posts/aws-glue-databrew
+-->
+
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html">AWS Glue User Guide</a></li>
@@ -3303,10 +3306,10 @@ https://medium.com/@milton32sanabria/construyendo-un-etl-en-aws-glue-6601309be3c
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      <script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
       
     
   </body>

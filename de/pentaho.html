@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Casos de usos resueltos mediante Pentaho Spoon, creando transformaciones y jobs para seleccionar, unir y transformar datos, tanto en fichero de texto locales en formato CSV / JSON como mediante acceso a bases de datos o S3.">
+        <meta name="description" content="Casos de usos resueltos mediante Pentaho, con transformaciones y jobs para seleccionar, unir y transformar datos locales en CSV/JSON o remotos en BBDD/S3.">
       
       
       
@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.1">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.8">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.45e1311d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.f2e4d321.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -73,7 +73,7 @@
       
         <meta  property="og:title"  content="Pentaho Data Integration. ETL mediante Spoon. - Inteligencia Artificial y Big Data" >
       
-        <meta  property="og:description"  content="Casos de usos resueltos mediante Pentaho Spoon, creando transformaciones y jobs para seleccionar, unir y transformar datos, tanto en fichero de texto locales en formato CSV / JSON como mediante acceso a bases de datos o S3." >
+        <meta  property="og:description"  content="Casos de usos resueltos mediante Pentaho, con transformaciones y jobs para seleccionar, unir y transformar datos locales en CSV/JSON o remotos en BBDD/S3." >
       
         <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/de/pentaho.png" >
       
@@ -89,7 +89,7 @@
       
         <meta  name="twitter:title"  content="Pentaho Data Integration. ETL mediante Spoon. - Inteligencia Artificial y Big Data" >
       
-        <meta  name="twitter:description"  content="Casos de usos resueltos mediante Pentaho Spoon, creando transformaciones y jobs para seleccionar, unir y transformar datos, tanto en fichero de texto locales en formato CSV / JSON como mediante acceso a bases de datos o S3." >
+        <meta  name="twitter:description"  content="Casos de usos resueltos mediante Pentaho, con transformaciones y jobs para seleccionar, unir y transformar datos locales en CSV/JSON o remotos en BBDD/S3." >
       
         <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/de/pentaho.png" >
       
@@ -3639,13 +3639,13 @@
 <p>Tras crear la nueva transformación (CTRL + N), desde <em>Input</em> arrastraremos el paso de <em>CSV input file</em> para seleccionar el archivo <code>samples\transformations\files\Zipssortedbycitystate.csv</code> dentro de nuestra instalación de Pentaho.</p>
 <p>Tras seleccionar el archivo, mediante el botón <em>Get Fields</em> cargaremos y comprobaremos que los campos que vamos a leer son correctos (nombre y tipo de los datos).</p>
 <figure style="align: center;">
-    <img src="images/pentaho/02getFields.png">
+    <img src="images/pentaho/02getFields.png" alt="Caso de Uso 1 - Tras pulsar sobre Get Fields">
     <figcaption>Caso de Uso 1 - Tras pulsar sobre Get Fields</figcaption>
 </figure>
 
 <p>Tras ello, mediante el botón <em>Preview</em> comprobaremos que los datos se leen correctamente.</p>
 <figure style="align: center;">
-    <img src="images/pentaho/02previewFields.png">
+    <img src="images/pentaho/02previewFields.png" alt="Caso de Uso 1 - Resultado de la opción Preview sobre Ciudades">
     <figcaption>Caso de Uso 1 - Resultado de la opción Preview sobre Ciudades</figcaption>
 </figure>
 
@@ -3783,13 +3783,17 @@
 <h3 id="uniendo-datos">Uniendo datos<a class="headerlink" href="#uniendo-datos" title="Permanent link">&para;</a></h3>
 <p>Una vez descargados los datos y descomprimidos, vamos a cargar los tres ficheros en el mismo paso, utilizando dentro de <em>Input</em> la opción de <em>Text File Input</em>/<em>Entrada Fichero de Texto</em>:</p>
 <figure style="align: center;">
-    <img src="images/pentaho/02lecturaMultiples.png">
+    <img src="images/pentaho/02lecturaMultiples.png" alt="Caso de Uso 3 - Filtrado compuesto">
     <figcaption>Caso de Uso 3 - Filtrado compuesto</figcaption>
 </figure>
 
 <p>Recordad que antes, en la pestaña <em>Content</em>/<em>Contenido</em> elegiremos la <code>,</code> como separador de campos y en <em>Fields</em>/<em>Campos</em>, tenemos que obtener los campos a leer:</p>
+<div class="admonition caution">
+<p class="admonition-title">Minstay</p>
+<p>Cuidado con la columna <code>minstay</code> que la infiere como <code>Integer</code> con formato <code>#</code> y necesita ser <code>Number</code> con formato <code>#.#</code> con el punto como separador de decimales):</p>
+</div>
 <figure style="align: center;">
-    <img src="images/pentaho/02caso3campos.png">
+    <img src="images/pentaho/02caso3campos.png" alt="Caso de Uso 3 - Campos">
     <figcaption>Caso de Uso 3 - Campos</figcaption>
 </figure>
 
@@ -4094,16 +4098,14 @@ Si no queremos este comportamiento, hemos de marcar la casilla <em>Do not pass t
 </ol>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="https://www.packtpub.com/product/pentaho-data-integration-quick-start-guide/9781789343328">Pentaho Data Integration Quick Start Guide</a> de María Carina Roldán.</li>
-</ul>
-<!--
-* [Apuntes de Pentaho](https://lsi2.ugr.es/jsamos/sm2019/etl-pdi.html), dentro de la asignatura *Sistemas Multidimensionales*, impartida por *José Samos Jiménez* en la Universidad de Granada.
--->
-<ul>
+<li><a href="https://www.packtpub.com/product/pentaho-data-integration-quick-start-guide/9781789343328">Pentaho Data Integration Quick Start Guide</a> de <em>María Carina Roldán</em>.</li>
 <li>Taller sobre Integración de datos (abiertos) / Uso de <em>Pentaho Data Integration</em> (<a href="https://www.youtube.com/watch?v=JxgmJr91yKo">vídeo</a> y <a href="https://ctranspaupv.com/wp-content/uploads/2022/03/jnmazon_datathon2022_PDI.pdf">diapositivas</a>), por <em>Jose Norberto Mazón</em> (Universidad de Alicante)</li>
 <li><a href="https://help.hitachivantara.com/Documentation/Pentaho/9.2/Setup/Pentaho_Data_Integration_(PDI)_tutorial">Tutorial oficial sobre PDI</a></li>
 <li><a href="https://www.youtube.com/playlist?list=PLPgjON4ZM0JBdxxDUAfCS84X79e_2CLNQ">Curso de Spoon</a> en <em>youtube</em> del usuario <em>Learning-BI</em>.</li>
 </ul>
+<!--
+* [Apuntes de Pentaho](https://lsi2.ugr.es/jsamos/sm2019/etl-pdi.html), dentro de la asignatura *Sistemas Multidimensionales*, impartida por *José Samos Jiménez* en la Universidad de Granada.
+-->
 
 
 
@@ -4336,10 +4338,10 @@ Si no queremos este comportamiento, hemos de marcar la casilla <em>Do not pass t
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      <script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
       
     
   </body>
