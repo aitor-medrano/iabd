@@ -2876,7 +2876,7 @@
           <li class="md-nav__item">
   <a href="#glue-crawlers" class="md-nav__link">
     <span class="md-ellipsis">
-      Glue crawlers
+      Glue Crawlers
     </span>
   </a>
   
@@ -2894,12 +2894,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Hola Glue Crawler">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preparamos-los-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preparamos los datos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creamos-el-crawler" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creamos el crawler
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comprobamos-el-resultado" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprobamos el resultado
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#hola-gluestudio" class="md-nav__link">
+  <a href="#hola-glue-studio" class="md-nav__link">
     <span class="md-ellipsis">
-      Hola GlueStudio
+      Hola Glue Studio
     </span>
   </a>
   
@@ -3020,7 +3053,7 @@
 <p>Los objetos (como bases de datos y tablas) del catálogo se pueden referenciar directamente desde el código ETL. Además, cada tabla del catálogo contiene metadatos, como los títulos de las columnas y los tipos de datos de cada columna, una referencia a la ubicación en S3 de los datos que componen esa tabla, y detalles sobre el formato del archivo (como CSV).</p>
 <p>Dentro del ecosistema de AWS, varios servicios pueden utilizar <em>AWS Glue Data Catalog</em>. Por ejemplo, <em>Amazon Athena</em> lo utiliza para permitir a los usuarios ejecutar consultas SQL directamente en los datos de <em>Amazon S3</em>, y <em>Amazon EMR</em> y el motor ETL de <em>AWS Glue</em> lo utilizan para permitir a los usuarios hacer referencia a objetos del catálogo (como bases de datos y tablas) directamente desde su código ETL.</p>
 <p>El primer millón de datos almacenado en el catálogo es gratis, y a partir ahí, se cobra 1$ por cada 100.000 objetos que superen el millón. También se cobra por las solicitudes realizadas, siendo gratis el primer millón de cada mes y luego 1$ más por cada millón más.</p>
-<h3 id="glue-crawlers">Glue crawlers<a class="headerlink" href="#glue-crawlers" title="Permanent link">&para;</a></h3>
+<h3 id="glue-crawlers">Glue Crawlers<a class="headerlink" href="#glue-crawlers" title="Permanent link">&para;</a></h3>
 <p>Los rastreadores (<a href="https://docs.aws.amazon.com/glue/latest/dg/add-crawler.html"><em>crawlers</em></a>) de <em>AWS Glue</em> son procesos que examinan una fuente de datos (como una ruta en un bucket de S3) e infieren automáticamente el esquema y otra información sobre esa fuente, rellenando automáticamente el catálogo de datos con la información relevante.</p>
 <p>Por ejemplo, podemos dirigir un rastreador de AWS Glue a la ubicación de S3 donde hemos exportado los datos de la tabla de <em>customers</em> de nuestra base de datos <em>retail_db</em>. Cuando ejecutamos <em>Glue Crawler</em>, se examina una parte de cada uno de los archivos del origen, identifica el tipo de archivo (<em>CSV</em> o <em>Parquet</em>), utiliza un clasificador para inferir el esquema del archivo (encabezados y tipos de columnas) y, a continuación, añade esa información a una base de datos en el <em>Glue Data Catalog</em>.</p>
 <figure style="align: center;">
@@ -3028,40 +3061,86 @@
     <figcaption>AWS Glue Crawler</figcaption>
 </figure>
 
-<p>El uso de <em>crawlers</em> es opcional, ya que podemos añadir bases de datos y tablas a <em>Glue Data Catalog</em> utilizando la API de Glue o mediante sentencias SQL en <em>Athena</em>.</p>
-<p>Si queremos que el crawler se conecte directamente a otros servicios, haremos uso de conexiones que también almacenaremos en el catálogo de Glue.</p>
+<p>El uso de <em>crawlers</em> es opcional, ya que podemos añadir bases de datos y tablas a <em>Glue Data Catalog</em> utilizando la API de <em>Glue</em> o mediante sentencias SQL en <em>Athena</em>.</p>
+<p>Si queremos que el <em>crawler</em> se conecte directamente a otros servicios, haremos uso de conexiones que también almacenaremos en el catálogo de <em>Glue</em>.</p>
 <h2 id="hola-glue-crawler">Hola Glue Crawler<a class="headerlink" href="#hola-glue-crawler" title="Permanent link">&para;</a></h2>
-<p>Nos vamos a conectar a la bd de <code>orders</code> que tenemos creada en RDS en la base de datos <code>retail_db</code>, y mediante un Glue Crawler, creamos una tabla en el catálogo de Glue.</p>
+<p>En los siguientes ejemplos vamos a utilizar los archivos de <a href="../de/resources/pdi_sales.csv"><code>pdi_sales</code></a> y <a href="../de/resources/pdi_product.csv"><code>pdi_product</code></a> utilizados a lo largo del curso, y en especial con <a href="../de/pentaho.html">Pentaho</a>.</p>
+<p>Así pues, el primer paso es utilizar un bucket y crear una estructura de carpetas para cada archivo. Realmente cada carpeta debería contener un número indeterminado de archivos con el mismo formato con datos del mismo tipo.</p>
+<h3 id="preparamos-los-datos">Preparamos los datos<a class="headerlink" href="#preparamos-los-datos" title="Permanent link">&para;</a></h3>
+<p>En nuestro caso, tenemos el <em>bucket</em> <code>iabd-glue</code> con las carpetas <code>ventas</code> y <code>productos</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>s3://iabd-glue/ventas/
+<span class="linenos" data-linenos="2 "></span>s3://iabd-glue/productos/
+</code></pre></div>
+<p>El siguiente paso es cargar los archivos en las carpetas correspondientes. Por ejemplo, mediante AWS CLI haremos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>pdi_sales.csv<span class="w"> </span>s3://iabd-glue/ventas/
+<span class="linenos" data-linenos="2 "></span>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>pdi_product.csv<span class="w"> </span>s3://iabd-glue/productos/
+</code></pre></div>
+<h3 id="creamos-el-crawler">Creamos el crawler<a class="headerlink" href="#creamos-el-crawler" title="Permanent link">&para;</a></h3>
+<p>Una vez cargados los datos en el <em>bucket</em>, vamos a utilizar un <em>crawler</em> para inferir las tablas.</p>
+<p>Para ello, tras acceder a AWS Glue, y crearemos un nuevo crawler, al cual hemos llamado <code>crawler-ventas-s3</code>, le indicamos que todavía no tenemos mapeadas tablas en Glue y añadimos un nuevo <em>datasource</em>:</p>
+<figure style="align: center;">
+    <img src="images/08glue-holacrawler01.png" alt="Hola Glue Crawler - Paso 2" width="800px">
+    <figcaption>Hola Glue Crawler - Paso 2 - Sin tablas mapeadas</figcaption>
+</figure>
+
+<p>A la hora de crear la fuente de datos, tal y como hemos cargado los datos en S3, seleccionamos como fuente S3 e indicamos la ruta <code>s3://iabd-glue/ventas/</code>:</p>
+<figure style="align: center;">
+    <img src="images/08glue-holacrawler02.png" alt="Paso 2 - Configuración de la fuente S3" width="500px">
+    <figcaption>Hola Glue Crawler - Paso 2 - Configuración de la fuente S3</figcaption>
+</figure>
+
+<p>Tras añadirlo y pasar al siguiente paso, seleccionamos el rol <code>LabRole</code> y llegamos al paso 4 de configuración de la salida. En este paso, podemos utilizar una de las bases de datos que tengamos en el catálogo, y si no, crear una. Así pues, vamos a crear la base de datos <code>iabd</code> y posteriomente seleccionamos que ejecute el <em>crawler</em> bajo demanda:</p>
+<figure style="align: center;">
+    <img src="images/08glue-holacrawler03.png" alt="Paso 4 - Configuración del destino" width="800px">
+    <figcaption>Hola Glue Crawler - Paso 2 - Configuración del destino</figcaption>
+</figure>
+
+<p>Tras revisar la página de resumen, guardamos el crawler, y estaremos listo para pulsar sobre el botón "Run crawler" y ejecutar el proceso de inferencia de la tabla (el crawler puede tardar algunos minutos).</p>
+<h3 id="comprobamos-el-resultado">Comprobamos el resultado<a class="headerlink" href="#comprobamos-el-resultado" title="Permanent link">&para;</a></h3>
+<p>Una vez finalizado, si vamos al menú de tablas de <em>Data Catalog</em>, veremos como aparece nuestra tabla:</p>
+<figure style="align: center;">
+    <img src="images/08glue-holacrawler04.png" alt="Tabla creada" width="800px">
+    <figcaption>Hola Glue Crawler - Tabla creada</figcaption>
+</figure>
+
+<p>Y si entramos a la tabla, vemos como ha creado las columnas con sus nombres y tipos:</p>
+<figure style="align: center;">
+    <img src="images/08glue-holacrawler05.png" alt="Características de la tabla ventas" width="1024px">
+    <figcaption>Hola Glue Crawler - Características de la tabla ventas</figcaption>
+</figure>
+
+<p>Así pues, ahora repetimos el proceso para crear la tabla <code>productos</code>. TRas crearla, comprobamos su definición:</p>
+<figure style="align: center;">
+    <img src="images/08glue-holacrawler06.png" alt="Características de la tabla productos" width="800px">
+    <figcaption>Hola Glue Crawler - Características de la tabla productos</figcaption>
+</figure>
+
+<p>Una vez tenemos ambas tablas creadas, si queremos, podemos comprobar sus datos haciendo uso de <em>AWS Athena</em>.</p>
+<figure style="align: center;">
+    <img src="images/08glue-holacrawler07.png" alt="Características de la tabla productos" width="1024px">
+    <figcaption>Hola Glue Crawler - Consultandos los datos desde Athena</figcaption>
+</figure>
+
 <!--
 RDS.. para que funcione, hace falta un VPC endpoint con S3: https://stackoverflow.com/questions/77226387/why-awss-glue-connections-need-a-vpc-s3-endpoint
 
 https://www.youtube.com/watch?v=dQnRP6X8QAU
 
-https://www.youtube.com/watch?v=Ly2kiDLyvhU
-
 https://www.bluetab.net/es/bluetab/
--->
-
-<p>Además, con otro crawler, leeremos el archivo customers.csv que tenemos en S3.</p>
-<p>Finalmente, crearemos una tabla resultante en Glue con el join de ambas tablas.</p>
-<p>FIXME: continuar y replicar ejemplo</p>
-<p>Se puede ejecutar bajo demanda o planificar su ejecución de forma diaria, por horas, etc... Una vez lanzado, al cabo de un minuto, veremos que ha finalizado y si en el menú lateral seleccionamos <em>Base de Datos -&gt; Tablas</em> podremos ver la tabla que ha creado (en nuestro caso la tabla <code>csv</code>), junto con la estructura que ha inferido respecto a los datos cargados.</p>
-<p>El siguiente paso es editar el esquema y ponerle nombres significativos a los campos:</p>
-<p>Una vez los datos están cargados, ya podemos realizar consular con AWS Athena.</p>
-<!--
-https://youtu.be/pbKnfjjVsx4?si=0F6lSdjDq-7vVfM1&t=364
 -->
 
 <!--
 ## Caso 1 - s3://noaa-ghcn-pds/csv/by_year/
+https://aws.amazon.com/es/blogs/big-data/visualize-over-200-years-of-global-climate-data-using-amazon-athena-and-amazon-quicksight/
 -->
 
 <!--
 ## Caso 2 - Glue con MongoAtlas
 -->
 
-<h2 id="hola-gluestudio">Hola GlueStudio<a class="headerlink" href="#hola-gluestudio" title="Permanent link">&para;</a></h2>
-<p>Mediate GlueStudio vamos a crear una ETL visual de forma similar a como hemos realizado con <a href="../de/pentaho.html">Pentaho</a>. Vamos a cargar en S3 los archivos de ventas y productos, y vamos a realizar un join para cargar los datos en una nueva tabla que almacenaremos en el catálogo.</p>
+<h2 id="hola-glue-studio">Hola Glue Studio<a class="headerlink" href="#hola-glue-studio" title="Permanent link">&para;</a></h2>
+<p>Mediante <em>Glue Studio</em> vamos a crear una ETL visual de forma similar a como hemos realizado con <a href="../de/pentaho.html">Pentaho</a> para cargar los datos en sus respectivas tablas. A continuación, realizaremos un <em>join</em> para cargar los datos en una nueva tabla que almacenaremos en el catálogo.</p>
+<p>El primer paso es entrar a <em>Glue Studio</em> desde el menú <em>Visual ETL</em></p>
 <h2 id="hola-databrew">Hola DataBrew<a class="headerlink" href="#hola-databrew" title="Permanent link">&para;</a></h2>
 <p>En este caso, vamos a crear un proyecto de muestra a partir de los datos de descubrimiento de fármacos de <a href="https://www.ebi.ac.uk/chembl/">ChEMBL</a>:</p>
 <p>A continuación vamos a realizar un conjunto de transformaciones:</p>
