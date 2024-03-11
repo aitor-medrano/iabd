@@ -3505,7 +3505,24 @@ https://aws.amazon.com/es/blogs/big-data/visualize-over-200-years-of-global-clim
 </figure>
 
 <h2 id="hola-databrew">Hola DataBrew<a class="headerlink" href="#hola-databrew" title="Permanent link">&para;</a></h2>
-<p>En este caso, para utilizar un conjunto de datos más voluminoso y con una casuística más amplia, vamos a crear un proyecto de muestra a partir de los datos de descubrimiento de fármacos de <a href="https://www.ebi.ac.uk/chembl/">ChEMBL</a>:</p>
+<p>En este caso, para utilizar un conjunto de datos más voluminoso y con una casuística más amplia, nos centraremos en un dataset de descubrimiento de fármacos de <a href="https://www.ebi.ac.uk/chembl/">ChEMBL</a>.</p>
+<p>El primer paso es entrar a <em>Glue DataBrew</em> y crear el proyecto de muestra con los datos de CHEMBL, utilizando el <code>LabRole</code> de AWS Academy:</p>
+<figure style="align: center;">
+    <img src="images/08glue-holadb01.png" alt="Creación del proyecto de muestra" width="600px">
+    <figcaption>Hola DataBrew - Creación del proyecto de muestra</figcaption>
+</figure>
+
+<p>Nada más crear el proyecto, se creará una sesión que tarda alrededor de un minuto en instanciarse.</p>
+<div class="admonition danger">
+<p class="admonition-title">Cuidado con las sesiones</p>
+<p>Cada sesión se factura por franjas de 30 minutos, a 1$. Por ejemplo, si utilizamos 40 minuto serían 2$</p>
+</div>
+<p>Tras crearse la sesión, veremos un interfaz de trabajo muy parecido al de PowerQuery con los datos mostrados de forma tabular, con un menu superior con las operaciones/transformaciones disponible y en la parte derecha el conjunto de pasos (recetas) que se aplican al <em>dataset</em>:</p>
+<figure style="align: center;">
+    <img src="images/08glue-holadb02.png" alt="Interfaz de DataBrew" width="1024px">
+    <figcaption>Hola DataBrew - Interfaz de DataBrew</figcaption>
+</figure>
+
 <p>A continuación vamos a realizar un conjunto de transformaciones:</p>
 <!--
 Continuar: https://geekflare.com/es/aws-glue/
@@ -3545,12 +3562,15 @@ https://www.edlitera.com/blog/posts/aws-glue-databrew
 <li><a href="https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html">AWS Glue User Guide</a></li>
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<ol>
+<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr>, <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> / 2p) A partir de los ejemplos de los casos de uso de <a href="#hola-glue-crawler">Hola Glue Crawler</a> y <a href="#hola-glue-studio">Hola Glue Studio</a>, añade el fichero con los <a href="../de/resources/pdi_manufacturer.csv">fabricantes</a> y:<ol>
+<li>Crea una tabla en el <em>Data Catalog</em> mediante un <em>crawler</em></li>
+<li>Crea una ETL que realice un <em>Join</em> entre <code>ventas-productos</code> para añadir el nombre del fabricante y almacena el resultado en S3 en la carpeta <code>ventas-productos-fabricantes</code> y genera una nueva tabla llamada <code>ventas_productos_fabricantes</code>.</li>
+</ol>
+</li>
+</ol>
 <!--
 Coger ejemplo de labS3.csv ... leer el archivo, cambiar los tipos del esquema, y luego hacer una consulta... por ejemplo
-
-O crear tres buckets, con los archivos de pdi, y hacer un join en una única tabla
-
-Hacer un crawler sobre una carpeta S3 y luego crear el esquema en el catalog
 
 https://medium.com/@milton32sanabria/construyendo-un-etl-en-aws-glue-6601309be3cb
 -->
