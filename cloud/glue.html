@@ -3299,10 +3299,6 @@
 
   <h1>Glue</h1>
 
-<div class="admonition failure">
-<p class="admonition-title">Sesión en construcción</p>
-<p>Esta sesión no está finalizada, así que mejor espera unos días y vuelve a intentarlo... En principio, la quiero tener lista para finales de marzo.</p>
-</div>
 <p><a href="https://aws.amazon.com/es/glue/">AWS Glue</a> es la herramienta ETL <em>serverless</em> completamente administrada que ofrece <em>Amazon Web Services</em>, con la cual podemos crear soluciones basadas en código tanto para la ingesta como para la transformación de los datos.</p>
 <p><em>AWS Glue</em> incluye un amplio conjunto de conectores tanto para los servicios AWS (<em>RDS</em>, <em>S3</em>, <em>Redshift</em>, etc...) como para servicios de terceros (<em>MongoDB</em>, <em>MongoDB Atlas</em>, conectores JDBC, etc...)</p>
 <p>Cuando el esquema de los datos es desconocido, <em>AWS Glue</em> permite inferirlo. Para ello, hemos de construir un rastreador (<em>crawler</em>) para descubrir su estructura.</p>
@@ -3515,41 +3511,77 @@ https://aws.amazon.com/es/blogs/big-data/visualize-over-200-years-of-global-clim
 <p>Nada más crear el proyecto, se creará una sesión que tarda alrededor de un minuto en instanciarse.</p>
 <div class="admonition danger">
 <p class="admonition-title">Cuidado con las sesiones</p>
-<p>Cada sesión se factura por franjas de 30 minutos, a 1$. Por ejemplo, si utilizamos 40 minuto serían 2$</p>
+<p>Cada sesión se factura por franjas de 30 minutos, a 1$. Por ejemplo, si utilizamos 40 minuto serían 2$.</p>
+<p>Cabe destacar que las primeras 40 sesiones interactivas son gratuitas para los usuarios de <em>DataBrew</em> por primera vez.</p>
 </div>
-<p>Tras crearse la sesión, veremos un interfaz de trabajo muy parecido al de PowerQuery con los datos mostrados de forma tabular, con un menu superior con las operaciones/transformaciones disponible y en la parte derecha el conjunto de pasos (recetas) que se aplican al <em>dataset</em>:</p>
+<p>Tras crearse la sesión, veremos un interfaz de trabajo muy parecido al de PowerQuery con los datos mostrados de forma tabular, con un menu superior con las operaciones/transformaciones disponible, y donde podemos observar como tenemos 39 columnas y que sólo se están mostrando 500 columnas. Para cada columna, podemos ver un gráfico con diversa información estadística y luego datos de ejemplo de dicha columna. Finalmente, en la parte derecha tenemos los pasos (la receta) que se aplican al <em>dataset</em>:</p>
 <figure style="align: center;">
     <img src="images/08glue-holadb02.png" alt="Interfaz de DataBrew" width="1024px">
     <figcaption>Hola DataBrew - Interfaz de DataBrew</figcaption>
 </figure>
 
-<p>A continuación vamos a realizar un conjunto de transformaciones:</p>
-<!--
-Continuar: https://geekflare.com/es/aws-glue/
--->
-
+<p>Una vez tenemos el entorno listo, vamos a realizar un conjunto de transformaciones que añadiremos a nuestra receta:</p>
 <ol>
-<li>Borrar columna: la última -&gt; crea un paso</li>
-<li>Filtrar por un campo: curated_by = Autocurated</li>
-<li>Gestión de nulo: missing -&gt; assay_organism -&gt; Null por unknown</li>
-<li>Añadir columna mes, sobre el campo fecha -&gt; MONTHNAME</li>
-<li>Publicar la receta</li>
-<li>Crear un job a partir de la receta</li>
 <li>
-<p>Elegir dataset y guardar resultado:</p>
-<ul>
-<li>csv</li>
-<li>parquet - particionado por nombre de mes</li>
-</ul>
+<p>El primer paso será eliminar la última columna, <code>tid_fixed</code> que tiene todos los valores nulos. Para ello, bien desde el menú <em>Columna</em>, o con los tres puntos de la propia columna (<code>...</code>) seleccionamos la opción de <em>Eliminar</em>.</p>
+<p><figure style="align: center;">
+    <img src="images/08glue-holadb03.png" alt="Borrando una columna" width="1024px">
+    <figcaption>Hola DataBrew - Borrando una columna</figcaption>
+</figure></p>
+<p>Tras aplicar los cambios, en la zona de la receta, aparecerá el paso aplicado.</p>
 </li>
 <li>
-<p>Ver un gráfico con el linaje de los datos</p>
+<p>A continuación, vamos a filtrar datos. Por ejemplo, seleccionamo la columna <code>curated_by</code> y seleccionamos para que sea exactamente <code>Autocuration</code>. En la parte derecha podremos ver una pequeña estadística de los valore existentes y si pulsamos sobre Vista previa, se marcarán en rojo las filas que se eliminarán.</p>
+<p><figure style="align: center;">
+    <img src="images/08glue-holadb04.png" alt="Filtrando datos" width="600px">
+    <figcaption>Hola DataBrew - Filtrando datos</figcaption>
+</figure></p>
 </li>
-<li>Para planificar, schedule</li>
+<li>
+<p>Ahora nos vamos a centrar en la gestión de los valores nulos. Para ello, en la columna <code>assay_organism</code> cambiaremos los nulos por <code>Unknown</code>, utilizando el menú <em>Faltante</em> y la opción de <em>Rellenar con valor personalizado</em>:</p>
+<p><figure style="align: center;">
+    <img src="images/08glue-holadb05.gif" alt="Cambiando los nulos" width="1024px">
+    <figcaption>Hola DataBrew - Cambiando los nulos</figcaption>
+</figure></p>
+</li>
+<li>
+<p>Si trabajamos con fechas es muy común crear columnas nuevas con información más útil. En nuestro caso, vamos a añadir una columna que llamaremos <code>Mes</code> con el nombre del mes que conseguimos con la función <code>MONTHNAME</code> sobre la columna <code>updated_on</code>. Para ello, desde el menú <em>Funciones</em> seleccionamos la función de fecha que nos interesa y configuramos los valores:</p>
+<p><figure style="align: center;">
+    <img src="images/08glue-holadb06.gif" alt="Utilizando funciones" width="1024px">
+    <figcaption>Hola DataBrew - Utilizando funciones</figcaption>
+</figure></p>
+</li>
+<li>
+<p>Una vez ya tenemos nuestra receta completa con todos los pasos necesarios en nuestra transformación, llega el momento de publicarla para crear una versión de la misma y posteriormente poder reutilizarla.</p>
+<p><figure style="align: center;">
+    <img src="images/08glue-holadb07.gif" alt="Publicando la receta" width="1024px">
+    <figcaption>Hola DataBrew - Publicando la receta</figcaption>
+</figure></p>
+</li>
+<li>
+<p>Si vamos al menú de las recetas, seleccionamos la receta recién publicada, en mi caso <code>Sample recipe-2</code>, y creamos un trabajo (<em>job</em>) con la misma, en el cual, tras darle un nombre y seleccionar el <em>dataset</em>, vamos a guardar el resultado en S3 tanto en formato CSV como en formato <em>Parquet</em> particionado por la columna <code>Mes</code>, y finalmente seleccionamos el rol <code>LabRole</code>:</p>
+<p><figure style="align: center;">
+    <img src="images/08glue-holadb08.gif" alt="Creando un job" width="1024px">
+    <figcaption>Hola DataBrew - Creando un job</figcaption>
+</figure></p>
+<p>Tras la creación, el job se ejecutará automáticamente. Si vamos a S3 veremos cómo ha creado una carpeta por cada salida y dentro estarán los datos transformados.</p>
+<p><figure style="align: center;">
+    <img src="images/08glue-holadb09.gif" alt="Resultado del job" width="1024px">
+    <figcaption>Hola DataBrew - Resultado del job</figcaption>
+</figure></p>
+</li>
 </ol>
-<!--
-Hacer otro ejemplo con nuestro conjunto de datos
+<div class="admonition info">
+<p class="admonition-title">Precio de ejecución</p>
+<p>A la hora de diseñar una receta, tenemos que pagar por la sesión. Una vez creada, AWS cobrará por cada ejecución de los <em>jobs</em> dependiendo de la cantidad de nodos asignados, a 0,48$ por nodo/hora facturados por minutos. Más información en <a href="https://aws.amazon.com/es/glue/pricing/">https://aws.amazon.com/es/glue/pricing/</a></p>
+</div>
+<p>Entre las diferentes funcionalidades extra que nos ofrece <em>DataBrew</em> es poder programar la ejecución de los <em>jobs</em> (por ejemplo, determinados días/horas o mediante expresiones CRON), así como visualizar el linaje de los datos de los <em>job</em>:</p>
+<figure style="align: center;">
+    <img src="images/08glue-holadb10.png" alt="Linaje de un job" width="700px">
+    <figcaption>Hola DataBrew - Linaje de un job</figcaption>
+</figure>
 
+<!--
 Comentar que se pueden crear cuadernos que se codifican con Spark
 -->
 
@@ -3559,20 +3591,38 @@ https://www.edlitera.com/blog/posts/aws-glue-databrew
 
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html">AWS Glue User Guide</a></li>
+<li><a href="https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html">AWS Glue User Guide</a> - Documentación oficial</li>
+<li><a href="https://docs.aws.amazon.com/databrew/latest/dg/getting-started.html">Getting started with AWS Glue DataBrew</a> - Documentación oficial</li>
+<li>Ejemplo de uso de <a href="https://criptonube.com/2021/08/preparacion-de-datos-con-aws-glue-databrew/">DataBrew</a> en <a href="https://criptonube.com/">https://criptonube.com/</a>.</li>
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
-<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr>, <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> / 2p) A partir de los ejemplos de los casos de uso de <a href="#hola-glue-crawler">Hola Glue Crawler</a> y <a href="#hola-glue-studio">Hola Glue Studio</a>, añade el fichero con los <a href="../de/resources/pdi_manufacturer.csv">fabricantes</a> y:<ol>
+<li>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr>, <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> / 2p) A partir de los ejemplos de los casos de uso de <a href="#hola-glue-crawler">Hola Glue Crawler</a> y <a href="#hola-glue-studio">Hola Glue Studio</a>, añade el fichero con los <a href="../de/resources/pdi_manufacturer.csv">fabricantes</a> y:</p>
+<ol>
 <li>Crea una tabla en el <em>Data Catalog</em> mediante un <em>crawler</em></li>
 <li>Crea una ETL que realice un <em>Join</em> entre <code>ventas-productos</code> para añadir el nombre del fabricante y almacena el resultado en S3 en la carpeta <code>ventas-productos-fabricantes</code> y genera una nueva tabla llamada <code>ventas_productos_fabricantes</code>.</li>
 </ol>
+</li>
+<li>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos">RABDA.1</abbr> / <abbr title="Se ha determinado el formato de datos adecuado para el almacenamiento.">CEBDA.1c</abbr>, <abbr title="Se han procesado los datos almacenados">CEBDA.1d</abbr> / 2p) Mediante <em>Glue DataBrew</em>, sigue el caso de uso de <em>Hola DataBrew</em> y añade los siguientes pasos:</p>
+<ol>
+<li>Elimina también la columna <code>log_id</code> (menu <em>Columna</em>).</li>
+<li>Filtra también por <code>HomoSapiens</code> la columna <code>mc_organism</code> (menú <em>Filtrar</em>).</li>
+<li>Rellenar los valores nulos de la columna <code>assay_source</code> con el valor más frecuente (menu <em>Faltante</em>).</li>
+<li>Pasar a mayúsculas la columna <code>assay_cell_type</code> (menú <em>Formato</em>). </li>
+</ol>
+<p>A continuación, publica la receta y crea y ejecuta el job de forma similar, exportando los datos a S3 tanto en formato CSV como en <em>Parquet</em> particionado por la columna <code>Mes</code>.</p>
 </li>
 </ol>
 <!--
 Coger ejemplo de labS3.csv ... leer el archivo, cambiar los tipos del esquema, y luego hacer una consulta... por ejemplo
 
 https://medium.com/@milton32sanabria/construyendo-un-etl-en-aws-glue-6601309be3cb
+-->
+
+<!--
+Revisar para AWS Glue: https://geekflare.com/es/aws-glue/
 -->
 
 
