@@ -4142,7 +4142,11 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <p>Siguiendo con los archivos cargados en HDFS en la sesión anterior y la base de datos <code>hiveiabd</code>:</p>
 <ol>
 <li>
-<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 1.5p) Crea una tabla interna llamada <code>ventas</code> en formato <em>ORC</em> y rellénala con el resultado de realizar un <em>join</em> entre las tablas <code>sales</code> y <code>products</code> y <code>manufacturer</code>, particionando los datos por el país de la venta.</p>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 1.5p) Crea una tabla interna llamada <code>ventas</code> en formato <em>ORC</em> y a continuación, rellénala con el resultado de realizar un <em>join</em> entre las tablas <code>sales</code> y <code>products</code> y <code>manufacturer</code>, particionando los datos por el país de la venta.</p>
+<div class="admonition note">
+<p class="admonition-title">Crear y rellenar</p>
+<p>Cuando utilizamos tablas particionadas, la sentencia <code>CREATE TABLE ventas AS SELECT ...</code> no funciona, por lo tanto, para esta actividad, primero deberemos realizar una <code>CREATE TABLE ventas (...) PARTITIONED BY (...) STORED AS...</code> y a continuación un <code>INSERT INTO ventas PARTITION (...) SELECT ...</code></p>
+</div>
 <ol>
 <li>¿Qué aparece al ejecutar el siguiente comando <code>hdfs dfs -ls /user/hive/warehouse/hiveiabd.db/ventas</code> ?</li>
 </ol>
