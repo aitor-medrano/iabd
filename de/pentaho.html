@@ -3773,7 +3773,7 @@
 <p>Y si comprobamos el fichero, veremos que ha vuelto a aparecer.</p>
 <h2 id="caso-de-uso-2-uniendo-datos">Caso de Uso 2 - Uniendo datos<a class="headerlink" href="#caso-de-uso-2-uniendo-datos" title="Permanent link">&para;</a></h2>
 <figure style="float: right;">
-    <img src="images/pentaho/02caso2paso1.png">
+    <img src="images/pentaho/02caso2paso1.png" alt="Caso de Uso 2 - Lecturas CSV">
     <figcaption>Caso de Uso 2 - Lecturas CSV</figcaption>
 </figure>
 
@@ -3782,13 +3782,13 @@
 <p>Para ello, primero vamos leer de forma separada cada archivo mediante un paso de tipo <em>CSV file input</em>, utilizando el el separador necesarios en cada caso (<code>;</code> o <code>,</code>). Así pues, tendremos dos pasos, tal como se puede observar en la imagen de la derecha. En el caso del CSV de <em>ventas</em>, al tener registros de diferentes países, deberemos cambiar el tipo del ZIP (el código postal) a <code>String</code>.</p>
 <p>A continuación, para unir los datos, dentro de la categoría <em>Join</em>/<em>Unión</em> utilizamos el paso <em>Merge join</em>/<em>Unión por clave</em>. En este caso tras arrastrar el paso al área de trabajo, vamos a enlazar desde el merge hacia los dos orígenes, en un caso como <em>left hand side stream of the join</em> y el otro como <em>right hand side stream of the join</em>:</p>
 <figure style="align: center;">
-    <img src="images/pentaho/02caso2merge.png">
+    <img src="images/pentaho/02caso2merge.png" alt="Caso de Uso 2 - Entradas de Merge">
     <figcaption>Caso de Uso 2 - Entradas de Merge</figcaption>
 </figure>
 
 <p>A continuación, editamos el <em>Merge</em> y le decimos que el campo de unión es <em>ProductID</em>. Cuando le damos a aceptar recibimos un mensaje de advertencia avisándonos que si los datos no están ordenados podemos obtener resultados incorrectos.</p>
 <figure style="align: center;">
-    <img src="images/pentaho/02caso2mensajeMerge.png">
+    <img src="images/pentaho/02caso2mensajeMerge.png" alt="Caso de Uso 2 - Aviso Merge">
     <figcaption>Caso de Uso 2 - Aviso Merge</figcaption>
 </figure>
 
@@ -3821,7 +3821,7 @@
 <p>Recordad que antes, en la pestaña <em>Content</em>/<em>Contenido</em> elegiremos la <code>,</code> como separador de campos y en <em>Fields</em>/<em>Campos</em>, tenemos que obtener los campos a leer:</p>
 <div class="admonition warning">
 <p class="admonition-title">Minstay</p>
-<p>Cuidado con la columna <code>minstay</code> que la infiere como <code>Integer</code> con formato <code>#</code> y necesita ser <code>Number</code> con formato <code>#.#</code> con el punto como separador de decimales):</p>
+<p>Cuidado con la columna <code>minstay</code> que la infiere como <code>Integer</code> con formato <code>#</code> y necesita ser <code>Number</code> con formato <code>#.#</code> con el punto como separador de decimales.</p>
 </div>
 <figure style="align: center;">
     <img src="images/pentaho/02caso3campos.png" alt="Caso de Uso 3 - Campos">
@@ -3847,21 +3847,21 @@
 
 <p>Si el filtrado fuese con condiciones más complejas, en ocasiones es más sencillo utilizar el paso <em>Java filter</em> (de la categoría <em>Flow</em>), el cual utilizando la notación de Java, podemos indicar la condición a cumplir. Por ejemplo, vamos filtrar los de más de 3 dormitorios o al menos 4 huéspedes, y que su precio sea inferior a 200$ → <code>(dormitorios&gt;3 || huespedes&gt;=4) &amp;&amp; precio &lt;200</code>:</p>
 <figure style="align: center;">
-    <img src="images/pentaho/02filterJava.png">
+    <img src="images/pentaho/02filterJava.png" alt="Caso de Uso 3 - Filtrado Java">
     <figcaption>Caso de Uso 3 - Filtrado Java</figcaption>
 </figure>
 
 <p>Para comprobar su funcionamiento, vamos a añadir un par de pasos <em>dummy</em>/<em>transformación simulada</em> (no realizan nada, pero sirven para finalizar tareas). Al ejecutarlo, veremos que nos da un error. Si algún dato es nulo, el filtrado Java provocará un error de transformación.</p>
 <p>Una posibilidad es que introduzcamos un paso de la categoría <em>Utility</em> denominado <em>If value is null</em>. Con este paso, podemos indicar el valor a tomar a todos los campos o hacerlo de forma concreta en los campos que queramos. En nuestro caso, vamos indicar que cambie todos los nulos por <code>-1</code>.</p>
 <figure style="align: center;">
-    <img src="images/pentaho/02ifnull.png">
+    <img src="images/pentaho/02ifnull.png" alt="Caso de Uso 3 - Cambiando nulos por -1">
     <figcaption>Caso de Uso 3 - Cambiando nulos por -1</figcaption>
 </figure>
 
 <p>Debemos tener en cuenta que como ahora podemos tener precios con <code>-1</code>, para evitar recogerlos en el filtrado Java, deberíamos modificarlo por <code>(dormitorios &gt; 3 || huespedes &gt;=4) &amp;&amp; ( precio &gt;= 0 &amp;&amp; precio &lt; 200)</code>.</p>
 <h3 id="generando-json">Generando JSON<a class="headerlink" href="#generando-json" title="Permanent link">&para;</a></h3>
 <figure style="float: right;">
-    <img src="images/pentaho/02JSONoutput.png" width="350">
+    <img src="images/pentaho/02JSONoutput.png" width="350" alt="Caso de Uso 3 - Configuración JSON">
     <figcaption>Caso de Uso 3 - Configuración JSON</figcaption>
 </figure>
 
@@ -3872,11 +3872,11 @@
 <li><em>Json bloc name</em>: nombre de la propiedad que contendrá un objeto o un array de objetos con los datos.</li>
 <li><em>Nr rows in a bloc</em>: Cantidad de datos del archivo. Si ponemos 0, coloca todos los datos en el mismo fichero. Si ponemos 1, generará un fichero por cada registro.</li>
 </ul>
-<p>En la imagen que tenemos a la derecha puedes comprobar los valores introducidos.</p>
+<p>En la imagen que tenemos a la derecha puedes comprobar los valores introducidos. Antes de enviar, en la pestaña <em>Fields</em>, pulsamos sobre <em>Get Fields</em> para indicarle los campos que queremos recuperar (si no, nos generará un archivo JSON con los campos vacíos).</p>
 <h3 id="resultado-final">Resultado final<a class="headerlink" href="#resultado-final" title="Permanent link">&para;</a></h3>
 <p>En la siguiente imagen puedes visualizar la transformación completa:</p>
 <figure style="align: center;">
-    <img src="images/pentaho/02caso3.png">
+    <img src="images/pentaho/02caso3.png" alt="Caso de Uso 3 - Transformación final">
     <figcaption>Caso de Uso 3 - Transformación final</figcaption>
 </figure>
 
