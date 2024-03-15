@@ -14,7 +14,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.8">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.1">
     
     
       
@@ -22,7 +22,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.f2e4d321.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.45e1311d.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -2955,7 +2955,7 @@
 <p>Hugging Face se fundó en 2016 con el propósito inicial de desarrollar una aplicación de chabot. A partir de 2018 comenzó a abrir a la comunidad <em>open source</em> partes de sus modelos NLP, los cuales ganaron popularidad dentro de la comunidad IA.</p>
 <p>A día de hoy es la plataforma por excelencia de modelos y datasets, facilitando el descubrimiento, distribución, uso y <em>fine-tuning</em> de modelos pre-entrenados.</p>
 <p>Gran parte de la fama adquirida por Hugging Face se debe a sus librerías, en concreto <a href="https://huggingface.co/docs/transformers/index">Transformers</a> (para trabar con textos) y <a href="https://huggingface.co/docs/diffusers/index">Diffusers</a> (para tareas basadas en imágenes), permitiéndonos a los desarrolladores importar y trabajar rápidamente con una gran variedad de modelos pre-entrenados como <a href="https://huggingface.co/docs/transformers/model_doc/gpt2">GPT2</a> (una versión temprana de ChatGPT) o <a href="https://huggingface.co/stabilityai/stable-diffusion-2">Stable Diffusion</a> o <a href="https://huggingface.co/openai/whisper-large-v3">WhisperAI</a>.</p>
-<p>Por ejemplo, aquí están las 5 líneas de código necesarias para importar Stable Diffusion (una librería estándar de generación de imágenes) y usarla para generar una imagen de una ardilla al estilo de Picasso:</p>
+<p>Por ejemplo, aquí están las 5 líneas de código necesarias para importar <em>Stable Diffusion</em> (una librería estándar de generación de imágenes) y usarla para generar una imagen de una ardilla al estilo de Picasso:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">diffusers</span> <span class="kn">import</span> <span class="n">DiffusionPipeline</span>
 <span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="linenos" data-linenos="3 "></span>
@@ -2963,6 +2963,39 @@
 <span class="linenos" data-linenos="5 "></span><span class="n">pipeline</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="6 "></span><span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;Una imagen de una ardilla al estilo Picasso&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Probando</p>
+<p>Lo puedes probar mediante Google Colab con el <a href="https://colab.research.google.com/drive/1mW3LG0bF2xII7tPMbwsndvhlUmi8ieLZ?usp=sharing">siguiente cuaderno</a>:</p>
+<p><figure style="align: center;">
+    <img src="images/01hello-hf.png" alt="Probando Hugging Face desde Google Colab" width="800px">
+    <figcaption>Probando Hugging Face desde Google Colab</figcaption>
+</figure></p>
+<p>O si quieres hacerlo en tu ordenador, dependiendo de si tienes tarjeta gráfica o no, necesitarás modificar un poco el código.</p>
+<p>Recuerda que el primer paso es crear un entorno virtual, activarlo, e instalar las librerías adecuadas:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>torch
+<span class="linenos" data-linenos="2 "></span>pip<span class="w"> </span>install<span class="w"> </span>diffusers
+<span class="linenos" data-linenos="3 "></span>pip<span class="w"> </span>install<span class="w"> </span>transformers
+</code></pre></div>
+<p>Si no tienes CPU, necesitarás cambiar el tipo de datos a <code>float32</code> y no utilizar CUDA:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">diffusers</span> <span class="kn">import</span> <span class="n">DiffusionPipeline</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="linenos" data-linenos="3 "></span>
+<span class="linenos" data-linenos="4 "></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">DiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;runwayml/stable-diffusion-v1-5&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;Una imagen de una ardilla al estilo Picasso&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hola-hf.png&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Cambiando el modelo</p>
+<p>¿Y si cambiamos el modelo por uno más nuevo?</p>
+<p>Sustituye las primeras líneas con el siguiente fragmento y comprueba si el estilo/calidad de la imagen cambia:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">diffusers</span> <span class="kn">import</span> <span class="n">StableDiffusionPipeline</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="linenos" data-linenos="3 "></span>
+<span class="linenos" data-linenos="4 "></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">StableDiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;stabilityai/stable-diffusion-2-1&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="o">...</span>
+</code></pre></div>
+</div>
+<p>¿Y si no queremos generar una imagen y estamos interesados en otro tipo de tarea o modelo?</p>
 <h2 id="hub">Hub<a class="headerlink" href="#hub" title="Permanent link">&para;</a></h2>
 <p>El <em>Hugging Face Hub</em> es una plataforma con más de 120.000 modelos, 20.000 conjuntos de datos y 50.000 demos en el cual podemos colaborar y reutilizar en nuestros desarrollos de ML.</p>
 <p>El Hub de HuggingFace funciona a modo de repositorio Git que almacena todos los archivos necesarios, como pueden ser:</p>
@@ -3220,10 +3253,10 @@ https://huggingface.co/learn/nlp-course/chapter9/1</p>
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
       
     
   </body>
