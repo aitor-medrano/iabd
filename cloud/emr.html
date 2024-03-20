@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.1">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.8">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.45e1311d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.f2e4d321.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -3312,9 +3312,9 @@
     <figcaption>Servicios Hadoop en EMR</figcaption>
 </figure>
 
-<p>Ofrece elasticidad sobre el cluster, pudiendo modificar dinámicamente el dimensionamiento del cluster según necesidades, tanto hacia arriba como hacia abajo de clúster que están en ejecución.</p>
-<p>Respecto al hardware, se ejecuta sobre máquinas EC2 (IaaS), las cuales configuraremos según necesidades. Utiliza HDFS y S3 para el almacenamiento, de manera que podemos guardar los datos de entrada y los de salida en S3, mientras que los resultados intermedios los almacenamos en HDFS.</p>
-<p>Cada cluster de EMR requiere de un nodo principal (<em>master</em>) y al menos nodo core (un nodo <em>worker</em> que incluye almacenamiento local), y opcionalmente un número de nodos tarea (nodos <em>worker</em> que no incluyen almacenamiento local).</p>
+<p>Ofrece elasticidad sobre el cluster, pudiendo modificar dinámicamente el dimensionamiento del mismo según necesidades, tanto hacia arriba como hacia abajo de nodos que están en ejecución.</p>
+<p>Respecto al <em>hardware</em>, se ejecuta sobre máquinas EC2 (IaaS), las cuales configuraremos según necesidades. Utiliza HDFS y S3 para el almacenamiento, de manera que podemos guardar los datos de entrada y los de salida en S3, mientras que los resultados intermedios los almacenamos en HDFS.</p>
+<p>Cada cluster de EMR requiere de un nodo principal (<em>master</em>) y al menos un nodo <em>core</em> (un nodo <em>worker</em> que incluye almacenamiento local), y opcionalmente la cantidad deseada de nodos tarea (nodos <em>worker</em> que no incluyen almacenamiento local).</p>
 <!--
 https://learning.oreilly.com/library/view/data-engineering-with/9781804614426/Text/Chapter_03.xhtml#_idParaDest-81
 -->
@@ -3336,7 +3336,7 @@ https://learning.oreilly.com/library/view/data-engineering-with/9781804614426/Te
 <p>Antes de lanzar EMR, necesitamos crear un repositorio de información donde guardar los datos de entrada y salida, así como los logs que EMR genere.</p>
 <p>Para ello, en S3 generaremos un bucket al que llamaremos <code>s3severo8a-emr</code>.</p>
 <p>Podemos lanzar un cluster de EMR de tres formas, mediante la consola, el CLI o con un API. Vamos a centrar en el uso de la consola.</p>
-<p>A continuación, accedemos al servicio de EMR, y creamos un cluster el cual hemos llamado <code>ClusterEMRs8a</code>, seleccionamos la última versión de EMR (en Enero de 2023 es la 7.0) y seleccionamos algunos de los paquetes ya definidos, o seleccionamos las aplicaciones en las que estamos interesados (en nuestro caso, vamos a seleccionar las aplicaciones que puedes ver en la imagen, que son los servicios que hemos trabajado en el bloque de <em>Hadoop</em>):</p>
+<p>A continuación, accedemos al servicio de EMR, y creamos un clúster el cual hemos llamado <code>ClusterEMRs8a</code>, seleccionamos la última versión de EMR (en Enero de 2023 es la 7.0) y elegimos algunos de los paquetes ya definidos, o seleccionamos las aplicaciones en las que estamos interesados (en nuestro caso, vamos a seleccionar las aplicaciones que puedes ver en la imagen, que son los servicios que hemos trabajado en el bloque de <em>Hadoop</em>):</p>
 <figure style="align: center;">
     <img src="images/05emr-create-cluster.png" alt="Creando un clúster en EMR">
     <figcaption>Creando un clúster en EMR</figcaption>
@@ -3649,8 +3649,16 @@ Tras ello, desde Hue, crearemos una tabla con Hive sobre dicha tabla y realizare
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 0.5p) Arranca un clúster EMR con 2 máquinas y modifica las configuraciones de HDFS y <em>Hue</em> para poder visualizar los archivos.</li>
-<li>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 1p) A partir del caso de uso, carga también los datos de los pedidos (tabla <code>orders</code> de la base de datos <code>retail_db</code>) en HDFS y tras crear la tabla en <em>Hive</em>, recupera, para cada cliente (mostrando el id y su nombre completo), cuantos pedidos ha realizado.</li>
-<li>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha visualizado que el sistema puede crecer fácilmente añadiendo módulos.">CEBDA.2e</abbr> / 0.5p) A continuación, añade dos nodos más al clúster (de forma manual, no gestionada por AWS) y sube un archivo a HDFS. Comprueba si los nodos aparecen en la consola de <em>Hadoop UI</em> y vuelve a ejecutar la consulta del ejercicio anterior.</li>
+<li>
+<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 1p) A partir del caso de uso, carga también los datos de los pedidos (tabla <code>orders</code> de la base de datos <code>retail_db</code>) en HDFS y tras crear la tabla en <em>Hive</em>, recupera, para cada cliente (mostrando el id y su nombre completo), cuantos pedidos ha realizado.</p>
+<div class="admonition tip">
+<p class="admonition-title">Exportar a S3</p>
+<p>Es importante que tanto para los clientes como para los pedidos realices el caso de uso completo, exportando los datos a S3 para poder realizar las actividades de la sesión de <em>Athena</em>.</p>
+</div>
+</li>
+<li>
+<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha visualizado que el sistema puede crecer fácilmente añadiendo módulos.">CEBDA.2e</abbr> / 0.5p) A continuación, añade dos nodos más al clúster (de forma manual, no gestionada por AWS) y sube un archivo a HDFS. Comprueba si los nodos aparecen en la consola de <em>Hadoop UI</em> y vuelve a ejecutar la consulta del ejercicio anterior.</p>
+</li>
 </ol>
 <!--
 EMR Spark Hive Jupyter
@@ -3893,10 +3901,10 @@ https://www.youtube.com/watch?v=v9nk6mVxJDU
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      <script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
       
     
   </body>
