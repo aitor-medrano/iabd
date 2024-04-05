@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Uso de AWS EMR para ejecutar procesos MapReduce y consultas Hive en el cloud.">
+        <meta name="description" content="Uso de AWS EMR para ejecutar procesos MapReduce y consultas Hive en el cloud, haciendo uso de jobs/pasos.">
       
       
       
@@ -73,7 +73,7 @@
       
         <meta  property="og:title"  content="AWS Elastic Map Reduce - Inteligencia Artificial y Big Data" >
       
-        <meta  property="og:description"  content="Uso de AWS EMR para ejecutar procesos MapReduce y consultas Hive en el cloud." >
+        <meta  property="og:description"  content="Uso de AWS EMR para ejecutar procesos MapReduce y consultas Hive en el cloud, haciendo uso de jobs/pasos." >
       
         <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/cloud/emr.png" >
       
@@ -89,7 +89,7 @@
       
         <meta  name="twitter:title"  content="AWS Elastic Map Reduce - Inteligencia Artificial y Big Data" >
       
-        <meta  name="twitter:description"  content="Uso de AWS EMR para ejecutar procesos MapReduce y consultas Hive en el cloud." >
+        <meta  name="twitter:description"  content="Uso de AWS EMR para ejecutar procesos MapReduce y consultas Hive en el cloud, haciendo uso de jobs/pasos." >
       
         <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/cloud/emr.png" >
       
@@ -3479,16 +3479,16 @@
 
 <p>Ofrece elasticidad sobre el cluster, pudiendo modificar dinámicamente el dimensionamiento del mismo según necesidades, tanto hacia arriba como hacia abajo de nodos que están en ejecución.</p>
 <p>Respecto al <em>hardware</em>, se ejecuta sobre máquinas EC2 (IaaS), las cuales configuraremos según necesidades. Utiliza HDFS y S3 para el almacenamiento, de manera que podemos guardar los datos de entrada y los de salida en S3, mientras que los resultados intermedios los almacenamos en HDFS.</p>
-<p>Cada cluster de EMR requiere de un nodo principal (<em>master</em>) y al menos un nodo <em>core</em> (un nodo <em>worker</em> que incluye almacenamiento local), y opcionalmente la cantidad deseada de nodos tarea (nodos <em>worker</em> que no incluyen almacenamiento local).</p>
+<p>Cada cluster de EMR requiere de un nodo central (<em>master</em>) y al menos un nodo <em>core</em> (un nodo <em>worker</em> que incluye almacenamiento local), y opcionalmente la cantidad deseada de nodos tarea (nodos <em>worker</em> que no incluyen almacenamiento local).</p>
 <!--
 https://learning.oreilly.com/library/view/data-engineering-with/9781804614426/Text/Chapter_03.xhtml#_idParaDest-81
 -->
 
 <p>Los cluster de EMR se componen de:</p>
 <ul>
-<li>un nodo <strong>principal central</strong>, encargado de gestionar el cluster y ejecutar los servicios de coordinación de datos.</li>
-<li>varios nodos <strong>principales</strong>, los cuales ejecutan las tareas y almacenan los datos en el clúster HDFS.</li>
-<li>nodos <strong>tareas</strong>, los cuales son opcionales, y no almacenan datos, y podemos añadir a un cluster para incrementar la capacidad de procesamiento (e eliminarlos una vez no los necesitamos para reducir costes).</li>
+<li>un nodo <strong>principal central</strong> (<em>master</em>), encargado de gestionar el cluster y ejecutar los servicios de coordinación de datos.</li>
+<li>varios nodos <strong>principales</strong> (<em>core</em>), los cuales ejecutan las tareas y almacenan los datos en el clúster HDFS.</li>
+<li>nodos <strong>tareas</strong> (<em>worker</em>), los cuales son opcionales, y no almacenan datos, y podemos añadir a un cluster para incrementar la capacidad de procesamiento (e eliminarlos una vez no los necesitamos para reducir costes).</li>
 </ul>
 <p>A nivel de servicios, podemos definir su arquitectura en cuatro capas:</p>
 <ul>
