@@ -3646,7 +3646,7 @@
 
 <h3 id="usando-git">Usando Git<a class="headerlink" href="#usando-git" title="Permanent link">&para;</a></h3>
 <p>Para poder trabajar con el repositorio ya hemos visto que podemos hacerlo mediante el interfaz web, aunque lo más cómodo para nosotros será trabajar mediante Git y GitLFS. <a href="https://git-lfs.com/">GitLFS</a> es una extensión para trabajar con archivos de gran tamaño (superiores a 10Mb), ya que es posible, que bien nuestros modelos o bien nuestros <em>datasets</em> tengan un tamaño considerable.</p>
-<p>Así pues, como es probable que trabajemos con archivos superiores a los 10Mb, instalaremos en nuestro sistema git-lfs:</p>
+<p>Así pues, como es probable que trabajemos con archivos superiores a los 10Mb, instalaremos en nuestro sistema <em>git-lfs</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>git-lfs<span class="w"> </span><span class="c1"># Ubuntu</span>
 <span class="linenos" data-linenos="2 "></span>brew<span class="w"> </span>install<span class="w"> </span>git-lfs<span class="w">    </span><span class="c1"># MacOS</span>
 </code></pre></div>
@@ -3658,6 +3658,10 @@
 <span class="linenos" data-linenos="2 "></span>ssh-add<span class="w"> </span>~/.ssh/id_rsa
 </code></pre></div>
 <p>A continuación, vamos a la preferencias del usuario, y en la opción <em>SSH and GPG Keys</em>, creamos una nueva clave, poniendo como identificador, por ejemplo, el nombre de nuestro ordenador, y en la clave, pegamos el contenido del archivo <code>.pub</code> generado anteriormente.</p>
+<p><figure style="align: center;">
+    <img src="images/01hf-ssh.png" alt="Configuración SSH" width="800px">
+    <figcaption>Configuración SSH</figcaption>
+</figure></p>
 </div>
 <p>Y haciendo uso de git, clonamos el repositorio:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>git<span class="w"> </span>clone<span class="w"> </span>git@hf.co:aitor-medrano/iabd_model
@@ -3701,7 +3705,11 @@
 <h3 id="model-card">Model Card<a class="headerlink" href="#model-card" title="Permanent link">&para;</a></h3>
 <p>La <a href="https://huggingface.co/docs/hub/model-cards">tarjeta del modelo</a> aporta información muy útil, como es la categoría del mismo, así como librerías, <em>datasets</em>, idiomas o los resultados obtenidos en la fase evaluación del modelo.</p>
 <p>Si nos fijamos en la tarjeta del modelo de que hemos <a href="https://huggingface.co/omarques/autotrain-dogs-and-cats-1527055142">escogido anteriormente</a>, podemos ver toda la información mostrada, con las diferentes etiquetas (<em>Image Classification</em>, <em>Pytorch</em>, etc...):</p>
-<p>MARK: poner imagen</p>
+<figure style="align: center;">
+    <img src="images/01hf-model-dogcats-tags.png" alt="Etiquetas en un modelo" width="1024px">
+    <figcaption>Etiquetas en un modelo</figcaption>
+</figure>
+
 <p>Así pues, vamos a editar nuestra tarjeta, y añadiremos los siguiente elementos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>tags:
 <span class="linenos" data-linenos="2 "></span><span class="k">-</span><span class="w"> </span>vision
@@ -3709,6 +3717,12 @@
 <span class="linenos" data-linenos="4 "></span>datasets:
 <span class="linenos" data-linenos="5 "></span><span class="k">-</span><span class="w"> </span>omarques/autotrain-data-dogs-and-cats
 </code></pre></div>
+<p>De manera, que ahora nuestro modelo tendrá la siguiente apariencias:</p>
+<figure style="align: center;">
+    <img src="images/01hf-model-tags.png" alt="Etiquetado del modelo" width="1024px">
+    <figcaption>Etiquetado del modelo</figcaption>
+</figure>
+
 <p>En próximas sesiones donde nos centremos en el <em>fine-tuning</em>, volveremos a la tarjeta del modelo para anotar toda la información obtenida.</p>
 <h3 id="inference-api">Inference API<a class="headerlink" href="#inference-api" title="Permanent link">&para;</a></h3>
 <p>Si vamos a la tarjeta de nuestro modelo, veremos que en la parte derecha, se ha marcado dentro del bloque de <em>Inference API</em> que se trata de un modelo de clasificación de imágenes y nos permite arrastrar una imagen.</p>
