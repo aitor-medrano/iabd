@@ -3669,7 +3669,7 @@
 </code></pre></div>
 <p>Y comprobamos como se han descargado los archivos del modelo, incluyendo el que hemos creado previamente:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>%<span class="w"> </span>ls
-<span class="linenos" data-linenos="2 "></span>README.md<span class="w">       </span>authors.tst
+<span class="linenos" data-linenos="2 "></span>README.md<span class="w">       </span>authors.txt
 </code></pre></div>
 <p>Y habilitamos Git-LFS:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>git<span class="w"> </span>lfs<span class="w"> </span>install
@@ -3677,7 +3677,7 @@
 <p>Si nuestros ficheros van a superar los 5GB, también deberemos habitarlos en <em>Hugging Face</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>huggingface-cli<span class="w"> </span>lfs-enable-largefiles<span class="w"> </span>.
 </code></pre></div>
-<p>Para seguir con este ejemplo, vamos a descargarnos los archivos del modelo <a href="https://huggingface.co/omarques/autotrain-dogs-and-cats-1527055142"><code>omarques/autotrain-dogs-and-cats-1527055142</code></a> y pegarlos dentro de nuestra carpeta <code>iabd_model</code>. Tras ello, los subimos mediante Git al repositorio:</p>
+<p>Para seguir con este ejemplo, vamos a descargarnos los archivos del modelo <a href="https://huggingface.co/omarques/autotrain-dogs-and-cats-1527055142"><code>omarques/autotrain-dogs-and-cats-1527055142</code></a> (<code>config.json</code>, <code>preprocessor_config.json</code> y el modelo <code>pytorch_model.bin</code>) y pegarlos dentro de nuestra carpeta <code>iabd_model</code>. Tras ello, los subimos mediante Git al repositorio:</p>
 <div class="highlight"><pre><span></span><code><span class="hll"><span class="linenos" data-linenos=" 1 "></span>aitormedrano@MacBook-Air-de-Aitor<span class="w"> </span>iabd_model<span class="w"> </span>%<span class="w"> </span>git<span class="w"> </span>add<span class="w"> </span>.
 </span><span class="hll"><span class="linenos" data-linenos=" 2 "></span>aitormedrano@MacBook-Air-de-Aitor<span class="w"> </span>iabd_model<span class="w"> </span>%<span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Primera version&quot;</span>
 </span><span class="linenos" data-linenos=" 3 "></span><span class="o">[</span>main<span class="w"> </span>ab99892<span class="o">]</span><span class="w"> </span>Primera<span class="w"> </span>version
@@ -3704,7 +3704,7 @@
 
 <h3 id="model-card">Model Card<a class="headerlink" href="#model-card" title="Permanent link">&para;</a></h3>
 <p>La <a href="https://huggingface.co/docs/hub/model-cards">tarjeta del modelo</a> aporta información muy útil, como es la categoría del mismo, así como librerías, <em>datasets</em>, idiomas o los resultados obtenidos en la fase evaluación del modelo.</p>
-<p>Si nos fijamos en la tarjeta del modelo de que hemos <a href="https://huggingface.co/omarques/autotrain-dogs-and-cats-1527055142">escogido anteriormente</a>, podemos ver toda la información mostrada, con las diferentes etiquetas (<em>Image Classification</em>, <em>Pytorch</em>, etc...):</p>
+<p>Si nos fijamos en la tarjeta del modelo de que hemos <a href="https://huggingface.co/omarques/autotrain-dogs-and-cats-1527055142">escogido anteriormente</a>, podemos ver toda la información mostrada, con las diferentes etiquetas (<em>Image Classification</em>, <em>Pytorch</em>, etc...), así como las estadísticas y el bloque para probar el modelo directamente:</p>
 <figure style="align: center;">
     <img src="images/01hf-model-dogcats-tags.png" alt="Etiquetas en un modelo" width="1024px">
     <figcaption>Etiquetas en un modelo</figcaption>
@@ -3725,10 +3725,18 @@
 
 <p>En próximas sesiones donde nos centremos en el <em>fine-tuning</em>, volveremos a la tarjeta del modelo para anotar toda la información obtenida.</p>
 <h3 id="inference-api">Inference API<a class="headerlink" href="#inference-api" title="Permanent link">&para;</a></h3>
-<p>Si vamos a la tarjeta de nuestro modelo, veremos que en la parte derecha, se ha marcado dentro del bloque de <em>Inference API</em> que se trata de un modelo de clasificación de imágenes y nos permite arrastrar una imagen.</p>
+<p>Si vamos a la tarjeta de nuestro modelo, veremos que en la parte derecha se ha marcado dentro del bloque de <em>Inference API</em> que se trata de un modelo de clasificación de imágenes y nos permite arrastrar una imagen.</p>
 <p>Esta API utiliza un <a href="https://huggingface.co/docs/hub/en/models-widgets">widget</a> el cual obtiene información de los metadatos del modelo y del archivo de configuración (<code>config.json</code>) para saber qué interfaz mostrar. Si queremos, podemos indicarlo de forma explicita mediante el <code>pipeline_tag</code> de la tarjeta del modelo, por ejemplo, en nuestro caso <code>image-classification</code>.</p>
-<p>Además podemos añadir valores de ejemplo para probar el modelo. Vamos a subir un par de imágenes para que se queden de prueba por defecto. Para ello, </p>
-<p>TODO: Desde el Space, poner una referencia al modelo.</p>
+<p>Por ejemplo, si le pasamos una <a href="images/perro-gato.jpg">foto</a> al bloque, veremos cómo se carga el modelo y al finalizar, nos muestra la predicción que ha realizado categorizando la imagen:</p>
+<figure style="align: center;">
+    <img src="images/01hf-model-inference.png" alt="Inferencia con el modelo" width="600">
+    <figcaption>Inferencia con el modelo</figcaption>
+</figure>
+
+<div class="admonition warning">
+<p class="admonition-title">Valores de ejemplo</p>
+<p>Aunque a priori se pueden <a href="https://huggingface.co/docs/hub/models-widgets#how-can-i-control-my-models-widget-example-input">añadir elementos</a> para probar el modelo directamente, actualmente no funciona, al menos, para poner imágenes de entrada.</p>
+</div>
 <h2 id="datasets">Datasets<a class="headerlink" href="#datasets" title="Permanent link">&para;</a></h2>
 <p>Subir datos y cargar con <code>load_datasets</code></p>
 <p>Todo tipo de datos</p>
