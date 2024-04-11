@@ -3566,13 +3566,13 @@
 </figure>
 
 <p>En nuestro caso, vamos a añadir la aplicación inicial desde el navegador pulsando sobre el enlace <em>create the <code>app.py</code></em> y añadimos el siguiente fragmento que emplea <em>Gradio</em> y realizamos un <em>commit</em> desde el interfaz web:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<div class="highlight"><span class="filename">app.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="k">def</span> <span class="nf">saluda</span><span class="p">(</span><span class="n">nombre</span><span class="p">):</span>
 <span class="linenos" data-linenos="4 "></span>    <span class="k">return</span> <span class="s2">&quot;Hola &quot;</span> <span class="o">+</span> <span class="n">nombre</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span>
 <span class="linenos" data-linenos="5 "></span>
-<span class="linenos" data-linenos="6 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">saluda</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="7 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">share</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos="6 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">saluda</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="7 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">share</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <p>Si ahora vamos nuestro perfil, podremos ver cómo se ha creado el espacio, y si pulsamos sobre él, aparecerá la aplicación:</p>
 <figure style="align: center;">
@@ -3580,6 +3580,16 @@
     <figcaption>Probando nuestro space</figcaption>
 </figure>
 
+<div class="admonition tip">
+<p class="admonition-title">Probando en local</p>
+<p>Para probar <em>Gradio</em> en local, el primer paso será instalar la librería:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>gradio
+</code></pre></div>
+<p>Y a continuación, lanzar el script pero en vez de con el interprete de Python, con el comando <code>gradio</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>gradio<span class="w"> </span>app.py
+</code></pre></div>
+<p>¿Te aparece una dirección local y otra remota? ¿Dónde se está ejecutando el código de la URL remota?</p>
+</div>
 <h3 id="hola-spaces-20">Hola Spaces 2.0<a class="headerlink" href="#hola-spaces-20" title="Permanent link">&para;</a></h3>
 <p>Vamos a reutilizar el ejemplo inicial de generar una imagen desde <em>Stable Difussion</em> para generar un prototipo que nos permita escribir el prompt y visualizar el resultado.</p>
 <p>Para ello, desde la pestaña <em>Files</em>, añadimos un nuevo fichero con el código de nuestra aplicación que ahora llamaremos `stable-app.py" ahora será similar a:</p>
@@ -3588,22 +3598,22 @@
 <span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="k">def</span> <span class="nf">stable</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
-<span class="linenos" data-linenos=" 6 "></span>    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">DiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;runwayml/stable-diffusion-v1-5&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 7 "></span>    <span class="k">return</span> <span class="n">pipeline</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span>    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">DiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;runwayml/stable-diffusion-v1-5&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span><span class="linenos" data-linenos=" 7 "></span>    <span class="k">return</span> <span class="n">pipeline</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="linenos" data-linenos=" 8 "></span>
 <span class="linenos" data-linenos=" 9 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">stable</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s2">&quot;image&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="10 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
 <p>Para indicarle al <em>Space</em> que este fichero es la nueva aplicación, editamos el fichero <code>README.md</code> que contiene la configuración del espacio (título, colores del banner, descripción y el nombre del script que lanza la aplicación):</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>---
+<div class="highlight"><span class="filename">README.md</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>---
 <span class="linenos" data-linenos=" 2 "></span>title: IABD
 <span class="linenos" data-linenos=" 3 "></span>emoji: 🌍
 <span class="linenos" data-linenos=" 4 "></span>colorFrom: blue
 <span class="linenos" data-linenos=" 5 "></span>colorTo: indigo
 <span class="linenos" data-linenos=" 6 "></span>sdk: gradio
 <span class="linenos" data-linenos=" 7 "></span>sdk_version: 4.25.0
-<span class="linenos" data-linenos=" 8 "></span>app_file: stable-app.py
-<span class="linenos" data-linenos=" 9 "></span>pinned: false
+<span class="hll"><span class="linenos" data-linenos=" 8 "></span>app_file: stable-app.py
+</span><span class="linenos" data-linenos=" 9 "></span>pinned: false
 <span class="linenos" data-linenos="10 "></span>license: cc-by-nc-4.0
 <span class="linenos" data-linenos="11 "></span><span class="gu">short_description: Probando los Spaces en IABD</span>
 <span class="linenos" data-linenos="12 "></span><span class="gu">---</span>
@@ -3734,7 +3744,7 @@
 </figure>
 
 <p>Así pues, vamos a editar nuestra tarjeta, y añadiremos los siguiente elementos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>tags:
+<div class="highlight"><span class="filename">README.md</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span>tags:
 <span class="linenos" data-linenos="2 "></span><span class="k">-</span><span class="w"> </span>vision
 <span class="linenos" data-linenos="3 "></span><span class="k">-</span><span class="w"> </span>image-classification
 <span class="linenos" data-linenos="4 "></span>datasets:
