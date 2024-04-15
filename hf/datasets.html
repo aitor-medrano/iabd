@@ -3021,6 +3021,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cargando-en-streaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cargando en streaming
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3118,6 +3127,39 @@
   <a href="#creando-el-dataset-card" class="md-nav__link">
     <span class="md-ellipsis">
       Creando el dataset card
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datasets-multimedia" class="md-nav__link">
+    <span class="md-ellipsis">
+      Datasets multimedia
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Datasets multimedia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#imagenes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Imágenes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audios" class="md-nav__link">
+    <span class="md-ellipsis">
+      Audios
     </span>
   </a>
   
@@ -3275,7 +3317,7 @@
 <span class="linenos" data-linenos="11 "></span><span class="nb">print</span><span class="p">(</span><span class="n">squad_remote_dataset</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="dividiendo-el-dataset">Dividiendo el dataset<a class="headerlink" href="#dividiendo-el-dataset" title="Permanent link">&para;</a></h3>
-<p>Si en vez de cargar por separados los datos de entrenamiento y los de test tenemos un único conjunto de datos, podemos dividirlo mediante el método <a href="https://huggingface.co/docs/datasets/v2.18.0/en/package_reference/main_classes#datasets.Dataset.train_test_split"><code>Dataset.train_test_split()</code></a> indicando el tamaño, por ejemplo, de los datos de test:</p>
+<p>Si en vez de cargar por separado los datos de entrenamiento y los de test tenemos un único conjunto de datos, podemos dividirlo mediante el método <a href="https://huggingface.co/docs/datasets/v2.18.0/en/package_reference/main_classes#datasets.Dataset.train_test_split"><code>Dataset.train_test_split()</code></a> indicando el tamaño, por ejemplo, de los datos de test:</p>
 <div class="highlight"><span class="filename">squad-es-split.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">squad_dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="s2">&quot;train-v2.0-es.json&quot;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
@@ -3294,10 +3336,9 @@
 <span class="linenos" data-linenos=" 9 "></span>    <span class="p">})</span>
 <span class="linenos" data-linenos="10 "></span><span class="p">})</span>
 </code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">Dataset en streaming</p>
-<p>FIXME: Cuando el dataset es muy grande...https://huggingface.co/learn/nlp-course/chapter5/4?fw=pt</p>
-</div>
+<h3 id="cargando-en-streaming">Cargando en streaming<a class="headerlink" href="#cargando-en-streaming" title="Permanent link">&para;</a></h3>
+<p>Si el <em>dataset</em> ocupa varios gigas, con modelos como BERT o GPT, puede que no quedan en memoria RAM. Para ello, la librería <em>datasets</em> gestiona los datos como ficheros mapeados en memoría realizando un streaming de los datos.</p>
+<p>https://huggingface.co/learn/nlp-course/chapter5/4?fw=pt</p>
 <h2 id="limpiando">Limpiando<a class="headerlink" href="#limpiando" title="Permanent link">&para;</a></h2>
 <p>De forma similar a <em>Pandas</em> o <em>Spark</em>, podemos manipular el contenido de los objetos <code>Dataset</code>.</p>
 <p>El primer paso debería ser barajar los datos para <em>desordenarlos</em> y coger una muestra. Para ello, emplearemos <a href="https://huggingface.co/docs/datasets/v2.18.0/en/package_reference/main_classes#datasets.Dataset.shuffle"><code>Dataset.shuffle()</code></a>:</p>
@@ -3359,7 +3400,7 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 <span class="linenos" data-linenos="13 "></span><span class="nb">print</span><span class="p">(</span><span class="n">squad_minus</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">987</span><span class="p">)[</span><span class="s2">&quot;title&quot;</span><span class="p">][:</span><span class="mi">5</span><span class="p">])</span>
 <span class="linenos" data-linenos="14 "></span><span class="c1"># [&#39;marshall&#39;, &#39;ascensor&#39;, &#39;kanye&#39;, &#39;bbc televisión&#39;, &#39;florida&#39;]</span>
 </code></pre></div>
-<p>Mediante la función <em>map</em> también podemos crear nuevas columnas a partir de los valores de otras. Por ejemplo, añadimos una nueva característica con la cantidad de páraffos y quitamos toda la info existente previamente de los párrafos:</p>
+<p>Mediante la función <code>map</code> también podemos crear nuevas columnas a partir de los valores de otras. Por ejemplo, añadimos una nueva característica con la cantidad de párrafos y quitamos toda la información existente previamente de los párrafos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># Añadimos nueva columna</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">squad_col_num_parrafos</span> <span class="o">=</span> <span class="n">squad_dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;num_paragraphs&quot;</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;paragraphs&quot;</span><span class="p">])})</span>
 <span class="linenos" data-linenos="3 "></span><span class="c1"># Borramos la antigua</span>
@@ -3377,11 +3418,75 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 <span class="linenos" data-linenos="7 "></span><span class="c1"># {&#39;title&#39;: [&#39;American Idol (en inglés).&#39;, &#39;Nueva York&#39;, &#39;Budismo&#39;], &#39;num_paragraphs&#39;: [127, 148, 149]}</span>
 </code></pre></div>
 <h3 id="trabajando-con-batches">Trabajando con <em>batches</em><a class="headerlink" href="#trabajando-con-batches" title="Permanent link">&para;</a></h3>
-<p><a href="https://huggingface.co/learn/nlp-course/chapter5/3?fw=pt#the-map-methods-superpowers">https://huggingface.co/learn/nlp-course/chapter5/3?fw=pt#the-map-methods-superpowers</a></p>
-<p>IMPORTANTE: Streaming</p>
+<p>El método <code>Dataset.map()</code> admite el argumento <code>batched</code> que, si se establece en <code>True</code>, hace que envíe un lote de ejemplos a la función <code>map</code> a la vez (el tamaño del lote es configurable, pero por defecto es de 1000). Al indicar <code>batched=True</code>, la función <code>map</code> recibe un diccionario con los campos del conjunto de datos, pero cada valor es ahora una lista de valores, y no un único valor, y del mismo modo, devuelve un diccionario con los campos que queremos actualizar o añadir a nuestro conjunto de datos, y una lista de valores.</p>
+<p>Por ello, debemos modificar la función que realiza el <code>map</code> para que trabaje con un diccionario de listas.</p>
+<p>Para el siguiente ejemplo, vamos a coger el <em>dataset</em> de <em>squad_es</em> desde <em>HuggingFace</em> que contiene más datos, y vamos a comparar el tiempo de ejecución, recodificando la función para trabajar con un diccionario que contiene una lista por cada campo:</p>
+<div class="highlight"><span class="filename">squad-map-batch.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1"># Cargamos el dataset desde HF</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">squad_dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;squad_es&quot;</span><span class="p">,</span> <span class="s2">&quot;v2.0.0&quot;</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>  <span class="c1"># (1)!</span>
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span><span class="k">def</span> <span class="nf">titulo_minus</span><span class="p">(</span><span class="n">registro</span><span class="p">):</span>
+<span class="hll"><span class="linenos" data-linenos=" 8 "></span>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="n">registro</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()}</span>
+</span><span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span><span class="n">inicio</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="hll"><span class="linenos" data-linenos="11 "></span><span class="n">squad_minus</span> <span class="o">=</span> <span class="n">squad_dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">titulo_minus</span><span class="p">)</span> <span class="c1"># (2)!</span>
+</span><span class="linenos" data-linenos="12 "></span><span class="c1"># Map: 100%|██████| 11858/11858 [00:00&lt;00:00, 37926.07 examples/s]   </span>
+<span class="linenos" data-linenos="13 "></span><span class="n">fin</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="linenos" data-linenos="14 "></span><span class="nb">print</span><span class="p">(</span><span class="n">fin</span> <span class="o">-</span> <span class="n">inicio</span><span class="p">)</span> <span class="c1"># 3.008699893951416</span>
+<span class="linenos" data-linenos="15 "></span>
+<span class="hll"><span class="linenos" data-linenos="16 "></span><span class="k">def</span> <span class="nf">titulo_minus_batch</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
+</span><span class="hll"><span class="linenos" data-linenos="17 "></span>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:[</span><span class="n">titulo</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">titulo</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]]}</span>
+</span><span class="linenos" data-linenos="18 "></span>
+<span class="linenos" data-linenos="19 "></span><span class="n">inicio</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="hll"><span class="linenos" data-linenos="20 "></span><span class="n">squad_minus</span> <span class="o">=</span> <span class="n">squad_dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">titulo_minus_batch</span><span class="p">,</span> <span class="n">batched</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># (3)!</span>
+</span><span class="linenos" data-linenos="21 "></span><span class="c1"># Map: 100%|██████| 11858/11858 [00:00&lt;00:00, 535210.67 examples/s]</span>
+<span class="linenos" data-linenos="22 "></span><span class="n">fin</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="linenos" data-linenos="23 "></span><span class="nb">print</span><span class="p">(</span><span class="n">fin</span> <span class="o">-</span> <span class="n">inicio</span><span class="p">)</span> <span class="c1"># 0.19133710861206055</span>
+</code></pre></div>
+<ol>
+<li>Cargamos los datos desde el dataset de <em>Hugging Face</em></li>
+<li>El mapper normal realiza casi 40.000 registros por segundo</li>
+<li>Al hacerlo con batches realiza más de 500.000 por segundo</li>
+</ol>
 <h3 id="uso-de-pandas">Uso de Pandas<a class="headerlink" href="#uso-de-pandas" title="Permanent link">&para;</a></h3>
-<p><code>Dataset.set_format()</code></p>
-<p><a href="https://huggingface.co/learn/nlp-course/chapter5/3?fw=pt#from-datasets-to-dataframes-and-back">https://huggingface.co/learn/nlp-course/chapter5/3?fw=pt#from-datasets-to-dataframes-and-back</a></p>
+<p>Para facilitar la conversión entre diferentes formados, podemos usar el método <a href="https://huggingface.co/docs/datasets/v2.18.0/en/package_reference/main_classes#datasets.Dataset.set_format"><code>Dataset.set_format()</code></a> para modificar el formato de salida (por ejemplo, a <code>pandas</code>, <code>numpy</code>, <code>torch</code>, <code>tensorflow</code>, <code>jax</code>, ...), sin modificar el formato original del dataset (el cual es <em>Apache Arrow</em> - <code>arrow</code>).</p>
+<p>Así, si por ejemplo queremos pasar los datos a <em>Pandas</em> para trabajar con ellos, transformarlos o visualizarlos, podemos hacer:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nb">print</span><span class="p">(</span><span class="n">squad_dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="n">squad_dataset</span><span class="o">.</span><span class="n">set_format</span><span class="p">(</span><span class="s2">&quot;pandas&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">squad_dataset</span><span class="p">[:]</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="c1"># (130313, 5)</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># Otra forma</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">df2</span> <span class="o">=</span> <span class="n">squad_dataset</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="nb">print</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># RangeIndex: 130313 entries, 0 to 130312</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># Data columns (total 5 columns):</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1">#  #   Column    Non-Null Count   Dtype </span>
+<span class="linenos" data-linenos="13 "></span><span class="c1"># ---  ------    --------------   ----- </span>
+<span class="linenos" data-linenos="14 "></span><span class="c1">#  0   id        130313 non-null  object</span>
+<span class="linenos" data-linenos="15 "></span><span class="c1">#  1   title     130313 non-null  object</span>
+<span class="linenos" data-linenos="16 "></span><span class="c1">#  2   context   130313 non-null  object</span>
+<span class="linenos" data-linenos="17 "></span><span class="c1">#  3   question  130313 non-null  object</span>
+<span class="linenos" data-linenos="18 "></span><span class="c1">#  4   answers   130313 non-null  object</span>
+<span class="linenos" data-linenos="19 "></span><span class="c1"># dtypes: object(5)</span>
+<span class="linenos" data-linenos="20 "></span><span class="c1"># memory usage: 5.0+ MB</span>
+<span class="linenos" data-linenos="21 "></span>
+<span class="linenos" data-linenos="22 "></span><span class="c1"># Y realizar consultas sobre los datos, por ejemplo, la 5 preguntas con más respuestas</span>
+<span class="linenos" data-linenos="23 "></span><span class="nb">print</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)[</span><span class="s2">&quot;answers&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">nlargest</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="linenos" data-linenos="24 "></span><span class="c1"># title</span>
+<span class="linenos" data-linenos="25 "></span><span class="c1"># Reina                         883</span>
+<span class="linenos" data-linenos="26 "></span><span class="c1"># Nueva York                    817</span>
+<span class="linenos" data-linenos="27 "></span><span class="c1"># American Idol (en inglés).    790</span>
+<span class="linenos" data-linenos="28 "></span><span class="c1"># Beyoncé Knowles               753</span>
+<span class="linenos" data-linenos="29 "></span><span class="c1"># Universidad                   738</span>
+</code></pre></div>
+<p>Y para volver a tener un objeto <code>Dataset</code>, podemos utilizar el método <a href="https://huggingface.co/docs/datasets/v2.18.0/en/package_reference/main_classes#datasets.Dataset.from_pandas"><code>Dataset.from_pandas()</code></a> o resetear el <em>dataset</em> que teníamos mediante <a href="https://huggingface.co/docs/datasets/v2.18.0/en/package_reference/main_classes#datasets.Dataset.reset_format"><code>Dataset.reset_format()</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">squad_transformed</span> <span class="o">=</span> <span class="n">Dataset</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">squad_original</span> <span class="o">=</span> <span class="n">squad_dataset</span><span class="o">.</span><span class="n">reset_format</span><span class="p">()</span>
+</code></pre></div>
 <h2 id="creando-un-dataset-desde-cero">Creando un dataset desde cero<a class="headerlink" href="#creando-un-dataset-desde-cero" title="Permanent link">&para;</a></h2>
 <p>Si en vez de cargar un dataset, tenemos que crear uno, el primer paso será obtener los datos.
 Ya sea mediante peticiones a URL externas mediante la librería <code>request</code>, acceso a bases de datos relacionales, por ejemplo, mediante ... o a <em>MongoDB</em> mediante <code>pymongo</code>, lo más normal es crear una estructura de datos mediante un diccionario y luego crear el <em>dataset</em> a partir del mismo.</p>
@@ -3437,6 +3542,9 @@ Ya sea mediante peticiones a URL externas mediante la librería <code>request</c
 https://huggingface.co/learn/nlp-course/chapter5/5?fw=pt#uploading-the-dataset-to-the-hugging-face-hub</p>
 <h3 id="creando-el-dataset-card">Creando el <em>dataset card</em><a class="headerlink" href="#creando-el-dataset-card" title="Permanent link">&para;</a></h3>
 <p>https://huggingface.co/datasets/bigcode/the-stack-v2/tree/main/data/Python</p>
+<h2 id="datasets-multimedia">Datasets multimedia<a class="headerlink" href="#datasets-multimedia" title="Permanent link">&para;</a></h2>
+<h3 id="imagenes">Imágenes<a class="headerlink" href="#imagenes" title="Permanent link">&para;</a></h3>
+<h3 id="audios">Audios<a class="headerlink" href="#audios" title="Permanent link">&para;</a></h3>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://huggingface.co/docs/datasets/index">Documentación oficial</a> de <em>dataset</em></li>
