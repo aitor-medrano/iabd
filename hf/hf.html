@@ -2033,6 +2033,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#pipelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pipelines
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2044,6 +2053,21 @@
       Datasets
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Datasets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creando-nuestro-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creando nuestro dataset
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3353,6 +3377,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#pipelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pipelines
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3364,6 +3397,21 @@
       Datasets
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Datasets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creando-nuestro-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creando nuestro dataset
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3770,17 +3818,129 @@
 <p class="admonition-title">Valores de ejemplo</p>
 <p>Aunque a priori se pueden <a href="https://huggingface.co/docs/hub/models-widgets#how-can-i-control-my-models-widget-example-input">añadir elementos</a> para probar el modelo directamente, actualmente no funciona, al menos, para poner imágenes de entrada.</p>
 </div>
+<h3 id="pipelines">Pipelines<a class="headerlink" href="#pipelines" title="Permanent link">&para;</a></h3>
+<p>Los <em>pipelines</em> son una abstracción para realizar inferencia sobre los modelos, simplificando el código complejo mediante un API dedicada a tareas.</p>
+<p>Por ejemplo, podemos utilizarlo pasándole por parámetro la tarea a realizar o el modelo a utilizar:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;text-classification&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">(</span><span class="s2">&quot;Me encanta venir a clase al IES Severo Ochoa&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="linenos" data-linenos="6 "></span><span class="c1"># [{&#39;label&#39;: &#39;POSITIVE&#39;, &#39;score&#39;: 0.9526600241661072}]</span>
+</code></pre></div>
+<p>Si queremos, podemos indicarle, además de la tarea, qué modelo queremos emplear:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;text-generation&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai-community/gpt2&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">(</span><span class="s2">&quot;What is big data?&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># [{&#39;generated_text&#39;: &quot;What is big data?\n\nBig data describes all kinds of things and I know who is a big data guy! I&#39;d love to talk about anything related to big data science or what I hear in our labs, but that&#39;s really boring.&quot;}]</span>
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">trad</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;text2text-generation&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;google/flan-t5-base&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">result</span> <span class="o">=</span> <span class="n">trad</span><span class="p">(</span><span class="s2">&quot;translate from spanish to english: Me encanta disfrutar las vacaciones en la playa&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="10 "></span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># [{&#39;generated_text&#39;: &#39;I love having holidays on the beach&#39;}]</span>
+</code></pre></div>
+<p>El listado de tareas disponibles se pueden consultar en la API del método <code>transformers.pipeline</code> con el parámetro <a href="https://huggingface.co/docs/transformers/v4.39.3/en/main_classes/pipelines#transformers.pipeline.task"><code>task</code></a>, por ejemplo, <code>audio-classification</code>, <code>image-segmentation</code>, <code>image-to-text</code>, <code>token-classification</code>, etc...</p>
 <h2 id="datasets">Datasets<a class="headerlink" href="#datasets" title="Permanent link">&para;</a></h2>
-<p>Por último, Hugging Face también ofrece un entorno para la utilización y publicación de <em>datasets</em>, organizados por categorías, tamaños, lenguajes y licencias de uso:</p>
+<p>Por último, <em>Hugging Face</em> también ofrece un entorno para la utilización y publicación de <em>datasets</em>, organizados por categorías, tamaños, lenguajes y licencias de uso:</p>
 <figure style="align: center;">
     <img src="images/01hf-datasets.png" alt="Datasets en Hugging Face" width="1024">
     <figcaption>Datasets en Hugging Face</figcaption>
 </figure>
 
-<!--
-Subir datos y cargar con `load_datasets`
+<p>Por ejemplo, uno de los <em>datasets</em> más utilizados al estudiar redes neuronales es el <a href="https://huggingface.co/datasets/mnist">MNIST</a> que contiene 70.000 imágenes de 28x28 en blanco y negro con los dígitos transcritos. Como podemos observar, el entorno ofrece previsualización de todas las columnas, así como la posibilidad de utilizar el <em>dataset</em> con unas pocas líneas de código:</p>
+<figure style="align: center;">
+    <img src="images/01hf-datasets-mnist.png" alt="MNIST Hugging Face" width="800">
+    <figcaption>MNIST Hugging Face</figcaption>
+</figure>
 
-Todo tipo de datos
+<p>Si queremos usar el <em>dataset</em>, podemos pulsar sobre el botón <em>Use in Datasets library</em> o codificar el siguiente fragmento:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">mnist_dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;mnist&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="nb">print</span><span class="p">(</span><span class="n">mnist_dataset</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1"># DatasetDict({</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1">#     train: Dataset({</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1">#         features: [&#39;image&#39;, &#39;label&#39;],</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1">#         num_rows: 60000</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1">#     })</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1">#     test: Dataset({</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1">#         features: [&#39;image&#39;, &#39;label&#39;],</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1">#         num_rows: 10000</span>
+<span class="linenos" data-linenos="13 "></span><span class="c1">#     })</span>
+<span class="linenos" data-linenos="14 "></span><span class="c1"># })</span>
+</code></pre></div>
+<p>Y si queremos acceder a una imagen:</p>
+<figure style="float: right;">
+    <img src="images/5.png" alt="Imagen de MNIST">
+    <figcaption>Imagen de MNIST</figcaption>
+</figure>
+
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">imagen</span> <span class="o">=</span> <span class="n">mnist_dataset</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">][</span><span class="s2">&quot;image&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">etiqueta</span> <span class="o">=</span> <span class="n">mnist_dataset</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">][</span><span class="s2">&quot;label&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos" data-linenos="3 "></span><span class="nb">print</span><span class="p">(</span><span class="n">etiqueta</span><span class="p">)</span> <span class="c1"># 5</span>
+</code></pre></div>
+<p>Además, al abstraer los datos dentro de la librería <em>datasets</em>, se crea la estructura de datos necesaria para entrenar los modelos más fácilmente mediante las clase <a href="https://huggingface.co/docs/transformers/main/en/trainer">Trainer</a> que facilita realizar el mismo proceso de <em>fine-tuning</em> a diferentes modelos (esto lo estudiaremos más adelante en la sesión sobre <em>fine-tuning</em>).</p>
+<h3 id="creando-nuestro-dataset">Creando nuestro dataset<a class="headerlink" href="#creando-nuestro-dataset" title="Permanent link">&para;</a></h3>
+<p>Aunque más adelante veremos cómo utilizar la librería <em>datasets</em> para cargar, filtrar y persistir <em>datasets</em>, vamos a ver cómo crear un <em>dataset</em> en <em>HuggingFace</em> para almacenar los datos. Para ello, el primer paso es crearlo desde el interfaz gráfico, y a continuación, podemos acceder a la pestaña de <em>Files</em> y subiremos, por ejemplo, los datos de <a href="resources/cp_train.csv"><code>cp_train.csv</code></a>, <a href="resources/cp_test.csv"><code>cp_test.csv</code></a> y <a href="resources/cp_val.csv"><code>cp_val.csv</code></a>::</p>
+<figure style="align: center;">
+    <img src="images/01hf-datasets-files.png" alt="Files del Dataset" width="800">
+    <figcaption>Files del Dataset</figcaption>
+</figure>
+
+<p>Una vez añadidos los archivos, automáticamente se mostrará la información (ya que los nombres de archivos contienen token reconocidos, como <code>test</code>, <code>train</code>, <code>val</code>...). Más información en <a href="https://huggingface.co/docs/datasets/repository_structure">https://huggingface.co/docs/datasets/repository_structure</a>:</p>
+<figure style="align: center;">
+    <img src="images/01hf-datasets-card.png" alt="Previsualización del Dataset" width="800">
+    <figcaption>Previsualización del Dataset</figcaption>
+</figure>
+
+<p>Y si editamos el archivo <code>README.md</code>, podemos añadir información extra, como el tamaño del dataset, la licencia o fuera de los metadatos, toda la información que queramos, como por ejemplo, la descripción de los campos:</p>
+<div class="highlight"><span class="filename">README.md</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>---
+<span class="linenos" data-linenos=" 2 "></span>size_categories:
+<span class="linenos" data-linenos=" 3 "></span><span class="gu">- 1K&lt;n&lt;10K</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="gu">---</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span>Extraído de &lt;https://github.com/anthony-wang/BestPractices/tree/master/data&gt;.
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span>Campos:
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span><span class="k">*</span><span class="w"> </span>Formula (<span class="sb">`string`</span>)
+<span class="linenos" data-linenos="11 "></span><span class="k">*</span><span class="w"> </span>T (<span class="sb">`float64`</span>): Temperatura (K)
+<span class="linenos" data-linenos="12 "></span><span class="k">*</span><span class="w"> </span>CP (<span class="sb">`float64`</span>): Capacidad calorífica (J/mol K)
+</code></pre></div>
+<p>Para terminar, si queremos usar nuestro <em>dataset</em>, de la misma forma que antes, usaremos el método <code>load_dataset</code>, indicando el usuario y el nombre del dataset:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">iabd_dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;aitor-medrano/iabd&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span><span class="nb">print</span><span class="p">(</span><span class="n">iabd_dataset</span><span class="p">)</span>
+</code></pre></div>
+<p>Y al ejecutarlo podemos ver la descarga de las tres partes, así como los nombres de las características y la cantidad de filas de cada uno de los <em>splits</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="err">Dow</span><span class="kc">nl</span><span class="err">oadi</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="err">readme</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="err">%|██████████████████████████████████████████████████|</span><span class="w"> </span><span class="mi">229</span><span class="err">/</span><span class="mi">229</span><span class="w"> </span><span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="err">&lt;</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span><span class="w"> </span><span class="mi">478</span><span class="err">kB/s</span><span class="p">]</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="err">Dow</span><span class="kc">nl</span><span class="err">oadi</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="err">da</span><span class="kc">ta</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="err">%|████████████████████████████████████████████████|</span><span class="w"> </span><span class="mf">74.5</span><span class="err">k/</span><span class="mf">74.5</span><span class="err">k</span><span class="w"> </span><span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="err">&lt;</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span><span class="w"> </span><span class="mi">308</span><span class="err">kB/s</span><span class="p">]</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="err">Dow</span><span class="kc">nl</span><span class="err">oadi</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="err">da</span><span class="kc">ta</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="err">%|████████████████████████████████████████████████|</span><span class="w"> </span><span class="mf">22.5</span><span class="err">k/</span><span class="mf">22.5</span><span class="err">k</span><span class="w"> </span><span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="err">&lt;</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span><span class="w"> </span><span class="mi">153</span><span class="err">kB/s</span><span class="p">]</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="err">Dow</span><span class="kc">nl</span><span class="err">oadi</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="err">da</span><span class="kc">ta</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="err">%|███████████████████████████████████████████████|</span><span class="w"> </span><span class="mf">8.56</span><span class="err">k/</span><span class="mf">8.56</span><span class="err">k</span><span class="w"> </span><span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">01</span><span class="err">&lt;</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span><span class="w"> </span><span class="mf">7.97</span><span class="err">kB/s</span><span class="p">]</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="err">Ge</span><span class="kc">nerat</span><span class="err">i</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="kc">tra</span><span class="err">i</span><span class="kc">n</span><span class="w"> </span><span class="err">spli</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="mi">3214</span><span class="w"> </span><span class="err">examples</span><span class="w"> </span><span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span><span class="w"> </span><span class="mf">148561.75</span><span class="w"> </span><span class="err">examples/s</span><span class="p">]</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="err">Ge</span><span class="kc">nerat</span><span class="err">i</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="err">valida</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">spli</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="mi">980</span><span class="w"> </span><span class="err">examples</span><span class="w"> </span><span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span><span class="w"> </span><span class="mf">530376.51</span><span class="w"> </span><span class="err">examples/s</span><span class="p">]</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="err">Ge</span><span class="kc">nerat</span><span class="err">i</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="kc">test</span><span class="w"> </span><span class="err">spli</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="mi">370</span><span class="w"> </span><span class="err">examples</span><span class="w"> </span><span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span><span class="w"> </span><span class="mf">289748.41</span><span class="w"> </span><span class="err">examples/s</span><span class="p">]</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="err">Da</span><span class="kc">taset</span><span class="err">Dic</span><span class="kc">t</span><span class="err">(</span><span class="p">{</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="kc">tra</span><span class="err">i</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="err">Da</span><span class="kc">taset</span><span class="err">(</span><span class="p">{</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">        </span><span class="kc">features</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">&#39;</span><span class="kc">f</span><span class="err">ormula&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;T&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;Cp&#39;</span><span class="p">],</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">        </span><span class="kc">nu</span><span class="err">m_rows</span><span class="p">:</span><span class="w"> </span><span class="mi">3214</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="p">}</span><span class="err">)</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">    </span><span class="err">valida</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="err">Da</span><span class="kc">taset</span><span class="err">(</span><span class="p">{</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">        </span><span class="kc">features</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">&#39;</span><span class="kc">f</span><span class="err">ormula&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;T&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;Cp&#39;</span><span class="p">],</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">        </span><span class="kc">nu</span><span class="err">m_rows</span><span class="p">:</span><span class="w"> </span><span class="mi">980</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">    </span><span class="p">}</span><span class="err">)</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">    </span><span class="kc">test</span><span class="p">:</span><span class="w"> </span><span class="err">Da</span><span class="kc">taset</span><span class="err">(</span><span class="p">{</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">        </span><span class="kc">features</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">&#39;</span><span class="kc">f</span><span class="err">ormula&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;T&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;Cp&#39;</span><span class="p">],</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">        </span><span class="kc">nu</span><span class="err">m_rows</span><span class="p">:</span><span class="w"> </span><span class="mi">370</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">    </span><span class="p">}</span><span class="err">)</span>
+<span class="linenos" data-linenos="21 "></span><span class="p">}</span><span class="err">)</span>
+</code></pre></div>
+<!--
+Pipelines
+Tokenizer
 -->
 
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
@@ -3800,8 +3960,13 @@ https://www.youtube.com/watch?v=k8sHYMeDitQ
 
 https://theaisummer.com/hugging-face-vit/
 
+Hugging Face Datasets - Example with Receipts Data: https://www.youtube.com/watch?v=ZS0k9NIgauo
+Fine-Tuning with Hugging Face Trainer: https://www.youtube.com/watch?v=L6Dr8AFXMd8
+
 IMPORTANT:
 https://github.com/huggingface/education-toolkit/tree/main/tutorials/ES
+
+https://medium.com/@rakeshrajpurohit/customized-evaluation-metrics-with-hugging-face-trainer-3ff00d936f99
 -->
 
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
@@ -3816,7 +3981,10 @@ https://github.com/huggingface/education-toolkit/tree/main/tutorials/ES
 <p>(<abbr title="Caracteriza sistemas de Inteligencia Artificial relacionados con la mejora de la eficiencia operativa de las organizaciones y empresas.">RAMIA.1</abbr> / <abbr title="Se han presentado los resultados y las soluciones al cliente final en una forma fácil de interpretar.">CEMIA.1e</abbr> / 2p) Crea un nuevo espacio en tu cuenta y reproduce los casos de uso de <a href="#hola-spaces">Hola Spaces</a> y <a href="#hola-spaces-20">Hola Spaces 2.0</a>, tanto en el espacio de HF como en local.</p>
 </li>
 <li>
-<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 2p) Crea un modelo y siguiendo el ejemplo de <a href="#usando-git">Usando Git</a>, configura tu clave SSH, y añade los archivos necesarios para poder inferir imágenes de perros y gatos.</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 2p) Crea un modelo y siguiendo el ejemplo de <a href="#usando-git">Usando Git</a>, configura tu clave SSH, y añade los archivos necesarios para poder inferir imágenes de perros y gatos desde el interfaz web. Posteriormente, mediante <em>Python</em>, realiza la inferencia del modelo haciendo uso de un <em>Pipeline</em>. </p>
+</li>
+<li>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 2p) Crea un <em>dataset</em> a partir de los datos de entrenamiento y pruebas de cualquier ejercicio realizado durante el curso (que no sea el utilizado durante esta sesión), y a continuación, desde <em>Python</em>, recupera los datos y muestra sus características.</p>
 </li>
 </ol>
 
