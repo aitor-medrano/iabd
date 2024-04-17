@@ -3682,7 +3682,7 @@
 <span class="linenos" data-linenos="18 "></span><span class="c1"># })</span>
 </code></pre></div>
 <h3 id="trabajando-con-map">Trabajando con map<a class="headerlink" href="#trabajando-con-map" title="Permanent link">&para;</a></h3>
-<p>Y la joya de la corona es la función <code>Dataset.map()</code> para aplicar una transformación a medida.
+<p>Y la joya de la corona es la función <a href="https://huggingface.co/docs/datasets/v2.18.0/en/package_reference/main_classes#datasets.Dataset.map"><code>Dataset.map()</code></a> para aplicar una transformación a medida.
 Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula haremos:</p>
 <div class="highlight"><span class="filename">squad-map.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
 <span class="linenos" data-linenos=" 2 "></span>
@@ -3717,7 +3717,7 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 <span class="linenos" data-linenos="7 "></span><span class="c1"># {&#39;title&#39;: [&#39;American Idol (en inglés).&#39;, &#39;Nueva York&#39;, &#39;Budismo&#39;], &#39;num_paragraphs&#39;: [127, 148, 149]}</span>
 </code></pre></div>
 <h3 id="trabajando-con-batches">Trabajando con <em>batches</em><a class="headerlink" href="#trabajando-con-batches" title="Permanent link">&para;</a></h3>
-<p>El método <code>Dataset.map()</code> admite el argumento <code>batched</code> que, si se establece en <code>True</code>, hace que envíe un lote de ejemplos a la función <code>map</code> a la vez (el tamaño del lote es configurable, pero por defecto es de 1000). Al indicar <code>batched=True</code>, la función <code>map</code> recibe un diccionario con los campos del conjunto de datos, pero cada valor es ahora una lista de valores, y no un único valor, y del mismo modo, devuelve un diccionario con los campos que queremos actualizar o añadir a nuestro conjunto de datos, y una lista de valores.</p>
+<p>El método <a href="https://huggingface.co/docs/datasets/v2.18.0/en/package_reference/main_classes#datasets.Dataset.map"><code>Dataset.map()</code></a> admite el argumento <code>batched</code> que, si se establece en <code>True</code>, hace que envíe un lote de ejemplos a la función <code>map</code> a la vez (el tamaño del lote es configurable mediante el parámetro <code>batch_size</code>, pero por defecto es de 1000). Al indicar <code>batched=True</code>, la función <code>map</code> recibe un diccionario con los campos del conjunto de datos, pero cada valor es ahora una lista de valores, y no un único valor, y del mismo modo, devuelve un diccionario con los campos que queremos actualizar o añadir a nuestro conjunto de datos, y una lista de valores.</p>
 <p>Por ello, debemos modificar la función que realiza el <code>map</code> para que trabaje con un diccionario de listas.</p>
 <p>Para el siguiente ejemplo, vamos a coger el <em>dataset</em> de <em>squad_es</em> desde <em>HuggingFace</em> que contiene más datos, y vamos a comparar el tiempo de ejecución, recodificando la función para trabajar con un diccionario que contiene una lista por cada campo:</p>
 <div class="highlight"><span class="filename">squad-map-batch.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
