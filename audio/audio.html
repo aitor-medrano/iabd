@@ -16,7 +16,7 @@
         <link rel="prev" href="../hf/datasets.html">
       
       
-        <link rel="next" href="../pia/index.html">
+        <link rel="next" href="audio-hf.html">
       
       
       <link rel="icon" href="../favicon.png">
@@ -1789,6 +1789,8 @@
       
         
       
+        
+      
     
     
     
@@ -2106,6 +2108,35 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="audio-hf.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Audio en Hugging Face
+  </span>
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
     </li>
   
 
@@ -3602,7 +3633,7 @@
     <figcaption>Escala de Mel / Por Krishna Vedala</figcaption>
 </figure>
 
-<p>Librosa incluye una función para extraer el espectrograma de potencia (amplitud al cuadrado) para cada Mel a lo largo del tiempo, así como una función para visualizar fácilmente el espectrograma Mel resultante:</p>
+<p><em>Librosa</em> incluye una función para extraer el espectrograma de potencia (amplitud al cuadrado) para cada Mel a lo largo del tiempo, así como una función para visualizar fácilmente el espectrograma Mel resultante:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spec</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">melspectrogram</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">librosa</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">specshow</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span><span class="n">y_axis</span><span class="o">=</span><span class="s1">&#39;mel&#39;</span><span class="p">,</span> <span class="n">x_axis</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">)</span>
@@ -3687,9 +3718,22 @@
 <span class="linenos" data-linenos="3 "></span><span class="c1">#         3.45977324,   4.01705215,   4.59755102,   5.13160998,...</span>
 </code></pre></div>
 <h3 id="transformaciones">Transformaciones<a class="headerlink" href="#transformaciones" title="Permanent link">&para;</a></h3>
+<div class="admonition tip">
+<p class="admonition-title">Aumento de datos</p>
+<p>Del mismo modo que con las imágenes, existen varias técnicas para aumentar los datos de audio. Este aumento puede realizarse tanto en el audio bruto antes de producir el espectrograma, como en el espectrograma generado. Si entrenamos un modelo desde cero, aumentar el espectrograma suele producir mejores resultados.</p>
+</div>
 <p>Si queremos, por ejemplo, remuestrar un audio, emplearemos el método <a href="https://librosa.org/doc/latest/generated/librosa.resample.html"><code>resample</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">y_resampled</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">orig_sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">target_sr</span><span class="o">=</span><span class="mi">9600</span><span class="p">)</span>
 </code></pre></div>
+<p>A la hora de aumentar los datos de audio, tenemos varias posibilidades:</p>
+<ul>
+<li>Añadir silencios delante y/o detrás</li>
+<li>Modificar de forma aleatoria la intensidad</li>
+<li>Modificar de forma aleatoria el tono</li>
+<li>Modificar de forma aleatoria la velocidad</li>
+</ul>
+<!-- Mediante Librosa -->
+
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <!--
 Taller "Python aplicado a Audio" - Tomás Cufaro - HUMAI
@@ -3720,14 +3764,14 @@ https://www.gradio.app/guides/real-time-speech-recognition
 <p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 1p) Mediante <em>Python</em> y la librería <em>PyDub</em>, una vez cargados ambos archivos (<a href="resources/Nutcracker.ogg"><code>Nutcracker.ogg</code></a> y <a href="resources/mensaje.wav"><code>mensaje.wav</code></a>), cambia la frecuencia de muestro a 16000 y vuelve a almacenarlos en formato MP3.</p>
 </li>
 <li>
-<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 2p) Haciendo uso de la librería <em>Librosa</em>, carga un nuevo archivo de audio (el que tu quieras) y:</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 2p) Haciendo uso de la librería <em>Librosa</em>, carga un nuevo archivo de audio (el que tú quieras) y:</p>
 <ul>
 <li>Muestra un gráfico de ondas.</li>
 <li>Obtén y compara los espectrogramas de Mel, indicando alguna particularidad del audio utilizado.</li>
 <li>Crea el cromagrama y justifica qué elementos aparecen en <em>amarillo</em>.</li>
 <li>Averigua el <em>tempo</em> del audio.</li>
 </ul>
-<p>Adjunta el cuaderno de Jupyter creado y el fichero de audio empleado. Si no tienes ningún audio, puedes utilizar cualquiera de los <a href="https://librosa.org/doc/latest/recordings.html#description-of-examples">audios de ejemplo</a> que incluye Librosa.</p>
+<p>Adjunta el cuaderno de <em>Jupyter</em> creado y el fichero de audio empleado. Si no tienes ningún audio, puedes utilizar cualquiera de los <a href="https://librosa.org/doc/latest/recordings.html#description-of-examples">audios de ejemplo</a> que incluye <em>Librosa</em>.</p>
 </li>
 </ol>
 
@@ -3827,13 +3871,13 @@ https://www.gradio.app/guides/real-time-speech-recognition
         
         
           
-          <a href="../pia/index.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Proyectos de Innovación Aplicada en FP (PIAFP)">
+          <a href="audio-hf.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Audio en Hugging Face">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Siguiente
               </span>
               <div class="md-ellipsis">
-                Proyectos de Innovación Aplicada en FP (PIAFP)
+                Audio en Hugging Face
               </div>
             </div>
             <div class="md-footer__button md-icon">
