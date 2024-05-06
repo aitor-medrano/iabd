@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Uso de Apache Kafka, configuración y caracterísitcas de sus elementos y ejemplos de consumidores y productores mediante Python.">
+        <meta name="description" content="Uso de Apache Kafka, configuración y características de sus elementos y ejemplos de consumidores y productores mediante Python.">
       
       
       
@@ -73,7 +73,7 @@
       
         <meta  property="og:title"  content="Apache Kafka. Elementos y ejemplos con Python. - Inteligencia Artificial y Big Data" >
       
-        <meta  property="og:description"  content="Uso de Apache Kafka, configuración y caracterísitcas de sus elementos y ejemplos de consumidores y productores mediante Python." >
+        <meta  property="og:description"  content="Uso de Apache Kafka, configuración y características de sus elementos y ejemplos de consumidores y productores mediante Python." >
       
         <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/dataflow/kafka1.png" >
       
@@ -89,7 +89,7 @@
       
         <meta  name="twitter:title"  content="Apache Kafka. Elementos y ejemplos con Python. - Inteligencia Artificial y Big Data" >
       
-        <meta  name="twitter:description"  content="Uso de Apache Kafka, configuración y caracterísitcas de sus elementos y ejemplos de consumidores y productores mediante Python." >
+        <meta  name="twitter:description"  content="Uso de Apache Kafka, configuración y características de sus elementos y ejemplos de consumidores y productores mediante Python." >
       
         <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/dataflow/kafka1.png" >
       
@@ -3649,14 +3649,25 @@
               <article class="md-content__inner md-typeset">
                 
                   
+  
+<nav class="md-tags" >
+  
+    
+    
+    
+      <a href="../tags.html#kafka" class="md-tag">Kafka</a>
+    
+  
+</nav>
+
 
 
 <h1 id="apache-kafka">Apache Kafka<a class="headerlink" href="#apache-kafka" title="Permanent link">&para;</a></h1>
 <h2 id="introduccion">Introducción<a class="headerlink" href="#introduccion" title="Permanent link">&para;</a></h2>
 <p><a href="https://kafka.apache.org/">Apache Kafka</a> es, en pocas palabras, un <em>middleware</em> de mensajería entre sistemas heterogéneos, el cual, mediante un sistema de colas (<em>topics</em>, para ser concreto) facilita la comunicación asíncrona, desacoplando los flujos de datos de los sistemas que los producen o consumen. Funciona como un <em>broker</em> de mensajes, encargado de enrutar los mensajes entre los clientes de un modo muy rápido.</p>
-<p>Supongamos que tenemos múltiples generadores de datos, ya sean servidores web, de bases de datos, un servidor de chat y que todos ellos tienen que almacenar sus datos en múltiples destinos, como pueden ser logs, métricas de rendimiento y monitorización, el carrito de la compra o los fallos ocurridos, lo que puede provocar una serie de dependencias de unos con otros. Para evitarlo, <em>Kafka</em> viene al rescate conectando todos los generadores de datos (productores) a Kafka y a su vez, a todos los consumidores de estos datos.</p>
+<p>Supongamos que tenemos múltiples generadores de datos, ya sean servidores web, de bases de datos, un servidor de chat y que todos ellos tienen que almacenar sus datos en múltiples destinos, como pueden ser logs, métricas de rendimiento y monitorización, el carrito de la compra o los fallos ocurridos, lo que puede provocar una serie de dependencias de unos con otros. Para evitarlo, <em>Kafka</em> viene al rescate conectando todos los generadores de datos (productores) a <em>Kafka</em> y a su vez, a todos los consumidores de estos datos.</p>
 <figure style="align: center;">
-    <img src="images/02kafka-middleware.png">
+    <img src="images/02kafka-middleware.png" alt="Kafka como middleware/broker de mensajes">
     <figcaption>Kafka como middleware/broker de mensajes</figcaption>
 </figure>
 
@@ -3665,33 +3676,33 @@
 <p class="admonition-title">Evento / Mensaje</p>
 <p>Dentro del vocabulario asociado a arquitecturas asíncronas basadas en productor/consumidor o publicador/suscriptor, se utiliza el mensaje para indicar el dato que viaja desde un punto a otro. En <em>Kafka</em>, además de utilizar el concepto <strong>mensaje</strong>, se emplea el término <strong>evento</strong>.</p>
 </div>
-<p>Más del <a href="https://kafka.apache.org/powered-by">80% de las 100 compañías</a> más importantes de EEUU utilizan <em>Kafka</em>: <em>Uber</em>, <em>Twitter</em>, <em>Netflix</em>, <em>Spotify</em>, <em>Blizzard</em>, <em>LinkedIn</em>, <em>Spotify</em>, y <em>PayPal</em> procesan cada día sus mensajes con <em>Kafka</em>.</p>
+<p>Más del <a href="https://kafka.apache.org/powered-by">80% de las 100 compañías</a> más importantes de EEUU utilizan <em>Kafka</em>: <em>Uber</em>, <em>Twitter</em>, <em>Netflix</em>, <em>Spotify</em>, <em>Blizzard</em>, <em>LinkedIn</em> y <em>PayPal</em> procesan cada día sus mensajes con <em>Kafka</em>.</p>
 <p>Como sistema de mensajes, sigue un modelo publicador-suscriptor. Su arquitectura tiene dos directivas claras:</p>
 <ul>
 <li>No bloquear los productores (para poder gestionar la <a href="https://youtu.be/K3axU2b0dDk"><em>back pressure</em></a>, la cual sucede cuando un publicador produce más elementos de los que un suscriptor puede consumir).</li>
 <li>Aislar los productores y los consumidores, de manera que los productores y los consumidores no se conocen.</li>
 </ul>
-<p>A día de hoy, <em>Apache Kafka</em> se utiliza, además de como un sistema de mensajería, para ingestar datos, realizar procesado de datos en streaming y analítica de datos en tiempo real, así como en arquitectura de microservicios y sistemas IOT.</p>
+<p>A día de hoy, <em>Apache Kafka</em> se utiliza, además de como un sistema de mensajería, para ingestar datos, realizar procesado de datos en <em>streaming</em> y analítica de datos en tiempo real, así como en arquitecturas de microservicios y sistemas IOT.</p>
 <div class="admonition info">
 <p class="admonition-title">Amazon Kinesis</p>
-<p><a href="https://aws.amazon.com/es/kinesis/">Amazon Kinesis</a> es un producto similar a <em>Apache Kafka</em> pero dentro de la plataforma AWS, por lo que no es un producto <em>open source</em> como tal. Su principal ventaja es la facilidad de escalabilidad a golpe de click e integración con el resto de servicios que ofrece AWS.
-Se trata de una herramienta muy utilizada que permite incorporar datos en tiempo real, como vídeos, audios, registros de aplicaciones, secuencias de clicks de sitios web y datos de sensores IoT para <em>machine learning</em>, analítica de datos en streaming, etc...</p>
+<p><a href="https://aws.amazon.com/es/kinesis/">Amazon Kinesis</a> es un producto similar a <em>Apache Kafka</em> pero dentro de la plataforma AWS, por lo que no es un producto <em>open source</em> como tal. Su principal ventaja es la facilidad de escalabilidad a golpe de <em>click</em> e integración con el resto de servicios que ofrece AWS.
+Se trata de una herramienta muy utilizada que permite incorporar datos en tiempo real, como vídeos, audios, registros de aplicaciones, secuencias de clicks de sitios web y datos de sensores IoT para <em>machine learning</em>, analítica de datos en <em>streaming</em>, etc...</p>
 </div>
 <div class="admonition info">
 <p class="admonition-title">Confluent</p>
-<p><a href="https://www.confluent.io/es-es/">Confluent</a> es una solución PaaS que ofrece el despliegue y la monitorización de Kafka en un producto. Pese a existir una versión <em>Community</em> que podemos probar en local (incluso mediante <em>Docker</em>), los requisitos a nivel de RAM son bastante altos, ya que requiere un mínimo de 8GB de RAM sólo para <em>Kafka</em>, con lo que el ordenador <em>host</em> debe tener mínimo 12GB de RAM.</p>
+<p><a href="https://www.confluent.io/es-es/">Confluent</a> es una solución PaaS que ofrece el despliegue y la monitorización de <em>Kafka</em> en un producto. Pese a existir una versión <em>Community</em> que podemos probar en local (incluso mediante <em>Docker</em>), los requisitos a nivel de RAM son bastante altos, ya que requiere un mínimo de 8GB de RAM sólo para <em>Kafka</em>, con lo que el ordenador <em>host</em> debe tener mínimo 12GB de RAM.</p>
 </div>
 <h3 id="publicador-suscriptor">Publicador / Suscriptor<a class="headerlink" href="#publicador-suscriptor" title="Permanent link">&para;</a></h3>
 <p>Antes de entrar en detalle sobre <em>Kafka</em>, hay que conocer el modelo publicador/suscriptor. Este patrón también se conoce como <em>publish / subscribe</em> o <em>productor / consumidor</em>.</p>
 <p>Hay tres elementos que hay que tener realmente claros:</p>
 <ul>
-<li>Publicador (<em>publisher</em> / productor / emisor): genera un dato y lo coloca en un <em>topic</em> como un mensaje.</li>
-<li>topic (tema): almacén temporal/duradero que guarda los mensajes funcionando como una cola.</li>
-<li>Suscriptor (<em>subscriber</em> / consumidor / receptor): recibe el mensaje.</li>
+<li>Publicador (<strong><em>publisher</em></strong> / productor / emisor): genera un dato y lo coloca en un <em>topic</em> como un mensaje.</li>
+<li><strong><em>Topic</em></strong> (tema): almacén temporal/duradero que guarda los mensajes funcionando como una cola.</li>
+<li>Suscriptor (<strong><em>subscriber</em></strong> / consumidor / receptor): recibe el mensaje.</li>
 </ul>
 <p>Cabe destacar que un productor no se comunica nunca directamente con un consumidor, siempre lo hace a través de un <em>topic</em>:</p>
 <figure style="align: center;">
-    <img src="images/02kafka-producer-consumer.png">
+    <img src="images/02kafka-producer-consumer.png" alt="Productor - Consumidor">
     <figcaption>Productor - Consumidor</figcaption>
 </figure>
 
@@ -3721,7 +3732,7 @@ https://kafka.apache.org/quickstart
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">zookeeper.properties</p>
-<p>Del archivo de configuración de Zookeeper conviene destacar dos propiedades:</p>
+<p>Del archivo de configuración de <em>Zookeeper</em> conviene destacar dos propiedades:</p>
 <ul>
 <li><code>clientPort</code>: puerto por defecto (2181)</li>
 <li><code>dataDir</code>: indica donde está el directorio de datos de <em>Zookeeper</em> (por defecto es <code>tmp/zookeeper</code>, pero si queremos que dicha carpeta no se elimine es mejor que apunte a una ruta propia, por ejemplo <code>/opt/zookeeper-data</code>)</li>
@@ -3764,11 +3775,11 @@ https://kafka.apache.org/quickstart
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-console-consumer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic<span class="w"> </span>--from-beginning<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
 </code></pre></div>
 <p>Al ejecutarlo veremos los mensajes que habíamos introducido antes (ya que hemos indicado la opción <code>--from-beginning</code>). Si ahora volvemos a escribir en el productor, casi instantáneamente, aparecerá en el consumidor el mismo mensaje.</p>
-<p>Tras esto, paramos todos los procesos que se están ejecutando mediante CTRL+C y hemos finalizado nuestro primer contacto con Kafka.</p>
+<p>Tras esto, paramos todos los procesos que se están ejecutando mediante CTRL+C y hemos finalizado nuestro primer contacto con <em>Kafka</em>.</p>
 <h2 id="elementos">Elementos<a class="headerlink" href="#elementos" title="Permanent link">&para;</a></h2>
 <p>Dentro de una arquitectura con <em>Kafka</em>, existen múltiples elementos que interactúan entre sí.</p>
 <h3 id="topic-y-particiones">Topic y Particiones<a class="headerlink" href="#topic-y-particiones" title="Permanent link">&para;</a></h3>
-<p>Un <em>topic</em> (¿tema?) es un flujo particular de datos que funciona como una cola almacenando de forma temporal o duradera los datos que se colocan en él.</p>
+<p>Un <strong><em>topic</em></strong> (¿tema?) es un flujo particular de datos que funciona como una cola almacenando de forma temporal o duradera los datos que se colocan en él.</p>
 <p>Podemos crear tantos <em>topics</em> como queramos y cada uno de ellos tendrá un nombre unívoco.</p>
 <p>Un <em>topic</em> se divide en <strong>particiones</strong>, las cuales se numeran, siendo la primera la 0. Al crear un <em>topic</em> podemos indicar la cantidad de particiones inicial, la cual podemos modificar <em>a posteriori</em> (en nuestra máquina virtual, en el archivo <code>server.properties</code> tenemos configurado que, por defecto, cada <em>topic</em> tenga una sola partición mediante la propiedad <code>num.partitions=1</code>).</p>
 <p>Al crear un topic, si queremos indicar la cantidad de particiones, hemos de pasarle el parámetro <code>--partitions</code> y el número de particiones deseadas:</p>
@@ -3776,7 +3787,7 @@ https://kafka.apache.org/quickstart
 </code></pre></div>
 <p>Cada partición está ordenada, de manera que cada mensaje dentro de una partición tendrá un identificador incremental, llamado <strong><em>offset</em></strong> (desplazamiento). Cada partición funciona como un <em>commit log</em> almacenando los mensajes que recibe.</p>
 <figure style="align: center;">
-    <img src="images/02kafka-topic-partitions.png">
+    <img src="images/02kafka-topic-partitions.png" alt="Offset dentro de las particiones de un topic">
     <figcaption>Offset dentro de las particiones de un topic</figcaption>
 </figure>
 
@@ -3789,7 +3800,7 @@ https://kafka.apache.org/quickstart
 <p>Para eliminar un <em>topic</em>, le pasaremos el parámetro <code>--delete</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--delete<span class="w"> </span>--topic<span class="w"> </span>iabd-topic<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
 </code></pre></div>
-<p>Al borrar un topic, sus índices con el histórico no se eliminan, de manera que volver a crear un <em>topic</em> con el mismo nombre es una mala idea ya que podemos obtener datos incongruentes.</p>
+<p>Al borrar un <em>topic</em>, sus índices con el histórico no se eliminan, de manera que volver a crear un <em>topic</em> con el mismo nombre es una mala idea ya que podemos obtener datos incongruentes.</p>
 </div>
 <h3 id="brokers">Brokers<a class="headerlink" href="#brokers" title="Permanent link">&para;</a></h3>
 <p>Un clúster de <em>Kafka</em> está compuesto de múltiples nodos conocidos como <em>Brokers</em>, donde cada <em>broker</em> es un servidor de <em>Kafka</em>. Cada <em>broker</em> se identifica con un id, el cual debe ser un número entero.</p>
@@ -3797,7 +3808,7 @@ https://kafka.apache.org/quickstart
 <p>Para comenzar se recomienda una arquitectura de 3 brokers, aunque <a href="https://netflixtechblog.com/kafka-inside-keystone-pipeline-dd5aeabaf6bb">algunos clústers lo forman cerca de un centenar de <em>brokers</em></a>.</p>
 <p>Por ejemplo, el siguiente gráfico muestra un clúster con tres brokers, de manera que el <em>topic A</em> está dividido en tres particiones, cada una de ellas residiendo en un broker diferente (no hay ninguna relación entre el número de la partición y el nombre del broker), y el <em>topic B</em> está a su vez dividido en dos particiones:</p>
 <figure style="align: center;">
-    <img src="images/02kafka-3brokers.png">
+    <img src="images/02kafka-3brokers.png" alt="Ejemplo de 3 brokers">
     <figcaption>Ejemplo de 3 brokers</figcaption>
 </figure>
 
@@ -3840,15 +3851,16 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 </ul>
 <h4 id="clave-de-mensaje">Clave de mensaje<a class="headerlink" href="#clave-de-mensaje" title="Permanent link">&para;</a></h4>
 <p>Los productores pueden enviar una clave con el mensaje (de tipo cadena, numérico, etc...). Cuando la clave no se envía, ya hemos comentado que los datos se envían mediante <em>Round Robin</em> (primero <em>Broker 101</em>, luego el 102, el 103, etc... y vuelta al 101).</p>
-<p>Kafka trabaja con pares clave-valor, de manera que si no indicamos la clave, de considerará por defecto como nula y por tanto, la partición se identifica mediante <em>round robin</em>. Si se envía la clave, todos los mensajes con la misma clave siempre irán a la misma partición. Por lo tanto, enviaremos una clave cuando necesitemos ordenar los mensajes por un campo específico (por ejemplo, el identificador de una operación).</p>
+<p><em>Kafka</em> trabaja con pares clave-valor, de manera que si no indicamos la clave, de considerará por defecto como nula y por tanto, la partición se identifica mediante <em>round robin</em>. Si se envía la clave, todos los mensajes con la misma clave siempre irán a la misma partición. Por lo tanto, enviaremos una clave cuando necesitemos ordenar los mensajes por un campo específico (por ejemplo, el identificador de una operación).</p>
 <p>Para enviar mensajes con la clave, desde el terminal, necesitamos indicar dos propiedades mediante <code>--property</code>:</p>
 <ul>
 <li><code>parse.key</code>: si es <code>true</code>, obligatoriamente enviaremos la clave (por defecto es <code>false</code>)</li>
 <li><code>key.separator</code>: carácter para separar la clave del valor, por ejemplo, <code>:</code>, <code>;</code>, ....</li>
 </ul>
 <p>Así pues, podemos enviar mensajes con clave mediante:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-console-producer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic<span class="w"> </span>--property<span class="w"> </span><span class="s2">&quot;parse.key=true&quot;</span><span class="w"> </span>--property<span class="w"> </span><span class="s2">&quot;key.separator=:&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-console-producer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="2 "></span><span class="w">    </span>--property<span class="w"> </span><span class="s2">&quot;parse.key=true&quot;</span><span class="w"> </span>--property<span class="w"> </span><span class="s2">&quot;key.separator=:&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span class="linenos" data-linenos="3 "></span><span class="w">    </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
 </code></pre></div>
 <p>Y luego enviar mensajes del estilo:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>clave1:valor1
@@ -3895,8 +3907,8 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 </code></pre></div>
 <p>A continuación, en dos pestañas diferentes, vamos a crear dos consumidores que pertenezcan al mismo grupo de consumidores:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-console-consumer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--group<span class="w"> </span>iabd-app1<span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+<span class="hll"><span class="linenos" data-linenos="2 "></span><span class="w">    </span>--group<span class="w"> </span>iabd-app1<span class="w"> </span><span class="se">\</span>
+</span><span class="linenos" data-linenos="3 "></span><span class="w">    </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
 </code></pre></div>
 <p>Y finalmente, creamos un nuevo productor sobre el <em>topic</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-console-producer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span><span class="se">\</span>
@@ -3911,7 +3923,7 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 <div class="admonition question">
 <p class="admonition-title">Autoevaluación</p>
 <ul>
-<li>¿Qué sucederá se creamos un nuevo consumidor que lo haga del mismo <em>topic</em> pero con un grupo de consumidores diferente (por ejemplo, <code>iabd-app2</code>) y le pedimos que lea los mensajes desde el principio (mediante <code>--from-beginning</code>) ?<br />
+<li>¿Qué sucederá si creamos un nuevo consumidor que lo haga del mismo <em>topic</em> pero con un grupo de consumidores diferente (por ejemplo, <code>iabd-app2</code>) y le pedimos que lea los mensajes desde el principio (mediante <code>--from-beginning</code>) ?<br />
     Que aparecerán todos los mensajes desde el principio.</li>
 <li>¿Y si lo detenemos y volvemos a crear el mismo consumidor (también con el grupo de consumidores <code>iabd-app2</code> y los vuelva a leer desde el principio también)?<br />
     En esta ocasión, ya no recibirá ningún mensaje, ya que el primer consumidor hace <em>commit</em> de la lectura y el segundo al hacerlo desde el mismo grupo de consumidores ya tiene los mensajes previos marcados como leídos.</li>
@@ -4070,10 +4082,10 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 0.5p) Realiza el caso de uso 0, adjuntando capturas de los comandos utilizados y, en alguno de los mensajes, envía tu nombre.</p>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 1p) Realiza el caso de uso 0, adjuntando capturas de los comandos utilizados y, en alguno de los mensajes, envía tu nombre.</p>
 </li>
 <li>
-<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 1p) Se pide:</p>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">CEBDA.1a</abbr> / 1.5p) Se pide:</p>
 <ol>
 <li>Crea un topic llamado <code>iabd-topic-&lt;nombre&gt;</code> con 4 particiones y un factor de replicación 2 y que permita el envío de claves de mensaje utilizando <code>:</code> como separador.</li>
 <li>A continuación, lanza dos consumidores que pertenezcan al grupo de consumidores <code>consumer-group-iabd</code>.</li>
@@ -4132,7 +4144,7 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 <p>Para este apartado se recomienda revisar la sesión de <a href="../sa/pymongo.html">MongoDB y Python</a></p>
 </li>
 </ol>
-<p>Adjunta el código fuente de ambos <em>scripts</em>, así como capturas de pantalla de la colección en MongoDB con datos rellenados.</p>
+<p>Adjunta el código fuente de ambos <em>scripts</em>, así como capturas de pantalla de la colección en <em>MongoDB</em> con datos rellenados.</p>
 </li>
 </ol>
 <!--
