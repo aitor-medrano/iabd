@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Creación de clúster de Kafka, integración de Kafka desde un servicios REST a MongoDB y S3, y uso de Kafka Connect.">
+        <meta name="description" content="Creación de un clúster de Kafka, integración de Kafka desde servicios REST a MongoDB y S3, y uso de Kafka Connect.">
       
       
       
@@ -73,7 +73,7 @@
       
         <meta  property="og:title"  content="Apache Kafka Avanzado. - Inteligencia Artificial y Big Data" >
       
-        <meta  property="og:description"  content="Creación de clúster de Kafka, integración de Kafka desde un servicios REST a MongoDB y S3, y uso de Kafka Connect." >
+        <meta  property="og:description"  content="Creación de un clúster de Kafka, integración de Kafka desde servicios REST a MongoDB y S3, y uso de Kafka Connect." >
       
         <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/dataflow/kafka2.png" >
       
@@ -89,7 +89,7 @@
       
         <meta  name="twitter:title"  content="Apache Kafka Avanzado. - Inteligencia Artificial y Big Data" >
       
-        <meta  name="twitter:description"  content="Creación de clúster de Kafka, integración de Kafka desde un servicios REST a MongoDB y S3, y uso de Kafka Connect." >
+        <meta  name="twitter:description"  content="Creación de un clúster de Kafka, integración de Kafka desde servicios REST a MongoDB y S3, y uso de Kafka Connect." >
       
         <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/dataflow/kafka2.png" >
       
@@ -4127,18 +4127,19 @@ Una vez que los datos se almacenan en <em>Kafka</em> como eventos, podemos proce
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> y <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 1p) A partir del caso 2, crea un clúster de Kafka con 4 particiones y 3 nodos. A continuación, en el productor utiliza <em>Faker</em> para crear 10 personas (almacénalas como un diccionario). En el consumidor, muestra los datos de las personas (no es necesario recibirlos ordenados, sólo necesitamos que se aproveche al máximo la infraestructura de <em>Kafka</em>).</li>
-<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> y <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 1.5p) Realiza el caso de uso 3 mediante <em>Python</em>, pero separando el <code>consumidorSilverProductorGold</code> en tres consumidores diferentes, uno que consuma y guarde en S3 (<code>consumidorSilverS3.py</code>), otro que consuma y guarde en <em>MongoDB</em> (<code>consumidorSilverMongoDB.py</code>) y el tercero que consuma, agrupe mensajes y produzca el mensaje al topic <em>gold</em> (<code>consumidorSilverGroupProducerGold.py</code>).</li>
-<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 1p) Realiza el caso de uso 4 mediante <em>Nifi</em>, pero modificando el primer flujo para que un grupo de procesadores únicamente realice la petición REST y coloque el contenido en <em>topic</em> <code>iabd-aemet-bronze</code> y en un segundo grupo, se consuman los mensajes de ese <em>topic</em> y se realice la transformación de la petición REST y su posterior producción al <em>topic</em> <code>iabd-aemet-silver</code>.</li>
+<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> y <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 2p) Realiza el caso de uso 3 mediante <em>Python</em>, pero separando el <code>consumidorSilverProductorGold</code> en tres consumidores diferentes, uno que consuma y guarde en S3 (<code>consumidorSilverS3.py</code>), otro que consuma y guarde en <em>MongoDB</em> (<code>consumidorSilverMongoDB.py</code>) y el tercero que consuma, agrupe mensajes y produzca el mensaje al topic <em>gold</em> (<code>consumidorSilverGroupProducerGold.py</code>).</li>
+<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / opcional) Realiza el caso de uso 4 mediante <em>Nifi</em>, pero modificando el primer flujo para que un grupo de procesadores únicamente realice la petición REST y coloque el contenido en <em>topic</em> <code>iabd-aemet-bronze</code> y en un segundo grupo, se consuman los mensajes de ese <em>topic</em> y se realice la transformación de la petición REST y su posterior producción al <em>topic</em> <code>iabd-aemet-silver</code>.</li>
 <li>
 <p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 1p) A partir del ejemplo realizado en el apartado de <em>Kafka Connect</em>, añade otro conector para que consuma los mensajes de la cola y los inserte en <em>MongoDB</em> de forma automática. Para ello, puedes utilizar el <a href="https://www.confluent.io/hub/mongodb/kafka-connect-mongodb">MongoDB Connector (Source and Sink)</a> y consultar su <a href="https://www.mongodb.com/docs/kafka-connector/current/">documentación</a> y un ejemplo de <a href="https://github.com/mongodb/mongo-kafka/blob/master/config/MongoSinkConnector.properties">fichero de configuración</a>.</p>
 <p>Ten en cuenta que para lanzar los dos conectores a la ver deberás lanzar <em>Kafka Connect</em> y pasarle todos los conectores como parámetros:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>connect-standalone.sh<span class="w"> </span>config/connect-standalone.properties<span class="w"> </span>config/mysql-source-connector.properties<span class="w"> </span>config/mongodb-sink-connector.properties
 </code></pre></div>
 </li>
-<li>
-<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos">CEBDA.1a</abbr> / 0.5p) Investiga en qué consiste el patrón CDC (<em>Change Data Capture</em>) y cómo se realiza CDC con <em>Kafka</em>/<em>Kafka Connect</em>, el procesador <a href="https://nifi.apache.org/docs/nifi-docs/components/org.apache.nifi/nifi-cdc-mysql-nar/latest/org.apache.nifi.cdc.mysql.processors.CaptureChangeMySQL/index.html">CaptureChangeMySQL</a> de <em>Nifi</em> y el producto <a href="https://debezium.io/">Debezium</a>. ¿Qué ventajas aportan las soluciones CDC?</p>
-</li>
 </ol>
+<div class="admonition info">
+<p class="admonition-title">Opcional</p>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos">CEBDA.1a</abbr> / 0.5p) Investiga en qué consiste el patrón CDC (<em>Change Data Capture</em>) y cómo se realiza CDC con <em>Kafka</em>/<em>Kafka Connect</em>, el procesador <a href="https://nifi.apache.org/docs/nifi-docs/components/org.apache.nifi/nifi-cdc-mysql-nar/latest/org.apache.nifi.cdc.mysql.processors.CaptureChangeMySQL/index.html">CaptureChangeMySQL</a> de <em>Nifi</em> y el producto <a href="https://debezium.io/">Debezium</a>. ¿Qué ventajas aportan las soluciones CDC?</p>
+</div>
 
 
 
