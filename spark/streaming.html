@@ -1575,6 +1575,14 @@
     Streaming I
   </span>
   
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
 
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -1585,6 +1593,14 @@
   <span class="md-ellipsis">
     Streaming I
   </span>
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -3850,7 +3866,7 @@
 <p>Para ello, en un terminal, abrimos un <em>listener</em> de <em>Netcat</em> en el puerto 9999:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>nc<span class="w"> </span>-lk<span class="w"> </span><span class="m">9999</span>
 </code></pre></div>
-<p>Tras arrancar <em>Netcat</em>, ya podemos crear nuestra aplicación <em>Spark</em> (vamos a indicar que cree 2 hilos, lo cual es el mínimo necesario para realizar <em>streaming</em>, uno para recibir y otro para procesar), en la cual tenemos diferenciadas:</p>
+<p>Tras arrancar <em>Netcat</em> y PySpark (en otro terminal, ejecutamos <code>pyspark</code>), ya podemos crear nuestra aplicación <em>Spark</em> (vamos a indicar que cree 2 hilos, lo cual es el mínimo necesario para realizar <em>streaming</em>, uno para recibir y otro para procesar), en la cual tenemos diferenciadas:</p>
 <ul>
 <li>la fuente de datos: creación del flujo de lectura mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.SparkSession.readStream.html"><code>readStream</code></a> que devuelve un <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamReader.html">DataStreamReader</a> que utilizaremos para cargar un <em>DataFrame</em>.</li>
 <li>la lógica de procesamiento, ya sea mediante <em>DataFrames API</em> o <em>Spark SQL</em>.</li>
@@ -4021,8 +4037,13 @@ Por ejemplo, si nos centramos en un escenario IoT, el tiempo del evento es cuand
 </li>
 <li>
 <p><ins>Memoria</ins>: se emplea para pruebas y depuración, ya que sólo permite un volumen pequeño de datos para evitar un problema de falta de memoria en el driver para almacenar la salida. Los datos se almacenan en una tabla temporal a la cual podemos acceder desde <em>SparkSQL</em>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">writeStream</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;memory&quot;</span><span class="p">)</span> \  
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">writeStream</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;memory&quot;</span><span class="p">)</span> \  
 <span class="linenos" data-linenos="2 "></span>    <span class="o">.</span><span class="n">queryName</span><span class="p">(</span><span class="s2">&quot;nombreTabla&quot;</span><span class="p">)</span>  
+<span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</code></pre></div>
+* <ins>Tabla</ins>: De la misma forma que en la entrada, podemos persistir el resultado a una tabla de Spark SQL:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">writeStream</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;parquet&quot;</span><span class="p">)</span> \  
+<span class="linenos" data-linenos="2 "></span>    <span class="o">.</span><span class="n">toTable</span><span class="p">(</span><span class="s2">&quot;nombreTabla&quot;</span><span class="p">)</span>  
 <span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">start</span><span class="p">()</span>
 </code></pre></div>
 </li>
@@ -4154,7 +4175,7 @@ FIXME: start() materializes the complete job description into a streaming comput
 <span class="linenos" data-linenos="20 "></span><span class="w">        </span><span class="p">{</span><span class="nt">&quot;ItemCode&quot;</span><span class="p">:</span><span class="s2">&quot;498&quot;</span><span class="p">,</span><span class="nt">&quot;ItemDescription&quot;</span><span class="p">:</span><span class="s2">&quot;Carving knifes&quot;</span><span class="p">,</span><span class="nt">&quot;ItemPrice&quot;</span><span class="p">:</span><span class="mf">1424.0</span><span class="p">,</span><span class="nt">&quot;ItemQty&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;TotalValue&quot;</span><span class="p">:</span><span class="mf">2848.0</span><span class="p">},</span>
 <span class="linenos" data-linenos="21 "></span><span class="w">        </span><span class="p">{</span><span class="nt">&quot;ItemCode&quot;</span><span class="p">:</span><span class="s2">&quot;523&quot;</span><span class="p">,</span><span class="nt">&quot;ItemDescription&quot;</span><span class="p">:</span><span class="s2">&quot;Oil-lamp clock&quot;</span><span class="p">,</span><span class="nt">&quot;ItemPrice&quot;</span><span class="p">:</span><span class="mf">1371.0</span><span class="p">,</span><span class="nt">&quot;ItemQty&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;TotalValue&quot;</span><span class="p">:</span><span class="mf">2742.0</span><span class="p">}]}</span>
 </code></pre></div>
-<p>Y a partir de él, generaremos 4 documentos (uno por cada línea de factura) con la siguiente estructura:</p>
+<p>Y a partir de él, generaremos 4 documentos (uno por cada línea de factura) con la siguiente estructura que contiene algunos campos comunes a la factura y otros a cada elemento:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">&quot;InvoiceNumber&quot;</span><span class="p">:</span><span class="s2">&quot;51402977&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">&quot;CreatedTime&quot;</span><span class="p">:</span><span class="mi">1595688900348</span><span class="p">,</span>
@@ -4163,12 +4184,12 @@ FIXME: start() materializes the complete job description into a streaming comput
 <span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="nt">&quot;CustomerType&quot;</span><span class="p">:</span><span class="s2">&quot;PRIME&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="nt">&quot;PaymentMethod&quot;</span><span class="p">:</span><span class="s2">&quot;CARD&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="nt">&quot;DeliveryType&quot;</span><span class="p">:</span><span class="s2">&quot;TAKEAWAY&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="nt">&quot;ItemCode&quot;</span><span class="p">:</span><span class="s2">&quot;458&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="nt">&quot;ItemDescription&quot;</span><span class="p">:</span><span class="s2">&quot;Wine glass&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="nt">&quot;ItemPrice&quot;</span><span class="p">:</span><span class="mf">1644.0</span><span class="p">,</span>
-<span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="nt">&quot;ItemQty&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>
-<span class="linenos" data-linenos="13 "></span><span class="w">    </span><span class="nt">&quot;TotalValue&quot;</span><span class="p">:</span><span class="mf">3288.0</span>
-<span class="linenos" data-linenos="14 "></span><span class="p">}</span>
+<span class="hll"><span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="nt">&quot;ItemCode&quot;</span><span class="p">:</span><span class="s2">&quot;458&quot;</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="nt">&quot;ItemDescription&quot;</span><span class="p">:</span><span class="s2">&quot;Wine glass&quot;</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="nt">&quot;ItemPrice&quot;</span><span class="p">:</span><span class="mf">1644.0</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="nt">&quot;ItemQty&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos" data-linenos="13 "></span><span class="w">    </span><span class="nt">&quot;TotalValue&quot;</span><span class="p">:</span><span class="mf">3288.0</span>
+</span><span class="linenos" data-linenos="14 "></span><span class="p">}</span>
 </code></pre></div>
 <h3 id="cargando-los-datos">Cargando los datos<a class="headerlink" href="#cargando-los-datos" title="Permanent link">&para;</a></h3>
 <p>Las facturas que nos envían las colocan en una carpeta a la que tenemos acceso (para este ejercicio, podemos descargar los archivos y colocarlos en la carpeta <code>entrada</code>), de manera que primero crearemos la sesión y realizaremos la lectura desde dicha carpeta. Es importante destacar que para que funcione la inferencia de la estructura del documento, debemos disponer de algún archivo en nuestra carpeta de <code>entrada</code> y activar la propiedad <code>spark.sql.streaming.schemaInference</code>:</p>
@@ -4426,6 +4447,13 @@ FIXME: start() materializes the complete job description into a streaming comput
 </code></pre></div>
 <p>Donde podemos ver que cada mensaje tiene una <code>key</code> y un <code>value</code>, así como otros campos relativos a <em>Kafka</em> que <em>Spark</em> utilizará para gestionar la tolerancia a fallos.</p>
 <p>Es importante destacar que el campo <code>value</code> es de tipo binario, por lo que necesitamos pasarlo a formato JSON.</p>
+<div class="admonition tip">
+<p class="admonition-title">Probando desde consola</p>
+<p>Si queremos crear un productor desde la consola y confirmar que aparecen en <em>Spark Streaming</em>, podemos recuperar los datos mediante:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">col</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">kafkaDFS</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">))</span>
+</code></pre></div>
+</div>
 <h3 id="leyendo-datos">Leyendo datos<a class="headerlink" href="#leyendo-datos" title="Permanent link">&para;</a></h3>
 <p>Para poder leer los datos, necesitamos indicar el esquema del campo <code>value</code>. Para ello, primero definimos el esquema:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">StructType</span><span class="p">,</span> <span class="n">StructField</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">LongType</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">,</span> <span class="n">ArrayType</span>
