@@ -14,7 +14,7 @@
         <link rel="prev" href="30entrenamiento.html">
       
       
-        <link rel="next" href="06autoponic.html">
+        <link rel="next" href="32evaluando.html">
       
       
       <link rel="icon" href="../favicon.png">
@@ -1569,7 +1569,7 @@
         
   
   <span class="md-ellipsis">
-    Streaming I
+    Streaming
   </span>
   
     
@@ -1598,7 +1598,7 @@
         
   
   <span class="md-ellipsis">
-    Streaming II
+    Windowing y Joins
   </span>
   
 
@@ -2246,6 +2246,8 @@
       
         
       
+        
+      
     
     
     
@@ -2449,6 +2451,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#gradio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gradio
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2476,6 +2487,27 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="32evaluando.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Evaluando
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -3386,6 +3418,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#gradio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gradio
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3454,10 +3495,10 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">Seq2SeqTrainingArguments</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">training_args</span> <span class="o">=</span> <span class="n">Seq2SeqTrainingArguments</span><span class="p">(</span>
-<span class="linenos" data-linenos="4 "></span>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;IABDs8a/whisper-base-lara&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="5 "></span>    <span class="o">...</span>
-<span class="linenos" data-linenos="6 "></span>    <span class="n">report_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;wandb&quot;</span><span class="p">],</span>
-<span class="linenos" data-linenos="7 "></span>    <span class="o">...</span>
+<span class="hll"><span class="linenos" data-linenos="4 "></span>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;whisper-base-lara&quot;</span><span class="p">,</span>
+</span><span class="linenos" data-linenos="5 "></span>    <span class="o">...</span>
+<span class="hll"><span class="linenos" data-linenos="6 "></span>    <span class="n">report_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;wandb&quot;</span><span class="p">],</span>
+</span><span class="linenos" data-linenos="7 "></span>    <span class="o">...</span>
 <span class="linenos" data-linenos="8 "></span><span class="p">)</span>
 </code></pre></div>
 <h3 id="hugging-face">Hugging Face<a class="headerlink" href="#hugging-face" title="Permanent link">&para;</a></h3>
@@ -3471,24 +3512,72 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">Seq2SeqTrainingArguments</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">training_args</span> <span class="o">=</span> <span class="n">Seq2SeqTrainingArguments</span><span class="p">(</span>
-<span class="linenos" data-linenos="4 "></span>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;IABDs8a/whisper-base-lara&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="5 "></span>    <span class="o">...</span>
-<span class="linenos" data-linenos="6 "></span>    <span class="n">push_to_hub</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos" data-linenos="7 "></span>    <span class="o">...</span>
+<span class="hll"><span class="linenos" data-linenos="4 "></span>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;whisper-base-lara&quot;</span><span class="p">,</span>
+</span><span class="linenos" data-linenos="5 "></span>    <span class="o">...</span>
+<span class="hll"><span class="linenos" data-linenos="6 "></span>    <span class="n">push_to_hub</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span class="linenos" data-linenos="7 "></span>    <span class="o">...</span>
 <span class="linenos" data-linenos="8 "></span><span class="p">)</span>
 </code></pre></div>
 <p>Si en vez de publicar al entrenar, únicamente queremos publicar el modelo resultante en <em>Hugging Face</em> dentro de la organización, haríamos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">model</span><span class="o">.</span><span class="n">push_to_hub</span><span class="p">(</span><span class="s2">&quot;lara-base-xyz&quot;</span><span class="p">,</span> <span class="n">organization</span><span class="o">=</span><span class="s2">&quot;IABDs8a&quot;</span><span class="p">)</span>
 </code></pre></div>
+<h3 id="gradio">Gradio<a class="headerlink" href="#gradio" title="Permanent link">&para;</a></h3>
+<p>A la hora de probar los modelos, por ejemplo, podemos crear un IU que nos permite probar más de un modelo dentro del mismo espacio:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># Utilizamos dos modelos entrenados</span>
+<span class="hll"><span class="linenos" data-linenos=" 8 "></span><span class="n">pipe_base</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;aitor-medrano/lara-base-pushed&quot;</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos" data-linenos=" 9 "></span><span class="n">pipe_small</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;aitor-medrano/whisper-small-lara&quot;</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span><span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">grabacion</span><span class="p">,</span> <span class="n">modelo</span><span class="o">=</span><span class="s2">&quot;base&quot;</span><span class="p">):</span>
+<span class="linenos" data-linenos="12 "></span>
+<span class="linenos" data-linenos="13 "></span>    <span class="n">inicio</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="linenos" data-linenos="14 "></span>
+<span class="linenos" data-linenos="15 "></span>    <span class="n">sr</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">grabacion</span>
+<span class="linenos" data-linenos="16 "></span>    <span class="c1"># Pasamos el array de muestras a tipo NumPy de 32 bits</span>
+<span class="linenos" data-linenos="17 "></span>    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="linenos" data-linenos="18 "></span>    <span class="n">y</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+<span class="linenos" data-linenos="19 "></span>
+<span class="linenos" data-linenos="20 "></span>    <span class="k">if</span> <span class="n">modelo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">modelo</span> <span class="o">==</span> <span class="s2">&quot;base&quot;</span><span class="p">:</span>
+<span class="linenos" data-linenos="21 "></span>        <span class="n">pipe</span> <span class="o">=</span> <span class="n">pipe_base</span>
+<span class="linenos" data-linenos="22 "></span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos" data-linenos="23 "></span>        <span class="n">modelo</span> <span class="o">=</span> <span class="s2">&quot;small&quot;</span>
+<span class="linenos" data-linenos="24 "></span>        <span class="n">pipe</span> <span class="o">=</span> <span class="n">pipe_small</span>
+<span class="linenos" data-linenos="25 "></span>
+<span class="hll"><span class="linenos" data-linenos="26 "></span>    <span class="n">result</span> <span class="o">=</span> <span class="n">modelo</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">pipe</span><span class="p">({</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">:</span> <span class="n">sr</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">})[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
+</span><span class="linenos" data-linenos="27 "></span>    <span class="n">fin</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="linenos" data-linenos="28 "></span>
+<span class="linenos" data-linenos="29 "></span>    <span class="c1"># Devolvemos el resultado de la predicción y el tiempo empleado</span>
+<span class="hll"><span class="linenos" data-linenos="30 "></span>    <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">fin</span> <span class="o">-</span> <span class="n">inicio</span>
+</span><span class="linenos" data-linenos="31 "></span>
+<span class="linenos" data-linenos="32 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">greet</span><span class="p">,</span>
+<span class="linenos" data-linenos="33 "></span>    <span class="n">inputs</span><span class="o">=</span><span class="p">[</span>
+<span class="linenos" data-linenos="34 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(),</span>
+<span class="hll"><span class="linenos" data-linenos="35 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+</span><span class="linenos" data-linenos="36 "></span>            <span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">,</span> <span class="s2">&quot;small&quot;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Modelo&quot;</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Modelos de Lara entrenados&quot;</span>
+<span class="linenos" data-linenos="37 "></span>        <span class="p">)</span>
+<span class="linenos" data-linenos="38 "></span>    <span class="p">],</span>
+<span class="linenos" data-linenos="39 "></span>    <span class="n">outputs</span><span class="o">=</span><span class="p">[</span>
+<span class="linenos" data-linenos="40 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Salida&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos="41 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Tiempo&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="42 "></span>    <span class="p">])</span>
+<span class="linenos" data-linenos="43 "></span>
+<span class="linenos" data-linenos="44 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+</code></pre></div>
 <h2 id="tareas-a-realizar">Tareas a realizar<a class="headerlink" href="#tareas-a-realizar" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Entrenar el modelo, al menos tres veces, con diferentes <em>datasets</em> y tamaños de <em>Whisper</em> o tamaños para test/validación.</li>
 <li>Publicar los modelos en <em>HuggingFace</em> dentro de la organización.</li>
-<li>Crear tantos espacios <em>Gradio</em> como modelos dispongamos para probarlos.</li>
+<li>Crear espacios <em>Gradio</em> para los modelos entrenados.</li>
 </ul>
 <h2 id="plazo-de-entrega">Plazo de entrega<a class="headerlink" href="#plazo-de-entrega" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Viernes 17 Mayo - 16:00: 3 modelos re-entrenados a partir de diferentes <em>datasets</em>, y sus respectivos Gradios para su prueba.</li>
+<li>Viernes 17 Mayo - 17:00 - 3 modelos re-entrenados a partir de diferentes <em>datasets</em>.</li>
+<li>Lunes 19 Mayo - 17:00 - Gradio que permita probar los diferentes modelos.</li>
 </ul>
 
 
@@ -3587,13 +3676,13 @@
         
         
           
-          <a href="06autoponic.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Presentación">
+          <a href="32evaluando.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Evaluando">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Siguiente
               </span>
               <div class="md-ellipsis">
-                Presentación
+                Evaluando
               </div>
             </div>
             <div class="md-footer__button md-icon">
