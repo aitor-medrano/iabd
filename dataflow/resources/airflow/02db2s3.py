@@ -46,7 +46,7 @@ def envioS3Hook():
 
 default_args = {
     'owner': 'aitor-medrano',
-    'start_date': dt.datetime(2022, 5, 1),
+    'start_date': dt.datetime(2024, 5, 1),
     'retries': 1,
     'retry_delay': dt.timedelta(minutes=5),
 }

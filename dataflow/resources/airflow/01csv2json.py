@@ -15,7 +15,7 @@ def csvToJson():
 
 default_args = {
     'owner': 'aitor-medrano',
-    'start_date': dt.datetime(2023, 4, 18),
+    'start_date': dt.datetime(2024, 5, 23),
     'retries': 1,
     'retry_delay': dt.timedelta(minutes=5),
 }
