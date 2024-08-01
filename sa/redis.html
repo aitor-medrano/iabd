@@ -20,7 +20,7 @@
     
     
       
-        <title>Redis como base de datos clave-valor - - Inteligencia Artificial y Big Data</title>
+        <title>Redis como base de datos clave-valor - Inteligencia Artificial y Big Data</title>
       
     
     
@@ -67,7 +67,7 @@
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Redis como base de datos clave-valor - - Inteligencia Artificial y Big Data" >
+        <meta  property="og:title"  content="Redis como base de datos clave-valor - Inteligencia Artificial y Big Data" >
       
         <meta  property="og:description"  content="aaa" >
       
@@ -83,7 +83,7 @@
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Redis como base de datos clave-valor - - Inteligencia Artificial y Big Data" >
+        <meta  name="twitter:title"  content="Redis como base de datos clave-valor - Inteligencia Artificial y Big Data" >
       
         <meta  name="twitter:description"  content="aaa" >
       
@@ -110,7 +110,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#puesta-en-marcha" class="md-skip">
+        <a href="#caracteristicas" class="md-skip">
           Saltar a contenido
         </a>
       
@@ -145,7 +145,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Redis como base de datos clave-valor -
+              Redis como base de datos clave-valor
             
           </span>
         </div>
@@ -2926,6 +2926,8 @@
       
         
       
+        
+      
     
     
     
@@ -3083,6 +3085,29 @@
   
   <span class="md-ellipsis">
     Febrero
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/julio.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Julio
   </span>
   
 
@@ -3293,9 +3318,45 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#caracteristicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Características
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estructuras-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Estructuras de datos
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#casos-de-uso" class="md-nav__link">
+    <span class="md-ellipsis">
+      Casos de Uso
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#puesta-en-marcha" class="md-nav__link">
     <span class="md-ellipsis">
       Puesta en marcha
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      Referencias
     </span>
   </a>
   
@@ -3333,43 +3394,124 @@
 
 
 
-  <h1>Redis como base de datos clave-valor -</h1>
+  <h1>Redis como base de datos clave-valor</h1>
 
 <figure style="float: right;">
-    <img src="images/10redis-logo.png" alt="Logo de Redis">
+    <img src="images/10redis-logo.png" alt="Logo de Redis" width="200px">
     <figcaption>Logo de Redis</figcaption>
 </figure>
 
-<p><a href="https://redis.io/es/">“Redis</a> es una base de datos NoSQL <em>open source</em> en memoria que permite el cacheo de los datos y funcionar como un <em>broker</em> de mensajería. Soporta estructuras de datos como cadenas, <em>hash</em>, listas, conjuntos, conjuntos ordenador con consultas por rango, así como otras estructuras más específicas como mapas de bit, consultas radius, índices geospaciales, etc...</p>
-<p>El nombre Redis proviene de las iniciales de <strong><em>Remote Dictionary Server</em></strong> (servidor de diccionario remoto), un tipo de servidor apto como memoria rápida para datos, permitiendo su uso como una base de datos en memoria y como de clave-valor.</p>
-<p>Base de datos en memoria: en este tipo de bases de datos, el SGBD guarda todos los datos en la memoria principal, lo cual garantiza una respuesta rápida incluso con grandes conjuntos de datos sin estructurar.
-Base de datos de clave-valor: gracias a su sencilla estructura, estas bases de datos también ofrecen un alto rendimiento y pueden escalarse fácilmente. Para cada entrada se crea una clave (key) mediante la que se puede volver a solicitar la información en cuestión.
-En un servidor Redis, por lo tanto, los datos no se guardan en el disco duro, sino en la memoria principal. Esto permite que Redis funcione como memoria caché y también como unidad de memoria principal, con independencia de si los datos permanecen en la base por mucho o poco tiempo.</p>
-<p>Cada entrada de la base de datos recibe asignada una clave con la que se pueden localizar los datos fácilmente de nuevo. De esta manera, las entradas no necesitan estar relacionadas entre sí ni tampoco consultarse con varias tablas diferentes, sino que la información está disponible de manera directa.</p>
-<p>Al depositar información en la memoria, sin embargo, también se corre el riesgo de perder todos los datos si hubiera un fallo del servidor. Para evitar que eso ocurra, Redis puede, o bien hacer regularmente un duplicado de todos los datos en un disco duro secundario, o bien guardar en un archivo de registro todas las órdenes necesarias para llevar a cabo una reconstrucción.</p>
-<p>La estructura de datos típica de Redis está formada por las llamadas strings, es decir, cadenas simples de caracteres. Las claves (parte del key-value store) también se han realizado como strings. El sistema, sin embargo, es también compatible con otras estructuras de datos:</p>
-<p>String: secuencias de un tamaño máximo de 512 MB
-Hash: entrada con varios campos
-List: conjunto de strings clasificados por orden de introducción
-Set: conjunto de strings sin clasificar
-Sorted set (sets clasificado): conjunto de strings clasificado por el usuario
-Bitmap: conjunto de operaciones a nivel de bit
-HyperLogLog: estimación según valores unívocos
-Stream: lista de strings o pares complejos de key-value
-Puesto que Redis es un sistema de código abierto, hay muchos desarrolladores trabajando para ampliar el sistema. Los llamados módulos o ampliaciones aumentan el rango de funciones de la base de datos, que por lo demás es bastante sencilla, y adaptan el software a ámbitos de uso específicos.</p>
-<p>Hecho
-Redis es de código abierto y cualquiera puede usarlo de forma gratuita. Está patrocinado principalmente por la empresa Redis Labs, que ofrece versiones en la nube, de pago, de este programa.</p>
+<p><a href="https://redis.io/es/">“Redis</a> es una base de datos NoSQL <em>open source</em> en memoria, con un modelo datos de clave-valor, que permite el cacheo de los datos y funcionar como un <em>broker</em> de mensajería. Soporta estructuras de datos como cadenas, <em>hash</em>, listas, conjuntos, conjuntos ordenador con consultas por rango, así como otras estructuras más específicas como mapas de bit, consultas radius, índices geospaciales, etc...</p>
+<p>El nombre <em>Redis</em> proviene de las iniciales de <strong><em>Remote Dictionary Server</em></strong> (servidor de diccionario remoto), un tipo de servidor apto como memoria rápida para datos, permitiendo su uso como una base de datos en memoria y como de clave-valor.</p>
+<h2 id="caracteristicas">Características<a class="headerlink" href="#caracteristicas" title="Permanent link">&para;</a></h2>
+<p>Cuando decimos que <em>Redis</em> es una base de datos en memoria, estamos indicando que el servidor almacena todos los datos en la memoria principal (RAM), ya que es la manera más rápida para almacenar y recuperar datos.  Esto permite que <em>Redis</em> funcione como memoria caché y también como unidad de memoria principal, con independencia de si los datos permanecen en la base de datos por mucho o poco tiempo. Así pues, en un servidor <em>Redis</em>, por lo tanto, los datos no se guardan en el disco duro, sino en la memoria principal.</p>
+<p>Gracias a ser un almacén clave-valor, ofrece un alto rendimiento y puede escalarse fácilmente. Para cada entrada se crea una clave (<em>key</em>) mediante la que se puede volver a solicitar la información en cuestión. Esto implica que las entradas no necesitan estar relacionadas entre sí ni tampoco consultarse con varias tablas diferentes, sino que la información está disponible de manera directa.</p>
+<p>¿Y si falla el servidor o se va la luz? ¿Corremos el riesgo de perder todos los datos? Para evitar que eso ocurra, <em>Redis</em> puede, o bien hacer regularmente un duplicado de todos los datos en un disco duro secundario (persistencia RDB - <em>???</em>), o bien guardar en un archivo de registro todas las órdenes necesarias para llevar a cabo una reconstrucción (persistencia AOF - <em>Append Only File</em>).</p>
+<p>Finalmente, respecto a la escalabilidad, como solución NoSQL, si toda la información no cabe es un único nodo, el sistema puede escalar horizontalmente añadiendo más nodos. Si cada nodo puede almacenar 64GB RAM, y tenemos 4 servidores, podríamos almacenar hasta 256GB de datos en nuestro servidor <em>Redis</em>.</p>
+<div class="admonition info">
+<p class="admonition-title">Hablemos de tamaños</p>
+<p>Un millón de cadenas almacenadas en Redis ocupan aproximadamente 85MB de almacenamiento.
+Una instancia vacía de Redis utiliza 3 MB de RAM.
+Los valores en Redis son de 64 bits.
+En teoría, Redis puede almacenar 2^32 claves en una única instancia Redis. En la práctica, hay servidores de una única instancia con 250 millones de claves.</p>
+</div>
+<h2 id="estructuras-de-datos">Estructuras de datos<a class="headerlink" href="#estructuras-de-datos" title="Permanent link">&para;</a></h2>
+<p>La estructura de datos típica de <em>Redis</em> está formada por las llamadas <strong><em>Strings</em></strong>, es decir, <strong>cadenas</strong> simples de caracteres.</p>
+<p>El uso de <em>Strings</em> permite almacenar datos de forma genérica, como por ejemplo, serializando cualquier dato en una cadena o utilizando documentos JSON. Conviene destacar que el tamaño máximo es de 512 MB.</p>
+<p>El sistema, sin embargo, es también compatible con otras estructuras de datos. Veamos las más destacadas</p>
+<div class="grid cards">
+<ul>
+<li>
+<p><strong><em>Hash</em></strong></p>
+<p>Un <em>hash</em> en Redis es similar a un documento JSON, donde se mapea una clave con un valor.</p>
+<p><figure style="align: center;">
+    <img src="images/10redis-hash.jpg" alt="Hashes en Redis" width="400px">
+    <figcaption>Hashes en Redis</figcaption>
+</figure></p>
+<p>Se utiliza para almacenar objetos ligeros, como las sesiones de usuario, los propios datos del usuario, visitantes, etc...</p>
+</li>
+<li>
+<p><strong>Listas</strong></p>
+<p>Las listas en Redis son como un array de cadenas, teniendo en cuenta que los elementos se ordenan por orden de inserción. </p>
+<p>Se implementan mediante listas enlazadas, lo que provoca que las operaciones en la cabeza y en la cola ocurran con complejidad constante, independientemente del tamaño de la lista. En cambio, acceder a un elemento determinado, supone recorrer la lista elemento por elemento. En este caso, es mejor utilizar conjuntos ordenados.</p>
+<p>En Redis, la cabeza (<em>head</em>) es el extremo izquierda y la cola (<em>tail</em>) el derecho.</p>
+<p><figure style="align: center;">
+    <img src="images/10redis-list.jpg" alt="Listas en Redis" width="400px">
+    <figcaption>Listas en Redis</figcaption>
+</figure></p>
+<p>Casos de uso:</p>
+<ul>
+<li>Implementar colas como estructuras de datos</li>
+<li>Cronogramas de mensajes (<em>feed</em> de una red social)</li>
+<li>Listado de tareas, para su procesamiento en el orden de adicción.</li>
+</ul>
+</li>
+<li>
+<p><strong>Conjuntos</strong></p>
+<p>Se parecen a las listas en que almacenan una colección de cadenas, pero los elementos no están ordenados, y los conjuntos sólo almacenan elementos únicos.</p>
+<p>Por lo tanto, no podemos y elementos. En cambio, podemos añadir y eliminar elementos de un conjunto. Aparte de añadir y eliminar, podemos realizar varias operaciones en conjuntos, como la unión, la intersección, etcétera. Se realizan del lado del servidor en Redis, por lo que son muy rápidas.  ¿Cuándo debemos considerar el uso de Redis Sets?  Se recomienda considerar el uso de Redis Sets en los siguientes casos:   Siempre que no estés considerando la cardinalidad o no te importe cuántos elementos están presentes para un mismo tipo. En esos casos, almacene los datos en Redissets.  Los Redissets son una buena manera de tener entidades únicas registradas y almacenadas. La sobrecarga de mantener una búsqueda para, si el elemento existe o no se toma el cuidado de.  Usted puede pensar en el uso de conjuntos Redis para almacenar la lista de usuarios únicos que visitaron su sitio web."</p>
+</li>
+<li>
+<p><strong>Conjuntos ordenados</strong></p>
+<p>Como conjunto, el conjunto ordenado también es una colección de cadenas únicas. A diferencia de un conjunto normal, los valores de un conjunto ordenado están ordenados. ¿Cómo se realiza la ordenación?</p>
+<p><figure style="align: center;">
+    <img src="images/10redis-set.jpg" alt="Sets ordenados en Redis" width="400px">
+    <figcaption>Sets ordenados en Redis</figcaption>
+</figure></p>
+<p>La ordenación se basa en las puntuaciones y el orden léxico (orden alfabético) de las cadenas. Así, cada cadena es única, aunque cada puntuación puede ser igual.  ¿Cómo se realiza la puntuación de estos valores?  Redis no se encarga de dar una puntuación a un valor, ya que puede haber múltiples formas de asignar una puntuación. En su lugar, se proporcionan operaciones para que los usuarios puedan manipular una puntuación para un elemento del conjunto.  Así, además de la estructura de datos de lista, los conjuntos ordenados son la única estructura de datos ordenada disponible. Los conjuntos ordenados son preferibles a las listas cuando el acceso rápido a un miembro concreto es más importante que la rapidez de inserción/eliminación. La complejidad temporal de la inserción/eliminación en un conjunto ordenado es O(N), donde N es el número de elementos del conjunto.  ¿Cuándo debemos considerar el uso de Redis Sorted Sets?   Cuando se desea mantener el orden, se opta por un conjunto ordenado en lugar de un conjunto normal.</p>
+<p>"Para utilizar un conjunto ordenado, deberíamos definir un "sistema de puntuación".  Los conjuntos ordenados de Redis son ideales para casos de uso como los usuarios más comprometidos, etc.  Los casos de uso comunes que utilizan conjuntos ordenados Redis son los siguientes:"</p>
+<p>"Leaderboards": Almacena los nombres de los máximos goleadores ordenados por sus puntuaciones.  Listas de preguntas y respuestas: Muchas plataformas de preguntas y respuestas, como Stack Overflow, utilizan conjuntos ordenados para almacenar preguntas basadas en las mejores puntuaciones y votos."</p>
+</li>
+<li>
+<p>Otros tipos menos comunes son:</p>
+<ul>
+<li><strong><em>Bitmaps</em></strong>: estructura compacta que permite operaciones a nivel de bit.</li>
+<li><strong><em>HyperLogLog</em></strong>: estimación según valores unívocos</li>
+<li><strong><em>Stream</em></strong>: lista de strings o pares complejos de key-value</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Puesto que Redis es un sistema de código abierto, hay muchos desarrolladores trabajando para ampliar el sistema. Los llamados módulos o ampliaciones aumentan el rango de funciones de la base de datos, que por lo demás es bastante sencilla, y adaptan el software a ámbitos de uso específicos.</p>
+<h2 id="casos-de-uso">Casos de Uso<a class="headerlink" href="#casos-de-uso" title="Permanent link">&para;</a></h2>
+<p>Redis es de código abierto y cualquiera puede usarlo de forma gratuita. Está patrocinado principalmente por la empresa Redis Labs, que ofrece versiones en la nube, de pago, de este programa.</p>
 <p>¿Para qué ámbitos de aplicación es más adecuado?
 Un escenario estándar de Redis es el almacenamiento en caché, para lo cual también Twitter utiliza esta base de datos, por ejemplo: la propia timeline en el servicio de mensajería es posible gracias a una caché de Redis. La timeline se compone principalmente de una lista que, gracias a Redis, puede solicitarse fácilmente y ampliarse de forma incremental.</p>
 <p>No obstante, Redis también se utiliza para otros fines. Gracias a su velocidad de respuesta, por ejemplo, esta base de datos es perfecta para servicios de mensajería o chat rooms. El sistema puede mostrar las nuevas entradas en tiempo real y actualiza regularmente las listas.</p>
 <p>https://www.ionos.es/digitalguide/hosting/cuestiones-tecnicas/redis-tutorial-paso-a-paso/</p>
 <h2 id="puesta-en-marcha">Puesta en marcha<a class="headerlink" href="#puesta-en-marcha" title="Permanent link">&para;</a></h2>
-<p>https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack/docker/</p>
+<p>Aunque podemos instalar Redis en cualquier sistema operativo, en nuestro caso, vamos a centrarnos en hacerlo mediante un contenedor <em>Docker</em>.</p>
+<p>La primera posibilidad es instalar la imagen <code>redis/redis-stack-server</code> el cual instala el servidor mediante el comando:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>redis-stack-server<span class="w"> </span>-p<span class="w"> </span><span class="m">6379</span>:6379<span class="w"> </span>redis/redis-stack-server:latest
+</code></pre></div>
+<p>Si en cambio, queremos utilizar el <em>stack</em> de <em>Redis</em> que también incluye la herramienta gráfica <a href="https://redis.io/insight/"><em>Redis Insight</em></a> en el puerto 8001 para administrar el sistema usaremos la imagen <code>redis/redis-stack</code> mediante el comando:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>redis-stack<span class="w"> </span>-p<span class="w"> </span><span class="m">6379</span>:6379<span class="w"> </span>-p<span class="w"> </span><span class="m">8001</span>:8001<span class="w"> </span>redis/redis-stack:latest
+</code></pre></div>
+<p>Si accedemos a <localhost:8001> obtenemos:</p>
+<figure style="align: center;">
+    <img src="images/10redis-insight.png">
+    <figcaption>Redis Insight</figcaption>
+</figure>
+
+<p>FIXME: continuar</p>
+<p>Connect with redis-cli
+You can then connect to the server using redis-cli, just as you connect to any Redis instance.</p>
+<p>If you don’t have redis-cli installed locally, you can run it from the Docker container:</p>
+<p>$ docker exec -it redis-stack redis-cli</p>
+<p>Más información en <a href="https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack/docker/">https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack/docker/</a></p>
 <p>redis/redis-stack
 To start a Redis Stack container using the redis-stack image, run the following command in your terminal:</p>
 <p>docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
 The docker run command above also exposes Redis Insight on port 8001. You can use Redis Insight by pointing your browser to localhost:8001.</p>
 <p>https://redis.io/docs/latest/operate/rs/installing-upgrading/quickstarts/docker-quickstart/#run-the-container</p>
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>El libro <a href="https://bpbonline.com/products/redis%C2%AE-deep-dive">Redis Deep Dive</a>, de <em>Suyog Dilip Kale</em> y <em>Chinmay Kulkarni</em>.</li>
+</ul>
+<!--
+Arquitectura: Redis Deep Dive- Core Archictures (p 68 / 275)
+
+-->
 
 
 
