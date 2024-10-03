@@ -2159,7 +2159,7 @@
     
   
   
-    <span class="md-status md-status--new" title="Recién añadido">
+    <span class="md-status md-status--updated" title="Modificado">
     </span>
   
 
@@ -4015,7 +4015,7 @@ Actualmente ha perdido uso en detrimento de <em>Hive</em>/<em>Impala</em> y de <
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd@iabd-virtualbox:~$<span class="w"> </span>beeline
 <span class="linenos" data-linenos="2 "></span>SLF4J:<span class="w"> </span>Class<span class="w"> </span>path<span class="w"> </span>contains<span class="w"> </span>multiple<span class="w"> </span>SLF4J<span class="w"> </span>bindings.
 <span class="linenos" data-linenos="3 "></span>SLF4J:<span class="w"> </span>...
-<span class="linenos" data-linenos="4 "></span>Beeline<span class="w"> </span>version<span class="w"> </span><span class="m">3</span>.1.2<span class="w"> </span>by<span class="w"> </span>Apache<span class="w"> </span>Hive
+<span class="linenos" data-linenos="4 "></span>Beeline<span class="w"> </span>version<span class="w"> </span><span class="m">3</span>.1.3<span class="w"> </span>by<span class="w"> </span>Apache<span class="w"> </span>Hive
 <span class="linenos" data-linenos="5 "></span>beeline&gt;<span class="w"> </span>
 </code></pre></div>
 <p>Por otro lado, también podemos utilizar <em>Hive CLI</em>, un cliente basado en <em>Apache Thrift</em>, que usa los mismos drivers que <em>Hive</em>.</p>
@@ -4052,15 +4052,15 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <span class="linenos" data-linenos="4 "></span>cp<span class="w"> </span>hive-log4j2.properties.template<span class="w"> </span>hive-log4j2.properties
 </code></pre></div>
 <p>Modificamos el fichero <code>hive.env.sh</code> para incluir dos variables de entorno con las rutas de <em>Hadoop</em> y la configuración de <em>Hive</em></p>
-<div class="highlight"><span class="filename">hive.env.sh</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nb">export</span><span class="w"> </span><span class="nv">HADOOP_HOME</span><span class="o">=</span>/opt/hadoop-3.3.1
-<span class="linenos" data-linenos="2 "></span><span class="nb">export</span><span class="w"> </span><span class="nv">HIVE_CONF_DIR</span><span class="o">=</span>/opt/hive-3.1.2/conf
+<div class="highlight"><span class="filename">hive.env.sh</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nb">export</span><span class="w"> </span><span class="nv">HADOOP_HOME</span><span class="o">=</span>/opt/hadoop
+<span class="linenos" data-linenos="2 "></span><span class="nb">export</span><span class="w"> </span><span class="nv">HIVE_CONF_DIR</span><span class="o">=</span>/opt/hive-3.1.3/conf
 <span class="linenos" data-linenos="3 "></span><span class="nb">export</span><span class="w"> </span><span class="nv">HCAT_HOME</span><span class="o">=</span><span class="nv">$HIVE_HOME</span>/hcatalog
 </code></pre></div>
 <p>Para que funcione la ingesta de datos en <em>Hive</em> mediante <em>Sqoop</em>, necesitamos añadir una librería a <em>Sqoop</em>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>cp<span class="w"> </span><span class="nv">$HIVE_HOME</span>/lib/hive-common-3.1.2.jar<span class="w"> </span><span class="nv">$SQOOP_HOME</span>/lib
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>cp<span class="w"> </span><span class="nv">$HIVE_HOME</span>/lib/hive-common-3.1.3.jar<span class="w"> </span><span class="nv">$SQOOP_HOME</span>/lib
 </code></pre></div>
 <p>Y configuramos las variables de entorno de nuestro <em>path</em> para exportar las rutas de Hive y del <em>metastore</em>:</p>
-<div class="highlight"><span class="filename">~/.bashrc</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nb">export</span><span class="w"> </span><span class="nv">HIVE_HOME</span><span class="o">=</span>/opt/hive-3.1.2
+<div class="highlight"><span class="filename">~/.bashrc</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nb">export</span><span class="w"> </span><span class="nv">HIVE_HOME</span><span class="o">=</span>/opt/hive-3.1.3
 <span class="linenos" data-linenos="2 "></span><span class="nb">export</span><span class="w"> </span><span class="nv">HIVE_CONF_DIR</span><span class="o">=</span><span class="nv">$HIVE_HOME</span>/conf
 <span class="linenos" data-linenos="3 "></span><span class="nb">export</span><span class="w"> </span><span class="nv">HCAT_HOME</span><span class="o">=</span><span class="nv">$HIVE_HOME</span>/hcatalog
 </code></pre></div>
@@ -4137,13 +4137,13 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>!connect jdbc:hive2://iabd-virtualbox:10000
 </code></pre></div>
 <p>Al conectarnos, tras introducir <code>iabd</code> como usuario y contraseña, obtendremos un interfaz similar al siguiente:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Beeline version 3.1.2 by Apache Hive
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Beeline version 3.1.3 by Apache Hive
 <span class="linenos" data-linenos="2 "></span>beeline&gt; !connect jdbc:hive2://iabd-virtualbox:10000
 <span class="linenos" data-linenos="3 "></span>Connecting to jdbc:hive2://iabd-virtualbox:10000
 <span class="linenos" data-linenos="4 "></span>Enter username for jdbc:hive2://iabd-virtualbox:10000: iabd
 <span class="linenos" data-linenos="5 "></span>Enter password for jdbc:hive2://iabd-virtualbox:10000: ****
-<span class="linenos" data-linenos="6 "></span>Connected to: Apache Hive (version 3.1.2)
-<span class="linenos" data-linenos="7 "></span>Driver: Hive JDBC (version 3.1.2)
+<span class="linenos" data-linenos="6 "></span>Connected to: Apache Hive (version 3.1.3)
+<span class="linenos" data-linenos="7 "></span>Driver: Hive JDBC (version 3.1.3)
 <span class="linenos" data-linenos="8 "></span>Transaction isolation: TRANSACTION_REPEATABLE_READ
 <span class="linenos" data-linenos="9 "></span>0: jdbc:hive2://iabd-virtualbox:10000&gt;
 </code></pre></div>

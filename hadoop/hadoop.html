@@ -2112,7 +2112,7 @@
     
   
   
-    <span class="md-status md-status--new" title="Recién añadido">
+    <span class="md-status md-status--updated" title="Modificado">
     </span>
   
 
@@ -4063,14 +4063,9 @@ Y por otro lado, las aplicaciones, que pueden desarrollarse utilizando un marco 
 <h2 id="instalacion">Instalación<a class="headerlink" href="#instalacion" title="Permanent link">&para;</a></h2>
 <p>Para trabajar en esta y las siguientes sesiones, vamos a utilizar la máquina virtual que tenemos compartida en <em>Aules</em>. A partir de la OVA de VirtualBox, podrás entrar con el usuario <em>iabd</em> y la contraseña <em>iabd</em>.</p>
 <p>Si quieres instalar el software del curso, se recomienda crear una máquina virtual con cualquier distribución Linux.
-En mi caso, yo lo he probado en la versión <em>Lubuntu 20.04 LTS</em> y la versión 3.3.1 de <em>Hadoop</em>. Puedes seguir las instrucciones del artículo <a href="https://noviello.it/es/como-instalar-y-configurar-hadoop-en-ubuntu-20-04-lts/">Cómo instalar y configurar Hadoop en Ubuntu 20.04 LTS</a>.</p>
+En mi caso, yo lo he probado en la versión <em>Lubuntu 22.04 LTS</em> y la versión 3.3.6 de <em>Hadoop</em>. Puedes seguir las instrucciones del artículo <a href="https://howtoforge.es/como-instalar-apache-hadoop-en-ubuntu-22-04/">Cómo instalar Apache Hadoop en Ubuntu 22.04</a>.</p>
 <!--
 https://shape.host/resources/guia-de-instalacion-de-apache-hadoop-para-usuarios-de-ubuntu-22-04
-wget https://downloads.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
-
-https://howtoforge.es/como-instalar-apache-hadoop-en-ubuntu-22-04/
-wget https://dlcdn.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
-tar -xzvf hadoop-3.3.6.tar.gz
 -->
 
 <p>Para trabajar en local tenemos montada una solución que se conoce como <em>pseudo-distribuida</em>, porque es al mismo tiempo maestro y esclavo. En el mundo real o si utilizamos una solución cloud tendremos un nodo maestro y múltiples nodos esclavos.</p>
@@ -4249,12 +4244,12 @@ Para ponerlo en marcha, necesitaremos un fichero <code>docker-compose.yaml</code
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Comando Hadoop</label><label for="__tabbed_2_2">Comando Yarn</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hadoop<span class="w"> </span>jar<span class="w"> </span><span class="nv">$HADOOP_HOME</span>/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.1.jar<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hadoop<span class="w"> </span>jar<span class="w"> </span><span class="nv">$HADOOP_HOME</span>/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span>wordcount<span class="w"> </span>/user/iabd/el_quijote.txt<span class="w"> </span>/user/iabd/salidaWC
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>yarn<span class="w"> </span>jar<span class="w"> </span><span class="nv">$HADOOP_HOME</span>/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.1.jar<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>yarn<span class="w"> </span>jar<span class="w"> </span><span class="nv">$HADOOP_HOME</span>/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span>wordcount<span class="w"> </span>/user/iabd/el_quijote.txt<span class="w"> </span>/user/iabd/salidaWC
 </code></pre></div>
 </div>
@@ -4444,7 +4439,7 @@ Para ponerlo en marcha, necesitaremos un fichero <code>docker-compose.yaml</code
 </code></pre></div>
 <h3 id="hadoop-streaming">Hadoop Streaming<a class="headerlink" href="#hadoop-streaming" title="Permanent link">&para;</a></h3>
 <p>Una vez comprobados que los algoritmos de mapeo y reducción funcionan, vamos a procesarlos dentro de <em>Hadoop</em> para aprovechar la computación distribuida.</p>
-<p>Para ello, haremos uso de <a href="https://hadoop.apache.org/docs/r3.3.1/hadoop-streaming/HadoopStreaming.html"><em>Hadoop Streaming</em></a>, el cual permite ejecutar <em>jobs Map/Reduce</em> con cualquier script (y por <em>ende</em>, codificados en cualquier lenguaje de programación) que pueda leer de la entrada estándar (<em>stdin</em>) y escribir a la salida estándar (<em>stdout</em>). De este manera, <em>Hadoop Streaming</em> envía los datos en crudo al <em>mapper</em> vía <em>stdin</em> y tras procesarlos, se los pasa al <em>reducer</em> vía <em>stdout</em>.</p>
+<p>Para ello, haremos uso de <a href="https://hadoop.apache.org/docs/r3.3.6/hadoop-streaming/HadoopStreaming.html"><em>Hadoop Streaming</em></a>, el cual permite ejecutar <em>jobs Map/Reduce</em> con cualquier script (y por <em>ende</em>, codificados en cualquier lenguaje de programación) que pueda leer de la entrada estándar (<em>stdin</em>) y escribir a la salida estándar (<em>stdout</em>). De este manera, <em>Hadoop Streaming</em> envía los datos en crudo al <em>mapper</em> vía <em>stdin</em> y tras procesarlos, se los pasa al <em>reducer</em> vía <em>stdout</em>.</p>
 <p>La sintaxis para ejecutar los <em>jobs</em> es:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>mapred streaming \
 <span class="linenos" data-linenos="2 "></span>    -input miCarpetaEntradaHDFS \
@@ -4489,8 +4484,9 @@ Para ponerlo en marcha, necesitaremos un fichero <code>docker-compose.yaml</code
 <ol>
 <li>
 <p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 1p) Sobre <em>Hadoop</em>, ejecuta el siguiente comando y explica qué sucede:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>yarn<span class="w"> </span>jar<span class="w"> </span><span class="nv">$HADOOP_HOME</span>/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.1.jar<span class="w"> </span>pi<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="m">32</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>yarn<span class="w"> </span>jar<span class="w"> </span><span class="nv">$HADOOP_HOME</span>/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar<span class="w"> </span>pi<span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">24</span>
 </code></pre></div>
+<p>Al cambiar los valores de 8 y de 24, ¿qué estamos cambiando relamente? ¿El resultado varía?</p>
 </li>
 <li>
 <p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 2p) Vuelve a contar las palabras que tiene <em>El Quijote</em>, pero haciendo usos de los scripts <em>Python</em>, teniendo en cuenta que el proceso de mapeo va a limpiar las palabras de signos ortográficos (quitar puntos, comas, paréntesis) y en el <em>reducer</em> vamos a considerar que las palabras en mayúsculas y minúsculas son la misma palabra.</p>

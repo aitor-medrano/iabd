@@ -1876,7 +1876,7 @@
     
   
   
-    <span class="md-status md-status--new" title="Recién añadido">
+    <span class="md-status md-status--updated" title="Modificado">
     </span>
   
 
@@ -1895,7 +1895,7 @@
     
   
   
-    <span class="md-status md-status--new" title="Recién añadido">
+    <span class="md-status md-status--updated" title="Modificado">
     </span>
   
 
@@ -1922,6 +1922,30 @@
       Introducción
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hola-traductor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hola Traductor
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hola-difusor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hola Difusor
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3594,6 +3618,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hola-traductor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hola Traductor
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hola-difusor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hola Difusor
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3818,35 +3866,73 @@
 
 <p><a href="https://huggingface.co/">Hugging Face</a> se fundó en 2016 con el propósito inicial de desarrollar una aplicación de <em>chabot</em>. A partir de 2018 comenzó a abrir a la comunidad <em>open source</em> partes de sus modelos NLP, los cuales ganaron popularidad dentro de la comunidad IA.</p>
 <p>A día de hoy es la plataforma por excelencia de modelos y datasets, facilitando el descubrimiento, distribución, uso y <em>fine-tuning</em> de modelos pre-entrenados.</p>
-<p>Gran parte de la fama adquirida por Hugging Face se debe a sus librerías, en concreto <a href="https://huggingface.co/docs/transformers/index">Transformers</a> (para trabar con textos) y <a href="https://huggingface.co/docs/diffusers/index">Diffusers</a> (para tareas basadas en imágenes), permitiéndonos a los desarrolladores importar y trabajar rápidamente con una gran variedad de modelos pre-entrenados como <a href="https://huggingface.co/docs/transformers/model_doc/gpt2">GPT2</a> (una versión temprana de ChatGPT) o <a href="https://huggingface.co/stabilityai/stable-diffusion-2">Stable Diffusion</a> o <a href="https://huggingface.co/openai/whisper-large-v3">WhisperAI</a>.</p>
-<p>Por ejemplo, aquí están las 5 líneas de código necesarias para importar <em>Stable Diffusion</em> (una librería estándar de generación de imágenes) y usarla para generar una imagen de una ardilla al estilo de Picasso:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">diffusers</span> <span class="kn">import</span> <span class="n">DiffusionPipeline</span>
+<p>Gran parte de la fama adquirida por <em>Hugging Face</em> se debe a sus librerías, en concreto <a href="https://huggingface.co/docs/transformers/index">Transformers</a> (para trabar con textos) y <a href="https://huggingface.co/docs/diffusers/index">Diffusers</a> (para tareas basadas en imágenes), permitiéndonos a los desarrolladores importar y trabajar rápidamente con una gran variedad de modelos pre-entrenados como <a href="https://huggingface.co/docs/transformers/model_doc/gpt2">GPT2</a> (una versión temprana de ChatGPT),  <a href="https://huggingface.co/stabilityai/stable-diffusion-2">Stable Diffusion</a> o <a href="https://huggingface.co/openai/whisper-large-v3">WhisperAI</a>.</p>
+<h3 id="hola-traductor">Hola Traductor<a class="headerlink" href="#hola-traductor" title="Permanent link">&para;</a></h3>
+<p>Vamos a comenzar con un par de ejemplos muy sencillos para hacernos una idea de lo que podemos hacer. Nuestro <em>Hola Mundo</em> particular va a ser cargar un modelo que traduce de inglés a castellano. Para ello, vamos utilizar el modelo <a href="https://huggingface.co/Helsinki-NLP/opus-mt-en-es">Helsinki-NLP/opus-mt-en-es</a> que la <em>Universidad de Helsinki</em> ha entrenado a partir de los corpus de <a href="https://opus.nlpl.eu/">OpusMT</a>, y luego ha liberado en <em>HuggingFace</em>.</p>
+<p>Para ello, haciendo uso de la librería <em>Transformers</em> (ya la estudiaremos en profundidad tanto en el bloque de Redes Neuronales como en NLP) cargamos el modelo y creamos un <em>pipeline</em> donde le indicamos que el modelo es de tipo traducción. Sin entrar en muchos detalles, un <em>pipeline</em> es una abstracción para simplificar el código sin entrar a las particularidades de cada modelo. Posteriormente, invocamos al <em>pipeline</em> creado con la frase de entrada, el cual realiza la inferencia sobre el modelo indicado, y recibimos la frase de salida:</p>
+<div class="highlight"><span class="filename">hola-traductor.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">frase_en</span> <span class="o">=</span> <span class="s2">&quot;I like to play basketball and being a geek&quot;</span>
+<span class="linenos" data-linenos="4 "></span>
+<span class="hll"><span class="linenos" data-linenos="5 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;translation&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;Helsinki-NLP/opus-mt-en-es&quot;</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos" data-linenos="6 "></span><span class="n">frase_es</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">(</span><span class="n">frase_en</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="7 "></span>
+<span class="linenos" data-linenos="8 "></span><span class="nb">print</span><span class="p">(</span><span class="n">frase_es</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;translation_text&#39;</span><span class="p">])</span>
+<span class="linenos" data-linenos="9 "></span><span class="c1"># Me gusta jugar al baloncesto y ser un friki</span>
+</code></pre></div>
+<p>Así de simple. Con un par de líneas realmente hemos cargado un modelo de IA ya creado, y hemos realizado una inferencia sobre él.</p>
+<h3 id="hola-difusor">Hola Difusor<a class="headerlink" href="#hola-difusor" title="Permanent link">&para;</a></h3>
+<p>¿Y si no queremos utilizar un traductor en nuestras aplicaciones pero sí que queremos generar imágenes?. En este caso, en vez de la librería <code>transformers</code> , necesitamos utilizar la librería <code>diffusers</code> para generar datos similares a los datos con los que se ha entrenado.</p>
+<p>En este caso, vamos a utilizar el modelo <em>Stable Diffusion</em> (una librería estándar de generación de imágenes), y con sólo 5 líneas de código  generar una imagen de una ardilla al estilo de Picasso:</p>
+<div class="highlight"><span class="filename">hola-difusor.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">diffusers</span> <span class="kn">import</span> <span class="n">DiffusionPipeline</span>
 <span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="linenos" data-linenos="3 "></span>
-<span class="linenos" data-linenos="4 "></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">DiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;runwayml/stable-diffusion-v1-5&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
-<span class="linenos" data-linenos="5 "></span><span class="n">pipeline</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="6 "></span><span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;Una imagen de una ardilla al estilo Picasso&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</code></pre></div>
+<span class="hll"><span class="linenos" data-linenos="4 "></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">DiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;runwayml/stable-diffusion-v1-5&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos" data-linenos="5 "></span><span class="n">pipeline</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos" data-linenos="6 "></span><span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;Una imagen de una ardilla al estilo Picasso&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></code></pre></div>
 <div class="admonition tip">
-<p class="admonition-title">Probando</p>
-<p>Lo puedes probar mediante Google Colab con el <a href="https://colab.research.google.com/drive/1mW3LG0bF2xII7tPMbwsndvhlUmi8ieLZ?usp=sharing">siguiente cuaderno</a>:</p>
+<p class="admonition-title">Probando en Colab</p>
+<p>Para probar ambos ejemplos, vamos a comenzar con <em>Google Colab</em>, herramienta que ya habéis visto en las primeras sesiones y nos permite ejecutar cuadernos <em>Jupyter</em> sobre máquinas de Google. Para ello, necesitamos tener una cuenta de <em>Google</em>.</p>
+<p>Con el <a href="https://colab.research.google.com/drive/161PCZQSzieiNQtvL_f3c5cWrNV99UW3q?usp=sharing">siguiente cuaderno</a> podemos probar el modelo traductor:</p>
 <p><figure style="align: center;">
-    <img src="images/01hello-hf.png" alt="Probando Hugging Face desde Google Colab" width="800px">
-    <figcaption>Probando Hugging Face desde Google Colab</figcaption>
+    <img src="images/01hello-hf-trad.png" alt="Probando la traducción de textos desde Google Colab" width="800px">
+    <figcaption>Probando la traducción de textos desde Google Colab</figcaption>
 </figure></p>
-<p>O si quieres hacerlo en tu ordenador, dependiendo de si tienes tarjeta gráfica o no, necesitarás modificar un poco el código.</p>
-<p>Recuerda que el primer paso es crear un entorno virtual, activarlo, e instalar las librerías adecuadas:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>torch
-<span class="linenos" data-linenos="2 "></span>pip<span class="w"> </span>install<span class="w"> </span>diffusers
-<span class="linenos" data-linenos="3 "></span>pip<span class="w"> </span>install<span class="w"> </span>transformers
+<p>Y para probar la generación de imágenes, tenemos el <a href="https://colab.research.google.com/drive/1mW3LG0bF2xII7tPMbwsndvhlUmi8ieLZ?usp=sharing">siguiente cuaderno</a>:</p>
+<p><figure style="align: center;">
+    <img src="images/01hello-hf-sdifussion.png" alt="Probando la generación de imágenes desde Google Colab" width="800px">
+    <figcaption>Probando la generación de imágenes desde Google Colab</figcaption>
+</figure></p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Probando en local</p>
+<p>Si queremos probarlo en local en nuestro ordenador, el primer paso es crear un entorno virtual y activarlo:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<span class="linenos" data-linenos="2 "></span><span class="nb">source</span><span class="w"> </span>venv/bin/activate
 </code></pre></div>
-<p>Si no tienes CPU, necesitarás cambiar el tipo de datos a <code>float32</code> y no utilizar CUDA:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">diffusers</span> <span class="kn">import</span> <span class="n">DiffusionPipeline</span>
+<p>A continuación, instalamos las librerías adecuadas:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Traductor</label><label for="__tabbed_1_2">Generación de imágenes</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>transformers<span class="w"> </span>torch<span class="w"> </span>sentencepiece<span class="w"> </span>sacremoses
+</code></pre></div>
+<p>Y una vez creado el script, ya puedes ejecutarlo mediante <code>python3 hola-traductor.py</code>.</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>diffusers<span class="w"> </span>torch<span class="w"> </span>transformers
+</code></pre></div>
+<p>Dependiendo de si tienes tarjeta gráfica o no, necesitarás modificar un poco el código. Si no tienes CPU, necesitarás cambiar el tipo de datos a <code>float32</code> y no utilizar CUDA:</p>
+<div class="highlight"><span class="filename">hola-difusor-nogpu.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">diffusers</span> <span class="kn">import</span> <span class="n">DiffusionPipeline</span>
 <span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="linenos" data-linenos="3 "></span>
 <span class="linenos" data-linenos="4 "></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">DiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;runwayml/stable-diffusion-v1-5&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="linenos" data-linenos="5 "></span><span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;Una imagen de una ardilla al estilo Picasso&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hola-hf.png&quot;</span><span class="p">)</span>
 </code></pre></div>
+<p>En la última línea, en vez de obtener únicamente la imagen, la persistimos en disco en el archivo <code>hola-hf.png</code>.</p>
+</div>
+</div>
+</div>
 </div>
 <div class="admonition question">
 <p class="admonition-title">Cambiando el modelo</p>
@@ -3859,10 +3945,10 @@
 <span class="linenos" data-linenos="5 "></span><span class="o">...</span>
 </code></pre></div>
 </div>
-<p>¿Y si no queremos generar una imagen y estamos interesados en otro tipo de tarea o modelo?</p>
+<p>¿Y si no queremos traducir ni generar una imagen y estamos interesados en otro tipo de tarea o modelo?</p>
 <h2 id="hub">Hub<a class="headerlink" href="#hub" title="Permanent link">&para;</a></h2>
-<p>El <em>Hugging Face Hub</em> es una plataforma con más de 350.000 modelos, 75.000 conjuntos de datos y 150.000 demos en el cual podemos colaborar y reutilizar en nuestros desarrollos de ML.</p>
-<p>El Hub de <em>Hugging Face</em> funciona a modo de repositorio Git que almacena todos los archivos necesarios de:</p>
+<p>El <em>Hugging Face Hub</em> es una plataforma con más de 400.000 modelos, 100.000 conjuntos de datos y 150.000 demos en el cual podemos colaborar y reutilizar en nuestros desarrollos de ML.</p>
+<p>El <em>Hub</em> de <em>Hugging Face</em> funciona a modo de repositorio Git que almacena todos los archivos necesarios de:</p>
 <ul>
 <li>Modelos (<em>models</em>): incluyendo los últimos modelos NLP, de vision artificial o tratamiento de audio.</li>
 <li>Espacios (<em>spaces</em>): aplicaciones interactivas para probar los modelos directamente desde el navegador.</li>
@@ -3878,10 +3964,10 @@
 <p>El primer paso es crearnos una cuenta en <em>Hugging Face</em> y a continuación, instalar el cliente de <em>Hugging Face</em> para poder interactuar con todas las herramientas disponibles.</p>
 <div class="admonition tip">
 <p class="admonition-title">Organizaciones</p>
-<p>Hemos creado una organización llamada <a href="https://huggingface.co/IABDs8a">IABDs8a</a> para agrupar al alumnado del IES Severo Ochoa.</p>
+<p>Hemos creado una organización llamada <a href="https://huggingface.co/IABDs8a">IABDs8a</a> para agrupar al alumnado del <em>IES Severo Ochoa</em>.</p>
 </div>
 <h3 id="huggingface-cli">HuggingFace-CLI<a class="headerlink" href="#huggingface-cli" title="Permanent link">&para;</a></h3>
-<p>Para poder subir nuestro código al Hub, podemos realizarlo desde el interfaz gráficos, o hacer uso del <a href="https://huggingface.co/docs/huggingface_hub/guides/cli">CLI</a>.</p>
+<p>Para poder subir nuestro código al <em>Hub</em>, podemos realizarlo desde el interfaz gráfico, o hacer uso del <a href="https://huggingface.co/docs/huggingface_hub/guides/cli">CLI</a>.</p>
 <p>Para ello, el primer paso es instarlo:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>huggingface_hub
 </code></pre></div>
@@ -3897,7 +3983,7 @@
 <p class="admonition-title">Lectura o escritura</p>
 <p>A la hora de generar el token, podemos crear tokens de:</p>
 <ul>
-<li>Lectura (<em>read</em>): para la lectura de los repositorios públicos y de los que somos miembros, y por tanto, nos sirve para descargar modelo privados o realizar inferencia</li>
+<li>Lectura (<em>read</em>): para la lectura de los repositorios públicos y de los que somos miembros, y por tanto, nos sirve para descargar modelos privados o realizar inferencia</li>
 <li>Escritura (<em>write</em>): para la escritura en los repositorios que tenemos acceso, por ejemplo, para entrenar un modelo o modificar la tarjeta de un modelo.</li>
 </ul>
 </div>
@@ -3931,7 +4017,7 @@
 <span class="linenos" data-linenos="5 "></span>
 <span class="linenos" data-linenos="6 "></span>Done<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.0s.<span class="w"> </span>Scanned<span class="w"> </span><span class="m">1</span><span class="w"> </span>repo<span class="o">(</span>s<span class="o">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>a<span class="w"> </span>total<span class="w"> </span>of<span class="w"> </span><span class="m">5</span>.5G.
 </code></pre></div>
-<p>Una vez ya tenemos el <em>token</em> ya podemos clonar los espacios y modelos y utilizar el <em>token</em> para autenticarnos.</p>
+<p>Una vez tenemos el <em>token</em> ya podemos clonar los espacios y modelos y utilizar el <em>token</em> para autenticarnos.</p>
 <h2 id="spaces">Spaces<a class="headerlink" href="#spaces" title="Permanent link">&para;</a></h2>
 <p>Mediante los espacios podemos construir y desplegar modelos de IA, así como aplicaciones de demostración para probarlos.</p>
 <p>Podemos crear <em>demos</em> de forma rápida, con una pocas líneas de Python, con las librerías <a href="https://www.gradio.app/">Gradio</a> o <a href="https://streamlit.io/">Streamlit</a>, y utilizar controles multimodales que facilitan el testeo de los modelos.</p>
