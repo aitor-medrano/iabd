@@ -287,11 +287,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../2324.html" class="md-nav__link">
+      <a href="../2425.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Planning 23/24
+    Planning 24/25
   </span>
   
 
@@ -4148,7 +4148,7 @@
 <span class="linenos" data-linenos="7 "></span><span class="o">|</span><span class="mi">2022</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">09</span> <span class="mi">10</span><span class="p">:</span><span class="mi">45</span><span class="p">:</span><span class="mi">00</span><span class="o">|</span><span class="mi">2022</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">09</span> <span class="mi">11</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="o">|</span>      <span class="mi">0</span><span class="o">|</span>   <span class="mi">700</span><span class="o">|</span>
 <span class="linenos" data-linenos="8 "></span><span class="o">+-------------------+-------------------+-------+------+</span>
 </code></pre></div>
-<p>Estos datos se parecen a la información que queríamos, pero únicamente esta sumando los datos de cada ventana, sin acumularlos con todos los datos anteriores. A día de hoy, la única forma de sumar todos los datos agregados es utilizar las <a href="../hadoop/hive2.html#consultas-de-agregación">funciones ventana</a> (similares a las que vimos al trabajar con <em>Hive</em>) dentro de un proceso <em>batch</em>.</p>
+<p>Estos datos se parecen a la información que queríamos, pero únicamente esta sumando los datos de cada ventana, sin acumularlos con todos los datos anteriores. A día de hoy, la única forma de sumar todos los datos agregados es utilizar las <a href="../hadoop/hive2.html#consultas-de-agregacion">funciones ventana</a> (similares a las que vimos al trabajar con <em>Hive</em>) dentro de un proceso <em>batch</em>.</p>
 <p>Así pues, vamos a almacenar los datos en un fichero en formato <em>Parquet</em>, para que luego desde un proceso Batch realizar los cálculos que nos faltan. Pero antes necesitamos introducir el concepto de marca de agua.</p>
 <h2 id="watermarking">Watermarking<a class="headerlink" href="#watermarking" title="Permanent link">&para;</a></h2>
 <p>Cuando los datos llegan tarde a nuestro sistema (se generan en la ventana N, pero llegan a <em>Spark</em> en la ventana N+M), <em>Spark</em> gestiona todas las ventanas y actualiza los cálculos. Estos cálculos, como hemos comentado, son el estado de las transformaciones y se almacenan en los diferentes ejecutores del clúster de <em>Spark</em>.</p>
@@ -4416,7 +4416,7 @@
 </code></pre></div>
 <p>Así pues, <code>loginDF</code> es un <em>DataFrame</em> que realiza <em>streaming</em> sobre <em>Kafka</em>.</p>
 <h3 id="lectura-estatica">Lectura estática<a class="headerlink" href="#lectura-estatica" title="Permanent link">&para;</a></h3>
-<p>El segundo paso es crear otro <em>DataFrame</em> que obtenga los datos desde MariaDB (en esta caso un <em>DataFrame</em> estático, sin <em>streaming</em>) haciendo uso del acceso a base de datos relacionales mediante JDBC, tal como vimos en una <a href="catalog.html#conectando-con-bases-de-datos">sesión anterior</a>.</p>
+<p>El segundo paso es crear otro <em>DataFrame</em> que obtenga los datos desde <em>MariaDB</em> (en esta caso un <em>DataFrame</em> estático, sin <em>streaming</em>) haciendo uso del acceso a base de datos relacionales mediante JDBC, tal como vimos en una <a href="catalog.html#spark-jdbc">sesión anterior</a>.</p>
 <p>Con el driver JDBC ya cargado en <em>Spark</em>, realizamos la lectura de los datos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">jdbcDF</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span> \
 <span class="linenos" data-linenos="2 "></span>    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jdbc&quot;</span><span class="p">)</span> \
