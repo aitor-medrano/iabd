@@ -3851,6 +3851,18 @@
       <a href="../tags.html#huggingface" class="md-tag">HuggingFace</a>
     
   
+    
+    
+    
+      <a href="../tags.html#pia-ra3" class="md-tag">PIA RA3</a>
+    
+  
+    
+    
+    
+      <a href="../tags.html#mia-ra1" class="md-tag">MIA RA1</a>
+    
+  
 </nav>
 
 
@@ -3867,8 +3879,8 @@
 <p>A día de hoy es la plataforma por excelencia de modelos y datasets, facilitando el descubrimiento, distribución, uso y <em>fine-tuning</em> de modelos pre-entrenados.</p>
 <p>Gran parte de la fama adquirida por <em>Hugging Face</em> se debe a sus librerías, en concreto <a href="https://huggingface.co/docs/transformers/index">Transformers</a> (para trabar con textos) y <a href="https://huggingface.co/docs/diffusers/index">Diffusers</a> (para tareas basadas en imágenes), permitiéndonos a los desarrolladores importar y trabajar rápidamente con una gran variedad de modelos pre-entrenados como <a href="https://huggingface.co/docs/transformers/model_doc/gpt2">GPT2</a> (una versión temprana de ChatGPT),  <a href="https://huggingface.co/stabilityai/stable-diffusion-2">Stable Diffusion</a> o <a href="https://huggingface.co/openai/whisper-large-v3">WhisperAI</a>.</p>
 <h3 id="hola-traductor">Hola Traductor<a class="headerlink" href="#hola-traductor" title="Permanent link">&para;</a></h3>
-<p>Vamos a comenzar con un par de ejemplos muy sencillos para hacernos una idea de lo que podemos hacer. Nuestro <em>Hola Mundo</em> particular va a ser cargar un modelo que traduce de inglés a castellano. Para ello, vamos utilizar el modelo <a href="https://huggingface.co/Helsinki-NLP/opus-mt-en-es">Helsinki-NLP/opus-mt-en-es</a> que la <em>Universidad de Helsinki</em> ha entrenado a partir de los corpus de <a href="https://opus.nlpl.eu/">OpusMT</a>, y luego ha liberado en <em>HuggingFace</em>.</p>
-<p>Para ello, haciendo uso de la librería <em>Transformers</em> (ya la estudiaremos en profundidad tanto en el bloque de Redes Neuronales como en NLP) cargamos el modelo y creamos un <em>pipeline</em> donde le indicamos que el modelo es de tipo traducción. Sin entrar en muchos detalles, un <em>pipeline</em> es una abstracción para simplificar el código sin entrar a las particularidades de cada modelo. Posteriormente, invocamos al <em>pipeline</em> creado con la frase de entrada, el cual realiza la inferencia sobre el modelo indicado, y recibimos la frase de salida:</p>
+<p>Vamos a comenzar con un par de ejemplos muy sencillos para hacernos una idea de lo que podemos hacer. Nuestro <em>Hola Mundo</em> particular va a ser cargar un modelo que traduce de inglés a castellano. Para ello, vamos a utilizar el modelo <a href="https://huggingface.co/Helsinki-NLP/opus-mt-en-es">Helsinki-NLP/opus-mt-en-es</a> que la <em>Universidad de Helsinki</em> ha entrenado a partir de los corpus de <a href="https://opus.nlpl.eu/">OpusMT</a>, y luego ha liberado en <em>HuggingFace</em>.</p>
+<p>Así pues, haciendo uso de la librería <em>Transformers</em> (ya la estudiaremos en profundidad tanto en el bloque de Redes Neuronales como en NLP) cargamos el modelo y creamos un <em>pipeline</em> donde le indicamos que el modelo es de tipo traducción. Sin entrar en muchos detalles, un <em>pipeline</em> es una abstracción para simplificar el código sin entrar a las particularidades de cada modelo. Posteriormente, invocamos al <em>pipeline</em> creado con la frase de entrada, el cual realiza la inferencia sobre el modelo indicado, y recibimos la frase de salida:</p>
 <div class="highlight"><span class="filename">hola-traductor.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">frase_en</span> <span class="o">=</span> <span class="s2">&quot;I like to play basketball and being a geek&quot;</span>
@@ -3881,12 +3893,12 @@
 </code></pre></div>
 <p>Así de simple. Con un par de líneas realmente hemos cargado un modelo de IA ya creado, y hemos realizado una inferencia sobre él.</p>
 <h3 id="hola-difusor">Hola Difusor<a class="headerlink" href="#hola-difusor" title="Permanent link">&para;</a></h3>
-<p>¿Y si no queremos utilizar un traductor en nuestras aplicaciones pero sí que queremos generar imágenes?. En este caso, en vez de la librería <code>transformers</code> , necesitamos utilizar la librería <code>diffusers</code> para generar datos similares a los datos con los que se ha entrenado.</p>
+<p>¿Y si no queremos utilizar un traductor en nuestras aplicaciones pero sí que queremos generar imágenes? En este caso, en vez de la librería <code>transformers</code> , necesitamos utilizar la librería <code>diffusers</code> para generar datos similares a los datos con los que se ha entrenado.</p>
 <p>En este caso, vamos a utilizar el modelo <em>Stable Diffusion</em> (una librería estándar de generación de imágenes), y con sólo 5 líneas de código  generar una imagen de una ardilla al estilo de Picasso:</p>
 <div class="highlight"><span class="filename">hola-difusor.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">diffusers</span> <span class="kn">import</span> <span class="n">DiffusionPipeline</span>
 <span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="linenos" data-linenos="3 "></span>
-<span class="hll"><span class="linenos" data-linenos="4 "></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">DiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;runwayml/stable-diffusion-v1-5&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos="4 "></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">DiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;sd-legacy/stable-diffusion-v1-5&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
 </span><span class="hll"><span class="linenos" data-linenos="5 "></span><span class="n">pipeline</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
 </span><span class="hll"><span class="linenos" data-linenos="6 "></span><span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;Una imagen de una ardilla al estilo Picasso&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </span></code></pre></div>
@@ -3949,7 +3961,7 @@
 <p>El <em>Hugging Face Hub</em> es una plataforma con más de 400.000 modelos, 100.000 conjuntos de datos y 150.000 demos en el cual podemos colaborar y reutilizar en nuestros desarrollos de ML.</p>
 <p>El <em>Hub</em> de <em>Hugging Face</em> funciona a modo de repositorio Git que almacena todos los archivos necesarios de:</p>
 <ul>
-<li>Modelos (<em>models</em>): incluyendo los últimos modelos NLP, de vision artificial o tratamiento de audio.</li>
+<li>Modelos (<em>models</em>): incluyendo los últimos modelos NLP, de visión artificial o tratamiento de audio.</li>
 <li>Espacios (<em>spaces</em>): aplicaciones interactivas para probar los modelos directamente desde el navegador.</li>
 <li>Conjuntos de datos (<em>datasets</em>): con datos de diferentes dominios.</li>
 </ul>
@@ -4019,17 +4031,18 @@
 <p>Una vez tenemos el <em>token</em> ya podemos clonar los espacios y modelos y utilizar el <em>token</em> para autenticarnos.</p>
 <h2 id="spaces">Spaces<a class="headerlink" href="#spaces" title="Permanent link">&para;</a></h2>
 <p>Mediante los espacios podemos construir y desplegar modelos de IA, así como aplicaciones de demostración para probarlos.</p>
-<p>Podemos crear <em>demos</em> de forma rápida, con una pocas líneas de Python, con las librerías <a href="https://www.gradio.app/">Gradio</a> o <a href="https://streamlit.io/">Streamlit</a>, y utilizar controles multimodales que facilitan el testeo de los modelos.</p>
-<p>Por ejemplo, si vamos a los espacios, podemos ordenar por los que tienen más <em>likes</em>, y entrar a <a href="https://huggingface.co/spaces/facebook/MusicGen">MusicGen</a> y ver los diferentes controles para introducir texto, subir un archivo, así como posteriormente reproducir un audio o un vídeo:</p>
+<p>Podemos crear <em>demos</em> de forma rápida, con una pocas líneas de <em>Python</em>, con las librerías <a href="https://www.gradio.app/">Gradio</a> o <a href="https://streamlit.io/">Streamlit</a>, y utilizar controles multimodales que facilitan el testeo de los modelos.</p>
+<p>Por ejemplo, si vamos a los espacios, podemos ordenarlos por los que tienen más <em>likes</em>, y entrar a <a href="https://huggingface.co/spaces/facebook/MusicGen">MusicGen</a> y ver los diferentes controles para introducir texto, subir un archivo, así como posteriormente reproducir un audio o un vídeo:</p>
 <figure style="align: center;">
     <img src="images/01hf-space-musicgen.png" alt="Espacio de MusicGen" width="1024">
     <figcaption>Espacio de MusicGen</figcaption>
 </figure>
 
+<p>Otros espacios no tienen apariencia de formulario, como <a href="https://huggingface.co/spaces/jbilcke-hf/FacePoke">FacePoke</a> (prueba a subir una foto de un retrato, o una versión menos interactiva como <a href="https://huggingface.co/spaces/fffiloni/expression-editor">expression-editor</a>), o permiten el uso de la aplicación en tiempo real como <a href="https://huggingface.co/spaces/KingNish/Realtime-whisper-large-v3-turbo">Realtime-whisper-large-v3-turbo</a>, pudiendo ofrecer elementos de ejemplo para probar los modelos como <a href="https://huggingface.co/spaces/Kwai-Kolors/Kolors-Virtual-Try-On">Kolors-Virtual-Try-On</a>.</p>
 <p>En este bloque, y en concreto en la <a href="gradio.html">próxima sesión</a> nos vamos a centrar en <em>Gradio</em> para la creación del interfaz de usuario.</p>
 <p>El uso básico de los espacios es gratuito, pero si necesitamos emplear GPU puede ser que necesitemos pagar por su uso.</p>
 <h3 id="hola-spaces">Hola Spaces<a class="headerlink" href="#hola-spaces" title="Permanent link">&para;</a></h3>
-<p>Para familiarizarnos con ellos, vamos a crear nuestro espacio que utilizaremos a lo largo del bloque. Para ello, dentro de la pestaña <em>Spaces</em>, creamos uno nuevo (<em>Create new Space</em>), y vemos como primero indicamos un nombre, una licencia, el SDK que utilizaremos para el prototipado (en nuestro caso, <em>Gradio</em>), el hardware empleado y la visibilidad del mismo:</p>
+<p>Para familiarizarnos con ellos, vamos a crear nuestro espacio que utilizaremos a lo largo del bloque. Para ello, dentro de la pestaña <em>Spaces</em>, creamos uno nuevo (<em>Create new Space</em>), y vemos como primero indicamos un nombre, una licencia, el SDK que utilizaremos para el prototipado el hardware empleado y la visibilidad del mismo:</p>
 <figure style="align: center;">
     <img src="images/01hf-create-space.png" alt="Creando un Space" width="600">
     <figcaption>Creando un Space</figcaption>
@@ -4041,13 +4054,14 @@
     <figcaption>Configurando el hardware de un Space</figcaption>
 </figure>
 
+<p>En nuestro caso, vamos a coger la instancia gratuita y elegiremos un proyecto <em>Gradio</em> con una plantilla en blanco (<em>blank</em>). Como podéis observar, además de <em>Streamlit</em>, podemos usar imágenes de <em>Docker</em> o utilizar plantillas estáticas. Finalmente, seleccionamos que queremos hacer nuestro espacio en abierto, para que sea accesible por cualquiera.</p>
 <p>Tras ello, nos saldrá una página con información para clonar el repositorio creado:</p>
 <figure style="align: center;">
     <img src="images/01fh-space-git.png" alt="Primeros pasos con el Space" width="600">
     <figcaption>Primeros pasos con el Space</figcaption>
 </figure>
 
-<p>En nuestro caso, vamos a añadir la aplicación inicial desde el navegador pulsando sobre el enlace <em>create the <code>app.py</code></em> y añadimos el siguiente fragmento que emplea <em>Gradio</em> y realizamos un <em>commit</em> desde el interfaz web:</p>
+<p>En nuestro caso, vamos a añadir la aplicación inicial desde el navegador pulsando sobre el enlace "<em>create the app.py</em>" y añadimos el siguiente fragmento que emplea <em>Gradio</em> y realizamos un <em>commit</em> desde el interfaz web:</p>
 <div class="highlight"><span class="filename">app.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="k">def</span> <span class="nf">saluda</span><span class="p">(</span><span class="n">nombre</span><span class="p">):</span>
@@ -4067,26 +4081,26 @@
 <p>Para probar <em>Gradio</em> en local, el primer paso será instalar la librería:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>gradio
 </code></pre></div>
-<p>Y a continuación, lanzar el script pero en vez de con el interprete de <em>Python</em>, con el comando <code>gradio</code>:</p>
+<p>Y a continuación, lanzar el <em>script</em> pero en vez de con el intérprete de <em>Python</em>, con el comando <code>gradio</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>gradio<span class="w"> </span>app.py
 </code></pre></div>
 <p>¿Te aparece una dirección local y otra remota? ¿Dónde se está ejecutando el código de la URL remota?</p>
 </div>
 <h3 id="hola-spaces-20">Hola Spaces 2.0<a class="headerlink" href="#hola-spaces-20" title="Permanent link">&para;</a></h3>
-<p>Vamos a reutilizar el ejemplo inicial de generar una imagen desde <em>Stable Difussion</em> para generar un prototipo que nos permita escribir el prompt y visualizar el resultado.</p>
+<p>Vamos a reutilizar el ejemplo inicial de generar una imagen desde <em>Stable Difussion</em> para generar un prototipo que nos permita escribir el <em>prompt</em> y visualizar el resultado.</p>
 <p>Para ello, desde la pestaña <em>Files</em>, añadimos un nuevo fichero con el código de nuestra aplicación que ahora llamaremos `stable-app.py" ahora será similar a:</p>
 <div class="highlight"><span class="filename">stable-app.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">diffusers</span> <span class="kn">import</span> <span class="n">DiffusionPipeline</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="k">def</span> <span class="nf">stable</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
-<span class="hll"><span class="linenos" data-linenos=" 6 "></span>    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">DiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;runwayml/stable-diffusion-v1-5&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span>    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">DiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;sd-legacy/stable-diffusion-v1-5&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </span><span class="linenos" data-linenos=" 7 "></span>    <span class="k">return</span> <span class="n">pipeline</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="linenos" data-linenos=" 8 "></span>
 <span class="linenos" data-linenos=" 9 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">stable</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s2">&quot;image&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="10 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
-<p>Para indicarle al <em>Space</em> que este fichero es la nueva aplicación, editamos el fichero <code>README.md</code> que contiene la configuración del espacio (título, colores del banner, descripción y el nombre del script que lanza la aplicación):</p>
+<p>Para indicarle al <em>Space</em> que este fichero es la nueva aplicación, editamos el fichero <code>README.md</code> que contiene la configuración del espacio (título, colores del banner, descripción y el nombre del <em>script</em> que lanza la aplicación):</p>
 <div class="highlight"><span class="filename">README.md</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>---
 <span class="linenos" data-linenos=" 2 "></span>title: IABD
 <span class="linenos" data-linenos=" 3 "></span>emoji: 🌍
@@ -4113,7 +4127,7 @@
 <span class="linenos" data-linenos="3 "></span>transformers
 <span class="linenos" data-linenos="4 "></span>accelerate
 </code></pre></div>
-<p>Tras hacer el <em>commit</em> del archivo, el espacio volverá a construirse. Y tras ello, ya podemos introducir nuestro prompt y tras más de 17 minutos (no utiliza GPU) podremos ver el resultado:</p>
+<p>Tras hacer el <em>commit</em> del archivo, el espacio volverá a construirse. Y tras ello, ya podemos introducir nuestro <em>prompt</em> y tras más de 17 minutos (no utiliza GPU) podremos ver el resultado:</p>
 <figure style="align: center;">
     <img src="images/01hf-space-stable.png" alt="Space con Stable Diffusion" width="600">
     <figcaption>Space con Stable Diffusion</figcaption>
@@ -4127,7 +4141,7 @@
     <figcaption>Modelos en Hugging Face</figcaption>
 </figure>
 
-<p>Si entramos a <a href="https://huggingface.co/microsoft/speecht5_tts">un modelo en concreto</a>, podemos ver una ficha con información del modelo como el método de entrenamiento, la licencia de uso, estadísticas de uso e interacciones de la comunidad, herramientas para utilizar el modelo (Inference API) o importarlo en nuestro propio código así como qué espacios utilizan este modelo.</p>
+<p>Si entramos a <a href="https://huggingface.co/microsoft/speecht5_tts">un modelo en concreto</a>, podemos ver una ficha con información del modelo como el método de entrenamiento, la licencia de uso, estadísticas de uso e interacciones de la comunidad, herramientas para utilizar el modelo (Inference API) o importarlo en nuestro propio código, así como qué espacios utilizan este modelo.</p>
 <figure style="align: center;">
     <img src="images/01hf-speech5_tts.png" alt="Página del modelo speecht5_tts" width="1024px">
     <figcaption>Página del modelo speecht5_tts</figcaption>
@@ -4141,7 +4155,7 @@
 
 <h3 id="creando-un-modelo">Creando un modelo<a class="headerlink" href="#creando-un-modelo" title="Permanent link">&para;</a></h3>
 <p>El primer paso es crear un modelo que implícitamente inicializará un repositorio donde almacenar el código fuente y los artefactos.</p>
-<p>Para crear el modelo, de forma similar a cómo hicimos al crear el espacio, vamos a nuestro perfil y pulsamos sobre <code>+ New Model</code> y tras ponerle un nombre y una licencia, accederemos a su panel sonde tenemos por una parte una <em>card</em> que hace de pagina de inicio, la pestaña con los ficheros y versiones que hace de repositorio, así como la posibilidad de interactuar con la comunidad y las preferencias.</p>
+<p>Para crear el modelo, de forma similar a cómo hicimos al crear el espacio, vamos a nuestro perfil y pulsamos sobre <code>+ New Model</code> y tras ponerle un nombre y una licencia, accederemos a su panel donde tenemos por una parte una <em>card</em> que hace de página de inicio, la pestaña con los ficheros y versiones que hace de repositorio, así como la posibilidad de interactuar con la comunidad y las preferencias.</p>
 <figure style="align: center;">
     <img src="images/01hf-create-model.png" alt="Modelo en blanco" width="800px">
     <figcaption>Modelo en blanco</figcaption>
@@ -4172,7 +4186,7 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>ssh-keygen
 <span class="linenos" data-linenos="2 "></span>ssh-add<span class="w"> </span>~/.ssh/id_rsa
 </code></pre></div>
-<p>A continuación, vamos a la preferencias del usuario, y en la opción <em>SSH and GPG Keys</em>, creamos una nueva clave, poniendo como identificador, por ejemplo, el nombre de nuestro ordenador, y en la clave, pegamos el contenido del archivo <code>.pub</code> generado anteriormente.</p>
+<p>A continuación, vamos a las preferencias del usuario, y en la opción <em>SSH and GPG Keys</em>, creamos una nueva clave, poniendo como identificador, por ejemplo, el nombre de nuestro ordenador, y en la clave, pegamos el contenido del archivo <code>.pub</code> generado anteriormente.</p>
 <p><figure style="align: center;">
     <img src="images/01hf-ssh.png" alt="Configuración SSH" width="800px">
     <figcaption>Configuración SSH</figcaption>
@@ -4218,21 +4232,21 @@
 </figure>
 
 <h3 id="model-card">Model Card<a class="headerlink" href="#model-card" title="Permanent link">&para;</a></h3>
-<p>La <a href="https://huggingface.co/docs/hub/model-cards">tarjeta del modelo</a> aporta información muy útil, como es la categoría del mismo, así como librerías, <em>datasets</em>, idiomas o los resultados obtenidos en la fase evaluación del modelo.</p>
+<p>La <a href="https://huggingface.co/docs/hub/model-cards">tarjeta del modelo</a> aporta información muy útil, como es la categoría de este, así como librerías, <em>datasets</em>, idiomas o los resultados obtenidos en la fase evaluación del modelo.</p>
 <p>Si nos fijamos en la tarjeta del modelo de que hemos <a href="https://huggingface.co/omarques/autotrain-dogs-and-cats-1527055142">escogido anteriormente</a>, podemos ver toda la información mostrada, con las diferentes etiquetas (<em>Image Classification</em>, <em>Pytorch</em>, etc...), así como las estadísticas y el bloque para probar el modelo directamente:</p>
 <figure style="align: center;">
     <img src="images/01hf-model-dogcats-tags.png" alt="Etiquetas en un modelo" width="1024px">
     <figcaption>Etiquetas en un modelo</figcaption>
 </figure>
 
-<p>Así pues, vamos a editar nuestra tarjeta, y añadiremos los siguiente elementos:</p>
+<p>Así pues, vamos a editar nuestra tarjeta, y añadiremos los siguientes elementos:</p>
 <div class="highlight"><span class="filename">README.md</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span>tags:
 <span class="linenos" data-linenos="2 "></span><span class="k">-</span><span class="w"> </span>vision
 <span class="linenos" data-linenos="3 "></span><span class="k">-</span><span class="w"> </span>image-classification
 <span class="linenos" data-linenos="4 "></span>datasets:
 <span class="linenos" data-linenos="5 "></span><span class="k">-</span><span class="w"> </span>omarques/autotrain-data-dogs-and-cats
 </code></pre></div>
-<p>De manera, que ahora nuestro modelo tendrá la siguiente apariencias:</p>
+<p>De manera, que ahora nuestro modelo tendrá la siguiente apariencia:</p>
 <figure style="align: center;">
     <img src="images/01hf-model-tags.png" alt="Etiquetado del modelo" width="1024px">
     <figcaption>Etiquetado del modelo</figcaption>
@@ -4241,7 +4255,7 @@
 <p>En próximas sesiones donde nos centremos en el <em>fine-tuning</em>, volveremos a la tarjeta del modelo para anotar toda la información obtenida.</p>
 <h3 id="inference-api">Inference API<a class="headerlink" href="#inference-api" title="Permanent link">&para;</a></h3>
 <p>Si vamos a la tarjeta de nuestro modelo, veremos que en la parte derecha se ha marcado dentro del bloque de <em>Inference API</em> que se trata de un modelo de clasificación de imágenes y nos permite arrastrar una imagen.</p>
-<p>Esta API utiliza un <a href="https://huggingface.co/docs/hub/en/models-widgets">widget</a> el cual obtiene información de los metadatos del modelo y del archivo de configuración (<code>config.json</code>) para saber qué interfaz mostrar. Si queremos, podemos indicarlo de forma explicita mediante el <code>pipeline_tag</code> de la tarjeta del modelo, por ejemplo, en nuestro caso <code>image-classification</code>.</p>
+<p>Esta API utiliza un <a href="https://huggingface.co/docs/hub/en/models-widgets">widget</a> el cual obtiene información de los metadatos del modelo y del archivo de configuración (<code>config.json</code>) para saber qué interfaz mostrar. Si queremos, podemos indicarlo de forma explícita mediante el <code>pipeline_tag</code> de la tarjeta del modelo, por ejemplo, en nuestro caso <code>image-classification</code>.</p>
 <p>Por ejemplo, si le pasamos una <a href="images/perro-gato.jpg">foto</a> al bloque, veremos cómo se carga el modelo y al finalizar, nos muestra la predicción que ha realizado categorizando la imagen:</p>
 <figure style="align: center;">
     <img src="images/01hf-model-inference.png" alt="Inferencia con el modelo" width="600">
@@ -4315,7 +4329,7 @@
 <span class="linenos" data-linenos="2 "></span><span class="n">etiqueta</span> <span class="o">=</span> <span class="n">mnist_dataset</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">][</span><span class="s2">&quot;label&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 <span class="linenos" data-linenos="3 "></span><span class="nb">print</span><span class="p">(</span><span class="n">etiqueta</span><span class="p">)</span> <span class="c1"># 5</span>
 </code></pre></div>
-<p>Además, al abstraer los datos dentro de la librería <em>datasets</em>, se crea la estructura de datos necesaria para entrenar los modelos más fácilmente mediante las clase <a href="https://huggingface.co/docs/transformers/main/en/trainer">Trainer</a> que facilita realizar el mismo proceso de <em>fine-tuning</em> a diferentes modelos (esto lo estudiaremos más adelante en la sesión sobre <em>fine-tuning</em>).</p>
+<p>Además, al abstraer los datos dentro de la librería <em>datasets</em>, se crea la estructura de datos necesaria para entrenar los modelos más fácilmente mediante la clase <a href="https://huggingface.co/docs/transformers/main/en/trainer"><code>Trainer</code></a> que facilita realizar el mismo proceso de <em>fine-tuning</em> a diferentes modelos (esto lo estudiaremos más adelante en la sesión sobre <em>fine-tuning</em>).</p>
 <h3 id="creando-nuestro-dataset">Creando nuestro dataset<a class="headerlink" href="#creando-nuestro-dataset" title="Permanent link">&para;</a></h3>
 <p>Aunque más adelante veremos cómo utilizar la librería <em>datasets</em> para cargar, filtrar y persistir <em>datasets</em>, vamos a ver cómo crear un <em>dataset</em> en <em>HuggingFace</em> para almacenar los datos. Para ello, el primer paso es crearlo desde el interfaz gráfico, y a continuación, podemos acceder a la pestaña de <em>Files</em> y subiremos, por ejemplo, los datos de <a href="resources/cp_train.csv"><code>cp_train.csv</code></a>, <a href="resources/cp_test.csv"><code>cp_test.csv</code></a> y <a href="resources/cp_val.csv"><code>cp_val.csv</code></a>:</p>
 <figure style="align: center;">
@@ -4329,7 +4343,7 @@
     <figcaption>Previsualización del Dataset</figcaption>
 </figure>
 
-<p>Y si editamos el archivo <code>README.md</code>, podemos añadir información extra, como el tamaño del dataset, la licencia o fuera de los metadatos, toda la información que queramos, como por ejemplo, la descripción de los campos:</p>
+<p>Y si editamos el archivo <code>README.md</code>, podemos añadir información extra como el tamaño del dataset, la licencia o fuera de los metadatos, toda la información que queramos como, por ejemplo, la descripción de los campos:</p>
 <div class="highlight"><span class="filename">README.md</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>---
 <span class="linenos" data-linenos=" 2 "></span>size_categories:
 <span class="linenos" data-linenos=" 3 "></span><span class="gu">- 1K&lt;n&lt;10K</span>
@@ -4398,19 +4412,19 @@ https://github.com/huggingface/education-toolkit/tree/main/tutorials/ES
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 2p) Crea un entorno virtual e instala las librerías de <em>Hugging Face</em> necesarias para ejecutar tanto el traductor como el modelo 2-1 de <em>Stable Difussion</em>. Genera un par de frases e imágenes. Anota con comentarios en el código el tiempo necesario para la generación de los resultados, y adjunta tanto las traducciones como las imágenes generadas.</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 3p) Crea un entorno virtual e instala las librerías de <em>Hugging Face</em> necesarias para ejecutar tanto el traductor como el modelo 2-1 de <em>Stable Difussion</em>. Genera un par de frases e imágenes. Anota con comentarios en el código el tiempo necesario para la generación de los resultados, y adjunta tanto las traducciones como las imágenes generadas.</p>
 </li>
 <li>
-<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr>, <abbr title="Se ha evaluado como la convergencia tecnológica aporta seguridad en los negocios.">CEPIA.3d</abbr> / 1p) Crea una cuenta en <em>Hugging Face</em>, instala las CLI y tras hacer login, averigua cuanto ocupan los modelos descargado.</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr>, <abbr title="Se ha evaluado como la convergencia tecnológica aporta seguridad en los negocios.">CEPIA.3d</abbr> / 1p) Crea una cuenta en <em>Hugging Face</em>, instala las CLI y tras hacer login, averigua cuanto ocupan los modelos descargados.</p>
 </li>
 <li>
-<p>(<abbr title="Caracteriza sistemas de Inteligencia Artificial relacionados con la mejora de la eficiencia operativa de las organizaciones y empresas.">RAMIA.1</abbr> / <abbr title="Se han presentado los resultados y las soluciones al cliente final en una forma fácil de interpretar.">CEMIA.1e</abbr> / 2p) Basándote en lo aprendido a partir de los casos de uso de <a href="#hola-spaces">Hola Spaces</a> y <a href="#hola-spaces-20">Hola Spaces 2.0</a>, mediante <em>Gradio</em> tanto en<em> Hugging Face</em> como en local, crea un nuevo espacio en tu cuenta que permita realizar traducciones a partir de una caja de texto.</p>
+<p>(<abbr title="Caracteriza sistemas de Inteligencia Artificial relacionados con la mejora de la eficiencia operativa de las organizaciones y empresas.">RAMIA.1</abbr> / CEMIA.1d, <abbr title="Se han presentado los resultados y las soluciones al cliente final en una forma fácil de interpretar.">CEMIA.1e</abbr> / 2p) Basándote en lo aprendido a partir de los casos de uso de <a href="#hola-spaces">Hola Spaces</a> y <a href="#hola-spaces-20">Hola Spaces 2.0</a>, mediante <em>Gradio</em> tanto en<em> Hugging Face</em> como en local, crea un nuevo espacio en tu cuenta que permita realizar traducciones a partir de una caja de texto.</p>
 </li>
 <li>
 <p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / opcional) Crea un modelo y siguiendo el ejemplo de <a href="#usando-git">Usando Git</a>, configura tu clave SSH, y añade los archivos necesarios para poder inferir imágenes de perros y gatos desde el interfaz web. Posteriormente, mediante <em>Python</em>, realiza la inferencia del modelo haciendo uso de un <em>Pipeline</em>.</p>
 </li>
 <li>
-<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 1p) Crea un <em>dataset</em> a partir de los datos de entrenamiento y pruebas de cualquier ejercicio realizado durante el curso (que no sea el utilizado durante esta sesión), y a continuación, desde <em>Python</em>, recupera los datos y muestra sus características.</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 2p) Crea un <em>dataset</em> a partir de los datos de entrenamiento y pruebas de cualquier ejercicio realizado durante el curso (que no sea el utilizado durante esta sesión), y a continuación, desde <em>Python</em>, recupera los datos y muestra sus características.</p>
 </li>
 </ol>
 
