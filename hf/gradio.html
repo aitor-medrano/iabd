@@ -2076,27 +2076,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#select" class="md-nav__link">
-    <span class="md-ellipsis">
-      Select
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#fechas" class="md-nav__link">
     <span class="md-ellipsis">
       Fechas
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#colores" class="md-nav__link">
-    <span class="md-ellipsis">
-      Colores
     </span>
   </a>
   
@@ -3750,27 +3732,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#select" class="md-nav__link">
-    <span class="md-ellipsis">
-      Select
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#fechas" class="md-nav__link">
     <span class="md-ellipsis">
       Fechas
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#colores" class="md-nav__link">
-    <span class="md-ellipsis">
-      Colores
     </span>
   </a>
   
@@ -3959,6 +3923,10 @@
 <h3 id="personalizando-el-interfaz">Personalizando el interfaz<a class="headerlink" href="#personalizando-el-interfaz" title="Permanent link">&para;</a></h3>
 <p>TODO: completar ..., texto de intro, fin, etc... colores</p>
 <h2 id="la-clase-blocks">La clase <code>Blocks</code><a class="headerlink" href="#la-clase-blocks" title="Permanent link">&para;</a></h2>
+<!--
+TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
+-->
+
 <p>La clase <a href="https://www.gradio.app/docs/gradio/blocks"><code>Blocks</code></a> es la API de bajo nivel de <em>Gradio</em> que nos permite controlar el flujo de datos, la disposición y agrupación de los componentes y los eventos que disparan la ejecución de las funciones de las aplicaciones <em>Gradio</em>, como si fueran bloques.</p>
 <p>El uso básico de <code>Blocks</code> es el siguiente: tras crear un objeto <code>Blocks</code>, lo usaremos como contexto (mediante la sentencia <a href="https://realpython.com/python-with-statement/"><code>with</code></a>) y definiremos los diseños, componentes o eventos dentro del contexto <code>Blocks</code>. Finalmente, llamaremos al método <code>launch()</code> para lanzar el <em>gradio</em>.</p>
 <p>Veamos un ejemplo sencillo, donde combinamos componentes como <em>Markdown</em>, botones o cajas de texto interactivas:</p>
@@ -4084,37 +4052,42 @@
 <span class="linenos" data-linenos="7 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
 <p><figure style="align: center;">
-    <img src="images/02gradio-accordion.gif" alt="Uso de Accordion" width="400px">
+    <img src="images/02gradio-accordion.gif" alt="Uso de Accordion" width="603px">
     <figcaption>Uso de Accordion</figcaption>
 </figure></p>
 </li>
 </ul>
 </div>
 <h3 id="visibilidad">Visibilidad<a class="headerlink" href="#visibilidad" title="Permanent link">&para;</a></h3>
-<!--
-TODO: https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
--->
-
-<p>Después de pasar una función a la clase <code>Interface</code> o <code>Block</code>, se devuelve un valor típico. <code>gradio.update</code> actualiza el valor. Pero también se pueden actualizar las propiedades de un componente de salida, como pueden ser el número de líneas de un <code>Textbox</code> o la visibilidad de un <code>Image</code> devolviendo la función <code>update()</code> del componente.</p>
-<p>El siguiente ejemplo muestra la aplicación de la actualización de la visibilidad de un componente de interfaz:</p>
+<p>Normalmente, la función que pasamos a la clase <code>Interface</code> o <code>Block</code> devuelve un valor, ya sea el resultado de un cálculo o de la inferencia a algún modelo de ML.</p>
+<p>Pero, podemos devolver otro componentes que modifica las propiedades de los componentes de salida, como pueden ser el número de líneas de un <code>Textbox</code> o la visibilidad de un <code>Image</code>.</p>
+<p>El siguiente ejemplo muestra como modificamos tanto el tamaño como la visibilidad (mediante la propiedad <code>visible</code>) de un componente de texto:</p>
 <div class="highlight"><span class="filename">gradio-visibilidad.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
 <span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="k">def</span> <span class="nf">update_textbox</span><span class="p">(</span><span class="n">choice</span><span class="p">):</span>
-<span class="linenos" data-linenos=" 4 "></span>    <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;short&quot;</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 5 "></span>        <span class="k">return</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 6 "></span>    <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 7 "></span>        <span class="k">return</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="k">def</span> <span class="nf">updateTextbox</span><span class="p">(</span><span class="n">eleccion</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 4 "></span>    <span class="k">if</span> <span class="n">eleccion</span> <span class="o">==</span> <span class="s2">&quot;Pequeño&quot;</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 5 "></span>        <span class="k">return</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 6 "></span>    <span class="k">elif</span> <span class="n">eleccion</span> <span class="o">==</span> <span class="s2">&quot;Grande&quot;</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 7 "></span>        <span class="k">return</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 8 "></span>    <span class="k">else</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 9 "></span>        <span class="k">return</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 9 "></span>        <span class="k">return</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="linenos" data-linenos="10 "></span>
-<span class="linenos" data-linenos="11 "></span><span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
-<span class="linenos" data-linenos="12 "></span>    <span class="n">update_textbox</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
+<span class="linenos" data-linenos="12 "></span>    <span class="n">updateTextbox</span><span class="p">,</span>
 <span class="linenos" data-linenos="13 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">Radio</span><span class="p">(</span>
-<span class="linenos" data-linenos="14 "></span>        <span class="p">[</span><span class="s2">&quot;short&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">,</span> <span class="s2">&quot;No message&quot;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;What kind of message would you like to send?&quot;</span>
+<span class="linenos" data-linenos="14 "></span>        <span class="p">[</span><span class="s2">&quot;Pequeño&quot;</span><span class="p">,</span> <span class="s2">&quot;Grande&quot;</span><span class="p">,</span> <span class="s2">&quot;Sin mensaje&quot;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;¿Qué tipo de mensaje quieres enviar?&quot;</span>
 <span class="linenos" data-linenos="15 "></span>    <span class="p">),</span>
 <span class="linenos" data-linenos="16 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="linenos" data-linenos="17 "></span><span class="p">)</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+<span class="linenos" data-linenos="17 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="18 "></span>
+<span class="linenos" data-linenos="19 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
+<p>Y un ejemplo de su uso:</p>
+<figure style="align: center;">
+    <img src="images/02gradio-visibility.gif" alt="Modificando la visibilidad" width="400px">
+    <figcaption>Modificando la visibilidad</figcaption>
+</figure>
+
 <h2 id="componentes-basicos">Componentes básicos<a class="headerlink" href="#componentes-basicos" title="Permanent link">&para;</a></h2>
 <p><em>Gradio</em> dispone de un <a href="https://www.gradio.app/docs/gradio/introduction">conjunto de componentes predefinidos</a> para varias funciones, ya sea desde trabajar con texto o multimedia como audios, imágenes y vídeo como gráficos mediante <em>Matplotlib</em> o <em>Seaborne</em>.</p>
 <h3 id="texto">Texto<a class="headerlink" href="#texto" title="Permanent link">&para;</a></h3>
@@ -4215,7 +4188,7 @@ TODO: https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
 <span class="linenos" data-linenos="18 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
 <p>Dependiendo del components, tendremos diferentes manejadores de eventos. Por ejemplo, el componente <code>gradio.Video()</code> dispone el manejado <code>play()</code> el cual se dispara cuando un usuario pulsa <em>play</em>. Del mismo modo, el componente <code>gradio.Text()</code> ofrece el manejador <code>change()</code> que se dispara al cambiar el texto al teclear.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<div class="highlight"><span class="filename">gradio-visibility.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="k">def</span> <span class="nf">welcome</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
 <span class="linenos" data-linenos=" 4 "></span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Welcome back, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">!&quot;</span>
@@ -4232,243 +4205,167 @@ TODO: https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
 <span class="linenos" data-linenos="15 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="componentes-interactivos">Componentes interactivos<a class="headerlink" href="#componentes-interactivos" title="Permanent link">&para;</a></h2>
-<p>Interactivity is a central characteristic of Gradio. To this end, Gradio allows interactivity using various functionalities, as shown in the following subsections.</p>
+<p>A continuación, vamos a estudiar algunos de los componentes interactivos que ofrece <em>Gradio</em>.</p>
 <h3 id="boton">Botón<a class="headerlink" href="#boton" title="Permanent link">&para;</a></h3>
-<p>Using gradio.Button() you can define a submission button for your application by specifying value = "Submit" and adding an event gradio.Button.click().</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-<span class="linenos" data-linenos=" 5 "></span>    <span class="k">return</span> <span class="s2">&quot;Hey! &quot;</span> <span class="o">+</span> <span class="n">a</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span> <span class="s2">&quot; Welcome to Machine Learning Nuggets.&quot;</span>
-<span class="linenos" data-linenos=" 6 "></span>
-<span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span><span class="k">with</span> <span class="n">gr</span><span class="o">.</span><span class="n">Blocks</span><span class="p">()</span> <span class="k">as</span> <span class="n">demo</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 9 "></span>
-<span class="linenos" data-linenos="10 "></span>    <span class="n">txt</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;First Name&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="linenos" data-linenos="11 "></span>    <span class="n">txt_2</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Second Name&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="12 "></span>    <span class="n">txt_3</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Output&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="13 "></span>    <span class="n">btn</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Submit&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="14 "></span>    <span class="n">btn</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="n">combine</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">txt</span><span class="p">,</span> <span class="n">txt_2</span><span class="p">],</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">txt_3</span><span class="p">])</span>
-<span class="linenos" data-linenos="15 "></span>
-<span class="linenos" data-linenos="16 "></span>
-<span class="linenos" data-linenos="17 "></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<span class="linenos" data-linenos="18 "></span>    <span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+<p>Mediante <a href="https://www.gradio.app/docs/gradio/button"><code>gradio.Button()</code></a> podemos definir un botón de envío nuestras aplicaciones especificando <code>value="Enviar"</code> y añadiendo un evento <code>gradio.Button.click()</code>:</p>
+<div class="highlight"><span class="filename">gradio-button.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="k">def</span> <span class="nf">combinar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 4 "></span>    <span class="k">return</span> <span class="s2">&quot;¡Hola &quot;</span> <span class="o">+</span> <span class="n">a</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="s1">&#39;!</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span> <span class="s2">&quot; Bienvenido a IABD&quot;</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="k">with</span> <span class="n">gr</span><span class="o">.</span><span class="n">Blocks</span><span class="p">()</span> <span class="k">as</span> <span class="n">demo</span><span class="p">:</span>  
+<span class="linenos" data-linenos=" 7 "></span>    <span class="n">txtIn1</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Nombre&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="n">txtIn2</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Apellidos&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 9 "></span>    <span class="n">txtOut</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Salida&quot;</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos="10 "></span>    <span class="n">btn</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Enviar&quot;</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="11 "></span>
+<span class="hll"><span class="linenos" data-linenos="12 "></span>    <span class="n">btn</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="n">combinar</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">txtIn1</span><span class="p">,</span> <span class="n">txtIn2</span><span class="p">],</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">txtOut</span><span class="p">])</span>
+</span><span class="linenos" data-linenos="13 "></span>
+<span class="linenos" data-linenos="14 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
+<p>Y su resultado sería:</p>
+<figure style="align: center;">
+    <img src="images/02gradio-button.gif" alt="Componente Button" width="603px">
+    <figcaption>Componente Button</figcaption>
+</figure>
+
 <h3 id="checkbox">Checkbox<a class="headerlink" href="#checkbox" title="Permanent link">&para;</a></h3>
-<p>In addition to the slider, you can add a checkbox for making selections. The example below combines a slider and checkbox for time selection.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<p>Cuando tenemos varios valores para elegir, podemos utilizar un <a href="https://www.gradio.app/docs/gradio/checkbox"><code>gradio.Checkbox()</code></a> o un <a href="https://www.gradio.app/docs/gradio/checkboxgroup"><code>gradio.CheckboxGroup()</code></a> para mostrar una caja con las opciones posibles:</p>
+<div class="highlight"><span class="filename">gradio-checkbox.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
 <span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="k">def</span> <span class="nf">sentence_builder</span><span class="p">(</span> <span class="n">morning</span><span class="p">):</span>
-<span class="linenos" data-linenos=" 5 "></span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;It is a nice time take a </span><span class="si">{</span><span class="s2">&quot;morning&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">morning</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;later in the day&quot;</span><span class="si">}</span><span class="s2"> glass of water&quot;&quot;&quot;</span>
-<span class="linenos" data-linenos=" 6 "></span>
-<span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
-<span class="linenos" data-linenos=" 9 "></span>    <span class="n">sentence_builder</span><span class="p">,</span>
-<span class="linenos" data-linenos="10 "></span>    <span class="p">[</span>
-<span class="linenos" data-linenos="11 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Is it before noon&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="12 "></span>    <span class="p">],</span>
-<span class="linenos" data-linenos="13 "></span>    <span class="s2">&quot;text&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="14 "></span>
-<span class="linenos" data-linenos="15 "></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<span class="linenos" data-linenos="16 "></span>    <span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="k">def</span> <span class="nf">crearFrase</span><span class="p">(</span><span class="n">tipo</span><span class="p">,</span> <span class="n">listaActividades</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 4 "></span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Se agradece un café </span><span class="si">{</span><span class="s2">&quot;cargado&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">tipo</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;suave&quot;</span><span class="si">}</span><span class="s2"> acompañado de </span><span class="si">{</span><span class="s2">&quot; y &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">listaActividades</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
+<span class="linenos" data-linenos=" 7 "></span>    <span class="n">crearFrase</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="p">[</span>
+<span class="hll"><span class="linenos" data-linenos=" 9 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Cargado&quot;</span><span class="p">),</span>
+</span><span class="hll"><span class="linenos" data-linenos="10 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">CheckboxGroup</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Café con...&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tostadas&quot;</span><span class="p">,</span> <span class="s2">&quot;galletas&quot;</span><span class="p">,</span> <span class="s2">&quot;magdalenas&quot;</span><span class="p">,</span> <span class="s2">&quot;las noticias&quot;</span><span class="p">]),</span>
+</span><span class="linenos" data-linenos="11 "></span>    <span class="p">],</span>
+<span class="linenos" data-linenos="12 "></span>    <span class="s2">&quot;text&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="13 "></span>
+<span class="linenos" data-linenos="14 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
-<h3 id="select">Select<a class="headerlink" href="#select" title="Permanent link">&para;</a></h3>
-<p>A select box is created using gradio.CheckboxGroup(). This component allows you to specify a list of entries for selection.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
-<span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="k">def</span> <span class="nf">sentence_builder</span><span class="p">(</span><span class="n">morning</span><span class="p">,</span> <span class="n">activity_list</span><span class="p">):</span>
-<span class="linenos" data-linenos=" 5 "></span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;It is a nice time take a </span><span class="si">{</span><span class="s2">&quot;morning&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">morning</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;later in the day&quot;</span><span class="si">}</span><span class="s2"> glass of water </span><span class="si">{</span><span class="s2">&quot; and take a &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">activity_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="linenos" data-linenos=" 6 "></span>
-<span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
-<span class="linenos" data-linenos=" 9 "></span>    <span class="n">sentence_builder</span><span class="p">,</span>
-<span class="linenos" data-linenos="10 "></span>    <span class="p">[</span>
-<span class="linenos" data-linenos="11 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Is it before noon&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="12 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">CheckboxGroup</span><span class="p">([</span><span class="s2">&quot;juice&quot;</span><span class="p">,</span> <span class="s2">&quot;beverage&quot;</span><span class="p">,</span> <span class="s2">&quot;snack&quot;</span><span class="p">,</span> <span class="s2">&quot;nap&quot;</span><span class="p">]),</span>
-<span class="linenos" data-linenos="13 "></span>    <span class="p">],</span>
-<span class="linenos" data-linenos="14 "></span>    <span class="s2">&quot;text&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="15 "></span>
-<span class="linenos" data-linenos="16 "></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<span class="linenos" data-linenos="17 "></span>    <span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
-</code></pre></div>
+<p>Y su resultado sería:</p>
+<figure style="align: center;">
+    <img src="images/02gradio-checkbox.gif" alt="Componentes Checkbox">
+    <figcaption>Componentes Checkbox</figcaption>
+</figure>
+
 <h3 id="fechas">Fechas<a class="headerlink" href="#fechas" title="Permanent link">&para;</a></h3>
-<p>Currently, Gradio does not support the selection of dates using a widget. However, you can display the current date among other operations using datetime  as input in Textbox() component.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
-<span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">datetime</span>
-<span class="linenos" data-linenos="3 "></span>
-<span class="linenos" data-linenos="4 "></span><span class="k">with</span> <span class="n">gr</span><span class="o">.</span><span class="n">Blocks</span><span class="p">()</span> <span class="k">as</span> <span class="n">demo</span><span class="p">:</span>
-<span class="linenos" data-linenos="5 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
-<span class="linenos" data-linenos="6 "></span>
+<p>Podemos utilizar el componente <a href="https://www.gradio.app/docs/gradio/datetime">gradio.DateTime</a> para mostrar un componente que muestre la fecha.</p>
+<div class="highlight"><span class="filename">gradio-datetime.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="k">with</span> <span class="n">gr</span><span class="o">.</span><span class="n">Blocks</span><span class="p">()</span> <span class="k">as</span> <span class="n">demo</span><span class="p">:</span>
+<span class="hll"><span class="linenos" data-linenos="4 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">DateTime</span><span class="p">()</span>
+</span><span class="hll"><span class="linenos" data-linenos="5 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">DateTime</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Solo fecha&quot;</span><span class="p">,</span> <span class="n">include_time</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="6 "></span>
 <span class="linenos" data-linenos="7 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
-<h3 id="colores">Colores<a class="headerlink" href="#colores" title="Permanent link">&para;</a></h3>
-<p>To generate random colors, you can use gradio.ColorPicker().</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">cv2</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span> <span class="nn">random</span>
-<span class="linenos" data-linenos=" 5 "></span>
-<span class="linenos" data-linenos=" 6 "></span>
-<span class="linenos" data-linenos=" 7 "></span><span class="c1"># Convert decimal color to hexadecimal color</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="k">def</span> <span class="nf">RGB_to_Hex</span><span class="p">(</span><span class="n">rgb</span><span class="p">):</span>
-<span class="linenos" data-linenos=" 9 "></span>    <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#&quot;</span>
-<span class="linenos" data-linenos="10 "></span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">rgb</span><span class="p">:</span>
-<span class="linenos" data-linenos="11 "></span>        <span class="n">num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-<span class="linenos" data-linenos="12 "></span>        <span class="n">color</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">num</span><span class="p">))[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-<span class="linenos" data-linenos="13 "></span>    <span class="k">return</span> <span class="n">color</span>
-<span class="linenos" data-linenos="14 "></span>
-<span class="linenos" data-linenos="15 "></span>
-<span class="linenos" data-linenos="16 "></span><span class="c1"># Randomly generate light or dark colors</span>
-<span class="linenos" data-linenos="17 "></span><span class="k">def</span> <span class="nf">gen_random_color</span><span class="p">(</span><span class="n">is_light</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="linenos" data-linenos="18 "></span>    <span class="k">return</span> <span class="p">(</span>
-<span class="linenos" data-linenos="19 "></span>        <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">127</span><span class="p">)</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">is_light</span><span class="p">)</span> <span class="o">*</span> <span class="mi">128</span><span class="p">,</span>
-<span class="linenos" data-linenos="20 "></span>        <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">127</span><span class="p">)</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">is_light</span><span class="p">)</span> <span class="o">*</span> <span class="mi">128</span><span class="p">,</span>
-<span class="linenos" data-linenos="21 "></span>        <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">127</span><span class="p">)</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">is_light</span><span class="p">)</span> <span class="o">*</span> <span class="mi">128</span><span class="p">,</span>
-<span class="linenos" data-linenos="22 "></span>    <span class="p">)</span>
-<span class="linenos" data-linenos="23 "></span>
-<span class="linenos" data-linenos="24 "></span>
-<span class="linenos" data-linenos="25 "></span><span class="k">def</span> <span class="nf">change_color</span><span class="p">(</span><span class="n">color_style</span><span class="p">):</span>
-<span class="linenos" data-linenos="26 "></span>    <span class="k">if</span> <span class="n">color_style</span> <span class="o">==</span> <span class="s2">&quot;light&quot;</span><span class="p">:</span>
-<span class="linenos" data-linenos="27 "></span>        <span class="n">is_light</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos" data-linenos="28 "></span>    <span class="k">elif</span> <span class="n">color_style</span> <span class="o">==</span> <span class="s2">&quot;dark&quot;</span><span class="p">:</span>
-<span class="linenos" data-linenos="29 "></span>        <span class="n">is_light</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos" data-linenos="30 "></span>    <span class="n">back_color_</span> <span class="o">=</span> <span class="n">gen_random_color</span><span class="p">(</span><span class="n">is_light</span><span class="p">)</span>  <span class="c1"># Randomly generate colors</span>
-<span class="linenos" data-linenos="31 "></span>    <span class="n">back_color</span> <span class="o">=</span> <span class="n">RGB_to_Hex</span><span class="p">(</span><span class="n">back_color_</span><span class="p">)</span>  <span class="c1"># Convert to hexadecimal</span>
-<span class="linenos" data-linenos="32 "></span>
-<span class="linenos" data-linenos="33 "></span>    <span class="c1"># Draw color pictures.</span>
-<span class="linenos" data-linenos="34 "></span>    <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span>
-<span class="linenos" data-linenos="35 "></span>    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
-<span class="linenos" data-linenos="36 "></span>    <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="n">back_color_</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-<span class="linenos" data-linenos="37 "></span>
-<span class="linenos" data-linenos="38 "></span>    <span class="k">return</span> <span class="n">back_color</span><span class="p">,</span> <span class="n">back_color</span><span class="p">,</span> <span class="n">img</span>
-<span class="linenos" data-linenos="39 "></span>
-<span class="linenos" data-linenos="40 "></span>
-<span class="linenos" data-linenos="41 "></span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gr</span><span class="o">.</span><span class="n">Radio</span><span class="p">([</span><span class="s2">&quot;light&quot;</span><span class="p">,</span> <span class="s2">&quot;dark&quot;</span><span class="p">],</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;light&quot;</span><span class="p">)]</span>
-<span class="linenos" data-linenos="42 "></span>
-<span class="linenos" data-linenos="43 "></span><span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span>
-<span class="linenos" data-linenos="44 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">ColorPicker</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;color&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="45 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;hexadecimal color&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="46 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;numpy&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;color picture&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="47 "></span><span class="p">]</span>
-<span class="linenos" data-linenos="48 "></span>
-<span class="linenos" data-linenos="49 "></span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Random Color Generator&quot;</span>
-<span class="linenos" data-linenos="50 "></span><span class="n">description</span> <span class="o">=</span> <span class="p">(</span>
-<span class="linenos" data-linenos="51 "></span>    <span class="s2">&quot;By clicking submit, a new color will be generated&quot;</span>
-<span class="linenos" data-linenos="52 "></span><span class="p">)</span>
-<span class="linenos" data-linenos="53 "></span>
-<span class="linenos" data-linenos="54 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
-<span class="linenos" data-linenos="55 "></span>    <span class="n">fn</span><span class="o">=</span><span class="n">change_color</span><span class="p">,</span>
-<span class="linenos" data-linenos="56 "></span>    <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span>
-<span class="linenos" data-linenos="57 "></span>    <span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">,</span>
-<span class="linenos" data-linenos="58 "></span>    <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
-<span class="linenos" data-linenos="59 "></span>    <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
-<span class="linenos" data-linenos="60 "></span><span class="p">)</span>
-<span class="linenos" data-linenos="61 "></span>
-<span class="linenos" data-linenos="62 "></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<span class="linenos" data-linenos="63 "></span>    <span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
-</code></pre></div>
 <h3 id="slider">Slider<a class="headerlink" href="#slider" title="Permanent link">&para;</a></h3>
-<p>gradio.Slider() creates a slider with a range from minimum to maximum value with a step of size step. The default slider position is specified by value. For instance, below is an implementation of the slider with minimum = 20, maximum = 100, step = 5, with default slider position</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
-<span class="linenos" data-linenos=" 2 "></span>
+<p>Mediante <a href="https://www.gradio.app/docs/gradio/slider"><code>gradio.Slider()</code></a> crearemos un deslizador entre un rango de valores con un tamaño de pasos. La posición por defecto la indicaremos mediante el valor.</p>
+<p>En el siguiente ejemplo, combinamos los componentes vistos anteriormente con un deslizador y un campo de tipo fecha:</p>
+<div class="highlight"><span class="filename">gradio-slider.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="k">def</span> <span class="nf">sentence_builder</span><span class="p">(</span><span class="n">quantity</span><span class="p">,</span> <span class="n">morning</span><span class="p">,</span> <span class="n">activity_list</span><span class="p">):</span>
-<span class="linenos" data-linenos=" 5 "></span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="si">{</span><span class="n">quantity</span><span class="si">}</span><span class="s2"> o&#39;clock is a nice time take a </span><span class="si">{</span><span class="s2">&quot;morning&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">morning</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;later in the day&quot;</span><span class="si">}</span><span class="s2"> glass of water </span><span class="si">{</span><span class="s2">&quot; and take a &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">activity_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="k">def</span> <span class="nf">crearFrase</span><span class="p">(</span><span class="n">fecha</span><span class="p">,</span> <span class="n">cantidad</span><span class="p">,</span> <span class="n">tipo</span><span class="p">,</span> <span class="n">listaActividades</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 5 "></span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;A las </span><span class="si">{</span><span class="n">cantidad</span><span class="si">}</span><span class="s2"> me </span><span class="si">{</span><span class="s2">&quot;tomé&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">fecha</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;tomaré&quot;</span><span class="si">}</span><span class="s2"> un café </span><span class="si">{</span><span class="s2">&quot;cargado&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">tipo</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;suave&quot;</span><span class="si">}</span><span class="s2"> acompañado de </span><span class="si">{</span><span class="s2">&quot; y &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">listaActividades</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="linenos" data-linenos=" 6 "></span>
-<span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
-<span class="linenos" data-linenos=" 9 "></span>    <span class="n">sentence_builder</span><span class="p">,</span>
-<span class="linenos" data-linenos="10 "></span>    <span class="p">[</span>  <span class="n">gr</span><span class="o">.</span><span class="n">Slider</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="mi">2</span><span class="p">),</span>
-<span class="linenos" data-linenos="11 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Is it before noon&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="12 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">CheckboxGroup</span><span class="p">([</span><span class="s2">&quot;juice&quot;</span><span class="p">,</span> <span class="s2">&quot;beverage&quot;</span><span class="p">,</span> <span class="s2">&quot;snack&quot;</span><span class="p">,</span> <span class="s2">&quot;nap&quot;</span><span class="p">]),</span>
-<span class="linenos" data-linenos="13 "></span>    <span class="p">],</span>
-<span class="linenos" data-linenos="14 "></span>    <span class="s2">&quot;text&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="15 "></span>
-<span class="linenos" data-linenos="16 "></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<span class="linenos" data-linenos="17 "></span>    <span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="n">crearFrase</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span>    <span class="p">[</span>
+<span class="hll"><span class="linenos" data-linenos="10 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">DateTime</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fecha...&quot;</span><span class="p">,</span> <span class="n">include_time</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+</span><span class="hll"><span class="linenos" data-linenos="11 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Slider</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Hora...&quot;</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+</span><span class="linenos" data-linenos="12 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Cargado&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos="13 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">CheckboxGroup</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Café con...&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tostadas&quot;</span><span class="p">,</span> <span class="s2">&quot;galletas&quot;</span><span class="p">,</span> <span class="s2">&quot;magdalenas&quot;</span><span class="p">,</span> <span class="s2">&quot;las noticias&quot;</span><span class="p">])</span>
+<span class="linenos" data-linenos="14 "></span>    <span class="p">],</span>
+<span class="linenos" data-linenos="15 "></span>    <span class="s2">&quot;text&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="16 "></span>
+<span class="linenos" data-linenos="17 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="desplegable">Desplegable<a class="headerlink" href="#desplegable" title="Permanent link">&para;</a></h3>
-<p>Gradio's Dropdown() function allows you to specify an item from a list of possible items. Building on our application, we can define an additional parameter watch that shows what a user would alternatively do.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
-<span class="linenos" data-linenos=" 2 "></span>
+<p>Mediante <a href="https://www.gradio.app/docs/gradio/dropdown">gradio.Dropdown()</a> podemos indicar un elemento de una lista de posibilidades mediante un componente desplegable:</p>
+<div class="highlight"><span class="filename">gradio-dropdown</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="k">def</span> <span class="nf">sentence_builder</span><span class="p">(</span><span class="n">quantity</span><span class="p">,</span> <span class="n">morning</span><span class="p">,</span> <span class="n">activity_list</span><span class="p">,</span> <span class="n">watch</span><span class="p">):</span>
-<span class="linenos" data-linenos=" 5 "></span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="si">{</span><span class="n">quantity</span><span class="si">}</span><span class="s2"> o&#39;clock is a nice time take a </span><span class="si">{</span><span class="s2">&quot;morning&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">morning</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;later in the day&quot;</span><span class="si">}</span><span class="s2"> glass of water </span><span class="si">{</span><span class="s2">&quot; and take a &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">activity_list</span><span class="p">)</span><span class="si">}</span><span class="s2"> or watch a </span><span class="si">{</span><span class="n">watch</span><span class="si">}</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="k">def</span> <span class="nf">crearFrase</span><span class="p">(</span><span class="n">fecha</span><span class="p">,</span> <span class="n">cantidad</span><span class="p">,</span> <span class="n">tipo</span><span class="p">,</span> <span class="n">listaActividades</span><span class="p">,</span> <span class="n">media</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 5 "></span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;A las </span><span class="si">{</span><span class="n">cantidad</span><span class="si">}</span><span class="s2"> me </span><span class="si">{</span><span class="s2">&quot;tomé&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">fecha</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;tomaré&quot;</span><span class="si">}</span><span class="s2"> un café </span><span class="si">{</span><span class="s2">&quot;cargado&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">tipo</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;suave&quot;</span><span class="si">}</span><span class="s2"> acompañado de </span><span class="si">{</span><span class="s2">&quot; y &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">listaActividades</span><span class="p">)</span><span class="si">}</span><span class="s2"> o ver </span><span class="si">{</span><span class="n">media</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="linenos" data-linenos=" 6 "></span>
-<span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
-<span class="linenos" data-linenos=" 9 "></span>    <span class="n">sentence_builder</span><span class="p">,</span>
-<span class="linenos" data-linenos="10 "></span>    <span class="p">[</span>   <span class="n">gr</span><span class="o">.</span><span class="n">Slider</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="mi">2</span><span class="p">),</span>
-<span class="linenos" data-linenos="11 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Is it before noon&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="12 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">CheckboxGroup</span><span class="p">([</span><span class="s2">&quot;juice&quot;</span><span class="p">,</span> <span class="s2">&quot;beverage&quot;</span><span class="p">,</span> <span class="s2">&quot;snack&quot;</span><span class="p">,</span> <span class="s2">&quot;nap&quot;</span><span class="p">]),</span>
-<span class="linenos" data-linenos="13 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">([</span><span class="s2">&quot;Television series&quot;</span><span class="p">,</span> <span class="s2">&quot;Movie&quot;</span><span class="p">,</span> <span class="s2">&quot;Documentary&quot;</span><span class="p">,</span> <span class="s2">&quot;Class&quot;</span><span class="p">]),</span>
-<span class="linenos" data-linenos="14 "></span>
-<span class="linenos" data-linenos="15 "></span>    <span class="p">],</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="n">crearFrase</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span>    <span class="p">[</span>
+<span class="linenos" data-linenos="10 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">DateTime</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fecha...&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;now&quot;</span><span class="p">,</span> <span class="n">include_time</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+<span class="linenos" data-linenos="11 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Slider</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Hora...&quot;</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+<span class="linenos" data-linenos="12 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Cargado&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos="13 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">CheckboxGroup</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Café con...&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tostadas&quot;</span><span class="p">,</span> <span class="s2">&quot;galletas&quot;</span><span class="p">,</span> <span class="s2">&quot;magdalenas&quot;</span><span class="p">,</span> <span class="s2">&quot;las noticias&quot;</span><span class="p">]),</span>
+<span class="hll"><span class="linenos" data-linenos="14 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">([</span><span class="s2">&quot;una serie&quot;</span><span class="p">,</span> <span class="s2">&quot;una película&quot;</span><span class="p">,</span> <span class="s2">&quot;un documental&quot;</span><span class="p">,</span> <span class="s2">&quot;un concierto&quot;</span><span class="p">])</span>
+</span><span class="linenos" data-linenos="15 "></span>    <span class="p">],</span>
 <span class="linenos" data-linenos="16 "></span>    <span class="s2">&quot;text&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="17 "></span>
-<span class="linenos" data-linenos="18 "></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<span class="linenos" data-linenos="19 "></span>    <span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+<span class="linenos" data-linenos="18 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
+<figure style="align: center;">
+    <img src="images/02gradio-dropdown.gif" alt="Componentes Slider, DateTime y Dropdown">
+    <figcaption>Componentes Slider, DateTime y Dropdown</figcaption>
+</figure>
+
+<div class="admonition tip">
+<p class="admonition-title">Más componentes</p>
+<p>Como puedes imaginar, hay muchos más componentes que puedes consultar en la <a href="https://www.gradio.app/docs/gradio/introduction">documentación oficial</a>.</p>
+</div>
 <h2 id="preparando-datos">Preparando datos<a class="headerlink" href="#preparando-datos" title="Permanent link">&para;</a></h2>
 <p>Poner datos de muestra</p>
 <h2 id="flagging">Flagging<a class="headerlink" href="#flagging" title="Permanent link">&para;</a></h2>
-<p>Flagging allows you to collect data on users who use your application/ model, especially data points in which the application behaves unexpectedly. Gradio has an easy flagging method.</p>
-<p>By including a Flag button in each interface, a user can send data back to the location where the application is running.</p>
-<p>Gradio allows four parameters in the gradio.Interface() component that define how Flagging functions. The parameters include  allow_flagging, flagging_options, flagging_dir, and flagging_callback.</p>
-<p>allow_flagging is  manual by default, where samples are flagged when the user clicks the Flag button. You can then use flagging_dir = "path/to/store" specifying the directory for storing the log data. Otherwise, the logs will be stored in a new folder in the location where the app is launched.</p>
-<p>We can add flagging to the Altair visualization app, as shown below.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span> <span class="nn">altair</span> <span class="k">as</span> <span class="nn">alt</span>
-<span class="linenos" data-linenos=" 6 "></span>
-<span class="linenos" data-linenos=" 7 "></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">log</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="linenos" data-linenos="10 "></span>
-<span class="linenos" data-linenos="11 "></span>
-<span class="linenos" data-linenos="12 "></span><span class="k">def</span> <span class="nf">gdp_change</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">smoothen</span><span class="p">):</span>
-<span class="linenos" data-linenos="13 "></span>    <span class="n">years</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1850&#39;</span><span class="p">,</span> <span class="s1">&#39;1900&#39;</span><span class="p">,</span> <span class="s1">&#39;1950&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;2050&#39;</span><span class="p">]</span>
-<span class="linenos" data-linenos="14 "></span>    <span class="n">m</span> <span class="o">=</span> <span class="n">years</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
-<span class="linenos" data-linenos="15 "></span>    <span class="n">start_day</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span> <span class="n">m</span>
-<span class="linenos" data-linenos="16 "></span>    <span class="n">final_day</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span> <span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-<span class="linenos" data-linenos="17 "></span>    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start_day</span><span class="p">,</span> <span class="n">final_day</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-<span class="linenos" data-linenos="18 "></span>    <span class="n">pop_count</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;USA&quot;</span><span class="p">:</span> <span class="mi">350</span><span class="p">,</span> <span class="s2">&quot;Canada&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="s2">&quot;Mexico&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="s2">&quot;UK&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">}</span>
-<span class="linenos" data-linenos="19 "></span>    <span class="k">if</span> <span class="n">smoothen</span><span class="p">:</span>
-<span class="linenos" data-linenos="20 "></span>        <span class="n">r</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-<span class="linenos" data-linenos="21 "></span>    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;day&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span>
-<span class="linenos" data-linenos="22 "></span>    <span class="n">df</span><span class="p">[</span><span class="n">country</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span> <span class="n">x</span> <span class="o">**</span> <span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">pop_count</span><span class="p">[</span><span class="n">country</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-<span class="linenos" data-linenos="23 "></span>    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">country</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-<span class="linenos" data-linenos="24 "></span>
-<span class="linenos" data-linenos="25 "></span>    <span class="k">return</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">mark_bar</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-<span class="linenos" data-linenos="26 "></span>            <span class="n">x</span><span class="o">=</span><span class="s1">&#39;day&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos="27 "></span>            <span class="n">y</span><span class="o">=</span> <span class="s1">&#39;country&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">properties</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">550</span><span class="p">)</span>
-<span class="linenos" data-linenos="28 "></span>
-<span class="linenos" data-linenos="29 "></span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span>
-<span class="linenos" data-linenos="30 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Slider</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span><span class="n">step</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;R&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="31 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">([</span><span class="s1">&#39;1850&#39;</span><span class="p">,</span> <span class="s1">&#39;1900&#39;</span><span class="p">,</span> <span class="s1">&#39;1950&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;2050&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;year&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="32 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Radio</span><span class="p">([</span><span class="s2">&quot;USA&quot;</span><span class="p">,</span> <span class="s2">&quot;Canada&quot;</span><span class="p">,</span> <span class="s2">&quot;Mexico&quot;</span><span class="p">,</span> <span class="s2">&quot;UK&quot;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Countries&quot;</span><span class="p">,</span> <span class="p">),</span>
-<span class="linenos" data-linenos="33 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Log of GDP Growth Rate?&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="34 "></span>    <span class="p">]</span>
-<span class="linenos" data-linenos="35 "></span><span class="n">outputs</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Plot</span><span class="p">()</span>
-<span class="linenos" data-linenos="36 "></span>
-<span class="linenos" data-linenos="37 "></span>
-<span class="linenos" data-linenos="38 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">gdp_change</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">,</span> <span class="n">allow_flagging</span><span class="o">=</span><span class="s2">&quot;manual&quot;</span><span class="p">,</span> <span class="n">flagging_options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;No plot shown&quot;</span><span class="p">,</span> <span class="s2">&quot;Wrong axis&quot;</span><span class="p">,</span> <span class="s2">&quot;Other&quot;</span><span class="p">])</span>
-<span class="linenos" data-linenos="39 "></span>
-<span class="linenos" data-linenos="40 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+<p><em>Gradio</em> nos permite <a href="https://www.gradio.app/guides/using-flagging">marcar las ejecuciones</a> (<em>flag</em>) para recopilar datos sobre los usuarios que utilizan nuestras aplicaciones o modelos, especialmente puntos de datos en los que la aplicación se comporta de forma inesperada.</p>
+<p>Para ello, en toda interfaz aparece el botón <code>Flag</code>, con el cual el usuario puede enviar datos al lugar donde se está ejecutando la aplicación.</p>
+<p>Gradio permite cuatro parámetros en el componente <code>gradio.Interface()</code> que definen cómo funciona:</p>
+<ul>
+<li><code>allow_flagging</code>: por defecto está activo (si no queremos que aparezca el botón, lo ponemos a <code>False</code>)</li>
+<li><code>flagging_options</code>: listad de diferentes botones a mostrar</li>
+<li><code>flagging_dir</code>: indica donde se almacenan los datos de las ejecuciones</li>
+<li><code>flagging_callback</code>: función a invocar al pulsar sobre cada <em>flag</em>.</li>
+</ul>
+<p>Veamos su uso con un ejemplo de una calculadora:</p>
+<div class="highlight"><span class="filename">gradio-flagging.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="k">def</span> <span class="nf">calcula</span><span class="p">(</span><span class="n">num1</span><span class="p">,</span> <span class="n">operacion</span><span class="p">,</span> <span class="n">num2</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 4 "></span>    <span class="k">if</span> <span class="n">operacion</span> <span class="o">==</span> <span class="s2">&quot;suma&quot;</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 5 "></span>        <span class="k">return</span> <span class="n">num1</span> <span class="o">+</span> <span class="n">num2</span>
+<span class="linenos" data-linenos=" 6 "></span>    <span class="k">elif</span> <span class="n">operacion</span> <span class="o">==</span> <span class="s2">&quot;resta&quot;</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 7 "></span>        <span class="k">return</span> <span class="n">num1</span> <span class="o">-</span> <span class="n">num2</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="k">elif</span> <span class="n">operacion</span> <span class="o">==</span> <span class="s2">&quot;producto&quot;</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 9 "></span>        <span class="k">return</span> <span class="n">num1</span> <span class="o">*</span> <span class="n">num2</span>
+<span class="linenos" data-linenos="10 "></span>    <span class="k">elif</span> <span class="n">operacion</span> <span class="o">==</span> <span class="s2">&quot;división&quot;</span><span class="p">:</span>
+<span class="linenos" data-linenos="11 "></span>        <span class="k">return</span> <span class="n">num1</span> <span class="o">/</span> <span class="n">num2</span>
+<span class="linenos" data-linenos="12 "></span>
+<span class="linenos" data-linenos="13 "></span>
+<span class="linenos" data-linenos="14 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
+<span class="linenos" data-linenos="15 "></span>    <span class="n">calcula</span><span class="p">,</span>
+<span class="linenos" data-linenos="16 "></span>    <span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="n">gr</span><span class="o">.</span><span class="n">Radio</span><span class="p">([</span><span class="s2">&quot;suma&quot;</span><span class="p">,</span> <span class="s2">&quot;resta&quot;</span><span class="p">,</span> <span class="s2">&quot;producto&quot;</span><span class="p">,</span> <span class="s2">&quot;división&quot;</span><span class="p">]),</span> <span class="s2">&quot;number&quot;</span><span class="p">],</span>
+<span class="linenos" data-linenos="17 "></span>    <span class="s2">&quot;number&quot;</span><span class="p">,</span>
+<span class="hll"><span class="linenos" data-linenos="18 "></span>    <span class="n">flagging_mode</span><span class="o">=</span><span class="s2">&quot;manual&quot;</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos" data-linenos="19 "></span>    <span class="n">flagging_options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;signo incorrecto&quot;</span><span class="p">,</span> <span class="s2">&quot;división por cero&quot;</span><span class="p">,</span> <span class="s2">&quot;otro&quot;</span><span class="p">]</span>
+</span><span class="linenos" data-linenos="20 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="21 "></span>
+<span class="linenos" data-linenos="22 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+</code></pre></div>
+<p>Si probamos diferentes operaciones, veremos que nos crea el archivo <code>.gradio/flagged/output/dataset1.csv</code> con los valores de entrada marcados, la salida, el botón pulsado y el <em>timestamp</em>:</p>
+<div class="highlight"><span class="filename">dataset1.csv</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span>num1,operacion,num2,output,flag,timestamp
+<span class="linenos" data-linenos="2 "></span>3,resta,&#39;-2,5,división por cero,2024-10-13 19:12:45.842902
+<span class="linenos" data-linenos="3 "></span>3,división,2.234532414213453e+63,1.3425627576120835e-63,otro,2024-10-13 19:13:06.604335
 </code></pre></div>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.gradio.app/guides/quickstart">Gradio Quickstart</a></li>
 <li><a href="https://huggingface.co/learn/nlp-course/chapter9/1">Gradio Tutorial</a></li>
 </ul>
-<p>https://www.machinelearningnuggets.com/gradio-tutorial/
-https://www.datacamp.com/es/tutorial/gradio-python-tutorial</p>
+<!--
+https://www.machinelearningnuggets.com/gradio-tutorial/
+https://www.datacamp.com/es/tutorial/gradio-python-tutorial
+-->
+
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
-<p>1.- Crea un prototipo mediante <em>Gradio</em> para el ejemplo inicial de <em>Stable Diffusion</em>, con un texto como entrada y una imagen como salida.</p>
+<p>1.- (RAPIA.3 / CEPIA.3b, CEPIA.3c / 3p) Crea un prototipo mediante <em>Gradio</em> que permita traducir de castellano a inglés y viceversa, haciendo uso de algún control que te facilite decidir el sentido de la traducción (y por tanto el modelo a emplear).</p>
 <!--
 
 
@@ -4964,22 +4861,6 @@ The Gradio package simplifies the creation of a shareable GUI & public link for 
 This is where hosting services like Heroku and Hugging Face spaces come in.
 
 
-Heroku
-Deploying a Gradio application in Heroku follows five steps:
-
-Create your application ( app.py) and store it in a new directory.
-Write your requirements.txt file
-You’ll need a Heroku account and, optionally, for convenience, the Heroku CLI. Create a Heroku account and download the CLI if you haven’t done that already:
-
-Create a setup.sh file. For your app to run correctly, ensure it’s served on the correct URL & port. Add export GRADIO_SERVER_NAME=0.0.0.0 and export GRADIO_SERVER_PORT="$PORT" to the setup.sh file.
-Create a Procfile. The Procfile specifies the commands that are run to start the Gradio app. There are only two commands: to run the bash script, and then to launch the app. So your Heroku Procfilelooks like web: source setup.sh && python app.py
-Deploy! With that in place, you can proceed with your usual Heroku deployment process.
-mlnuggets newsletter
-Join the newsletter to receive the technical deep dives in your inbox.
-
-
-
-
 
 Hugging Face spaces
 Create a user account at https://huggingface.co/. Navigate to Spaces in the navigation bar and create a New Space.
@@ -5002,12 +4883,6 @@ git commit -m "first commit"
 git push
 You will be prompted to enter your Hugging face credentials. For Windows users, the widget will be something like:
 
-
-If you have met all the requirements, go to your spaces and click on your space. You should see an app running.
-
-
-
-Below is the link to this guide's Hugging face application.
 
 -->
 
