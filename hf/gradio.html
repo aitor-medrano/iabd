@@ -2108,20 +2108,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#preparando-datos" class="md-nav__link">
+  <a href="#flagging" class="md-nav__link">
     <span class="md-ellipsis">
-      Preparando datos
+      Flagging
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#flagging" class="md-nav__link">
+  <a href="#preparando-datos" class="md-nav__link">
     <span class="md-ellipsis">
-      Flagging
+      Preparando datos
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Preparando datos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#desde-una-carpeta" class="md-nav__link">
+    <span class="md-ellipsis">
+      Desde una carpeta
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3764,20 +3779,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#preparando-datos" class="md-nav__link">
+  <a href="#flagging" class="md-nav__link">
     <span class="md-ellipsis">
-      Preparando datos
+      Flagging
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#flagging" class="md-nav__link">
+  <a href="#preparando-datos" class="md-nav__link">
     <span class="md-ellipsis">
-      Flagging
+      Preparando datos
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Preparando datos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#desde-una-carpeta" class="md-nav__link">
+    <span class="md-ellipsis">
+      Desde una carpeta
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3888,7 +3918,7 @@
 <p>Al final de la ejecución nos recomienda el uso de <em>Spaces</em>. Así pues, si queremos desplegar el modelo en <em>Spaces</em>, el primer paso será hacer login con las credenciales de <em>Hugging Face</em>.</p>
 <h2 id="la-clase-interface">La clase <code>Interface</code><a class="headerlink" href="#la-clase-interface" title="Permanent link">&para;</a></h2>
 <p>La clase Interfaces es la clase de más alto nivel, y permite crear el IU de nuestros modelos ML.</p>
-<p>Del ejemplo anterior, hemos visto que la clase recibe tres parámetros: <code>Interface(fn=funcion, inputs=entradas, outputs=salidas, ...)</code>:</p>
+<p>Del ejemplo anterior, hemos visto que la clase <a href="https://www.gradio.app/docs/gradio/interface"><code>Interface</code></a> recibe tres parámetros: <code>Interface(fn=funcion, inputs=entradas, outputs=salidas, ...)</code>:</p>
 <ul>
 <li><strong><code>fn</code></strong>: función que invoca al modelo ML o realiza la funcionalidad deseadas. La función acepta al menos un parámetros y devuelve uno o más valores.</li>
 <li><strong><code>inputs</code></strong>: define el tipo del componente de entrada (o los tipos de los componentes si tenemos varias entradas). <em>Gradio</em> ofrece varios componentes predefinidos, como de tipo texto, imagen, micrófono, etc...  La cantidad de componentes de entrada debe coincidir con el número de parámetros indicados en la función <code>fn</code>. Si asociamos <code>None</code> a <code>inputs</code>, sólo se muestran los componentes de salida.</li>
@@ -3921,7 +3951,37 @@
 </figure>
 
 <h3 id="personalizando-el-interfaz">Personalizando el interfaz<a class="headerlink" href="#personalizando-el-interfaz" title="Permanent link">&para;</a></h3>
-<p>TODO: completar ..., texto de intro, fin, etc... colores</p>
+<p>Además de los controles, podemos configurar ciertos elementos, como el título o la descripción, o cambiar el tema de todo el interfaz.</p>
+<p>Para ello, cuando definimos el interfaz tenemos disponibles los parámetros:</p>
+<ul>
+<li><code>title</code>: título, se muestra en la parte superior y como título de la página</li>
+<li><code>description</code>: acepta tanto texto como Markdown o HTML, y se coloca debajo del título</li>
+<li><code>article</code>: acepta tanto texto como Markdown o HTML, y se coloca debajo del interfaz.</li>
+<li><code>theme</code>: mediante <a href="https://www.gradio.app/docs/gradio/themes">gr.Theme()</a> podemos cambiar toda la apariencia visual. Tenemos un conjunto de <a href="https://www.gradio.app/guides/theming-guide">temas disponibles</a>, o podemos crear los nuestros propios, tanto a nivel de colores o fuentes como de tamaños de los componentes. También podemos utilizar temas <a href="https://huggingface.co/spaces/gradio/theme-gallery">creados por terceros</a> mediante <a href="https://www.gradio.app/docs/gradio/themes">gr.Theme.from_hub()</a>.</li>
+<li><code>css</code>: además del tema, podemos modificar <a href="https://www.gradio.app/guides/custom-CSS-and-JS">propiedades CSS</a>.</li>
+<li><code>fill_witdh</code>: con el valor <code>True</code>, permite anular el <em>padding</em> y ocupar todo el ancho.</li>
+</ul>
+<p>Así pues, si cogemos nuestro ejemplo inicial y lo personalizamos con algunas propiedades, veremos su apariencia modificada:</p>
+<div class="highlight"><span class="filename">hello-gradio-custom.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="k">def</span> <span class="nf">saluda</span><span class="p">(</span><span class="n">nombre</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 4 "></span>    <span class="k">return</span> <span class="s2">&quot;Hola &quot;</span> <span class="o">+</span> <span class="n">nombre</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">titulo</span> <span class="o">=</span> <span class="s2">&quot;Hola Gradio&quot;</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">descripcion</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Con Gradio podemos crear prototipos visuales para probar nuestros &lt;strong&gt;modelos de IA&lt;/strong&gt;</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span><span class="s2">&lt;br /&gt;</span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span><span class="s2">&lt;figure style=&quot;display: flex; justify-content: center; align-items: center;&quot;&gt;</span>
+<span class="linenos" data-linenos="13 "></span><span class="s2">    &lt;img src=&quot;https://aitor-medrano.github.io/iabd/images/logoIABD3.png&quot; alt=Logo IABD&quot; width=&quot;100px&quot;&gt;</span>
+<span class="linenos" data-linenos="14 "></span><span class="s2">&lt;/figure&gt;</span>
+<span class="linenos" data-linenos="15 "></span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="16 "></span><span class="n">articulo</span> <span class="o">=</span> <span class="s2">&quot;En este caso, sólo debes escribir tu *nombre* y pulsar sobre **enviar**&quot;</span>
+<span class="linenos" data-linenos="17 "></span>
+<span class="hll"><span class="linenos" data-linenos="18 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">saluda</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">titulo</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">descripcion</span><span class="p">,</span> <span class="n">article</span><span class="o">=</span><span class="n">articulo</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s2">&quot;glass&quot;</span><span class="p">,</span> <span class="n">submit_btn</span><span class="o">=</span><span class="s2">&quot;enviar&quot;</span><span class="p">,</span> <span class="n">fill_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="19 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+</code></pre></div>
 <h2 id="la-clase-blocks">La clase <code>Blocks</code><a class="headerlink" href="#la-clase-blocks" title="Permanent link">&para;</a></h2>
 <!--
 TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
@@ -4313,8 +4373,6 @@ TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
 <p class="admonition-title">Más componentes</p>
 <p>Como puedes imaginar, hay muchos más componentes que puedes consultar en la <a href="https://www.gradio.app/docs/gradio/introduction">documentación oficial</a>.</p>
 </div>
-<h2 id="preparando-datos">Preparando datos<a class="headerlink" href="#preparando-datos" title="Permanent link">&para;</a></h2>
-<p>Poner datos de muestra</p>
 <h2 id="flagging">Flagging<a class="headerlink" href="#flagging" title="Permanent link">&para;</a></h2>
 <p><em>Gradio</em> nos permite <a href="https://www.gradio.app/guides/using-flagging">marcar las ejecuciones</a> (<em>flag</em>) para recopilar datos sobre los usuarios que utilizan nuestras aplicaciones o modelos, especialmente puntos de datos en los que la aplicación se comporta de forma inesperada.</p>
 <p>Para ello, en toda interfaz aparece el botón <code>Flag</code>, con el cual el usuario puede enviar datos al lugar donde se está ejecutando la aplicación.</p>
@@ -4354,6 +4412,25 @@ TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
 <span class="linenos" data-linenos="2 "></span>3,resta,&#39;-2,5,división por cero,2024-10-13 19:12:45.842902
 <span class="linenos" data-linenos="3 "></span>3,división,2.234532414213453e+63,1.3425627576120835e-63,otro,2024-10-13 19:13:06.604335
 </code></pre></div>
+<h2 id="preparando-datos">Preparando datos<a class="headerlink" href="#preparando-datos" title="Permanent link">&para;</a></h2>
+<p>Añadir ejemplos a un <em>Gradio</em> es tan fácil como proporcionar una lista de listas con el parámetro <code>examples</code>. Cada sublista es una muestra de datos, donde cada elemento corresponde a una entrada de la función de predicción. Las entradas deben estar ordenadas en el mismo orden en que las espera la función de predicción.</p>
+<p>Si nuestro interfaz sólo tiene un componente de entrada, podemos proporcionar los ejemplos como una lista normal en lugar de una lista de listas.</p>
+<div class="highlight"><span class="filename">hello-examples.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="k">def</span> <span class="nf">saluda</span><span class="p">(</span><span class="n">nombre</span><span class="p">):</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="k">return</span> <span class="s2">&quot;Hola &quot;</span> <span class="o">+</span> <span class="n">nombre</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span>
+<span class="linenos" data-linenos="5 "></span>
+<span class="hll"><span class="linenos" data-linenos="6 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">saluda</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Aitor&quot;</span><span class="p">,</span> <span class="s2">&quot;IABD&quot;</span><span class="p">,</span> <span class="s2">&quot;¿Qué tal?&quot;</span><span class="p">])</span>
+</span><span class="linenos" data-linenos="7 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="desde-una-carpeta">Desde una carpeta<a class="headerlink" href="#desde-una-carpeta" title="Permanent link">&para;</a></h3>
+<p>También podemos especificar una ruta a un directorio que contenga los ejemplos. Si nuestro interfaz sólo acepta un único tipo de archivo de entrada, por ejemplo, un clasificador de imágenes, simplemente pasaremos la ruta de un directorio al argumento <code>examples</code>, y la interfaz cargará las imágenes del directorio como ejemplos. En el caso de entradas múltiples, este directorio debe contener un archivo <code>log.csv</code> con los valores de los ejemplos.</p>
+<p>En el contexto de la demo de la calculadora vista en el apartado anterior, podemos establecer <code>examples='/demo/examples'</code> y en ese directorio incluimos el siguiente fichero <code>log.csv</code>:</p>
+<div class="highlight"><span class="filename">log.csv</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span>num1,operacion,num2
+<span class="linenos" data-linenos="2 "></span>5,&quot;suma&quot;,3
+<span class="linenos" data-linenos="3 "></span>4,&quot;producto&quot;,2
+<span class="linenos" data-linenos="4 "></span>5,&quot;resta&quot;,3
+</code></pre></div>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.gradio.app/guides/quickstart">Gradio Quickstart</a></li>
@@ -4366,10 +4443,8 @@ https://www.datacamp.com/es/tutorial/gradio-python-tutorial
 
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <p>1.- (RAPIA.3 / CEPIA.3b, CEPIA.3c / 3p) Crea un prototipo mediante <em>Gradio</em> que permita traducir de castellano a inglés y viceversa, haciendo uso de algún control que te facilite decidir el sentido de la traducción (y por tanto el modelo a emplear).</p>
+<p>2.- A partir de la siguiente imagen, crea el interfaz de usuario del prototipo para probar el proyecto Lara:</p>
 <!--
-
-
-
 
 Caching in Gradio
 You will lose examples from your server each time your application is refreshed. You can specify cache_examples = True in Gradio's main interface, i.e., gradio.Interface() after defining your examples.
@@ -4384,122 +4459,6 @@ def user_greeting(name):
 app =  gra.Interface(fn = user_greeting, inputs="text", outputs="text", examples = ["Zenith", "Antoinne", "Amelia", "Johanna"], cache_examples = True)
 app.launch()
 
-
-
-
-Gradio configurations
-Gradio applications are configured in the launch() process. However, you can make some configurations through environment variables.
-
-Through environment variables
-To make the app accessible on the local network, you will need to set the value "0.0.0.0" in theserver_name parameter in gradio.Interface.launch() . This can also be set through the environment variable GRADIO_SERVER_NAME. If None, it will use 127.0.0.1 by default.
-
-
-
-
-Integrating visualization libraries with Gradio
-Gradio provides an easy-to-use Plot output component for creating data visualizations with various Python visualization libraries, including Matplotlib, Bokeh, and Plotly.
-
-Using Matplotlib and Seaborn in Gradio
-Visualizing data using Seaborn or Matplotlib in Gradio follows the same syntax.
-
-For matplotlib, use matplotlib.plot() while for Seaborn, use seaborn.plot().
-
-Matplotlib
-
-import gradio as gr
-from math import log
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-
-
-def gdp_change(r, year, country, smoothen):
-    years = ['1850', '1900', '1950', '2000', '2050']
-    m = years.index(year)
-    start_day = 10* m
-    final_day = 10* (m + 1)
-    x = np.arange(start_day, final_day + 1)
-    pop_count = {"USA": 350, "Canada": 40, "Mexico": 300, "UK": 120}
-    if smoothen:
-        r = log(r)
-    df = pd.DataFrame({'day': x})
-    df[country] = ( x ** (r) * (pop_count[country] + 1))
-    fig = plt.figure()
-    plt.plot(df['day'], df[country].to_numpy(), label = country)
-    plt.title("GDP in " + year)
-    plt.ylabel("GDP (Millions)")
-    plt.xlabel("Population Change since 1800")
-    plt.grid()
-    return fig
-
-inputs = [
-        gr.Slider(1, 4, 3.2, label="R"),
-        gr.Dropdown(['1850', '1900', '1950', '2000', '2050'], label="Year"),
-        gr.Radio(["USA", "Canada", "Mexico", "UK"], label="Countries", ),
-        gr.Checkbox(label="Log of GDP Growth Rate?"),
-    ]
-outputs = gr.Plot()
-
-demo = gr.Interface(fn=gdp_change, inputs=inputs, outputs=outputs)
-
-demo.launch()
-
-Seaborn
-
-Seaborn follows the same syntax as Matplotlib. First, define a plotting function Interfaces. Place the chart as output.
-
-
-
-def gdp_change(r, year, country, smoothen):
-    years = ['1850', '1900', '1950', '2000', '2050']
-    m = years.index(year)
-    start_day = 10* m
-    final_day = 10* (m + 1)
-    x = np.arange(start_day, final_day + 1)
-    pop_count = {"USA": 350, "Canada": 40, "Mexico": 300, "UK": 120}
-    if smoothen:
-        r = log(r)
-    df = pd.DataFrame({'day': x})
-    df[country] = ( x ** (r) * (pop_count[country] + 1))
-    fig = plt.figure()
-    sns.lineplot(x = df['day'], y = df[country].to_numpy())
-    plt.title("GDP in " + year)
-    plt.ylabel("GDP (Millions)")
-    plt.xlabel("Population Change since 1800")
-    plt.grid()
-    return fig
-
-inputs = [
-        gr.Slider(1, 4, 3.2, label="R"),
-        gr.Dropdown(['1850', '1900', '1950', '2000', '2050'], label="year"),
-        gr.Radio(["USA", "Canada", "Mexico", "UK"], label="Countries", ),
-        gr.Checkbox(label="Log of GDP Growth Rate?"),
-    ]
-outputs = gr.Plot()
-
-demo = gr.Interface(fn=gdp_change, inputs=inputs, outputs=outputs)
-
-demo.launch()
-
-Visualize maps with Gradio
-Map objects created using packages like Plotly or Seaborn can also be visualized using gradio.Plot().
-
-import plotly.express as px
-import pandas as pd
-def map_plot():
-  #define a map element
-    df = px.data.gapminder().query("year==2002")
-    fig = px.scatter_geo(df, locations="iso_alpha", color="continent",
-                        hover_name="country", size="lifeExp",
-                        projection="natural earth")
-    return fig
-outputs = gr.Plot()
-
-demo = gr.Interface(fn=map_plot, inputs=None, outputs=outputs)
-
-demo.launch()
 
 
 
@@ -4577,113 +4536,6 @@ You will notice that the session persists within the page, but if you load the a
 
 
 
-
-
-
-
-Multi-page Gradio apps
-After creating different apps, you can use methods like:
-
-gradio.TabbedInterfaces() and  gradio.Parallel() for comparing outputs from multiple apps
-gradio.Series() for feeding input from one app to the next
-to combine the apps into multi-page applications.
-
-In this section, we will use gradio.TabbedInterface() to create a multi-page app for the Dropdown and Seaborn applications that we had created earlier.
-
-#define your first application
-#!pip install gradio
-import gradio as gr
-import seaborn as sns
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-from math import log
-def user_greeting(name):
-    return "Hi! " + name + " Welcome to your multi-page application!😎"
-#app 1
-app =  gr.Interface(fn = user_greeting, inputs="text", outputs="text", examples = ["Zenith", "Antoinne", "Amelia", "Johanna"])
-
-#define your second application
-def gdp_change(r, year, country, smoothen):
-    years = ['1850', '1900', '1950', '2000', '2050']
-    m = years.index(year)
-    start_day = 10* m
-    final_day = 10* (m + 1)
-    x = np.arange(start_day, final_day + 1)
-    pop_count = {"USA": 350, "Canada": 40, "Mexico": 300, "UK": 120}
-    if smoothen:
-        r = log(r)
-    df = pd.DataFrame({'day': x})
-    df[country] = ( x ** (r) * (pop_count[country] + 1))
-    fig = plt.figure()
-    sns.lineplot(x = df['day'], y = df[country].to_numpy())
-    plt.title("GDP in " + year)
-    plt.ylabel("GDP (Millions)")
-    plt.xlabel("Population Change since 1800s")
-    plt.grid()
-    return fig
-
-inputs = [
-        gr.Slider(1, 4, 3.2, label="R"),
-        gr.Dropdown(['1850', '1900', '1950', '2000', '2050'], label="year"),
-        gr.Radio(["USA", "Canada", "Mexico", "UK"], label="Countries", ),
-        gr.Checkbox(label="Log of GDP Growth Rate?"),
-    ]
-outputs = gr.Plot()
-#app 2
-app2 = gr.Interface(fn=gdp_change, inputs=inputs, outputs=outputs)
-#combine to create a multipage app
-demo = gr.TabbedInterface([app, app2], ["Welcome page", "Visualization page"])
-
-if __name__ == "__main__":
-    demo.launch()
-
-mlnuggets newsletter
-Join the newsletter to receive the technical deep dives in your inbox.
-
-
-
-
-Custom CSS and Javascript in Gradio
-You can style your app to custom specifications by passing any CSS to your app using css = kwarg. For example, in the Tab layout example, you can define a custom background CSS as follows:
-
-import gradio as gr
-with gr.Blocks(css=".gradio-container {background-color: grey}") as demo:
-    with gr.Tab(label = "Button tab"):
-         btn1 = gr.Button("Button 1")
-         btn2 = gr.Button("Button 2")
-    with gr.Tab(label = "Textbox tab"):
-         text1 = gr.Textbox()
-         text2 = gr.Textbox()
-demo.launch()
-
-Similarly, you can define custom JS for your app.
-
-import gradio as gr
-
-blocks = gr.Blocks()
-
-with blocks as demo:
-    subject = gr.Radio(["Analyse", "Explore", "Learn"])
-    verb = gr.Radio(["GDP Change", "Population Growth", "Big Data"])
-    object = gr.Textbox(placeholder="region")
-
-    with gr.Row():
-        btn = gr.Button("Create sentence.")
-        reverse_btn = gr.Button("Reverse sentence.")
-
-    def sentence_maker(w1, w2, w3):
-        return f"{w1} {w2} in {w3}"
-
-    output1 = gr.Textbox(label="output 1")
-    output2 = gr.Textbox(label="verb reversed")
-
-    btn.click(sentence_maker, [subject, verb, object], output1)
-    #custom JS to reverse the sentense
-    reverse_btn.click(None, [subject, verb, object], output2, _js="(s, v, o) => o + ' ' + v + ' ' + s")
-
-demo.launch()
-
 Authenticating Gradio apps
 When launching a Gradio application, you can define an authentication method by specifying the auth parameter. If auth is passed, a username and password (or list of username-password tuples) will be required to access the interface.
 
@@ -4759,9 +4611,6 @@ demo = gr.Interface(
 if __name__ == "__main__":
     demo.launch()
 
-mlnuggets newsletter
-Join the newsletter to receive the technical deep dives in your inbox.
-
 
 
 
@@ -4781,109 +4630,6 @@ def sepia_hue(input_img):
 
 demo = gr.Interface(sepia_hue, gr.Image(shape=(300, 200)), "image")
 demo.launch()
-Dog: Photo by Dongsh on Unsplash
-
-
-
-See Gradio documentation for the parameter options.
-
-Using Flagging
-A Step-by-Step Gradio Tutorial
-
-Gradio Team
-
-Build an image Classification with Vision Transformers in Gradio
-Transformers offer APIs and tools to download and train state-of-the-art pre-trained models quickly. As shown below, you can easily create a classification application using vision transformers.
-
-import gradio as gr
-#load your preffered model
-app = gr.Interface.load(
-             "huggingface/google/vit-base-patch16-224")
-
-#launch
-app.launch()
-
-Llama: Photo by Raspopova Marina, on Unsplash
-For additional transformer models, go to Hugging face documentation.
-
-google (Google AI)
-We’re on a journey to advance and democratize artificial intelligence through open source and open science.
-
-
-mlnuggets newsletter
-Join the newsletter to receive the technical deep dives in your inbox.
-
-
-
-
-Use Hugging face to develop a chatbot application with Gradio
-Creating a chatbot is simplified by using Hugging face pre-trained models. You will need a pre-trained tokenizer and conversational model such as DialoGPT.
-
-
-In the example below, we use a  DialoGPT tokenizer and conversational model.
-
-from transformers import AutoModelForCausalLM, AutoTokenizer
-import torch
-#set up the model (large version of DialoGPT)
-tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-large")
-model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-large")
-
-#Defining a predict function
-
-def predict(input, history=[]):
-    # tokenize the new input sentence
-    new_user_input_ids = tokenizer.encode(input + tokenizer.eos_token, return_tensors='pt')
-
-    # append the new user input tokens to the chat history
-    bot_input_ids = torch.cat([torch.LongTensor(history), new_user_input_ids], dim=-1)
-
-    # generate a response 
-    history = model.generate(bot_input_ids, max_length=1000, pad_token_id=tokenizer.eos_token_id).tolist()
-
-    # convert the tokens to text, and then split the responses into lines
-    response = tokenizer.decode(history[0]).split("<|endoftext|>")
-    response = [(response[i], response[i+1]) for i in range(0, len(response)-1, 2)]  # convert to tuples of list
-    return response, history
-
-#creating a gradio interface
-
-import gradio as gr
-
-demo = gr.Interface(fn=predict,
-             inputs=["text", "state"],
-             outputs=["chatbot", "state"])
-
-demo.launch()
-
-Deploying Gradio applications
-The Gradio package simplifies the creation of a shareable GUI & public link for your model. This is true as long as the model runs in your local environment. But when you need a long-term hosted solution, you will need to look elsewhere.
-
-This is where hosting services like Heroku and Hugging Face spaces come in.
-
-
-
-Hugging Face spaces
-Create a user account at https://huggingface.co/. Navigate to Spaces in the navigation bar and create a New Space.
-
-
-
-Provide the necessary information.
-
-
-A link with a repo will be created. Copy the link in your command prompt. In our case, we obtained the link as shown below, but it might differ depending on your details.
-
-git clone https://huggingface.co/spaces/Kamanda/Gradio_machine_learning
-A new folder ( Gradio_machine_learning) will be created.
-
-Make a copy of  the files necessary for running your Gradio application, such asapp.py, requirements.txt in this new folder.
-Back in your terminal, execute the following commands, replacing the respective names with that of your workspace.
-cd Gradio_Machine_Learning
-git add .
-git commit -m "first commit"
-git push
-You will be prompted to enter your Hugging face credentials. For Windows users, the widget will be something like:
-
-
 -->
 
 
