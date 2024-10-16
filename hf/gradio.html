@@ -3915,7 +3915,7 @@
 <p class="admonition-title">Gradio ❤️ HuggingFace</p>
 <p><em>Gradio</em> y <em>HuggingFace</em> van de la mano, de manera que podemos desplegar nuestras aplicaciones <em>Gradio</em> en <em>Spaces</em> de <em>HuggingFace</em> para ofrecer una solución rápida para probar nuestros modelos desplegados.</p>
 </div>
-<p>Al final de la ejecución nos recomienda el uso de <em>Spaces</em>. Así pues, si queremos desplegar el modelo en <em>Spaces</em>, el primer paso será hacer login con las credenciales de <em>Hugging Face</em>.</p>
+<p>Al final de la ejecución nos recomienda el uso de <em>Spaces</em>. Así pues, si queremos desplegar el modelo en <em>Spaces</em>, el primer paso será hacer <em>login</em> con las credenciales de <em>Hugging Face</em>.</p>
 <h2 id="la-clase-interface">La clase <code>Interface</code><a class="headerlink" href="#la-clase-interface" title="Permanent link">&para;</a></h2>
 <p>La clase Interfaces es la clase de más alto nivel, y permite crear el IU de nuestros modelos ML.</p>
 <p>Del ejemplo anterior, hemos visto que la clase <a href="https://www.gradio.app/docs/gradio/interface"><code>Interface</code></a> recibe tres parámetros: <code>Interface(fn=funcion, inputs=entradas, outputs=salidas, ...)</code>:</p>
@@ -3982,6 +3982,12 @@
 <span class="hll"><span class="linenos" data-linenos="18 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">saluda</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">titulo</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">descripcion</span><span class="p">,</span> <span class="n">article</span><span class="o">=</span><span class="n">articulo</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s2">&quot;glass&quot;</span><span class="p">,</span> <span class="n">submit_btn</span><span class="o">=</span><span class="s2">&quot;enviar&quot;</span><span class="p">,</span> <span class="n">fill_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span><span class="linenos" data-linenos="19 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
+<p>Obteniendo:</p>
+<figure style="align: center;">
+    <img src="images/02gradio-custom.png" alt="Personalizando el interfaz con Gradio" width="909px">
+    <figcaption>Personalizando el interfaz con Gradio</figcaption>
+</figure>
+
 <h2 id="la-clase-blocks">La clase <code>Blocks</code><a class="headerlink" href="#la-clase-blocks" title="Permanent link">&para;</a></h2>
 <!--
 TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
@@ -4033,6 +4039,7 @@ TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
     <figcaption>Uso de Blocks con evento change</figcaption>
 </figure>
 
+<p>Dependiendo del componente, tendremos diferentes manejadores de eventos. Acabamos de ver que el componente <a href="https://www.gradio.app/docs/gradio/textbox"><code>gradio.Textbox()</code></a> ofrece el manejador <code>change()</code> que se dispara al cambiar el texto al teclear. Otro ejemplo sería <a href="https://www.gradio.app/docs/gradio/video"><code>gradio.Video()</code></a> que ofrece el manejador <code>play()</code>, el cual se dispara cuando un usuario pulsa <em>play</em>.</p>
 <h3 id="disposicion">Disposición<a class="headerlink" href="#disposicion" title="Permanent link">&para;</a></h3>
 <p>La disposición (<em>layout</em>) de los bloques de una aplicación se pueden personalizar mediante clases como <code>gr.Row()</code>, <code>gr.Columns()</code>, <code>gr.Tab()</code> o <code>gr.Accordion()</code>.</p>
 <div class="grid cards">
@@ -4180,7 +4187,10 @@ TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
 </code></pre></div>
 <h4 id="datos">Datos<a class="headerlink" href="#datos" title="Permanent link">&para;</a></h4>
 <p>Para mostrar datos, podemos emplear diferentes tipos como <code>str</code>, <code>number</code>, <code>bool</code>, <code>date</code> o <code>markdown</code>. Por defecto, tendremos un <em>DataFrame</em> de <em>Pandas</em>.</p>
-<p>TODO: Probar... poner un ejemplo con más tipos de salida</p>
+<!--
+TODO: Probar... poner un ejemplo con más tipos de salida
+-->
+
 <p>Para obtener otros tipos de datos, hemos de indicarlo en la salida. Por ejemplo, podemos obtener un array de <em>NumPy</em> indicando <code>numpy</code>, y <code>array</code> si queremos un array de <em>Python</em>.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
 <span class="linenos" data-linenos="2 "></span>
@@ -4190,7 +4200,6 @@ TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
 <span class="linenos" data-linenos="6 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">mostrarDatos</span><span class="p">,</span> <span class="n">gr</span><span class="o">.</span><span class="n">Dataframe</span><span class="p">(),</span> <span class="s2">&quot;dataframe&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="7 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
-<p>TODO: otros componentes.. listas, radios</p>
 <h3 id="multimedia">Multimedia<a class="headerlink" href="#multimedia" title="Permanent link">&para;</a></h3>
 <p>En Gradio podemos mostrar elementos como imágenes, así comos transformar las imágenes aplicando un filtro como el sepia o el azul. Para ello, en la entrada podemos pasar componentes de tipo <a href="https://www.gradio.app/docs/gradio/image"><code>Image</code></a>, <a href="https://www.gradio.app/docs/gradio/video"><code>Video</code></a>, <a href="https://www.gradio.app/docs/gradio/audio"><code>Audio</code></a> o <a href="https://www.gradio.app/docs/gradio/file"><code>File</code></a>.</p>
 <p>El siguiente ejemplo muestra cómo visualizar una imagen después de aplicar un filtro de tono azul.</p>
@@ -4246,23 +4255,6 @@ TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
 <span class="linenos" data-linenos="16 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">createBarPlot</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">gr</span><span class="o">.</span><span class="n">BarPlot</span><span class="p">())</span>
 <span class="linenos" data-linenos="17 "></span>
 <span class="linenos" data-linenos="18 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
-</code></pre></div>
-<p>Dependiendo del components, tendremos diferentes manejadores de eventos. Por ejemplo, el componente <code>gradio.Video()</code> dispone el manejado <code>play()</code> el cual se dispara cuando un usuario pulsa <em>play</em>. Del mismo modo, el componente <code>gradio.Text()</code> ofrece el manejador <code>change()</code> que se dispara al cambiar el texto al teclear.</p>
-<div class="highlight"><span class="filename">gradio-visibility.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
-<span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="k">def</span> <span class="nf">welcome</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-<span class="linenos" data-linenos=" 4 "></span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Welcome back, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">!&quot;</span>
-<span class="linenos" data-linenos=" 5 "></span>
-<span class="linenos" data-linenos=" 6 "></span><span class="k">with</span> <span class="n">gr</span><span class="o">.</span><span class="n">Blocks</span><span class="p">()</span> <span class="k">as</span> <span class="n">demo</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 7 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">Markdown</span><span class="p">(</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="sd">    Type anything to see the output</span>
-<span class="linenos" data-linenos="10 "></span><span class="sd">    &quot;&quot;&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="11 "></span>    <span class="n">inp</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Enter your name&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="12 "></span>    <span class="n">out</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">()</span>
-<span class="linenos" data-linenos="13 "></span>    <span class="n">inp</span><span class="o">.</span><span class="n">change</span><span class="p">(</span><span class="n">welcome</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
-<span class="linenos" data-linenos="14 "></span>
-<span class="linenos" data-linenos="15 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="componentes-interactivos">Componentes interactivos<a class="headerlink" href="#componentes-interactivos" title="Permanent link">&para;</a></h2>
 <p>A continuación, vamos a estudiar algunos de los componentes interactivos que ofrece <em>Gradio</em>.</p>
@@ -4442,194 +4434,21 @@ https://www.datacamp.com/es/tutorial/gradio-python-tutorial
 -->
 
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
-<p>1.- (RAPIA.3 / CEPIA.3b, CEPIA.3c / 3p) Crea un prototipo mediante <em>Gradio</em> que permita traducir de castellano a inglés y viceversa, haciendo uso de algún control que te facilite decidir el sentido de la traducción (y por tanto el modelo a emplear).</p>
-<p>2.- A partir de la siguiente imagen, crea el interfaz de usuario del prototipo para probar el proyecto Lara:</p>
+<ol>
+<li>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 2p) Mediante <em>Gradio</em> y a partir de la siguiente imagen, crea el interfaz de usuario del prototipo para probar el proyecto <a href="https://piafplara.es/">Lara</a>:</p>
+<p><figure style="align: center;">
+    <img src="images/02gradio-lara.png" alt="Gradio de Lara">
+    <figcaption>Gradio de Lara</figcaption>
+</figure></p>
+<p>En sesiones posteriores introduciremos el modelo <a href="https://openai.com/index/whisper/">Whisper</a> para transcribir de audios a texto y hacer el prototipo funcional. Por lo tanto, en esta actividad sólo necesitamos crear el interfaz gráfico.</p>
+</li>
+<li>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 3p) Crea un prototipo mediante <em>Gradio</em> que permita traducir entre dos idiomas (por ejemplo, de castellano a inglés y viceversa), haciendo uso de algún control que te facilite decidir el sentido de la traducción (y por tanto el modelo a emplear). Para ello, emplea los modelos <code>opus-mt-xx-yy</code> de traducción que necesites de <a href="https://huggingface.co/Helsinki-NLP">Helsinki-NLP</a>.</p>
+</li>
+</ol>
 <!--
-
-Caching in Gradio
-You will lose examples from your server each time your application is refreshed. You can specify cache_examples = True in Gradio's main interface, i.e., gradio.Interface() after defining your examples.
-
-
-
-#!pip install gradio
-import gradio as gra
-def user_greeting(name):
-    return "Hi! " + name + " Welcome to your first Gradio application!😎"
-
-app =  gra.Interface(fn = user_greeting, inputs="text", outputs="text", examples = ["Zenith", "Antoinne", "Amelia", "Johanna"], cache_examples = True)
-app.launch()
-
-
-
-
-Add statefulness to Gradio applications
-Statefullness in Gradio can be done in either global or session states.
-
-
-Global state
-The global state in Blocks has similar functionality as in Interface. Any variable or data defined outside a function is accessible to all functions.
-
-In the track_gdp example below, the variable gdps is shared between all users. Users who access the app will have their scores added to the list.
-
-import gradio as gr
-
-gdps = []
-
-def track_gdp(gdp):
-    gdps.append(gdp)
-    top_gdps = sorted(gdps, reverse=True)[:3]
-    return top_gdps
-
-demo = gr.Interface(
-    track_gdp, 
-    gr.Number(label="gdp"), 
-    gr.JSON(label="Top gdps")
-)
-demo.launch()
-
-Session state
-Gradio supports Session State, where the data persists across multiple submits within a page session and in Blocks apps. For session state:
-
-
-Define a gradio.State() object.
-Place the State object in the event listener, as input and output.
-In the event listener function, include the variable in the input parameter and the return value.
-To demonstrate the session state of an app we will use the hangman game.
-
-import gradio as gr
-import random
-
-secret_word = "Machine"
-
-with gr.Blocks() as demo:    
-    used_letters_var = gr.State([])
-    with gr.Row() as row:
-        with gr.Column():
-            input_letter = gr.Textbox(label="Enter letter")
-            btn = gr.Button("Guess Letter")
-        with gr.Column():
-            hangman = gr.Textbox(
-                label="Hangman",
-                value="_"*len(secret_word)
-            )
-            used_letters_box = gr.Textbox(label="Used Letters")
-
-    def guess_letter(letter, used_letters):
-        used_letters.append(letter)
-        answer = "".join([
-            (letter if letter in used_letters else "_")
-            for letter in secret_word
-        ])
-        return {
-            used_letters_var: used_letters,
-            used_letters_box: ", ".join(used_letters),
-            hangman: answer
-        }
-    btn.click(
-        guess_letter, 
-        [input_letter, used_letters_var],
-        [used_letters_var, used_letters_box, hangman]
-        )
-demo.launch()
-
-You will notice that the session persists within the page, but if you load the app in a new tab or refresh the application, the app will not share the "guess" history.
-
-
-
-Authenticating Gradio apps
-When launching a Gradio application, you can define an authentication method by specifying the auth parameter. If auth is passed, a username and password (or list of username-password tuples) will be required to access the interface.
-
-You can also add an auth_message to guide the user on what to include.
-
-
-import gradio as gr
-
-def data_display(input_img):
-    return input_img
-
-demo = gr.Interface(data_display, gr.Dataframe(), "matrix")
-demo.launch(enable_queue=False, auth=("username", "password"), auth_message="Try this")
-
-Uploading and processing files in Gradio
-You can upload and display generic and displaying generic files as output. Moreover, you can choose to process the uploaded files.
-
-Uploading a single file
-import numpy as np
-import gradio as gr
-
-def upload_image(input_img):
-
-    return input_img
-
-demo = gr.Interface(upload_image, gr.Image(shape=(400, 300)), "image")
-demo.launch()
-
-gradio.File() enables you to upload generic files like zip files.
-
-from zipfile import ZipFile
-
-import gradio as gr
-
-
-def upload_file(file_obj):
-    files = []
-    with ZipFile(file_obj.name) as zfile:
-        for zinfo in zfile.infolist():
-            files.append(
-                {
-                    "name": zinfo.filename,
-                }
-            )
-    return files
-
-
-demo = gr.Interface(upload_file, "file", "json")
-
-if __name__ == "__main__":
-    demo.launch()
-
-Uploading multiple files
-To upload multiple files, add a file_count parameter, which specifies the number of files you can upload in a single session.
-
-import os
-from zipfile import ZipFile
-
-import gradio as gr
-
-def zip_files(files):
-    with ZipFile("tmp.zip", "w") as zipObj:
-        for idx, file in enumerate(files):
-            zipObj.write(file.name, "file" + str(idx))
-    return "tmp.zip"
-
-demo = gr.Interface(
-    zip_files,
-    gr.File(file_count="multiple"),
-    "file"
-)
-
-if __name__ == "__main__":
-    demo.launch()
-
-
-
-
-Uploading and processing data
-While uploading your files, you can define a function that preprocesses the data and returns an output of the preprocessed file. For instance, you can change the hue of your image data.
-
-import numpy as np
-import gradio as gr
-
-def sepia_hue(input_img):
-    sepia_filter = np.array([[.393, .769, .189],
-                         [.349, .686, .168],
-                         [.272, .534, .131]])
-    sepia_hue_img = input_img.dot(sepia_hue_filter.T)
-    sepia_hue_img /= sepia_hue_img.max()
-    return sepia_hue_img
-
-demo = gr.Interface(sepia_hue, gr.Image(shape=(300, 200)), "image")
-demo.launch()
+3. (opcional) Añadir autenticación
 -->
 
 
