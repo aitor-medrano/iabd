@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Apuntes ...">
+        <meta name="description" content="Apuntes y actividades sobre Gradio como herramienta visual para desarrollar prototipos que permiten probar modelos de IA, configurando tantos los tipos de entrada como de salida con componentes gráficos.">
       
       
       
@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.35f28582.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -73,7 +73,7 @@
       
         <meta  property="og:title"  content="Prototipado con Gradio - Inteligencia Artificial y Big Data" >
       
-        <meta  property="og:description"  content="Apuntes ..." >
+        <meta  property="og:description"  content="Apuntes y actividades sobre Gradio como herramienta visual para desarrollar prototipos que permiten probar modelos de IA, configurando tantos los tipos de entrada como de salida con componentes gráficos." >
       
         <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/hf/gradio.png" >
       
@@ -89,7 +89,7 @@
       
         <meta  name="twitter:title"  content="Prototipado con Gradio - Inteligencia Artificial y Big Data" >
       
-        <meta  name="twitter:description"  content="Apuntes ..." >
+        <meta  name="twitter:description"  content="Apuntes y actividades sobre Gradio como herramienta visual para desarrollar prototipos que permiten probar modelos de IA, configurando tantos los tipos de entrada como de salida con componentes gráficos." >
       
         <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/hf/gradio.png" >
       
@@ -1983,6 +1983,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#multiples-flujos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Múltiples flujos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#disposicion" class="md-nav__link">
     <span class="md-ellipsis">
       Disposición
@@ -3654,6 +3663,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#multiples-flujos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Múltiples flujos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#disposicion" class="md-nav__link">
     <span class="md-ellipsis">
       Disposición
@@ -3851,16 +3869,18 @@
       <a href="../tags.html#huggingface" class="md-tag">HuggingFace</a>
     
   
+    
+    
+    
+      <a href="../tags.html#pia-ra3" class="md-tag">PIA RA3</a>
+    
+  
 </nav>
 
 
 
   <h1>Gradio</h1>
 
-<div class="admonition failure">
-<p class="admonition-title">Sesión en construcción</p>
-<p>Esta sesión no está finalizada, así que mejor espera unos días y vuelve a intentarlo... En principio, la quiero tener lista para mitad de octubre.</p>
-</div>
 <p><a href="https://www.gradio.app/">Gradio</a> es una herramienta que facilita el prototipado de <em>demos</em> para modelos de ML mediante un interfaz web amigable, de manera que con unas pocas líneas de código <em>Python</em> tengamos un interfaz gráfico que nos evite tener que desarrollar toda una aplicación web para comprobar el funcionamiento de nuestros modelos de IA, sin necesidad de saber <em>JavaScript</em> ni <em>CSS</em> para hacer un diseño <em>responsive</em>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Alternativas</p>
@@ -3873,12 +3893,12 @@
 <li>Funciones: funciones <em>Python</em> que procesan la información de los componentes de entrada y devuelven los resultados para mostrarlos con componentes de salida.</li>
 </ul>
 <figure style="align: center;">
-    <img src="images/02gradio-components.svg" alt="Elementos Gradio" width="800px">
+    <img src="images/02gradio-components.svg" alt="Elementos Gradio" width="1024px">
     <figcaption>Elementos Gradio</figcaption>
 </figure>
 
 <h2 id="hola-gradio">Hola Gradio<a class="headerlink" href="#hola-gradio" title="Permanent link">&para;</a></h2>
-<p>A continuación vamos a ver cómo, con sólo un par de líneas, creamos un diálogo para un introducir texto como entrada y una caja para mostrar el resultado:</p>
+<p>A continuación, vamos a ver cómo, con unas pocas líneas, creamos un diálogo para un introducir texto como entrada y una caja para mostrar el resultado:</p>
 <div class="highlight"><span class="filename">hello-gradio.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="k">def</span> <span class="nf">saluda</span><span class="p">(</span><span class="n">nombre</span><span class="p">):</span>
@@ -3887,7 +3907,7 @@
 <span class="hll"><span class="linenos" data-linenos="6 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">saluda</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>
 </span><span class="hll"><span class="linenos" data-linenos="7 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </span></code></pre></div>
-<p>Al ejecutar el <em>script</em>, ya sea mediante <code>python hello-gradio.py</code> o mejor con <code>gradio hello-gradio.py</code>, se publicará la aplicación en una URL privada, normalmente en <code>http://127.0.0.1:7860</code>, donde podemos ver cómo ha creado un diálogo de tipo texto con <code>nombre</code> para introducir la entrada, y otro <code>output</code>, para mostrar la salida:</p>
+<p>Al ejecutar el <em>script</em>, ya sea mediante <code>python hello-gradio.py</code> o mejor con <code>gradio hello-gradio.py</code> (ya que permite la <a href="https://www.gradio.app/guides/developing-faster-with-reload-mode">edición en caliente</a>), se publicará la aplicación en una URL privada, normalmente en <code>http://127.0.0.1:7860</code>, donde podemos ver cómo ha creado un diálogo de tipo texto con <code>nombre</code> para introducir la entrada, y otro <code>output</code>, para mostrar la salida:</p>
 <figure style="align: center;">
     <img src="images/02hello-gradio.png" alt="Hola gradio!" width="800px">
     <figcaption>Hola gradio!</figcaption>
@@ -3899,10 +3919,10 @@
     <figcaption>Hola gradio! - response</figcaption>
 </figure>
 
-<p>Para crear una URL pública, cambiaremos la último línea de nuestro <em>script</em> con:</p>
+<p>Para crear una URL pública, cambiaremos la última línea de nuestro <em>script</em> con:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">share</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
-<p>Si volvemos a ejecutar el script, ahora nos mostrará tanto la URL local como la remota para poder acceder a nuestra demo durante 72 horas de forma gratuita (mediante la conexión remota sólo se realiza una pasarela con nuestro ordenador local, de manera que tanto el modelo de IA como toda la computación se realiza en nuestra máquina local, con lo que si la detenemos, ya no funcionará):</p>
+<p>Si volvemos a ejecutar el script, ahora nos mostrará tanto la URL local como la remota para poder acceder a nuestra demo durante 72 horas de forma gratuita (mediante la conexión remota sólo se realiza una pasarela con nuestro ordenador local, de manera que tanto el modelo de IA como toda la computación se realiza en nuestra máquina local, con lo que, si la detenemos, ya no funcionará):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">(</span>venv<span class="o">)</span><span class="w"> </span>%<span class="w"> </span>gradio<span class="w"> </span>hello-gradio.py<span class="w"> </span>
 <span class="linenos" data-linenos="2 "></span>Watching:<span class="w"> </span><span class="s1">&#39;/Users/aitormedrano/sandbox/hf&#39;</span><span class="w"> </span><span class="s1">&#39;/Users/aitormedrano/sandbox/hf&#39;</span>
 <span class="linenos" data-linenos="3 "></span>
@@ -3917,14 +3937,18 @@
 </div>
 <p>Al final de la ejecución nos recomienda el uso de <em>Spaces</em>. Así pues, si queremos desplegar el modelo en <em>Spaces</em>, el primer paso será hacer <em>login</em> con las credenciales de <em>Hugging Face</em>.</p>
 <h2 id="la-clase-interface">La clase <code>Interface</code><a class="headerlink" href="#la-clase-interface" title="Permanent link">&para;</a></h2>
-<p>La clase Interfaces es la clase de más alto nivel, y permite crear el IU de nuestros modelos ML.</p>
+<p>La clase <code>Interface</code> es la clase de más alto nivel, y permite crear el IU de nuestros modelos ML.</p>
 <p>Del ejemplo anterior, hemos visto que la clase <a href="https://www.gradio.app/docs/gradio/interface"><code>Interface</code></a> recibe tres parámetros: <code>Interface(fn=funcion, inputs=entradas, outputs=salidas, ...)</code>:</p>
 <ul>
-<li><strong><code>fn</code></strong>: función que invoca al modelo ML o realiza la funcionalidad deseadas. La función acepta al menos un parámetros y devuelve uno o más valores.</li>
+<li><strong><code>fn</code></strong>: función que invoca al modelo ML o realiza la funcionalidad deseada. La función acepta al menos un parámetro y devuelve uno o más valores.</li>
 <li><strong><code>inputs</code></strong>: define el tipo del componente de entrada (o los tipos de los componentes si tenemos varias entradas). <em>Gradio</em> ofrece varios componentes predefinidos, como de tipo texto, imagen, micrófono, etc...  La cantidad de componentes de entrada debe coincidir con el número de parámetros indicados en la función <code>fn</code>. Si asociamos <code>None</code> a <code>inputs</code>, sólo se muestran los componentes de salida.</li>
 <li><strong><code>outputs</code></strong>: igual que el caso anterior, define el tipo del componente de salida (o los tipos de los componentes si tenemos varias salidas). <em>Gradio</em> ofrece varios componentes predefinidos, como de tipo texto, imagen, etiqueta, etc...  La cantidad de componentes de salida debe coincidir con el número de valores devueltos por la función <code>fn</code>. Si asociamos <code>None</code> a <code>outputs</code>, sólo se muestran los componentes de entrada.</li>
 </ul>
-<p>En el caso de crear varios interfaces, <em>Gradio</em> ofrece las clases <code>TabbedInterface</code>, <code>Parallel</code>, y <code>Series</code> para combinar interfaces.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tipos de componentes</p>
+<p>Aunque los estudiaremos más adelante en esta sesión, podemos indicar los <a href="https://www.gradio.app/docs/gradio/introduction">tipos de componentes</a> mediante una cadena de texto (por ejemplo,  <code>"text"</code>, <code>"textbox"</code>, <code>"image"</code>, <code>"audio"</code>, etc...) o como una instancia de la clase ( <code>gr.TextBox()</code>, <code>gr.Image()</code>, <code>gr.Audio()</code>, etc...)</p>
+</div>
+<p>En el caso de crear varios interfaces, <em>Gradio</em> ofrece tanto las clases <a href="https://www.gradio.app/docs/gradio/tabbedinterface"><code>TabbedInterface</code></a> como <a href="https://www.gradio.app/docs/gradio/blocks"><code>Blocks</code></a> para combinar interfaces (en versiones anteriores a la 3.0 se utilizaban tanto <code>Parallel</code> como <code>Series</code>)</p>
 <p>Por ejemplo, a modo de aplicación de bienvenida, podemos definir una serie de funciones que muestren al usuario diferentes mensajes y utilizar un <a href="https://www.gradio.app/docs/gradio/tabbedinterface"><code>TabbedInterface</code></a> para combinarlos mediante el uso de pestañas:</p>
 <div class="highlight"><span class="filename">gradio-tabbed.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
 <span class="linenos" data-linenos=" 2 "></span>
@@ -3951,12 +3975,12 @@
 </figure>
 
 <h3 id="personalizando-el-interfaz">Personalizando el interfaz<a class="headerlink" href="#personalizando-el-interfaz" title="Permanent link">&para;</a></h3>
-<p>Además de los controles, podemos configurar ciertos elementos, como el título o la descripción, o cambiar el tema de todo el interfaz.</p>
-<p>Para ello, cuando definimos el interfaz tenemos disponibles los parámetros:</p>
+<p>Además de los controles, podemos configurar ciertos elementos, como el título o la descripción, así como cambiar el tema visual (colores, fuente, etc...) de todo el interfaz.</p>
+<p>Para ello, cuando definimos el interfaz, además de la función y los componentes de entrada y salida, tenemos disponibles los parámetros:</p>
 <ul>
-<li><code>title</code>: título, se muestra en la parte superior y como título de la página</li>
-<li><code>description</code>: acepta tanto texto como Markdown o HTML, y se coloca debajo del título</li>
-<li><code>article</code>: acepta tanto texto como Markdown o HTML, y se coloca debajo del interfaz.</li>
+<li><code>title</code>: título, se muestra en la parte superior y como título de la página.</li>
+<li><code>description</code>: acepta tanto texto como <em>Markdown</em> o HTML, y se coloca debajo del título.</li>
+<li><code>article</code>: acepta tanto texto como <em>Markdown</em> o HTML, y se coloca debajo del interfaz.</li>
 <li><code>theme</code>: mediante <a href="https://www.gradio.app/docs/gradio/themes">gr.Theme()</a> podemos cambiar toda la apariencia visual. Tenemos un conjunto de <a href="https://www.gradio.app/guides/theming-guide">temas disponibles</a>, o podemos crear los nuestros propios, tanto a nivel de colores o fuentes como de tamaños de los componentes. También podemos utilizar temas <a href="https://huggingface.co/spaces/gradio/theme-gallery">creados por terceros</a> mediante <a href="https://www.gradio.app/docs/gradio/themes">gr.Theme.from_hub()</a>.</li>
 <li><code>css</code>: además del tema, podemos modificar <a href="https://www.gradio.app/guides/custom-CSS-and-JS">propiedades CSS</a>.</li>
 <li><code>fill_witdh</code>: con el valor <code>True</code>, permite anular el <em>padding</em> y ocupar todo el ancho.</li>
@@ -3990,7 +4014,8 @@
 
 <h2 id="la-clase-blocks">La clase <code>Blocks</code><a class="headerlink" href="#la-clase-blocks" title="Permanent link">&para;</a></h2>
 <!--
-TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
+Blocks  https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
+        https://www.gradio.app/guides/blocks-and-event-listeners
 -->
 
 <p>La clase <a href="https://www.gradio.app/docs/gradio/blocks"><code>Blocks</code></a> es la API de bajo nivel de <em>Gradio</em> que nos permite controlar el flujo de datos, la disposición y agrupación de los componentes y los eventos que disparan la ejecución de las funciones de las aplicaciones <em>Gradio</em>, como si fueran bloques.</p>
@@ -4011,12 +4036,31 @@ TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
 <span class="linenos" data-linenos="13 "></span>
 <span class="linenos" data-linenos="14 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
-<p>Tras lanzar el <em>Gradio</em>, veremos el siguiente interfaz, el cual captura el evento <em>click</em> del botón y concatena el nombre en la salida:</p>
+<p>Tras lanzar el <em>Gradio</em>, veremos el siguiente interfaz, el cual captura el evento <em>click</em> del botón (con una firma similar a la de <code>Interface</code>) y concatena el nombre en la salida:</p>
 <figure style="align: center;">
     <img src="images/02gradio-blocks.png" alt="Uso de Blocks" width="900px">
     <figcaption>Uso de Blocks</figcaption>
 </figure>
 
+<div class="admonition tipo">
+<p class="admonition-title">Usando decoradores</p>
+<p>También podemos usar decoradores para simplificar el código utilizando el nombre del componente que maneja el evento:</p>
+<div class="highlight"><span class="filename">gradio-blocks-decorator.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="k">with</span> <span class="n">gr</span><span class="o">.</span><span class="n">Blocks</span><span class="p">()</span> <span class="k">as</span> <span class="n">demo</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 4 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">Markdown</span><span class="p">(</span><span class="s2">&quot;Escribe debajo y pulsa *Ejecuta* para ver la salida&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span>    <span class="k">with</span> <span class="n">gr</span><span class="o">.</span><span class="n">Row</span><span class="p">():</span>
+<span class="linenos" data-linenos=" 6 "></span>        <span class="n">inp</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;¿Cómo te llamas?&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Entrada&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 7 "></span>        <span class="n">out</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Salida&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="n">btn</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="s2">&quot;Ejecuta&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="hll"><span class="linenos" data-linenos="10 "></span>    <span class="nd">@btn</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inp</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="11 "></span>    <span class="k">def</span> <span class="nf">modifica</span><span class="p">(</span><span class="n">nombre</span><span class="p">):</span>
+<span class="linenos" data-linenos="12 "></span>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;¡Bienvenido a Gradio, </span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">!&quot;</span>
+<span class="linenos" data-linenos="13 "></span>
+<span class="linenos" data-linenos="14 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+</code></pre></div>
+</div>
 <p>Sobre este ejemplo, vamos a quitar el botón, y asociar el manejador a un cambio en la entrada, capturando el evento <code>change</code>:</p>
 <div class="highlight"><span class="filename">gradio-blocks-change-py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
 <span class="linenos" data-linenos=" 2 "></span>
@@ -4039,9 +4083,42 @@ TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
     <figcaption>Uso de Blocks con evento change</figcaption>
 </figure>
 
-<p>Dependiendo del componente, tendremos diferentes manejadores de eventos. Acabamos de ver que el componente <a href="https://www.gradio.app/docs/gradio/textbox"><code>gradio.Textbox()</code></a> ofrece el manejador <code>change()</code> que se dispara al cambiar el texto al teclear. Otro ejemplo sería <a href="https://www.gradio.app/docs/gradio/video"><code>gradio.Video()</code></a> que ofrece el manejador <code>play()</code>, el cual se dispara cuando un usuario pulsa <em>play</em>.</p>
+<p>Dependiendo del componente, tendremos diferentes manejadores de eventos. Acabamos de ver que el componente <a href="https://www.gradio.app/docs/gradio/textbox"><code>gradio.Textbox()</code></a> ofrece el manejador <code>change()</code> que se dispara al cambiar el texto al teclear. Otro ejemplo sería el componente <a href="https://www.gradio.app/docs/gradio/video"><code>gradio.Video()</code></a> que ofrece el manejador <code>play()</code>, el cual se dispara cuando un usuario pulsa <em>play</em>.</p>
+<h3 id="multiples-flujos">Múltiples flujos<a class="headerlink" href="#multiples-flujos" title="Permanent link">&para;</a></h3>
+<p>Es común que nuestros prototipos contengan varios de datos de entrada y que dependiendo de las elecciones, luego utilicemos unos u otros valores. Es más, puede que hasta tengamos varios lanzadores para la aplicación.</p>
+<p>Vamos a darle una vuelta de tuerca a nuestra aplicación que saluda, para que nos permita saludar o despedirnos, teniendo en cuenta el valor de un campo numérico. Así como datos de entrada, usaremos una caja de texto y un número, y como salida una caja de texto, pero con dos botones para saludar o despedirse:</p>
+<div class="highlight"><span class="filename">gradio-flows.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="hll"><span class="linenos" data-linenos=" 3 "></span><span class="k">def</span> <span class="nf">saludar</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">hora</span><span class="p">):</span>
+</span><span class="linenos" data-linenos=" 4 "></span>    <span class="n">texto_hora</span> <span class="o">=</span> <span class="s2">&quot;¡Buenos días!&quot;</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">hora</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">12</span> <span class="k">else</span> <span class="s2">&quot;¡Buenas tardes!&quot;</span> 
+<span class="linenos" data-linenos=" 5 "></span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">texto_hora</span><span class="si">}</span><span class="s2"> ¡Bienvenido a Gradio, </span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">!&quot;</span>
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="hll"><span class="linenos" data-linenos=" 7 "></span><span class="k">def</span> <span class="nf">despedir</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">hora</span><span class="p">):</span>
+</span><span class="linenos" data-linenos=" 8 "></span>    <span class="n">texto_hora</span> <span class="o">=</span> <span class="s2">&quot;¡A disfrutar!&quot;</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">hora</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">12</span> <span class="k">else</span> <span class="s2">&quot;¡Mañana más!&quot;</span>
+<span class="linenos" data-linenos=" 9 "></span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">texto_hora</span><span class="si">}</span><span class="s2"> ¡Hasta la próxima con Gradio, </span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">!&quot;</span>
+<span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span><span class="k">with</span> <span class="n">gr</span><span class="o">.</span><span class="n">Blocks</span><span class="p">()</span> <span class="k">as</span> <span class="n">demo</span><span class="p">:</span>
+<span class="linenos" data-linenos="13 "></span>    <span class="n">nombre</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;¿Cómo te llamas?&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Nombre&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="14 "></span>    <span class="n">hora</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Hora&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;8&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="15 "></span>    <span class="n">out</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Textbox</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Salida&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="16 "></span>
+<span class="linenos" data-linenos="17 "></span>    <span class="n">btnSaluda</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="s2">&quot;Saludar&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="18 "></span>    <span class="n">btnSaluda</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">saludar</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">nombre</span><span class="p">,</span> <span class="n">hora</span><span class="p">],</span> <span class="n">outputs</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
+<span class="linenos" data-linenos="19 "></span>
+<span class="hll"><span class="linenos" data-linenos="20 "></span>    <span class="n">btnDespide</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="s2">&quot;Despedir&quot;</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos" data-linenos="21 "></span>    <span class="n">btnDespide</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">despedir</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">nombre</span><span class="p">,</span> <span class="n">hora</span><span class="p">],</span> <span class="n">outputs</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="22 "></span>
+<span class="linenos" data-linenos="23 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+</code></pre></div>
+<p>De esta manera, cada botón tiene su manejador y cada función su propia lógica:</p>
+<figure style="align: center;">
+    <img src="images/02gradio-flows.gif" alt="Uso de flujos con Blocks" width="594px">
+    <figcaption>Uso de flujos con Blocks</figcaption>
+</figure>
+
 <h3 id="disposicion">Disposición<a class="headerlink" href="#disposicion" title="Permanent link">&para;</a></h3>
-<p>La disposición (<em>layout</em>) de los bloques de una aplicación se pueden personalizar mediante clases como <code>gr.Row()</code>, <code>gr.Columns()</code>, <code>gr.Tab()</code> o <code>gr.Accordion()</code>.</p>
+<p>La disposición (<a href="https://www.gradio.app/guides/controlling-layout"><em>layout</em></a>) de los bloques de una aplicación se pueden personalizar mediante clases como <code>gr.Row()</code>, <code>gr.Columns()</code>, <code>gr.Tab()</code> o <code>gr.Accordion()</code>.</p>
 <div class="grid cards">
 <ul>
 <li>
@@ -4127,8 +4204,8 @@ TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
 </div>
 <h3 id="visibilidad">Visibilidad<a class="headerlink" href="#visibilidad" title="Permanent link">&para;</a></h3>
 <p>Normalmente, la función que pasamos a la clase <code>Interface</code> o <code>Block</code> devuelve un valor, ya sea el resultado de un cálculo o de la inferencia a algún modelo de ML.</p>
-<p>Pero, podemos devolver otro componentes que modifica las propiedades de los componentes de salida, como pueden ser el número de líneas de un <code>Textbox</code> o la visibilidad de un <code>Image</code>.</p>
-<p>El siguiente ejemplo muestra como modificamos tanto el tamaño como la visibilidad (mediante la propiedad <code>visible</code>) de un componente de texto:</p>
+<p>Pero también podemos devolver otro componente que modifique las propiedades de los componentes de salida, como pueden ser el número de líneas de un <code>Textbox</code> o la visibilidad de un <code>Image</code>.</p>
+<p>El siguiente ejemplo, donde la función ya no devuelve un valor sino un componente, muestra como modificamos tanto el tamaño como la visibilidad (mediante la propiedad <code>visible</code>) de un componente de texto:</p>
 <div class="highlight"><span class="filename">gradio-visibilidad.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="k">def</span> <span class="nf">updateTextbox</span><span class="p">(</span><span class="n">eleccion</span><span class="p">):</span>
@@ -4154,6 +4231,14 @@ TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
     <img src="images/02gradio-visibility.gif" alt="Modificando la visibilidad" width="400px">
     <figcaption>Modificando la visibilidad</figcaption>
 </figure>
+
+<!--
+TODO: https://www.gradio.app/guides/blocks-and-event-listeners#running-events-consecutively
+Explicar uso de .then(), .success()
+    Primero uso whisper, luego traducir, y luego pasar a audio
+Uso de .on()
+    Ejecutar una misma función tanto al pulsar un botón, dar un intro, etc...
+-->
 
 <h2 id="componentes-basicos">Componentes básicos<a class="headerlink" href="#componentes-basicos" title="Permanent link">&para;</a></h2>
 <p><em>Gradio</em> dispone de un <a href="https://www.gradio.app/docs/gradio/introduction">conjunto de componentes predefinidos</a> para varias funciones, ya sea desde trabajar con texto o multimedia como audios, imágenes y vídeo como gráficos mediante <em>Matplotlib</em> o <em>Seaborne</em>.</p>
@@ -4186,7 +4271,7 @@ TODO: Blocks - https://huggingface.co/learn/nlp-course/chapter9/7?fw=pt
 <span class="linenos" data-linenos="14 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
 <h4 id="datos">Datos<a class="headerlink" href="#datos" title="Permanent link">&para;</a></h4>
-<p>Para mostrar datos, podemos emplear diferentes tipos como <code>str</code>, <code>number</code>, <code>bool</code>, <code>date</code> o <code>markdown</code>, o incluso <em>DataFrames</em> de <em>Pandas</em> mediante <code>dataframe</code>.</p>
+<p>Para mostrar datos, podemos emplear diferentes tipos como <code>str</code>, <code>number</code>, <code>bool</code>, <code>date</code> o <code>markdown</code>. Por defecto, tendremos un <em>DataFrame</em> de <em>Pandas</em>.</p>
 <!--
 TODO: Probar... poner un ejemplo con más tipos de salida
 -->
@@ -4201,7 +4286,7 @@ TODO: Probar... poner un ejemplo con más tipos de salida
 <span class="linenos" data-linenos="7 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="multimedia">Multimedia<a class="headerlink" href="#multimedia" title="Permanent link">&para;</a></h3>
-<p>En Gradio podemos mostrar elementos como imágenes, así comos transformar las imágenes aplicando un filtro como el sepia o el azul. Para ello, en la entrada podemos pasar componentes de tipo <a href="https://www.gradio.app/docs/gradio/image"><code>Image</code></a>, <a href="https://www.gradio.app/docs/gradio/video"><code>Video</code></a>, <a href="https://www.gradio.app/docs/gradio/audio"><code>Audio</code></a> o <a href="https://www.gradio.app/docs/gradio/file"><code>File</code></a>.</p>
+<p>En Gradio podemos mostrar elementos como imágenes, así como transformar las imágenes aplicando un filtro como, por ejemplo, el sepia o el azul. Para ello, en la entrada podemos pasar componentes de tipo <a href="https://www.gradio.app/docs/gradio/image"><code>Image</code></a>, <a href="https://www.gradio.app/docs/gradio/video"><code>Video</code></a>, <a href="https://www.gradio.app/docs/gradio/audio"><code>Audio</code></a> o <a href="https://www.gradio.app/docs/gradio/file"><code>File</code></a>.</p>
 <p>El siguiente ejemplo muestra cómo visualizar una imagen después de aplicar un filtro de tono azul.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
@@ -4399,6 +4484,12 @@ TODO: Probar... poner un ejemplo con más tipos de salida
 <span class="linenos" data-linenos="21 "></span>
 <span class="linenos" data-linenos="22 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
+<p>En la siguiente imagen podéis observar cómo se visualizan diferentes botones para marcar las ejecuciones, con las etiquetas marcadas en el parámetro <code>flagging_options</code>:</p>
+<figure style="align: center;">
+    <img src="images/02gradio-flagging.png" alt="Flagging en Gradio">
+    <figcaption>Flagging en Gradio</figcaption>
+</figure>
+
 <p>Si probamos diferentes operaciones, veremos que nos crea el archivo <code>.gradio/flagged/output/dataset1.csv</code> con los valores de entrada marcados, la salida, el botón pulsado y el <em>timestamp</em>:</p>
 <div class="highlight"><span class="filename">dataset1.csv</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span>num1,operacion,num2,output,flag,timestamp
 <span class="linenos" data-linenos="2 "></span>3,resta,&#39;-2,5,división por cero,2024-10-13 19:12:45.842902
@@ -4406,8 +4497,8 @@ TODO: Probar... poner un ejemplo con más tipos de salida
 </code></pre></div>
 <h2 id="preparando-datos">Preparando datos<a class="headerlink" href="#preparando-datos" title="Permanent link">&para;</a></h2>
 <p>Añadir ejemplos a un <em>Gradio</em> es tan fácil como proporcionar una lista de listas con el parámetro <code>examples</code>. Cada sublista es una muestra de datos, donde cada elemento corresponde a una entrada de la función de predicción. Las entradas deben estar ordenadas en el mismo orden en que las espera la función de predicción.</p>
-<p>Si nuestro interfaz sólo tiene un componente de entrada, podemos proporcionar los ejemplos como una lista normal en lugar de una lista de listas.</p>
-<div class="highlight"><span class="filename">hello-examples.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<p>Si nuestro interfaz sólo tiene un componente de entrada, podemos proporcionar los ejemplos como una lista normal en lugar de una lista de listas:</p>
+<div class="highlight"><span class="filename">gradio-examples.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="k">def</span> <span class="nf">saluda</span><span class="p">(</span><span class="n">nombre</span><span class="p">):</span>
 <span class="linenos" data-linenos="4 "></span>    <span class="k">return</span> <span class="s2">&quot;Hola &quot;</span> <span class="o">+</span> <span class="n">nombre</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span>
@@ -4415,6 +4506,12 @@ TODO: Probar... poner un ejemplo con más tipos de salida
 <span class="hll"><span class="linenos" data-linenos="6 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">saluda</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Aitor&quot;</span><span class="p">,</span> <span class="s2">&quot;IABD&quot;</span><span class="p">,</span> <span class="s2">&quot;¿Qué tal?&quot;</span><span class="p">])</span>
 </span><span class="linenos" data-linenos="7 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
+<p>Como puede observarse, los ejemplos se muestran en la parte inferior de los componentes de entrada:</p>
+<figure style="align: center;">
+    <img src="images/02gradio-examples.png" alt="Datos de ejemplo como entradas en Gradio">
+    <figcaption>Datos de ejemplo como entradas en Gradio</figcaption>
+</figure>
+
 <h3 id="desde-una-carpeta">Desde una carpeta<a class="headerlink" href="#desde-una-carpeta" title="Permanent link">&para;</a></h3>
 <p>También podemos especificar una ruta a un directorio que contenga los ejemplos. Si nuestro interfaz sólo acepta un único tipo de archivo de entrada, por ejemplo, un clasificador de imágenes, simplemente pasaremos la ruta de un directorio al argumento <code>examples</code>, y la interfaz cargará las imágenes del directorio como ejemplos. En el caso de entradas múltiples, este directorio debe contener un archivo <code>log.csv</code> con los valores de los ejemplos.</p>
 <p>En el contexto de la demo de la calculadora vista en el apartado anterior, podemos establecer <code>examples='/demo/examples'</code> y en ese directorio incluimos el siguiente fichero <code>log.csv</code>:</p>
@@ -4441,15 +4538,16 @@ https://www.datacamp.com/es/tutorial/gradio-python-tutorial
     <img src="images/02gradio-lara.png" alt="Gradio de Lara">
     <figcaption>Gradio de Lara</figcaption>
 </figure></p>
+<p>Debes tener en cuenta que como entradas tienes que configurar tanto un fichero de sonido, como un desplegable con diferentes nombres de modelos, y como salida, una caja de texto.</p>
 <p>En sesiones posteriores introduciremos el modelo <a href="https://openai.com/index/whisper/">Whisper</a> para transcribir de audios a texto y hacer el prototipo funcional. Por lo tanto, en esta actividad sólo necesitamos crear el interfaz gráfico.</p>
 </li>
 <li>
-<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 3p) Crea un prototipo mediante <em>Gradio</em> que permita traducir entre dos idiomas (por ejemplo, de castellano a inglés y viceversa), haciendo uso de algún control que te facilite decidir el sentido de la traducción (y por tanto el modelo a emplear). Para ello, emplea los modelos <code>opus-mt-xx-yy</code> de traducción que necesites de <a href="https://huggingface.co/Helsinki-NLP">Helsinki-NLP</a>.</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 2p) Crea un prototipo mediante <em>Gradio</em> haciendo uso de <code>Blocks</code> que permita traducir entre dos idiomas (por ejemplo, de castellano a inglés y viceversa), haciendo uso de algún control que te facilite decidir el sentido de la traducción (y por tanto el modelo a emplear). Para ello, emplea los modelos <code>opus-mt-xx-yy</code> de traducción que necesites de <a href="https://huggingface.co/Helsinki-NLP">Helsinki-NLP</a>.</p>
+</li>
+<li>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr>, <abbr title="Se ha evaluado como la convergencia tecnológica aporta seguridad en los negocios.">CEPIA.3d</abbr> / opcional) Investiga como puedes añadir una autenticación básica a <em>Gradio</em>, y modifica tu prototipo de traductor para permitir su uso únicamente al usuario <code>iabd</code> y contraseña <code>iabd</code>.</p>
 </li>
 </ol>
-<!--
-3. (opcional) Añadir autenticación
--->
 
 
 
@@ -4682,10 +4780,10 @@ https://www.datacamp.com/es/tutorial/gradio-python-tutorial
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="../assets/javascripts/bundle.56dfad97.min.js"></script>
       
     
   </body>
