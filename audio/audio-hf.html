@@ -1975,6 +1975,14 @@
     Audio en Hugging Face
   </span>
   
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
 
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -1985,6 +1993,14 @@
   <span class="md-ellipsis">
     Audio en Hugging Face
   </span>
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -2050,15 +2066,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#probando-varios-modelos" class="md-nav__link">
-    <span class="md-ellipsis">
-      Probando varios modelos
-    </span>
-  </a>
   
 </li>
       
@@ -3521,15 +3528,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#probando-varios-modelos" class="md-nav__link">
-    <span class="md-ellipsis">
-      Probando varios modelos
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       Referencias
@@ -3566,7 +3564,13 @@
     
     
     
-      <a href="../tags.html#audio" class="md-tag">Audio</a>
+      <a href="../tags.html#huggingface" class="md-tag">HuggingFace</a>
+    
+  
+    
+    
+    
+      <a href="../tags.html#pia-ra3" class="md-tag">PIA RA3</a>
     
   
 </nav>
@@ -3575,7 +3579,7 @@
 
   <h1>Audio en Hugging Face</h1>
 
-<p>Tal como vimos en la sesión de <em>Hugging Face</em>, existen múltiples modelos tanto para el reconocimiento del audio (ASR - <em>Automatic Speech Recognition</em>), como para el paso de texto a audio (TTS - <em>Text-to-Speech</em>), así como nuevos modelos centrados en la generación de audio y música.</p>
+<p>Tal como vimos en la sesión de <a href="../hf/hf.html"><em>Hugging Face</em></a>, existen múltiples modelos tanto para el reconocimiento del audio (ASR - <em>Automatic Speech Recognition</em>), como para el paso de texto a audio (TTS - <em>Text-to-Speech</em>), así como nuevos modelos centrados en la generación de audio y música.</p>
 <p>En esta sesión vamos a realizar algunos casos de uso sencillos sobre los dos primeros tipo de modelos de audio mediante <em>Hugging Face</em>.</p>
 <h2 id="caso-1-asr-con-whisper">Caso 1: ASR con Whisper<a class="headerlink" href="#caso-1-asr-con-whisper" title="Permanent link">&para;</a></h2>
 <p>A día de hoy, uno de los modelos que mejor funciona reconociendo la voz humana es <a href="https://openai.com/research/whisper"><em>Whisper</em></a>, de <em>Open AI</em>, el cual  podemos <a href="https://huggingface.co/openai/whisper-base">utilizar desde <em>Hugging Face</em></a></p>
@@ -3622,7 +3626,7 @@
 <p>Haciendo uso de <em>Gradio</em>, vamos a utilizar <em>Whisper</em> para transcribir un audio. El primer paso es instalar las librerías necesarias:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>torchaudio
 </code></pre></div>
-<p>Y a continuación, haciendo uso de un <em>pipeline</em>, vamos a cargar el modelo base y realizar la inferencia. La función <code>transcribe</code> toma un único parámetro un audio como un array NumPy del audio grabado por el usuario. El objeto <code>pipeline</code> lo espera en formato <code>float32</code>, así que primero lo convertimos y luego extraemos el texto transcrito.</p>
+<p>Y a continuación, haciendo uso de un <em>pipeline</em>, vamos a cargar el modelo base y realizar la inferencia. La función <code>transcribe</code> toma un único parámetro un audio como un array <em>NumPy</em> del audio grabado por el usuario. El objeto <code>pipeline</code> lo espera en formato <code>float32</code>, así que primero lo convertimos y luego extraemos el texto transcrito.</p>
 <div class="highlight"><span class="filename">gradio-whisper.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -3658,6 +3662,11 @@
     <figcaption>Gradio con Whisper</figcaption>
 </figure>
 
+<p>Podemos probar a cambiar el tamaño del modelo y, en el caso de tener GPU, podemos indicarle que la queremos utilizar mediante el parámetro <code>device=0</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span>
+<span class="linenos" data-linenos="2 "></span>    <span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai/whisper-medium&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span>
+<span class="linenos" data-linenos="3 "></span><span class="p">)</span>
+</code></pre></div>
 <!--
 ### Configurando Whisper
 -->
@@ -3709,7 +3718,8 @@
 <h2 id="caso-3-de-whisper-a-bark">Caso 3: De Whisper a Bark<a class="headerlink" href="#caso-3-de-whisper-a-bark" title="Permanent link">&para;</a></h2>
 <p>Para cerrar el circulo, vamos a realizar un ejemplo donde la salida del primer modelo, sea la entrada de un segundo modelo que genere un audio a partir del texto saliente de Whisper.</p>
 <h3 id="caso-3a-tts-mediante-bark">Caso 3a: TTS mediante Bark<a class="headerlink" href="#caso-3a-tts-mediante-bark" title="Permanent link">&para;</a></h3>
-<p>Como TTS, vamos a utilizar el modelo <a href="https://huggingface.co/suno/bark">Bark</a>, el cual, además de ser multi-idioma, también permite incluir sonidos como música, sonrisas, tos, etc...</p>
+<p>Como TTS, vamos a utilizar el modelo <a href="https://huggingface.co/suno/bark">Bark</a>, el cual, además de ser multi-idioma, también permite incluir sonidos como música, sonrisas, tos, etc... Puedes probarlo en el siguiente <a href="https://huggingface.co/spaces/suno/bark">Space</a>.</p>
+<p>A la hora de usarlo, tras inferir el texto, obtendremos el audio generado, tanto la tasa de muestreo como el propio audio:</p>
 <div class="highlight"><span class="filename">gradio-bark.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
 <span class="linenos" data-linenos=" 3 "></span>
@@ -3810,7 +3820,6 @@
     <figcaption>Gradio con Whisper y TTS</figcaption>
 </figure>
 
-<h2 id="probando-varios-modelos">Probando varios modelos<a class="headerlink" href="#probando-varios-modelos" title="Permanent link">&para;</a></h2>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.gradio.app/guides/real-time-speech-recognition">Real Time Speech Recognition in Gradio</a></li>
@@ -3818,10 +3827,10 @@
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 3p) Realiza los tres casos de uso, tanto en un entorno local mediante un entorno virtual, como en tres espacios diferentes de <em>Hugging Face</em>.</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 2p) Realiza los tres casos de uso, ya sea en un entorno local mediante un entorno virtual como en espacios diferentes de <em>Hugging Face</em>. Adjunta capturas de pantalla donde en el texto de entrada o en el generado, aparezca tu nombre.</p>
 </li>
 <li>
-<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 1p) Investiga los modelos disponibles en <em>Hugging Face</em>, y modifica el tercer caso de uso y emplea un modelo diferente tanto para el ASR como para el TTS.</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 1p) A partir del ejercicio de la sesión anterior donde creamos un traductor bidireccional, crea un nuevo Gradio que como entrada reciba un audio, lo pase a texto, lo traduzca, y a partir del texto traducido, genere un nuevo audio. Como salida, debe mostrar tanto el texto traducido como el audio generado.</p>
 </li>
 </ol>
 

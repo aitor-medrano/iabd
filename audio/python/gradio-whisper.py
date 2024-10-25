@@ -1,9 +1,10 @@
 import torch
 from transformers import pipeline
 import numpy as np
+import gradio as gr
 
 pipe = pipeline(
-    "automatic-speech-recognition", model="openai/whisper-base"
+    "automatic-speech-recognition", model="openai/whisper-medium"
 )
 
 def transcribe(audio):
@@ -12,8 +13,6 @@ def transcribe(audio):
     y /= np.max(np.abs(y))
 
     return pipe({"sampling_rate": sr, "raw": y})["text"]
-
-import gradio as gr
 
 demo = gr.Interface(
     transcribe,
