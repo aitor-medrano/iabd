@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.35f28582.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -3630,28 +3630,27 @@
 <div class="highlight"><span class="filename">gradio-whisper.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos" data-linenos=" 4 "></span>
-<span class="linenos" data-linenos=" 5 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span>
-<span class="hll"><span class="linenos" data-linenos=" 6 "></span>    <span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai/whisper-base&quot;</span>
-</span><span class="linenos" data-linenos=" 7 "></span><span class="p">)</span>
-<span class="linenos" data-linenos=" 8 "></span>
-<span class="linenos" data-linenos=" 9 "></span><span class="k">def</span> <span class="nf">transcribe</span><span class="p">(</span><span class="n">audio</span><span class="p">):</span>
-<span class="linenos" data-linenos="10 "></span>    <span class="n">sr</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">audio</span>
-<span class="linenos" data-linenos="11 "></span>    <span class="c1"># Pasamos el array de muestras a tipo NumPy de 32 bits</span>
-<span class="linenos" data-linenos="12 "></span>    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="linenos" data-linenos="13 "></span>    <span class="n">y</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
-<span class="linenos" data-linenos="14 "></span>
-<span class="hll"><span class="linenos" data-linenos="15 "></span>    <span class="k">return</span> <span class="n">pipe</span><span class="p">({</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">:</span> <span class="n">sr</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">})[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
-</span><span class="linenos" data-linenos="16 "></span>
-<span class="linenos" data-linenos="17 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
-<span class="linenos" data-linenos="18 "></span>
-<span class="linenos" data-linenos="19 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
-<span class="linenos" data-linenos="20 "></span>    <span class="n">transcribe</span><span class="p">,</span>
-<span class="linenos" data-linenos="21 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;microphone&quot;</span><span class="p">]),</span>
-<span class="linenos" data-linenos="22 "></span>    <span class="s2">&quot;text&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="23 "></span><span class="p">)</span>
-<span class="linenos" data-linenos="24 "></span>
-<span class="linenos" data-linenos="25 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span>
+<span class="hll"><span class="linenos" data-linenos=" 7 "></span>    <span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai/whisper-base&quot;</span>
+</span><span class="linenos" data-linenos=" 8 "></span><span class="p">)</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span><span class="k">def</span> <span class="nf">transcribe</span><span class="p">(</span><span class="n">audio</span><span class="p">):</span>
+<span class="linenos" data-linenos="11 "></span>    <span class="n">sr</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">audio</span>
+<span class="linenos" data-linenos="12 "></span>    <span class="c1"># Pasamos el array de muestras a tipo NumPy de 32 bits</span>
+<span class="linenos" data-linenos="13 "></span>    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="linenos" data-linenos="14 "></span>    <span class="n">y</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+<span class="linenos" data-linenos="15 "></span>
+<span class="hll"><span class="linenos" data-linenos="16 "></span>    <span class="k">return</span> <span class="n">pipe</span><span class="p">({</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">:</span> <span class="n">sr</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">})[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
+</span><span class="linenos" data-linenos="17 "></span>
+<span class="linenos" data-linenos="18 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
+<span class="linenos" data-linenos="19 "></span>    <span class="n">transcribe</span><span class="p">,</span>
+<span class="linenos" data-linenos="20 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;microphone&quot;</span><span class="p">]),</span>
+<span class="linenos" data-linenos="21 "></span>    <span class="s2">&quot;text&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="22 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="23 "></span>
+<span class="linenos" data-linenos="24 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
 </code></pre></div>
 <p>Para ponerlo en marcha, lanzamos el gradio:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>gradio<span class="w"> </span>gradio-whisper.py
@@ -3830,7 +3829,7 @@
 <p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 2p) Realiza los tres casos de uso, ya sea en un entorno local mediante un entorno virtual como en espacios diferentes de <em>Hugging Face</em>. Adjunta capturas de pantalla donde en el texto de entrada o en el generado, aparezca tu nombre.</p>
 </li>
 <li>
-<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 1p) A partir del ejercicio de la sesión anterior donde creamos un traductor bidireccional, crea un nuevo Gradio que como entrada reciba un audio, lo pase a texto, lo traduzca, y a partir del texto traducido, genere un nuevo audio. Como salida, debe mostrar tanto el texto traducido como el audio generado.</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 1p) A partir del ejercicio de la sesión anterior donde creamos un traductor bidireccional, crea un nuevo <em>Gradio</em> que como entrada reciba un audio, lo pase a texto, lo traduzca, y a partir del texto traducido, genere un nuevo audio. Como salida, debe mostrar tanto el texto traducido como el audio generado.</p>
 </li>
 </ol>
 
@@ -4065,10 +4064,10 @@
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.56dfad97.min.js"></script>
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>
