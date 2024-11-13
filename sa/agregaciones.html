@@ -4300,8 +4300,8 @@
 <span class="hll"><span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="p">{</span><span class="nx">$match</span><span class="o">:</span>
 </span><span class="linenos" data-linenos=" 3 "></span><span class="w">      </span><span class="p">{</span><span class="nx">categoria</span><span class="o">:</span><span class="s2">&quot;Tablets&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="w">      </span><span class="nx">precio</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">$lt</span><span class="o">:</span><span class="w"> </span><span class="mf">500</span><span class="p">}}},</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="p">{</span><span class="nx">$group</span><span class="o">:</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="w">      </span><span class="p">{</span><span class="nx">_id</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;empresa&quot;</span><span class="o">:</span><span class="s2">&quot;$fabricante&quot;</span><span class="p">},</span>
+<span class="hll"><span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="p">{</span><span class="nx">$group</span><span class="o">:</span>
+</span><span class="linenos" data-linenos=" 6 "></span><span class="w">      </span><span class="p">{</span><span class="nx">_id</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;empresa&quot;</span><span class="o">:</span><span class="s2">&quot;$fabricante&quot;</span><span class="p">},</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="w">      </span><span class="nx">cantidad</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">$sum</span><span class="o">:</span><span class="mf">1</span><span class="p">}}</span>
 <span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="p">}</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="w">  </span><span class="p">])</span>
@@ -4310,6 +4310,10 @@
 <span class="linenos" data-linenos="12 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">_id</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">empresa</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Google&#39;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">cantidad</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">}</span>
 <span class="linenos" data-linenos="13 "></span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">_id</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">empresa</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Apple&#39;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">cantidad</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
+<div class="admonition question">
+<p class="admonition-title">Autoevaluación</p>
+<p>En la consulta anterior, si cambiamos el orden y hacemos el <code>$group</code> antes que el <code>$match</code>, ¿qué estamos obteniendo?</p>
+</div>
 <h2 id="sort">$sort<a class="headerlink" href="#sort" title="Permanent link">&para;</a></h2>
 <p>El operador <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/"><code>$sort</code></a> ordena los documentos recibidos por el campo, y el orden indicado por la expresión indicada al <em>pipeline</em>.</p>
 <p>Por ejemplo, para ordenar los productos por precio descendentemente haríamos:</p>
@@ -4843,6 +4847,7 @@
 <span class="linenos" data-linenos="12 "></span><span class="w">  </span><span class="kc">t</span><span class="err">iempo_ajus</span><span class="kc">ta</span><span class="err">do</span><span class="p">:</span><span class="w"> </span><span class="mi">56</span><span class="w"> </span><span class="p">}</span>
 <span class="linenos" data-linenos="13 "></span><span class="err">...</span>
 </code></pre></div>
+<p>Si quieres, puedes usar el operador <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/round/"><code>$round</code></a> en la proyección para redondear los valores numéricos a una cantidad de decimales.</p>
 </li>
 <li>
 <p>(0.5) Sobre la consulta anterior, además de la información ya recuperada, queremos buscar qué película recomendar de cada categoría siempre y cuando duren un máximo de 218 minutos y tengan al menos una calificación de 7.  (pista: necesitas utilizar <code>$first</code>)</p>
@@ -4888,7 +4893,7 @@
 <span class="linenos" data-linenos="10 "></span><span class="p">];</span>
 <span class="linenos" data-linenos="11 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">movies</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span><span class="nx">pipeline</span><span class="p">)</span>
 </code></pre></div>
-<p>Adjunta una captura inicial y otra final, y la exportación de la agregación a Python.</p>
+<p>Adjunta una captura inicial y otra final, y la exportación de la agregación a <em>Python</em>.</p>
 </li>
 </ol>
 <!--
