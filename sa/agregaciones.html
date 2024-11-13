@@ -4467,9 +4467,9 @@
 </code></pre></div>
 <p>Para obtener un listado de cantidad de pares talla/color haríamos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">inventario</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="p">{</span><span class="nx">$unwind</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$tallas&quot;</span><span class="p">},</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="p">{</span><span class="nx">$unwind</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$colores&quot;</span><span class="p">},</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="p">{</span><span class="nx">$group</span><span class="o">:</span>
+<span class="hll"><span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="p">{</span><span class="nx">$unwind</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$tallas&quot;</span><span class="p">},</span>
+</span><span class="hll"><span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="p">{</span><span class="nx">$unwind</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$colores&quot;</span><span class="p">},</span>
+</span><span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="p">{</span><span class="nx">$group</span><span class="o">:</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="s1">&#39;_id&#39;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s1">&#39;talla&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;$tallas&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;color&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;$colores&#39;</span><span class="p">},</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="s1">&#39;total&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s1">&#39;$sum&#39;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">}</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="p">}</span>
@@ -4831,7 +4831,7 @@
 <li>(0.5) Recupera los títulos de las tres películas románticas (<code>Romance</code>) con mayor calificación en IMDB que se lanzaron (<code>released</code>) antes del 2001.</li>
 <li>(0.5) Averigua la cantidad de películas que hay de cada categoría de calificación (<code>rated</code>).</li>
 <li>
-<p>(0.5) Teniendo en cuenta las películas anteriores al año 2001, para cada género, recupera la media y la máxima calificación en IMDB así como el tiempo ajustado (con <em>trailers</em>, los cuales duran 12 minutos) de la película más larga, ordenando los géneros por popularidad.</p>
+<p>(0.5) Teniendo en cuenta las películas anteriores al año 2001, para cada género, recupera la media y la máxima calificación en IMDB así como el tiempo ajustado (con <em>trailers</em>, los cuales duran 12 minutos) de la película más larga, ordenando los géneros por popularidad (cantidad de votos en IMDB).</p>
 <p>El resultado será similar a:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span><span class="w"> </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Film</span><span class="mi">-</span><span class="err">Noir&#39;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="kc">n</span><span class="err">o</span><span class="kc">ta</span><span class="err">_media</span><span class="p">:</span><span class="w"> </span><span class="mf">7.62</span><span class="p">,</span>
