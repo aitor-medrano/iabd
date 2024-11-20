@@ -461,14 +461,6 @@
     Rendimiento
   </span>
   
-    
-  
-  
-    <span class="md-status md-status--new" title="Recién añadido">
-    </span>
-  
-
-  
 
       </a>
     </li>
@@ -3793,7 +3785,7 @@
 <p class="admonition-title">A tener en cuenta</p>
 <ul>
 <li>No ejecutar un árbitro en sistemas que también ejecutan los miembros primarios y secundarios del conjunto de réplicas.</li>
-<li>Sólo añadir un árbitro a un conjunto con un número par de miembros, ya que si se añade un árbitro a un conjunto con un número impar de miembros, el conjunto puede sufrir un empate.</li>
+<li>Sólo añadir un árbitro a un conjunto con un número par de miembros, ya que, si se añade un árbitro a un conjunto con un número impar de miembros, el conjunto puede sufrir un empate.</li>
 </ul>
 </div>
 </li>
@@ -3813,7 +3805,7 @@
 <h3 id="creando-un-conjunto-de-replicas">Creando un conjunto de réplicas<a class="headerlink" href="#creando-un-conjunto-de-replicas" title="Permanent link">&para;</a></h3>
 <div class="admonition note">
 <p class="admonition-title">Replicación y particionado en MongoAtlas</p>
-<p>El cluster gratuito de <em>MongoAtlas</em> ya ofrece replicación de los datos, pero no nos permite administrarlo, al tratarse de un clúster compartido.</p>
+<p>El clúster gratuito de <em>MongoAtlas</em> ya ofrece replicación de los datos, pero no nos permite administrarlo, al tratarse de un clúster compartido.</p>
 </div>
 <p>Para poder probar tanto la replicación como el particionado, necesitamos tener control sobre los servidores. Por ello, en esta sesión vamos a utilizar <em>Docker</em> para montar la infraestructura.</p>
 <p>Para ello, vamos a partir del archivo de <a href="resources/docker-compose-replicaset.yml">docker-compose-replicaset.yml</a> donde creamos tres contenedores (siendo <code>mongo1</code> el nodo principal y <code>mongo2</code> y <code>mongo3</code> los secundarios) dentro de una misma red y que pertenecen al conjunto de réplicas <code>iabdrs</code>:</p>
@@ -3909,7 +3901,7 @@
 <p>Ya sólo nos queda ejecutar el <em>script</em> de inicialización sobre el nodo principal:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>mongo1<span class="w"> </span>sh<span class="w"> </span>/scripts/rs-init.sh
 </code></pre></div>
-<p>Al ejecutarse el script, se inicializa el conjunto de réplicas y se obtiene su estado (mediante <code>rs.status()</code>) el cual se muestra por consola y podemos observar como ha creado los tres nodos, diferenciando el nodo principal de los secundarios:</p>
+<p>Al ejecutarse el script, se inicializa el conjunto de réplicas y se obtiene su estado (mediante <code>rs.status()</code>) el cual se muestra por consola y podemos observar cómo ha creado los tres nodos, diferenciando el nodo principal de los secundarios:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="  1 "></span><span class="err">iabdrs</span><span class="w"> </span><span class="p">[</span><span class="err">direc</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="err">primary</span><span class="p">]</span><span class="w"> </span><span class="kc">test</span><span class="err">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="hll"><span class="linenos" data-linenos="  2 "></span><span class="w">  </span><span class="err">se</span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;iabdrs&#39;</span><span class="p">,</span>
 </span><span class="linenos" data-linenos="  3 "></span><span class="w">  </span><span class="err">da</span><span class="kc">te</span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">&quot;2022-10-26T09:54:42.137Z&quot;</span><span class="err">)</span><span class="p">,</span>
@@ -4025,7 +4017,7 @@
 <span class="linenos" data-linenos="113 "></span><span class="w">  </span><span class="err">opera</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">Time</span><span class="p">:</span><span class="w"> </span><span class="err">Times</span><span class="kc">ta</span><span class="err">mp(</span><span class="p">{</span><span class="w"> </span><span class="kc">t</span><span class="p">:</span><span class="w"> </span><span class="mi">1666778080</span><span class="p">,</span><span class="w"> </span><span class="err">i</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">}</span><span class="err">)</span>
 <span class="linenos" data-linenos="114 "></span><span class="p">}</span>
 </code></pre></div>
-<p>Una vez que ya hemos arrancando todo, podemos conectarnos a nuestro conjunto de réplica mediante <code>mongosh</code> (si no le pasamos ningún parámetro, se conecta automáticamente a <code>localhost</code> y al puerto 27017).</p>
+<p>Una vez que ya hemos arrancado todo, podemos conectarnos a nuestro conjunto de réplica mediante <code>mongosh</code> (si no le pasamos ningún parámetro, se conecta automáticamente a <code>localhost</code> y al puerto 27017).</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>mongo1<span class="w"> </span>mongosh
 </code></pre></div>
 <p>Dentro del shell, los comandos que trabajan con réplicas comienzan por el prefijo <strong><code>rs</code></strong>. Por ejemplo, mediante <code>rs.help()</code> obtendremos la ayuda de los métodos disponibles:</p>
@@ -4132,7 +4124,7 @@
     <figcaption>Preferencias de lectura</figcaption>
 </figure>
 
-<p>Por defecto, las aplicaciones dirigen las operaciones de consulta al miembro principal (con el modo de lectura <code>primary</code>, el cual es el modo por defecto). Pero los clientes puede indicar otras preferencias:</p>
+<p>Por defecto, las aplicaciones dirigen las operaciones de consulta al miembro principal (con el modo de lectura <code>primary</code>, el cual es el modo por defecto). Pero los clientes pueden indicar otras preferencias:</p>
 <ul>
 <li><code>primaryPreferred</code>: si está disponible, las lecturas se realizan en el nodo primario, pero si no estuviera en pie, habilita las lecturas de los secundarios.</li>
 <li><code>secondary</code>: todas las operaciones de lectura se realizan en nodos secundarios.</li>
@@ -4176,15 +4168,15 @@
 <h3 id="consistencia-en-la-lectura">Consistencia en la lectura<a class="headerlink" href="#consistencia-en-la-lectura" title="Permanent link">&para;</a></h3>
 <p>De igual manera que podemos decidir en cuantos nodos se deben propagar las escrituras, podemos indicar cuantos nodos debemos leer para dar un dato como válido. Para ello, <em>MongoDB</em> da soporte a diferentes niveles de <a href="https://www.mongodb.com/docs/manual/reference/read-concern/">consistencia en la lectura (Read Concern)</a>:</p>
 <ul>
-<li><code>local</code>: devuelve el dato más reciente en el cluster. Cualquier dato que haya sido escrito en el nodo primario puede ser elegido para devolverse. Sin embargo, no se garantiza que este dato esté replicado a los miembros del conjunto en caso de fallo. Este es el nivel por defecto en las operaciones de lectura contra el nodo primario.</li>
+<li><code>local</code>: devuelve el dato más reciente en el clúster. Cualquier dato que haya sido escrito en el nodo primario puede ser elegido para devolverse. Sin embargo, no se garantiza que este dato esté replicado a los miembros del conjunto en caso de fallo. Este es el nivel por defecto en las operaciones de lectura contra el nodo primario.</li>
 <li><code>available</code>: equivalente de <code>local</code> cuando las operaciones de lectura se efectúan contra un nodo secundario.</li>
 <li><code>majority</code>: únicamente devuelve datos que hayan sido confirmados en una mayoría de nodos dentro del conjunto.</li>
 <li><code>linearizable</code>: devuelve datos que hayan sido confirmados por una mayoría de nodos, pero permite al desarrollador establecer su propia funcionalidad.</li>
 <li><code>snapshot</code>: sólo disponible para transacciones multi-documento, realiza una "foto" de los datos al inicio de la transacción.</li>
 </ul>
-<p>Imaginemos un escenario en el cual recibimos la confirmación de escritura desde el nodo primario. Inmediatamente efectuamos una operación de lectura, el nodo devuelve el dato, pero éste nodo falla antes de replicar la operación de escritura a los nodos secundarios. Sobre esta operación se efectuará un proceso de <em>rollback</em> en el momento que el nodo primario vuelva a estar disponible, por lo que ese dato realmente no existirá en el conjunto replicado. Es decir, la aplicación actualmente tiene un dato que no existe en el conjunto de réplicas.</p>
-<p>Mediante la consistencia en la lectura, podemos obtener unas mínimas garantías de que el dato que estamos leyendo es correcto y durable. Cuando se utiliza, únicamente devolverá datos cuya grabación haya sido confirmada por el número de nodos especificados en sus opciones. Se puede escoger entre devolver el dato más reciente que exista en el clúster, o el dato recibido por una mayoría de miembros en el cluster.</p>
-<p>El hecho de que un documento no se considere correcto, no quiere decir necesariamente que se haya perdido, sino que en el momento de su lectura, no ha cumplido las condiciones necesarias de durabilidad para ser devuelto. Puede ser que la lectura se esté produciendo antes de que el dato haya sido propagado al número mínimo de nodos necesario, y por eso no se obtenga, pero en lecturas sucesivas sí pueda aparecer.</p>
+<p>Imaginemos un escenario en el cual recibimos la confirmación de escritura desde el nodo primario. Inmediatamente efectuamos una operación de lectura, el nodo devuelve el dato, pero este nodo falla antes de replicar la operación de escritura a los nodos secundarios. Sobre esta operación se efectuará un proceso de <em>rollback</em> en el momento que el nodo primario vuelva a estar disponible, por lo que ese dato realmente no existirá en el conjunto replicado. Es decir, la aplicación actualmente tiene un dato que no existe en el conjunto de réplicas.</p>
+<p>Mediante la consistencia en la lectura, podemos obtener unas mínimas garantías de que el dato que estamos leyendo es correcto y durable. Cuando se utiliza, únicamente devolverá datos cuya grabación haya sido confirmada por el número de nodos especificados en sus opciones. Se puede escoger entre devolver el dato más reciente que exista en el clúster, o el dato recibido por una mayoría de miembros en el clúster.</p>
+<p>El hecho de que un documento no se considere correcto, no quiere decir necesariamente que se haya perdido, sino que, en el momento de su lectura, no ha cumplido las condiciones necesarias de durabilidad para ser devuelto. Puede ser que la lectura se esté produciendo antes de que el dato haya sido propagado al número mínimo de nodos necesario, y por eso no se obtenga, pero en lecturas sucesivas sí pueda aparecer.</p>
 <h3 id="tolerancia-a-fallos">Tolerancia a fallos<a class="headerlink" href="#tolerancia-a-fallos" title="Permanent link">&para;</a></h3>
 <p>Cuando un nodo primario no se comunica con otros miembros del conjunto durante más de 10 segundos, el conjunto de réplicas intentará, de entre los secundarios, que otro miembro se convierta en el nuevo primario.</p>
 <p>Para ello se realiza un proceso de votación, de modo que el nodo que obtenga el mayor número de votos se erigirá en primario. Este proceso de votación se realiza bastante rápido (menos de 3 segundos), durante el cual no existe ningún nodo primario y por tanto la réplica no acepta escrituras y todos los miembros se convierten en nodos de sólo-lectura.</p>
@@ -4198,7 +4190,7 @@
 <p>Antes de dar su voto, el resto de nodos comprobarán:</p>
 <ul>
 <li>si ellos tienen conectividad con el primario</li>
-<li>si el nodo que solicita ser primario tienen una réplica actualizada de los datos. Todas las operaciones replicadas están ordenadas por el <em>timestamp</em> ascendentemente, de modo que los candidatos deben tener operaciones posteriores o iguales a cualquier miembro con el que tengan conectividad.</li>
+<li>si el nodo que solicita ser primario tiene una réplica actualizada de los datos. Todas las operaciones replicadas están ordenadas por el <em>timestamp</em> ascendentemente, de modo que los candidatos deben tener operaciones posteriores o iguales a cualquier miembro con el que tengan conectividad.</li>
 <li>si existe algún nodo con una prioridad mayor que debería ser elegido.</li>
 </ul>
 <p>Si algún miembro que quiere ser primario recibe una mayoría de "sís" se convertirá en el nuevo primario, siempre y cuando no haya un servidor que vete la votación. Si un miembro la veta es porque conoce alguna razón por la que el nodo que quiere ser primario no debería serlo, es decir, ha conseguido contactar con el antiguo primario.</p>
@@ -4255,7 +4247,7 @@ Hay que destacar que la mayoría no se basa en los elementos que queden en pie o
 <p>Si en un conjunto de réplicas se cae el primario y hay escrituras que se han pasado al <code>oplog</code> y tenemos que otros nodos no las han replicado, cuando el nodo primario vuelva en sí como secundario y se sincronice con el nuevo primario, se dará cuenta que hay operaciones de escritura pendientes y las pasará a <em>rollback</em>, para que si se desean se apliquen manualmente.</p>
 <p>Para evitar este escenario, se necesita emplear consistencia en la escritura, de manera que hasta que la escritura no se haya replicado en la mayoría de los nodos no se considere como una escritura exitosa.</p>
 <h2 id="particionado">Particionado<a class="headerlink" href="#particionado" title="Permanent link">&para;</a></h2>
-<p>Ya vimos en la primera sesión que dentro del entorno de las bases de datos, particionar consiste en dividir los datos entre múltiples máquinas. Al poner un subconjunto de los datos en cada máquina, vamos a poder almacenar más información y soportar más carga sin necesidad de máquinas más potentes, sino una mayor cantidad de máquinas más modestas (y mucho más baratas).</p>
+<p>Ya vimos en la primera sesión que, dentro del entorno de las bases de datos, particionar consiste en dividir los datos entre múltiples máquinas. Al poner un subconjunto de los datos en cada máquina, vamos a poder almacenar más información y soportar más carga sin necesidad de máquinas más potentes, sino una mayor cantidad de máquinas más modestas (y mucho más baratas).</p>
 <p>El <em>Sharding</em> es una técnica que fragmenta los datos de la base de datos horizontalmente agrupándolos de algún modo que tenga sentido y que permita un direccionamiento más rápido.</p>
 <figure style="align: center;">
     <img src="images/06sharded-collection.png">
@@ -4263,7 +4255,7 @@ Hay que destacar que la mayoría no se basa en los elementos que queden en pie o
 </figure>
 
 <p>Por lo tanto, estos <em>shards</em> (fragmentos) pueden estar localizados en diferentes bases de datos y localizaciones físicas.</p>
-<p>El <em>Sharding</em> no tiene por qué estar basado únicamente en una colección y un campo, puede ser a nivel de todas las colecciones. Por ejemplo podríamos decir "<em>todos los datos de usuarios cuyo perfil esté en los Estados Unidos los redirigimos a la base de datos del servidor en Estados Unidos, y todos los de Asia van a la base de datos de Asia</em>".</p>
+<p>El <em>Sharding</em> no tiene por qué estar basado únicamente en una colección y un campo, puede ser a nivel de todas las colecciones. Por ejemplo, podríamos decir "<em>todos los datos de usuarios cuyo perfil esté en los Estados Unidos los redirigimos a la base de datos del servidor en Estados Unidos, y todos los de Asia van a la base de datos de Asia</em>".</p>
 <p><em>MongoDB</em> implementa el <em>sharding</em> de forma nativa y automática (de ahí el término de <em>auto-sharding</em>), siguiendo un enfoque basado en rangos.</p>
 <p>Para ello, divide una colección entre diferentes servidores, utilizando <a href="https://www.mongodb.com/docs/manual/reference/program/mongos/"><code>mongos</code></a> como router de las peticiones entre los <em>sharded clusters</em>.
 Esto favorece que el desarrollador ignore que la aplicación no se comunica con un único servidor, balanceando de manera automática los datos y permitiendo incrementar o reducir la capacidad del sistema a conveniencia.</p>
@@ -4272,13 +4264,13 @@ Esto favorece que el desarrollador ignore que la aplicación no se comunica con 
 <p>Antes de plantearse hacer <em>auto-sharding</em> sobre nuestros datos, es conveniente dominar cómo se trabaja con <em>MongoDB</em> y el uso de conjuntos de réplica.</p>
 </div>
 <h3 id="sharded-cluster">Sharded Cluster<a class="headerlink" href="#sharded-cluster" title="Permanent link">&para;</a></h3>
-<p>El particionado de <em>MongoDB</em> permite crear un cluster de muchas máquinas, dividiendo a nivel de colección y poniendo un subconjunto de los datos de la colección en cada uno de los fragmentos.</p>
+<p>El particionado de <em>MongoDB</em> permite crear un clúster de muchas máquinas, dividiendo a nivel de colección y poniendo un subconjunto de los datos de la colección en cada uno de los fragmentos.</p>
 <p>Los componentes de un <em>sharded cluster</em> son:</p>
 <ul>
-<li><strong><em>Shards</em></strong> (Fragmentos): Cada una de las máquinas del cluster, que almacena un subconjunto de los datos de la colección. Cada <em>shard</em> es una instancia de <em>mongod</em> o un conjunto de réplicas. En un entorno de producción, todos los <em>shards</em> son conjuntos de réplica.</li>
+<li><strong><em>Shards</em></strong> (Fragmentos): Cada una de las máquinas del clúster, que almacena un subconjunto de los datos de la colección. Cada <em>shard</em> es una instancia de <em>mongod</em> o un conjunto de réplicas. En un entorno de producción, todos los <em>shards</em> son conjuntos de réplica.</li>
 <li>
-<p><strong>Servidores de Configuración</strong>: Cada servidor de configuración es una instancia de <code>mongod</code> que almacena metadatos sobre el cluster. Los metadatos mapean los trozos con los shards, definiendo qué rangos de datos definen un trozo (<em>chunk</em>) de la colección, y qué trozos se encuentran en un determinado <em>shard</em>.<br />
-    En entornos de producción se aconseja tener 3 servidores de configuración (uno primario y dos secundarios) ya que si sólo tuviésemos uno, al producirse una caída el cluster quedaría inaccesible.</p>
+<p><strong>Servidores de Configuración</strong>: Cada servidor de configuración es una instancia de <code>mongod</code> que almacena metadatos sobre el clúster. Los metadatos mapean los trozos con los shards, definiendo qué rangos de datos definen un trozo (<em>chunk</em>) de la colección, y qué trozos se encuentran en un determinado <em>shard</em>.<br />
+    En entornos de producción se aconseja tener 3 servidores de configuración (uno primario y dos secundarios) ya que si sólo tuviésemos uno, al producirse una caída el clúster quedaría inaccesible.</p>
 </li>
 <li>
 <p><strong>Enrutadores</strong>: Cada router es una instancia <code>mongos</code> que enruta las lecturas y escrituras de las aplicaciones a los <em>shards</em>. Las aplicaciones no acceden directamente a los <em>shards</em>, sino al router. Estos enrutadores funcionan de manera similar a una tabla de contenidos, indicándonos dónde se encuentran los datos. Una vez recopilados los datos de los diferentes <em>shards</em>, se fusionan y se encarga de devolverlos a la aplicación.</p>
@@ -4308,13 +4300,13 @@ Esto favorece que el desarrollador ignore que la aplicación no se comunica con 
     <figcaption>Fragmentación por la shard-key</figcaption>
 </figure>
 
-<p>Para las búsquedas, borrados y actualizaciones, al emplear la <em>shard key</em>, <code>mongos</code> sabe a que <em>shard</em> enviar la petición. En cambio, si la operación no la indica, se hará un <em>broadcast</em> a todas los <em>shards</em> para averiguar donde se encuentra.</p>
+<p>Para las búsquedas, borrados y actualizaciones, al emplear la <em>shard key</em>, <code>mongos</code> sabe a qué <em>shard</em> enviar la petición. En cambio, si la operación no la indica, se hará un <em>broadcast</em> a todas los <em>shards</em> para averiguar donde se encuentra.</p>
 <p>Entre los aspectos a tener en cuenta a la hora de <a href="https://www.mongodb.com/docs/manual/core/sharding-choose-a-shard-key">elegir una <em>shard key</em></a> cabe destacar que debe:</p>
 <ul>
 <li>Tener una alta cardinalidad, para asegurar que los documentos puedan dividirse en los distintos fragmentos. Por ejemplo, si elegimos un <em>shard key</em> que solo tiene 3 valores posibles y tenemos 5 fragmentos, <em>MongoDB</em> no sabrá como separar los documentos en los 5 fragmentos. Cuantos más valores posibles pueda tener la clave de fragmentación, más eficiente será la división de los trozos entre los fragmentos disponibles.</li>
 <li>Tener un alto nivel de aleatoriedad. Si utilizamos una clave que siga un patrón incremental como una fecha o un ID, conllevará que al insertar documentos, el mismo fragmento estará siendo utilizando constantemente durante el rango de valores definido para él. Esto provoca que los datos estén separados de una manera óptima, pero pondrá siempre bajo estrés a un fragmento en períodos de tiempo mientras que los otros posiblemente queden con muy poca actividad (comportamiento conocido como <em>hotspotting</em>).<br />
     Una solución a las claves que siguen patrones incrementales es aplicar una función <em>hash</em> y crear una clave <em>hasheada</em> que si tiene un alto nivel de aleatoriedad.</li>
-<li>Considerar los patrones de las consultas, ya que si elegimos una buena clave, al realizar consultas por la clave, todos los datos se encontrarán en el mismo fragmento.</li>
+<li>Considerar los patrones de las consultas, ya que, si elegimos una buena clave, al realizar consultas por la clave, todos los datos se encontrarán en el mismo fragmento.</li>
 </ul>
 <h3 id="particionado-con-docker">Particionado con Docker<a class="headerlink" href="#particionado-con-docker" title="Permanent link">&para;</a></h3>
 <p>Para este caso, vamos a crear dos conjuntos de réplicas de dos nodos cada una, y a su vez, particionaremos los datos en dos <em>shards</em>.</p>
@@ -4462,7 +4454,7 @@ Por ejemplo, mediante <code>sh.help()</code> obtendremos la ayuda de los método
 </code></pre></div>
 </li>
 <li>
-<p>O abrir directamente un sesión al puerto 27117, que es donde habíamos colocado nuestro router:</p>
+<p>O abrir directamente una sesión al puerto 27117, que es donde habíamos colocado nuestro router:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>mongosh<span class="w"> </span><span class="m">127</span>.0.0.1:27117
 <span class="linenos" data-linenos="2 "></span><span class="o">[</span>direct:<span class="w"> </span>mongos<span class="o">]</span><span class="w"> </span>test&gt;
 </code></pre></div>
@@ -4602,7 +4594,7 @@ Por ejemplo, mediante <code>sh.help()</code> obtendremos la ayuda de los método
 <li>nombre del campo para fragmentar la colección, es decir, el <em>shard key</em>. Uno de los requisitos es que esta clave tenga una alta cardinalidad. Si quisiéramos indicar que queremos utilizar una clave <em>hasheada</em>, lo haríamos indicando como valor <code>hashed</code>, por ejemplo, <code>{"login": "hashed"}</code> (teniendo en cuenta que el índice asociado también debe ser <em>hash</em>). Si queremos utilizar rangos, lo indicamos con valor <code>1</code>, por ejemplo, <code>{"login": 1}</code>.</li>
 <li><em>booleano</em> que indica si el valor utilizado como <em>shard key</em> es único. Para ello, el índice que se crea sobre el campo debe ser del tipo <em>unique</em>.</li>
 </ul>
-<p>Este comando divide la colección en fragmentos (<em>chunks</em>), la cual es la unidad que utiliza <em>MongoDB</em> para mover los datos. Una vez que se ha ejecutado, <em>MongoDB</em> comenzará a balancear la colección entre los <em>shards</em> del cluster. Este proceso no es instantáneo. Si la colección contiene un gran conjunto de datos puede llevar horas completar el balanceo.</p>
+<p>Este comando divide la colección en fragmentos (<em>chunks</em>), la cual es la unidad que utiliza <em>MongoDB</em> para mover los datos. Una vez que se ha ejecutado, <em>MongoDB</em> comenzará a balancear la colección entre los <em>shards</em> del clúster. Este proceso no es instantáneo. Si la colección contiene un gran conjunto de datos puede llevar horas completar el balanceo.</p>
 <p>Si ahora volvemos a comprobar el estado del <em>shard</em> obtendremos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">[</span><span class="nx">direct</span><span class="o">:</span><span class="w"> </span><span class="nx">mongos</span><span class="p">]</span><span class="w"> </span><span class="nx">iabd</span><span class="o">&gt;</span><span class="w"> </span><span class="nx">sh</span><span class="p">.</span><span class="nx">status</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="p">...</span>
@@ -4948,7 +4940,7 @@ Por ejemplo, mediante <code>sh.help()</code> obtendremos la ayuda de los método
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr>, <abbr title="Se ha probado la tolerancia a fallos de los sistemas.">CEBDA.2c</abbr> / 2p) Se pide crear una conjunto de 4 réplicas de nombre <code>iabdrs4</code> en la cual insertaremos los datos de <a href="resources/1000cities.json">1000 ciudades</a>, los cuales deberás <a href="mongo.html#mongodb-database-tools">importar a una base de datos</a>.</p>
+<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr>, <abbr title="Se ha probado la tolerancia a fallos de los sistemas.">CEBDA.2c</abbr> / 2p) Se pide crear un conjunto de 4 réplicas de nombre <code>iabdrs4</code> en la cual insertaremos los datos de <a href="resources/1000cities.json">1000 ciudades</a>, los cuales deberás <a href="mongo.html#mongodb-database-tools">importar a una base de datos</a>.</p>
 <p>Una vez creado, se pide:</p>
 <ol>
 <li>Obtener el estado del conjunto de réplicas</li>
@@ -4957,12 +4949,15 @@ Por ejemplo, mediante <code>sh.help()</code> obtendremos la ayuda de los método
 <li>Volver a consultar la ciudad en el nodo secundario.</li>
 <li>Insertar una ciudad en el nodo secundario.</li>
 <li>Degradar el nodo primario</li>
-<li>Averiguar cual es el nuevo nodo primario.</li>
+<li>Averiguar cuál es el nuevo nodo primario.</li>
 </ol>
 <p>Adjunta un documento con los scripts de creación, comandos empleados y las salidas generadas.</p>
 </li>
+</ol>
+<p>Actividades de ampliación (opcional):</p>
+<ol start="2">
 <li>
-<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 2p) Se pide crear un clúster de <em>MongoDB</em> con tres nodos y tres particiones y volver a importar las <a href="resources/1000cities.json">1000 ciudades</a>.</p>
+<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 2p) Se pide crear un clúster de <em>MongoDB</em> con tres nodos y dos particiones y volver a importar las <a href="resources/1000cities.json">1000 ciudades</a>.</p>
 <p>Una vez creado, se pide:</p>
 <ol>
 <li>Particionar los datos por el nombre de la ciudad.</li>
@@ -4978,7 +4973,7 @@ https://www.mongodb.com/developer/products/mongodb/cheat-sheet/#sharded-cluster
 
 FIXME: revisar métodos splitAt, splitFind... rangos con tag, zonas, etc..
 
-Cambiar el ejercicio 2 para hacer un cluster de 3 nodos y 2 particiones, para diferenciar bien los conceptos
+Cambiar el ejercicio 2 para hacer un clúster de 3 nodos y 2 particiones, para diferenciar bien los conceptos
 En los apuntes, renombrar las particiones y nodos para diferenciarlos bien
 -->
 

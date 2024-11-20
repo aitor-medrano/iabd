@@ -468,14 +468,6 @@
     Rendimiento
   </span>
   
-    
-  
-  
-    <span class="md-status md-status--new" title="Recién añadido">
-    </span>
-  
-
-  
 
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -486,14 +478,6 @@
   <span class="md-ellipsis">
     Rendimiento
   </span>
-  
-    
-  
-  
-    <span class="md-status md-status--new" title="Recién añadido">
-    </span>
-  
-
   
 
       </a>
@@ -3674,7 +3658,7 @@
 <p>Los índices son una parte importante de la gestión de bases de datos. Un índice en una base de datos es similar a un índice de un libro; permite saltar directamente a la parte del libro en vez de tener que pasar las páginas buscando el tema o la palabra que nos interesa.</p>
 <p>En el caso de <em>MongoDB</em>, un <a href="https://www.mongodb.com/docs/manual/indexes/">índice</a> es una estructura de datos que almacena información sobre los valores de determinados campos de los documentos de una colección. Esta estructura permite recorrer los datos y ordenarlos de manera muy rápida. Así pues, los índices se utilizan tanto al buscar un documento como al ordenar los datos de una consulta.</p>
 <p>Como idea base, emplear índices mejora el rendimiento de las consultas.</p>
-<p>Cuando una colección no contiene un índice, al buscar un documento, se realizará una escaneo de toda la colección, lo que se conoce como un <em>collection scan</em>, operación que tiene una complejidad lineal <code>O(N)</code>, ya que la búsqueda de un documento es proporcional a la cantidad de documentos de la colección.</p>
+<p>Cuando una colección no contiene un índice, al buscar un documento, se realizará un escaneo de toda la colección, lo que se conoce como un <em>collection scan</em>, operación que tiene una complejidad lineal <code>O(N)</code>, ya que la búsqueda de un documento es proporcional a la cantidad de documentos de la colección.</p>
 <div class="admonition info">
 <p class="admonition-title">Preparando los ejemplos</p>
 <p>Para los siguientes ejemplos, vamos a trabajar con dos colecciones distintas.</p>
@@ -3800,7 +3784,7 @@
 </code></pre></div>
 <div class="admonition tip inline end">
 <p class="admonition-title">explain</p>
-<p>En cuanto al método <a href="https://www.mongodb.com/docs/manual/reference/method/db.collection.explain/"><code>explain()</code></a>, nos va a permitir averiguar si una consulta utiliza el índice que esperamos, si utiliza un índice al realizar una proyección u ordenación de resultados, así como averiguar que parte del plan de ejecución es más costoso.</p>
+<p>En cuanto al método <a href="https://www.mongodb.com/docs/manual/reference/method/db.collection.explain/"><code>explain()</code></a>, nos va a permitir averiguar si una consulta utiliza el índice que esperamos, si utiliza un índice al realizar una proyección u ordenación de resultados, así como averiguar qué parte del plan de ejecución es más costoso.</p>
 </div>
 <p>El plan de ejecución devuelve <a href="https://docs.mongodb.org/manual/reference/explain-results/">mucha información</a>, pero nos vamos a centrar en unos pocos atributos para analizar el resultado.</p>
 <p>A <em>grosso modo</em> podemos observar como el resultado se divide en dos partes:</p>
@@ -3821,7 +3805,7 @@
 </li>
 </ul>
 <p>Del resultado obtenido, se puede observar mediante la propiedad <code>queryPlanner.winningPlan.stage</code> que ha utilizado un <code>COLLSCAN</code>, lo que significa que se ha realizado un escaneo completo de toda la colección para encontrar los datos, es decir, no se ha usado ningún índice en la consulta. Esta consulta sólo devuelve un documento (<code>executionStats.nReturned</code>) pero ¡ha tenido que escanear los 100.000 existentes (<code>executionStats.totalDocsExamined</code>)!</p>
-<p>Cuando vamos a buscar un elemento es mucho mas rápido hacer un <code>findOne</code> que <code>find</code>, porque mientras <code>find</code> recorre toda la colección, con <code>findOne</code> en cuanto encuentre un documento, el cursor se detendrá.</p>
+<p>Cuando vamos a buscar un elemento es mucho más rápido hacer un <code>findOne</code> que <code>find</code>, porque mientras <code>find</code> recorre toda la colección, con <code>findOne</code> en cuanto encuentre un documento, el cursor se detendrá.</p>
 <p>Por defecto, el campo <code>_id</code> esta indexado. Así pues, vamos a buscar el mismo documento de antes, pero ahora mediante el campo indexado:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">_id</span><span class="o">:</span><span class="w"> </span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&quot;56d5f7eb604eb380b0d8d8d3&quot;</span><span class="p">)}).</span><span class="nx">explain</span><span class="p">(</span><span class="s2">&quot;executionStats&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -3847,7 +3831,7 @@
 <span class="linenos" data-linenos="22 "></span><span class="w">    </span><span class="p">...</span>
 <span class="linenos" data-linenos="23 "></span><span class="w">  </span><span class="p">}</span>
 </code></pre></div>
-<p>Ahora <em>MongoDB</em> sólo ha escaneado el documento que ha devuelto ( <code>executionStats.totalKeysExamined</code>), y ha utilizado un índice para acceder al campo <code>_id</code> (valor <strong><code>IDHACK</code></strong> en <code>winningPlan.stage</code>). Al haber utilizado un índice, hemos evitado tener que mirar en más documentos. Esta consulta se ha realizado más rápidamente (y a mayor número de documentos más se nota la diferencia). Por supuesto, no siempre vamos a buscar por su <code>_id</code>, así que vamos a ver como crear nuevos índices.</p>
+<p>Ahora <em>MongoDB</em> sólo ha escaneado el documento que ha devuelto ( <code>executionStats.totalKeysExamined</code>), y ha utilizado un índice para acceder al campo <code>_id</code> (valor <strong><code>IDHACK</code></strong> en <code>winningPlan.stage</code>). Al haber utilizado un índice, hemos evitado tener que mirar en más documentos. Esta consulta se ha realizado más rápidamente (y a mayor número de documentos más se nota la diferencia). Por supuesto, no siempre vamos a buscar por su <code>_id</code>, así que vamos a ver cómo crear nuevos índices.</p>
 <p>Toda la información sobre el uso de índices con <em>MongoDB</em> se encuentra disponible en <a href="http://docs.mongodb.org/manual/core/indexes/">http://docs.mongodb.org/manual/core/indexes/</a>.</p>
 <h3 id="simples">Simples<a class="headerlink" href="#simples" title="Permanent link">&para;</a></h3>
 <p>Para crear un índice hemos de utilizar el método <a href="https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex"><code>createIndex({ &lt;atributo&gt; : &lt;orden&gt; })</code></a>. Si lo hacemos sobre un único campo, se conoce como índice simple.</p>
@@ -3906,14 +3890,14 @@
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Índice sobre <code>_id</code></p>
-<p>Todas las colecciones tienen creados un índice sobre el campo <code>_id</code>, el cual es único aunque al visualizarlo no nos diga que lo sea, ya que no permite que se inserten dos <code>_id</code> iguales.</p>
+<p>Todas las colecciones tienen creados un índice sobre el campo <code>_id</code>, el cual es único, aunque al visualizarlo no nos diga que lo sea, ya que no permite que se inserten dos <code>_id</code> iguales.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Cuidado con crear índices a lo loco</p>
 <p>Un aspecto a considerar de los índices es que aceleran mucho las búsquedas, pero ralentizan las inserciones/modificaciones y hace que la información ocupe más espacio en disco. Por ello, deberemos considerar añadir índices a las colecciones donde el número de lecturas sea mayor que el de escrituras. Si sucede al revés, el uso de índices puede provocar un deterioro en el rendimiento.</p>
 </div>
 <p>Volvamos a nuestra consulta inicial donde recuperábamos las calificaciones de un determinado estudiante de una clase. Ahora mismo únicamente tenemos un índice sobre el identificador de la clase, pero no sobre el estudiante.</p>
-<p>La pregunta es: cuando le pasamos a la consulta más columnas que las que tienen índices ¿sirve de algo?.</p>
+<p>La pregunta es: cuando le pasamos a la consulta más columnas que las que tienen índices ¿sirve de algo?</p>
 <p>Si ahora volvemos a ejecutar la consulta, vemos que ya no recorre toda la colección, pero ¿entendemos lo que está haciendo?</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s2">&quot;student_id&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;class_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">7</span><span class="p">}).</span><span class="nx">explain</span><span class="p">(</span><span class="s2">&quot;executionStats&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="o">&lt;</span><span class="w"> </span><span class="p">{</span>
@@ -4012,7 +3996,7 @@
 <span class="linenos" data-linenos="47 "></span><span class="p">}</span>
 </code></pre></div>
 <p>En esta ocasión, vuelve a repetir estrategia pero con el índice de estudiantes (ya que devuelve menos documentos que el índice de clases), de manera que ahora sólo recorre 10 documentos.</p>
-<p>Si nos centramos en la línea 33 y los planes rechazados (ahora aparece rellenado por que al tener dos índices, va a probar con cada uno de ellos por separado), vemos las diferentes consultas alternativas que ha generado <em>MongoDB</em> y que ha rechazado por implicar un peor rendimiento. Por ejemplo, elige el índice <code>class_id_1</code> y luego busca el estudiante <code>0</code> o prueba a hacer una conjunción (<code>AND_SORTED</code>) de los dos índices y luego filtrar por la condición compuesta:</p>
+<p>Si nos centramos en la línea 33 y los planes rechazados (ahora aparece rellenado porque al tener dos índices, va a probar con cada uno de ellos por separado), vemos las diferentes consultas alternativas que ha generado <em>MongoDB</em> y que ha rechazado por implicar un peor rendimiento. Por ejemplo, elige el índice <code>class_id_1</code> y luego busca el estudiante <code>0</code> o prueba a hacer una conjunción (<code>AND_SORTED</code>) de los dos índices y luego filtrar por la condición compuesta:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nx">rejectedPlans</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="p">{</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nx">stage</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;FETCH&#39;</span><span class="p">,</span>
@@ -4099,10 +4083,10 @@
 <li>Primero el escaneo <code>IXSCAN</code> mediante el índice <code>student_id_1</code>, el cual devuelve 10 documentos.</li>
 <li>Del resultado, se realiza el <code>FETCH</code> que devuelve un único documento.</li>
 </ul>
-<p>En la parte derecha, nos muestra un resumen del rendimiento, cantidad de documentos y claves examinadas así como el tiempo de ejecución total. </p>
+<p>En la parte derecha, nos muestra un resumen del rendimiento, cantidad de documentos y claves examinadas, así como el tiempo de ejecución total. </p>
 <h3 id="compuestos">Compuestos<a class="headerlink" href="#compuestos" title="Permanent link">&para;</a></h3>
 <p>Si queremos aplicar un índice sobre más de una propiedad, podemos crear <a href="https://www.mongodb.com/docs/manual/core/indexes/index-types/index-compound/">índices compuestos</a>, indicando las propiedades separadas por coma, de manera que el índice agrupa por la primera propiedad, y después por el/los siguiente(s) campo(s), hasta un máximo de 32 campos.</p>
-<p>Así pues ahora crearemos un índice compuesto sobre el identificador del estudiante y de la clase:</p>
+<p>Así pues, ahora crearemos un índice compuesto sobre el identificador del estudiante y de la clase:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">({</span><span class="s2">&quot;student_id&quot;</span><span class="o">:</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;class_id&quot;</span><span class="o">:</span><span class="mf">1</span><span class="p">})</span>
 </code></pre></div>
 <p>Y vemos si cambia su comportamiento respecto a los dos índices individuales:</p>
@@ -4200,7 +4184,7 @@
 <span class="linenos" data-linenos="92 "></span><span class="w">  </span><span class="p">}</span>
 </code></pre></div>
 <p>Podemos observar como ahora sólo examina una única clave y un documento, utilizando el índice <code>student_id_1_class_id_1</code>, y que rechaza emplear los índices simples, ya sea el del estudiante como el de la clase.</p>
-<p>Es importante destacar que en los índices compuestos, el orden de los índices importa, y mucho. Si hacemos una consulta que sólo utilice el atributo <code>class_id</code>, el índice compuesto <em>no</em> se va a utilizar, ya que los identificadores de clases realmente son índices secundarios a partir del identificador del estudiante, y localizar una clase implicaría volver a recorrer todos los estudiantes.</p>
+<p>Es importante destacar que, en los índices compuestos, el orden de los índices importa, y mucho. Si hacemos una consulta que sólo utilice el atributo <code>class_id</code>, el índice compuesto <em>no</em> se va a utilizar, ya que los identificadores de clases realmente son índices secundarios a partir del identificador del estudiante, y localizar una clase implicaría volver a recorrer todos los estudiantes.</p>
 <p>Pero volviendo al índice creado, si hacemos una consulta por ambos campos, da igual el orden que utilizamos en la búsqueda que siempre va a utilizar el índice. Esto es, las siguientes consultas van a utilizar el mismo índice <code>student_id_1_class_id_1</code>, ya que el orden de los campos en la consulta no importa:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="err">db.grades.</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">d(</span><span class="p">{</span><span class="nt">&quot;student_id&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;class_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">}</span><span class="err">)</span>
 <span class="linenos" data-linenos="2 "></span><span class="err">db.grades.</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">d(</span><span class="p">{</span><span class="nt">&quot;class_id&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;student_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span><span class="err">)</span>
@@ -4354,7 +4338,7 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">zips</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;zip&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">unique</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">)</span>
 </code></pre></div>
 <p>Además, una vez creado el índice, no permitirá insertar valores duplicados.</p>
-<p>En un índice compuesto, la univocidad se realiza entre las combinaciones de valores de todos los campos del índices. Por ejemplo, las siguientes operaciones no violan el índice único, ya que las combinaciones de <code>nombre</code> y <code>cargo</code> no se repiten:</p>
+<p>En un índice compuesto, la univocidad se realiza entre las combinaciones de valores de todos los campos del índice. Por ejemplo, las siguientes operaciones no violan el índice único, ya que las combinaciones de <code>nombre</code> y <code>cargo</code> no se repiten:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="err">&gt;</span><span class="w"> </span><span class="err">db.iabd.crea</span><span class="kc">te</span><span class="err">I</span><span class="kc">n</span><span class="err">dex(</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cargo&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">u</span><span class="kc">n</span><span class="err">ique</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="err">)</span>
 <span class="linenos" data-linenos="2 "></span><span class="err">&gt;</span><span class="w"> </span><span class="err">db.iabd.i</span><span class="kc">nsert</span><span class="err">(</span><span class="p">{</span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Marina&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cargo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Técnico&quot;</span><span class="p">}</span><span class="err">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="err">&gt;</span><span class="w"> </span><span class="err">db.iabd.i</span><span class="kc">nsert</span><span class="err">(</span><span class="p">{</span><span class="nt">&quot;nombre&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Marina&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cargo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CEO&quot;</span><span class="p">}</span><span class="err">)</span>
@@ -4441,7 +4425,7 @@
 </li>
 </ul>
 <h3 id="manejando-indices">Manejando índices<a class="headerlink" href="#manejando-indices" title="Permanent link">&para;</a></h3>
-<p>En versiones previas a la 4.4, los índices se podían <a href="https://docs.mongodb.org/manual/core/index-creation">crear</a> en <em>foreground</em>, de manera que al crear un índice se bloqueaban a todos los <em>writers</em> o en modo <em>background</em> que no penalizaba las escrituras pero tardaba más.</p>
+<p>En versiones previas a la 4.4, los índices se podían <a href="https://docs.mongodb.org/manual/core/index-creation">crear</a> en <em>foreground</em>, de manera que al crear un índice se bloqueaban a todos los <em>writers</em> o en modo <em>background</em> que no penalizaba las escrituras, pero tardaba más.</p>
 <p>Actualmente, se utiliza un mecanismo optimizado el cual es el método por defecto y ya no se indica si se hacen en <em>foreground</em> o <em>background</em>.</p>
 <p>Si al crear un índice, le queremos indicar un nombre, lo podemos hacer pasándole un segundo parámetro:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">student_id</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;student_idx&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">)</span>
@@ -4475,8 +4459,8 @@
 Aunque sea más responsabilidad de un administrador de bases de datos (DBA), los desarrolladores debemos saber si el índice va a caber en memoria. Si no van a caber es mejor no usarlos.</p>
 <div class="admonition question">
 <p class="admonition-title">Autoevaluación</p>
-<p>Hemos actualizado un documento con una clave llamada <code>etiquetas</code> que provoca que el documento tenga que moverse a disco. Supongamos que el documento contiene 10.000 etiquetas en él y que el array de <code>etiquetas</code> está indexada con un índice multiclave.</p>
-<p>¿Cuantos elementos tienen que actualizarse en el índice para acomodar el movimiento? <sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+<p>Hemos actualizado un documento con una clave llamada <code>etiquetas</code> que provoca que el documento tenga que moverse a disco. Supongamos que el documento contiene 10.000 etiquetas en él y que el array de <code>etiquetas</code> está indexado con un índice multiclave.</p>
+<p>¿Cuántos elementos tienen que actualizarse en el índice para acomodar el movimiento? <sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
 </div>
 <h4 id="forzando-indices">Forzando índices<a class="headerlink" href="#forzando-indices" title="Permanent link">&para;</a></h4>
 <p>Si en algún momento queremos forzar el uso de un determinado índice al realizar una consulta, necesitaremos usar el método <a href="https://www.mongodb.com/docs/manual/reference/method/cursor.hint/"><code>hint({campo:1}</code></a></p>
@@ -4530,7 +4514,7 @@ Aunque sea más responsabilidad de un administrador de bases de datos (DBA), los
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">auditoria</span><span class="p">.</span><span class="nx">find</span><span class="p">()</span><span class="w"> </span><span class="c1">// orden natural</span>
 <span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">auditoria</span><span class="p">.</span><span class="nx">find</span><span class="p">().</span><span class="nx">sort</span><span class="p">({</span><span class="w"> </span><span class="nx">$natural</span><span class="o">:-</span><span class="mf">1</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="c1">// orden inverso</span>
 </code></pre></div>
-<p>Finalmente, si queremos averiguar si una colección es limitada, disponemos d el método <code>isCapped()</code>:</p>
+<p>Finalmente, si queremos averiguar si una colección es limitada, disponemos del método <code>isCapped()</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">auditoria</span><span class="p">.</span><span class="nx">isCapped</span><span class="p">()</span><span class="w"> </span><span class="c1">// true</span>
 </code></pre></div>
 <p>De forma alternativa, podríamos utilizar un índice TTL dentro de una colección ordinaria, pero perderíamos
@@ -4546,7 +4530,7 @@ parte de las prestaciones que ofrecen las colecciones <em>capped</em>.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">setProfilingLevel</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span><span class="o">&lt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">was</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">slowms</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="p">,</span><span class="w"> </span><span class="nx">sampleRate</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
-<p>El método <code>setProfilingLevel()</code> también admite un segundo parámetro para indicar el numero mínimo de milisegundos de las consultas para ser auditadas.</p>
+<p>El método <code>setProfilingLevel()</code> también admite un segundo parámetro para indicar el número mínimo de milisegundos de las consultas para ser auditadas.</p>
 <p>Por defecto, <em>MongoDB</em> automáticamente escribe en el log las consultas que tardan más de 100ms.
 Si queremos indicar estas propiedades al arrancar el demonio, le pasaremos los parámetros <code>--profile</code> y/o <code>--slowms</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">mongod</span><span class="w"> </span><span class="o">--</span><span class="nx">profile</span><span class="o">=</span><span class="mf">1</span><span class="w"> </span><span class="o">--</span><span class="nx">slowms</span><span class="o">=</span><span class="mf">15</span>
@@ -4612,7 +4596,7 @@ db.zips.find({ "pop":{$gt:10000, $lte:50000}, "state":{$in: ["AL","AK","AZ","CA"
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han aplicado herramientas de monitorización eficiente de los recursos.">CEBDA.4a</abbr>, <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr> / 3.5p) Para la siguiente actividad, se recomienda trabajar con una instalación de <em>MongoDB</em> en local, ya sea mediante <em>Docker</em> o una instalación propia.</p>
+<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han aplicado herramientas de monitorización eficiente de los recursos.">CEBDA.4a</abbr>, <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr> / 2p) Para la siguiente actividad, se recomienda trabajar con una instalación de <em>MongoDB</em> en local, ya sea mediante <em>Docker</em> o una instalación propia.</p>
 <p>Tenemos los datos de 1.000.000 de restaurantes con una estructura similar al siguiente documento:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">&quot;65291f2d09ae7e23eba2b3df&quot;</span><span class="err">)</span><span class="p">,</span>
@@ -4644,8 +4628,11 @@ db.zips.find({ "pop":{$gt:10000, $lte:50000}, "state":{$in: ["AL","AK","AZ","CA"
 <li>Comprueba que se utilizan los índices mediante los planes de ejecución y compara el rendimiento actual respecto al previo al crear los índices.</li>
 </ol>
 </li>
+</ol>
+<p>Actividades de ampliación (opcional):</p>
+<ol start="2">
 <li>
-<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr> / 0.5p) Supongamos que tenemos un índice similar al siguiente:</p>
+<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr> / 1p) Supongamos que tenemos un índice similar al siguiente:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;nombre&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dir.provincia&quot;</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dir.ciudad&quot;</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;cp&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 <p>Identifica los prefijos que se utilizarán (si lo hacen) para las siguientes consultas y justifica el motivo, tanto al filtrar como al ordenar los resultados:</p>
@@ -4664,13 +4651,10 @@ d. no
 e. perfecta, da igual que el orden de los atributos en el filtrado no coincida con el índice
 -->
 </li>
-</ol>
-<p>Actividades de ampliación:</p>
-<ol start="3">
 <li>
-<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr> / 0.5p) Realiza las siguientes acciones anotando el comando necesario:</p>
+<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr> / 1p) Realiza las siguientes acciones anotando el comando necesario:</p>
 <ol>
-<li>Crea un colección llamada <code>nombres</code>.</li>
+<li>Crea una colección llamada <code>nombres</code>.</li>
 <li>Añade 5 documentos con tu nombre con diferentes combinaciones de mayúsculas y minúsculas, pero ninguno que esté todo en minúsculas.</li>
 <li>Crea una consulta que busque tu nombre en minúsculas.</li>
 <li>Crea un índice con el <em>locale</em> en español sobre el nombre.</li>
@@ -4678,7 +4662,7 @@ e. perfecta, da igual que el orden de los atributos en el filtrado no coincida c
 </ol>
 </li>
 <li>
-<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr> / 0.5p) Investiga para qué sirven los <a href="https://www.mongodb.com/docs/manual/core/index-hidden/">índices ocultos</a> en <em>MongoDB</em>, indicando al menos dos casos de uso donde tiene sentido su utilización.</p>
+<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr> / 1p) Investiga para qué sirven los <a href="https://www.mongodb.com/docs/manual/core/index-hidden/">índices ocultos</a> en <em>MongoDB</em>, indicando al menos dos casos de uso donde tiene sentido su utilización.</p>
 </li>
 </ol>
 <!--
