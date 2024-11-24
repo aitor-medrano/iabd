@@ -3658,6 +3658,10 @@
 <p>Los índices son una parte importante de la gestión de bases de datos. Un índice en una base de datos es similar a un índice de un libro; permite saltar directamente a la parte del libro en vez de tener que pasar las páginas buscando el tema o la palabra que nos interesa.</p>
 <p>En el caso de <em>MongoDB</em>, un <a href="https://www.mongodb.com/docs/manual/indexes/">índice</a> es una estructura de datos que almacena información sobre los valores de determinados campos de los documentos de una colección. Esta estructura permite recorrer los datos y ordenarlos de manera muy rápida. Así pues, los índices se utilizan tanto al buscar un documento como al ordenar los datos de una consulta.</p>
 <p>Como idea base, emplear índices mejora el rendimiento de las consultas.</p>
+<div class="admonition info">
+<p class="admonition-title">Índices y consultas agregadas</p>
+<p>También podemos utilizar índices dentro del framework de agregación, sólo que en las fases de $match, $sort</p>
+</div>
 <p>Cuando una colección no contiene un índice, al buscar un documento, se realizará un escaneo de toda la colección, lo que se conoce como un <em>collection scan</em>, operación que tiene una complejidad lineal <code>O(N)</code>, ya que la búsqueda de un documento es proporcional a la cantidad de documentos de la colección.</p>
 <div class="admonition info">
 <p class="admonition-title">Preparando los ejemplos</p>
@@ -4071,13 +4075,13 @@
 <span class="linenos" data-linenos="72 "></span><span class="p">]</span>
 </code></pre></div>
 <h4 id="trabajando-con-mongodbcompass">Trabajando con MongoDBCompass<a class="headerlink" href="#trabajando-con-mongodbcompass" title="Permanent link">&para;</a></h4>
-<figure style="float: right">
+<p>Además de crear y consultar los índices mediante el <em>shell</em> de <em>MongoDB</em>, podemos utilizar la herramienta gráfica <em>MongoDBCompass</em>.</p>
+<p>Una característica muy útil es la posibilidad de visualizar el plan de ejecución de una forma gráfica y más cómoda. Para ello, en la pestaña de consultas, si repetimos la última consulta y pulsamos en <code>Explain</code>, podemos ver:</p>
+<figure style="align: center">
     <img src="images/08explain-mongodb-compass.png" alt="Plan de ejecución en MongoDB Compass" width="800px">
     <figcaption>Plan de ejecución en MongoDB Compass</figcaption>
 </figure>
 
-<p>Además de crear y consultar los índices mediante el <em>shell</em> de <em>MongoDB</em>, podemos utilizar la herramienta gráfica <em>MongoDBCompass</em>.</p>
-<p>Una característica muy útil es la posibilidad de visualizar el plan de ejecución de una forma gráfica y más cómoda. Para ello, en la pestaña de consultas, si repetimos la última consulta y pulsamos en <code>Explain</code>, podemos ver:</p>
 <p>En la parte izquierda, un grafo con los pasos realizados:</p>
 <ul>
 <li>Primero el escaneo <code>IXSCAN</code> mediante el índice <code>student_id_1</code>, el cual devuelve 10 documentos.</li>
@@ -4442,7 +4446,7 @@
 <span class="linenos" data-linenos="2 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">grades</span><span class="p">.</span><span class="nx">dropIndex</span><span class="p">(</span><span class="w"> </span><span class="s2">&quot;student_idx&quot;</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="c1">// borra el índice por su nombre</span>
 </code></pre></div>
 <h4 id="rendimiento">Rendimiento<a class="headerlink" href="#rendimiento" title="Permanent link">&para;</a></h4>
-<p>En cuanto al rendimiento, algunos de los operadores que no utilizan los índices eficientemente son los operadores <code>$where</code>, <code>$nin</code> y <code>$exists</code>. Cuando estos operadores se emplean en una consulta hay que tener en mente un posible cuelo de botella cuando el tamaño de los datos incremente.</p>
+<p>En cuanto al rendimiento, algunos de los operadores que no utilizan los índices eficientemente son los operadores <code>$where</code>, <code>$nin</code> y <code>$exists</code>. Cuando estos operadores se emplean en una consulta hay que tener en mente un posible cuello de botella cuando el tamaño de los datos incremente.</p>
 <p>Al explicar los índices ya hemos visto que podemos obtener información sobre la operación realizada mediante el método <a href="http://docs.mongodb.org/manual/reference/method/cursor.explain/"><code>explain()</code></a>.</p>
 <p>El atributo <code>indexOnly</code> nos dice si toda la información que queremos recuperar se encuentra en el índice. Este atributo va a depender de los campos que quiera que me devuelva la consulta, si son un subconjunto del índice utilizado.</p>
 <p>Como los índices consumen espacio en disco y memoria, es importante vigilar y planificar su uso, para no sobrepasar las prestaciones de nuestro sistema, de manera que sólo utilicemos índices cuando tengamos consultas que se repiten en el tiempo y que empiezan a ser lentas.</p>
@@ -4464,7 +4468,7 @@ Aunque sea más responsabilidad de un administrador de bases de datos (DBA), los
 </div>
 <h4 id="forzando-indices">Forzando índices<a class="headerlink" href="#forzando-indices" title="Permanent link">&para;</a></h4>
 <p>Si en algún momento queremos forzar el uso de un determinado índice al realizar una consulta, necesitaremos usar el método <a href="https://www.mongodb.com/docs/manual/reference/method/cursor.hint/"><code>hint({campo:1}</code></a></p>
-<p>Si queremos que se utilice el índice asociado a la propiedad twitter:</p>
+<p>Si queremos que se utilice el índice asociado a la propiedad <code>twitter</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">iabd</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">nombre</span><span class="o">:</span><span class="s2">&quot;Aitor Medrano&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">twitter</span><span class="o">:</span><span class="s2">&quot;aitormedrano&quot;</span><span class="p">}).</span><span class="nx">hint</span><span class="p">({</span><span class="nx">twitter</span><span class="o">:</span><span class="mf">1</span><span class="p">})</span>
 </code></pre></div>
 <p>Si por algún motivo no queremos usar índices y forzar un escaneo de toda la colección, le pasaremos el operador <code>$natural</code> al método <code>hint()</code>.</p>

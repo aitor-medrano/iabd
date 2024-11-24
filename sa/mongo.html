@@ -4183,14 +4183,14 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">127</span>.0.0.1:27017:27017<span class="w"> </span>--name<span class="w"> </span>iabd-mongo<span class="w"> </span>-d<span class="w"> </span>mongo:4.4
 </code></pre></div>
 </div>
-<p>A continuación vamos a descargar el conjunto de datos <a href="https://atlas-education-staging.s3.amazonaws.com/sampledata.archive.gz">sampledata.archive.gz</a> que ofrece <em>MongoDB</em> a modo de prueba, el cual vamos a emplear a lo largo de las diferentes sesiones.</p>
+<p>A continuación vamos a descargar el conjunto de datos comprimido (<a href="https://atlas-education-staging.s3.amazonaws.com/sampledata.archive.gz">sampledata.archive.gz</a>) o sin comprimir (<a href="https://atlas-education.s3.amazonaws.com/sampledata.archive">sampledata.archive</a>) que ofrece <em>MongoDB</em> a modo de prueba, el cual vamos a emplear a lo largo de las diferentes sesiones.</p>
 <p>Volvemos al terminal de nuestro sistema y copiamos los datos desde nuestro sistema a la carpeta <code>/tmp</code> del contenedor:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>cp<span class="w"> </span>sampledata.archive.gz<span class="w"> </span>iabd-mongo:/tmp
 </code></pre></div>
 <p>Posteriormente abrimos un terminal dentro de nuestro contenedor (o mediante <em>Attach Shell</em> en <em>VSCode</em>):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>iabd-mongo<span class="w"> </span>bash
 </code></pre></div>
-<p>Y finalmente, descomprimimos y restauramos los datos mediante <code>mongorestore</code>:</p>
+<p>Y finalmente, si hemos descargado el <code>.gz</code> lo descomprimimos y restauramos los datos mediante <code>mongorestore</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>gunzip<span class="w"> </span>sampledata.archive.gz
 <span class="linenos" data-linenos="2 "></span>mongorestore<span class="w"> </span>--archive<span class="o">=</span>sampledata.archive
 </code></pre></div>
