@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.35f28582.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -724,64 +724,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#caso-de-uso-pia-login" class="md-nav__link">
+  <a href="#caso-de-uso" class="md-nav__link">
     <span class="md-ellipsis">
-      Caso de uso - PIA: Login
+      Caso de uso
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Caso de uso - PIA: Login">
+    <nav class="md-nav" aria-label="Caso de uso">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#estructura" class="md-nav__link">
+  <a href="#mvc" class="md-nav__link">
     <span class="md-ellipsis">
-      Estructura
+      MVC
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#configuracion" class="md-nav__link">
+  <a href="#flask-pymongo" class="md-nav__link">
     <span class="md-ellipsis">
-      Configuración
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#blueprints" class="md-nav__link">
-    <span class="md-ellipsis">
-      Blueprints
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#login" class="md-nav__link">
-    <span class="md-ellipsis">
-      Login
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#plantillas" class="md-nav__link">
-    <span class="md-ellipsis">
-      Plantillas
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#acceso-a-los-datos" class="md-nav__link">
-    <span class="md-ellipsis">
-      Acceso a los datos
+      Flask + PyMongo
     </span>
   </a>
   
@@ -3851,64 +3815,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#caso-de-uso-pia-login" class="md-nav__link">
+  <a href="#caso-de-uso" class="md-nav__link">
     <span class="md-ellipsis">
-      Caso de uso - PIA: Login
+      Caso de uso
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Caso de uso - PIA: Login">
+    <nav class="md-nav" aria-label="Caso de uso">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#estructura" class="md-nav__link">
+  <a href="#mvc" class="md-nav__link">
     <span class="md-ellipsis">
-      Estructura
+      MVC
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#configuracion" class="md-nav__link">
+  <a href="#flask-pymongo" class="md-nav__link">
     <span class="md-ellipsis">
-      Configuración
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#blueprints" class="md-nav__link">
-    <span class="md-ellipsis">
-      Blueprints
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#login" class="md-nav__link">
-    <span class="md-ellipsis">
-      Login
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#plantillas" class="md-nav__link">
-    <span class="md-ellipsis">
-      Plantillas
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#acceso-a-los-datos" class="md-nav__link">
-    <span class="md-ellipsis">
-      Acceso a los datos
+      Flask + PyMongo
     </span>
   </a>
   
@@ -3957,6 +3885,12 @@
     
     
       <a href="../tags.html#mongodb" class="md-tag">MongoDB</a>
+    
+  
+    
+    
+    
+      <a href="../tags.html#sbd-ra3" class="md-tag">SBD RA3</a>
     
   
 </nav>
@@ -4725,352 +4659,175 @@
 </code></pre></div>
 <p>Hemos decidido no profundizar en su conocimiento ya que el equipo de <em>MongoDB</em> ha pausado su mantenimiento desde hace ya dos años.    </p>
 </div>
-<h2 id="caso-de-uso-pia-login">Caso de uso - PIA: Login<a class="headerlink" href="#caso-de-uso-pia-login" title="Permanent link">&para;</a></h2>
-<p>El siguiente proyecto se basa inicialmente en el artículo <a href="https://www.digitalocean.com/community/tutorials/how-to-add-authentication-to-your-app-with-flask-login"><em>How To Add Authentication to Your App with Flask-Login</em></a>.</p>
-<p>A partir de él, vamos a crear una aplicación en <em>Flask</em> que ataca a una base de datos de <em>MongoDB</em> para almacenar la información del proyecto PIA Lara.</p>
-<p>Esta primera versión de la aplicación únicamente se centra en la gestión de los usuarios, distinguiendo entre los diferentes roles:</p>
-<ul>
-<li><code>Administrador</code>: superusuario, puede crear, editar y eliminar todo tipo de usuarios.</li>
-<li><code>Técnico</code>: usuario que supervisará a los clientes, el cual, más adelante, puede llegar a crear textos predefinidos para los clientes.</li>
-<li><code>Cliente</code>: usuario final de la aplicación que, más adelante, grabará los audios.</li>
-</ul>
-<div class="admonition warning">
-<p class="admonition-title">Simplicidad</p>
-<p>El presente caso de uso se ha organizado para intentar simplificar al máximo el código y preparar un esqueleto que facilite el crecimiento de la aplicación. Aún así, una solución basada en <em>Django</em> o el uso de herramientas de mapeo entre los datos y los objetos del dominio serían un punto de partida para siguientes fases del proyecto.</p>
+<h2 id="caso-de-uso">Caso de uso<a class="headerlink" href="#caso-de-uso" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">PIA Login</p>
+<p>En cursos anteriores hicimos un caso de uso donde definiamos la <a href="pymongo-login.html">autenticación para el proyecto Lara</a>. Este curso, dicho caso de uso forma parte de la sesión de trabajo del proyecto que realizaremos en una sesión aparte.</p>
 </div>
-<h3 id="estructura">Estructura<a class="headerlink" href="#estructura" title="Permanent link">&para;</a></h3>
-<p>Una vez <a href="resources/piafplogin.zip">descargado el proyecto</a> y tras descomprimirlo, o clonado desde <a href="https://github.com/aitor-medrano/piafplogin">https://github.com/aitor-medrano/piafplogin</a>, veremos que tiene la siguiente estructura:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>PIAFPLOGIN/
-<span class="linenos" data-linenos=" 2 "></span>├── migrations/
-<span class="linenos" data-linenos=" 3 "></span>│   └── user_migration.py
-<span class="linenos" data-linenos=" 4 "></span>├── project/
-<span class="linenos" data-linenos=" 5 "></span>│   ├── static/
-<span class="linenos" data-linenos=" 6 "></span>│   │   ├── pialara.js
-<span class="linenos" data-linenos=" 7 "></span>│   │   └── pialara.png
-<span class="linenos" data-linenos=" 8 "></span>│   ├── templates/
-<span class="linenos" data-linenos=" 9 "></span>│   │   ├── base.html
-<span class="linenos" data-linenos="10 "></span>│   │   ├── index.html
-<span class="linenos" data-linenos="11 "></span>│   │   ├── login.html
-<span class="linenos" data-linenos="12 "></span>│   │   └── profile.html
-<span class="linenos" data-linenos="13 "></span>│   ├── __init__.py
-<span class="linenos" data-linenos="14 "></span>│   ├── auth.py
-<span class="linenos" data-linenos="15 "></span>│   ├── db.py
-<span class="linenos" data-linenos="16 "></span>│   ├── main.py
-<span class="linenos" data-linenos="17 "></span>│   └── models.py
-<span class="linenos" data-linenos="18 "></span>├── .ini
-<span class="linenos" data-linenos="19 "></span>└── requirements.txt
+<p>Vamos a crear una pequeña aplicación web que permita mostrar datos obtenidos desde <em>MongoDB</em>. Para ello, vamos a utilizar <a href="https://flask.palletsprojects.com/es/">Flask</a> como framework ligero escrito en <em>Python</em>.</p>
+<p>El primer paso será, tras crear el entorno virtual, instalar las librerías de <em>PyMongo</em> y <em>Flask</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>pymongo<span class="w"> </span>flask
 </code></pre></div>
-<p>El primer paso es crear un entorno virtual:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>app-env
+<p>Tras ello, crearemos nuestro primer archivo <code>app.py</code>, el cual colocaremos en la raíz del proyecto. Si nos fijamos, tras importar los archivos necesarios, definimos una ruta y anotamos el método que se va a ejecutar: </p>
+<div class="highlight"><span class="filename">app.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span>
+<span class="hll"><span class="linenos" data-linenos="5 "></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="6 "></span><span class="k">def</span> <span class="nf">hola</span><span class="p">():</span>
+<span class="linenos" data-linenos="7 "></span>    <span class="k">return</span> <span class="s2">&quot;&lt;p&gt;¡Hola IABD!&lt;/p&gt;&quot;</span>
 </code></pre></div>
-<p>Y activarlo:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nb">source</span><span class="w"> </span>app-env/bin/activate
+<p>Para lanzar la aplicación web, en el terminal ejecutaremos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>flask<span class="w"> </span>run<span class="w"> </span>--debug
 </code></pre></div>
-<p>A continuación instalaremos las dependencias mediante:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<p>Y si entramos a <code>http://127.0.0.1:5000</code> veremos el resultado de su ejecución.</p>
+<h3 id="mvc">MVC<a class="headerlink" href="#mvc" title="Permanent link">&para;</a></h3>
+<p>Antes de integrar <em>PyMongo</em> con <em>Flask</em>, vamos a ver como podemos cargar una vista y de esta, cederle el control a Flask.</p>
+<p>Primero, vamos a crear una página de inicio donde invoquemos a una ruta de Flask, y esta configura una variable y devuelve el dato a una nueva vista. Pero vamos paso a paso. </p>
+<p>Primero crearemos nuestra página de inicio similar a la siguiente:</p>
+<div class="highlight"><span class="filename">index.html</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hola IABD<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="p">&lt;</span><span class="nt">ul</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/hola&quot;</span><span class="p">&gt;</span>Saludar<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos="5 "></span>    <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/adios&quot;</span><span class="p">&gt;</span>Despedir<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos="6 "></span><span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
 </code></pre></div>
-<h3 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">&para;</a></h3>
-<p>Para configurar el proyecto, partimos del fichero <code>.ini</code> que reside en la raíz del mismo y contiene los datos de configuración a <em>MongoDB</em> y la clave secreta que utiliza <em>Flask</em> para encriptar la sesión:</p>
-<div class="highlight"><span class="filename">.ini</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">[PROD]</span>
-<span class="linenos" data-linenos="2 "></span><span class="na">SECRET_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">eac5e91171438960ddec0c9c469a4c3dd42e96aea462afc5ab830f78527ad80e</span>
-<span class="linenos" data-linenos="3 "></span><span class="na">PIALARA_DB_URI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mongodb+srv://usuario:contraseña@cluster0.xyz.mongodb.net</span>
-<span class="linenos" data-linenos="4 "></span><span class="na">PIALARA_DB_NAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">pialara</span>
-<span class="linenos" data-linenos="5 "></span>
-<span class="linenos" data-linenos="6 "></span><span class="k">[LOCAL]</span>
-<span class="linenos" data-linenos="7 "></span><span class="na">SECRET_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">eac5e91171438960ddec0c9c469a4c3dd42e96aea462afc5ab830f78527ad80e</span>
-<span class="linenos" data-linenos="8 "></span><span class="na">PIALARA_DB_URI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
-<span class="linenos" data-linenos="9 "></span><span class="na">PIALARA_DB_NAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">pialara</span>
+<p>Esta página la vamos a colocar dentro de una carpeta <code>templates</code>, de manera que nuestra estructura de proyecto será:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>├───app.py
+<span class="linenos" data-linenos="2 "></span>├───templates
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>└───index.html
 </code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">Secret Key</p>
-<p>Para generar una clave secreta, tal como indica la <a href="https://flask.palletsprojects.com/en/latest/quickstart/#sessions">documentación de Flask</a>, podemos ejecutar el siguiente comando:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;import secrets; print(secrets.token_hex())&#39;</span>
-</code></pre></div>
-</div>
-<p>Una vez ya hemos configurado la conexión y antes de arrancar la aplicación, vamos a cargar unos datos básicos con usuarios. Para ello, en la carpeta <code>migrations</code> tenemos el archivo <code>users_migration.py</code>, el cual lee la configuración del archivo anterior, y crea tres usuarios:</p>
-<div class="highlight"><span class="filename">users_migration.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">werkzeug.security</span> <span class="kn">import</span> <span class="n">generate_password_hash</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span> <span class="nn">configparser</span>
+<p>Y modificar nuestro archivo de aplicación para configurar la ruta para la raíz del proyecto, y la respuesta a cada uno de los enlaces:</p>
+<div class="highlight"><span class="filename">app.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">render_template</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 5 "></span>
-<span class="linenos" data-linenos=" 6 "></span><span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;.ini&quot;</span><span class="p">)))</span>
-<span class="linenos" data-linenos=" 8 "></span>
-<span class="linenos" data-linenos=" 9 "></span><span class="n">DB_URI</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;PROD&#39;</span><span class="p">][</span><span class="s1">&#39;PIALARA_DB_URI&#39;</span><span class="p">]</span>
-<span class="linenos" data-linenos="10 "></span><span class="n">DB_NAME</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;PROD&#39;</span><span class="p">][</span><span class="s1">&#39;PIALARA_DB_NAME&#39;</span><span class="p">]</span>
-<span class="linenos" data-linenos="11 "></span><span class="c1"># DB_URI = config[&#39;LOCAL&#39;][&#39;PIALARA_DB_URI&#39;]</span>
-<span class="linenos" data-linenos="12 "></span><span class="c1"># DB_NAME = config[&#39;LOCAL&#39;][&#39;PIALARA_DB_NAME&#39;]</span>
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+</span><span class="linenos" data-linenos=" 7 "></span><span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+<span class="hll"><span class="linenos" data-linenos=" 8 "></span>    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;index.html&quot;</span><span class="p">)</span>
+</span><span class="linenos" data-linenos=" 9 "></span>
+<span class="hll"><span class="linenos" data-linenos="10 "></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/hola&quot;</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="11 "></span><span class="k">def</span> <span class="nf">hola</span><span class="p">():</span>
+<span class="linenos" data-linenos="12 "></span>    <span class="k">return</span> <span class="s2">&quot;&lt;p&gt;¡Hola IABD desde Flask!&lt;/p&gt;&quot;</span>
 <span class="linenos" data-linenos="13 "></span>
-<span class="linenos" data-linenos="14 "></span><span class="n">db</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">DB_URI</span><span class="p">)[</span><span class="n">DB_NAME</span><span class="p">]</span>
-<span class="linenos" data-linenos="15 "></span>
-<span class="linenos" data-linenos="16 "></span><span class="n">usuarios</span> <span class="o">=</span> <span class="p">[</span>
-<span class="linenos" data-linenos="17 "></span>    <span class="p">{</span><span class="s2">&quot;nombre&quot;</span><span class="p">:</span><span class="s2">&quot;Admin&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">:</span><span class="s2">&quot;admin@admin.com&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span><span class="n">generate_password_hash</span><span class="p">(</span><span class="s2">&quot;admin&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;sha256&#39;</span><span class="p">),</span> <span class="s2">&quot;rol&quot;</span><span class="p">:</span><span class="s2">&quot;Administrador&quot;</span><span class="p">},</span>
-<span class="linenos" data-linenos="18 "></span>    <span class="p">{</span><span class="s2">&quot;nombre&quot;</span><span class="p">:</span><span class="s2">&quot;Alumno&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">:</span><span class="s2">&quot;alumno@alumno.com&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span><span class="n">generate_password_hash</span><span class="p">(</span><span class="s2">&quot;alumno&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;sha256&#39;</span><span class="p">),</span> <span class="s2">&quot;rol&quot;</span><span class="p">:</span><span class="s2">&quot;Técnico&quot;</span><span class="p">},</span>
-<span class="linenos" data-linenos="19 "></span>    <span class="p">{</span><span class="s2">&quot;nombre&quot;</span><span class="p">:</span><span class="s2">&quot;Severo Ochoa&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">:</span><span class="s2">&quot;s8a@s8a.com&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span><span class="n">generate_password_hash</span><span class="p">(</span><span class="s2">&quot;s8a&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;sha256&#39;</span><span class="p">),</span> <span class="s2">&quot;rol&quot;</span><span class="p">:</span><span class="s2">&quot;Cliente&quot;</span><span class="p">,</span> <span class="s2">&quot;parent&quot;</span><span class="p">:</span><span class="s2">&quot;alumno@alumno.com&quot;</span><span class="p">},</span>
-<span class="linenos" data-linenos="20 "></span><span class="p">]</span>
-<span class="linenos" data-linenos="21 "></span>
-<span class="linenos" data-linenos="22 "></span><span class="k">try</span><span class="p">:</span>
-<span class="linenos" data-linenos="23 "></span>    <span class="n">db</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">insert_many</span><span class="p">(</span><span class="n">usuarios</span><span class="p">)</span>
-<span class="linenos" data-linenos="24 "></span><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="linenos" data-linenos="25 "></span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos="14 "></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/adios&quot;</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="15 "></span><span class="k">def</span> <span class="nf">adios</span><span class="p">():</span>
+<span class="linenos" data-linenos="16 "></span>    <span class="k">return</span> <span class="s2">&quot;&lt;p&gt;¡Adios IABD desde Flask!&lt;/p&gt;&quot;</span>
 </code></pre></div>
-<p>Destacar que al definir los documentos con los usuarios, encriptamos la contraseña mediante la función <a href="https://tedboy.github.io/flask/generated/werkzeug.generate_password_hash.html"><code>generate_password_hash</code></a> para no almacenarla en la base de datos en texto plano.</p>
-<p>Así pues, ejecutamos la migración:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>python3<span class="w"> </span>migrations/users_migration.py
-</code></pre></div>
-<p>Finalmente podemos arrancar la aplicación:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>flask<span class="w"> </span>--app<span class="w"> </span>project<span class="w"> </span>--debug<span class="w"> </span>run
-</code></pre></div>
-<p>Y acceder a la aplicación a través de <code>http://127.0.0.1:5000/</code>:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">Versión escritorio</label><label for="__tabbed_11_2">Versión móvil</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<p><figure style="align: center;">
-    <img src="images/07pialara-index.png" width="500px" style="border: 1px solid grey">
-    <figcaption>PIA Lara - Index</figcaption>
-</figure></p>
-</div>
-<div class="tabbed-block">
-<p><figure style="align: center;">
-    <img src="images/07pialara-index-mobile.png" width="300px" style="border: 1px solid grey">
-    <figcaption>PIA Lara - Index en móvil</figcaption>
-</figure></p>
-</div>
-</div>
-</div>
-<p>Una vez que un usuario ha entrado a la aplicación, por ejemplo, si es un administrador, dispondrá de las opciones que hemos comentado anteriormente:</p>
-<figure style="align: center;">
-    <img src="images/07pialara-admin.png" width="600px" style="border: 1px solid grey">
-    <figcaption>PIA Lara - Administrador</figcaption>
-</figure>
-
-<h3 id="blueprints">Blueprints<a class="headerlink" href="#blueprints" title="Permanent link">&para;</a></h3>
-<p>El archivo .ini que hemos configurado previamente define unos valores que la aplicación va a cargar desde el archivo <code>__init__.py</code>, el cual actúa como factoría de la aplicación y le indica a <em>Flask</em> los <em>blueprints</em> a utilizar:</p>
-<div class="highlight"><span class="filename">__init__.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">flask_login</span> <span class="kn">import</span> <span class="n">LoginManager</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">db</span>
-<span class="linenos" data-linenos=" 4 "></span>
-<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="kn">import</span> <span class="nn">configparser</span>
-<span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span><span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;.ini&quot;</span><span class="p">)))</span>
-<span class="linenos" data-linenos="10 "></span>
-<span class="linenos" data-linenos="11 "></span><span class="k">def</span> <span class="nf">create_app</span><span class="p">():</span>
-<span class="linenos" data-linenos="12 "></span>    <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-<span class="linenos" data-linenos="13 "></span>
-<span class="linenos" data-linenos="14 "></span>    <span class="c1"># cargamos la configuración</span>
-<span class="linenos" data-linenos="15 "></span>    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;PIALARA_DB_URI&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;LOCAL&#39;</span><span class="p">][</span><span class="s1">&#39;PIALARA_DB_URI&#39;</span><span class="p">]</span>
-<span class="linenos" data-linenos="16 "></span>    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;PIALARA_DB_NAME&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;LOCAL&#39;</span><span class="p">][</span><span class="s1">&#39;PIALARA_DB_NAME&#39;</span><span class="p">]</span>
-<span class="linenos" data-linenos="17 "></span>    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SECRET_KEY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;LOCAL&#39;</span><span class="p">][</span><span class="s1">&#39;SECRET_KEY&#39;</span><span class="p">]</span>
-<span class="linenos" data-linenos="18 "></span>
-<span class="linenos" data-linenos="19 "></span>    <span class="c1"># configuramos flask-login con la ruta del login</span>
-<span class="linenos" data-linenos="20 "></span>    <span class="n">login_manager</span> <span class="o">=</span> <span class="n">LoginManager</span><span class="p">()</span>
-<span class="linenos" data-linenos="21 "></span>    <span class="n">login_manager</span><span class="o">.</span><span class="n">login_view</span> <span class="o">=</span> <span class="s1">&#39;auth.login&#39;</span>
-<span class="linenos" data-linenos="22 "></span>    <span class="n">login_manager</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
-<span class="linenos" data-linenos="23 "></span>
-<span class="linenos" data-linenos="24 "></span>    <span class="c1"># función que utiliza flask-login para recuperar el usuario</span>
-<span class="linenos" data-linenos="25 "></span>    <span class="nd">@login_manager</span><span class="o">.</span><span class="n">user_loader</span>
-<span class="linenos" data-linenos="26 "></span>    <span class="k">def</span> <span class="nf">load_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
-<span class="linenos" data-linenos="27 "></span>        <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
-<span class="linenos" data-linenos="28 "></span>
-<span class="linenos" data-linenos="29 "></span>    <span class="c1"># blueprint para las rutas de autenticación</span>
-<span class="linenos" data-linenos="30 "></span>    <span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">auth</span> <span class="k">as</span> <span class="n">auth_blueprint</span>
-<span class="linenos" data-linenos="31 "></span>    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">auth_blueprint</span><span class="p">)</span>
-<span class="linenos" data-linenos="32 "></span>
-<span class="linenos" data-linenos="33 "></span>    <span class="c1"># blueprint para la aplicación</span>
-<span class="linenos" data-linenos="34 "></span>    <span class="kn">from</span> <span class="nn">.main</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">main_blueprint</span>
-<span class="linenos" data-linenos="35 "></span>    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">main_blueprint</span><span class="p">)</span>
-<span class="linenos" data-linenos="36 "></span>
-<span class="linenos" data-linenos="37 "></span>    <span class="k">return</span> <span class="n">app</span>
-</code></pre></div>
-<p>Un <a href="https://flask.palletsprojects.com/en/2.2.x/blueprints/"><strong><em>blueprint</em></strong></a> permite organizar un grupo de vistas y código en módulos. En vez de registrar las vistas y el resto de código en la aplicación, se registran en el blueprint, y éste es que se registra en la aplicación en la función <code>create_app</code>.</p>
-<p>En nuestro caso, vamos a empezar con dos <em>blueprints</em>, uno para las funciones de autenticación, y otra para las funciones de gestión de usuarios. El código de cada <em>blueprint</em> irá en un módulo separado. Como la gestión de usuarios necesita primero la autenticación, vamos a ver cómo funciona.</p>
-<h3 id="login">Login<a class="headerlink" href="#login" title="Permanent link">&para;</a></h3>
-<p>Para la gestión de la autenticación, nos hemos apoyado en la librería <a href="https://flask-login.readthedocs.io/en/latest/">Flask-login</a> que facilita la gestión la sesión del usuario.</p>
-<p>En archivo <code>auth.py</code> contiene la lógica del <em>login</em> y el <em>logout</em>:</p>
-<div class="highlight"><span class="filename">auth.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">flash</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">flask_login</span> <span class="kn">import</span> <span class="n">login_user</span><span class="p">,</span> <span class="n">login_required</span><span class="p">,</span> <span class="n">logout_user</span><span class="p">,</span> <span class="n">current_user</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">werkzeug.security</span> <span class="kn">import</span> <span class="n">check_password_hash</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">db</span>
-<span class="linenos" data-linenos=" 5 "></span>
-<span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="n">auth</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;auth&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
-</span><span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span><span class="nd">@auth</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
-<span class="linenos" data-linenos="10 "></span>    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;login.html&#39;</span><span class="p">)</span>
-<span class="linenos" data-linenos="11 "></span>
-<span class="linenos" data-linenos="12 "></span><span class="nd">@auth</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
-<span class="linenos" data-linenos="13 "></span><span class="k">def</span> <span class="nf">login_post</span><span class="p">():</span>
-<span class="linenos" data-linenos="14 "></span>    <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
-<span class="linenos" data-linenos="15 "></span>    <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
-<span class="linenos" data-linenos="16 "></span>    <span class="n">remember</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remember&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span>
-<span class="linenos" data-linenos="17 "></span>
-<span class="hll"><span class="linenos" data-linenos="18 "></span>    <span class="n">user</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
-</span><span class="linenos" data-linenos="19 "></span>    <span class="c1"># comprobamos si el usuario existe</span>
-<span class="linenos" data-linenos="20 "></span>    <span class="c1"># cogemos la contraseña, la hasheamos y la comparamos con la contraseña hasheada</span>
-<span class="linenos" data-linenos="21 "></span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">check_password_hash</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-<span class="linenos" data-linenos="22 "></span>        <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Por favor, comprueba tus datos y vuélvelo a intentar.&#39;</span><span class="p">)</span>
-<span class="linenos" data-linenos="23 "></span>        <span class="c1"># si el usuario no existe, o está mal la contraseña, recargamos la página</span>
-<span class="linenos" data-linenos="24 "></span>        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;auth.login&#39;</span><span class="p">))</span> 
-<span class="linenos" data-linenos="25 "></span>
-<span class="linenos" data-linenos="26 "></span>    <span class="c1"># marcamos al usuario como autenticado en flask_login </span>
-<span class="hll"><span class="linenos" data-linenos="27 "></span>    <span class="n">login_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">remember</span><span class="o">=</span><span class="n">remember</span><span class="p">)</span> 
-</span><span class="linenos" data-linenos="28 "></span>    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;main.profile&#39;</span><span class="p">,</span> <span class="n">nombre</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">nombre</span><span class="p">))</span>
-<span class="linenos" data-linenos="29 "></span>
-<span class="linenos" data-linenos="30 "></span><span class="nd">@auth</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/logout&#39;</span><span class="p">)</span>
-<span class="linenos" data-linenos="31 "></span><span class="nd">@login_required</span>
-<span class="linenos" data-linenos="32 "></span><span class="k">def</span> <span class="nf">logout</span><span class="p">():</span>
-<span class="linenos" data-linenos="33 "></span>    <span class="n">logout_user</span><span class="p">()</span>
-<span class="linenos" data-linenos="34 "></span>    <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Sesión cerrada con éxito&#39;</span><span class="p">)</span>
-<span class="linenos" data-linenos="35 "></span>    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;auth.login&#39;</span><span class="p">))</span>
-</code></pre></div>
-<p>Los usuarios van a entrar al sistema mediante su email y una contraseña. Así pues, una vez hayamos recuperado un usuario por dicho email, creamos el <em>hash</em> de la contraseña recibida, y vemos si comprueba con la recuperada de la base de datos.</p>
-<p>El método <code>login_user</code> de la línea 27 pertenece a la librería <em>Flask-Login</em> y se utiliza para indicar que el usuario ha sido autenticado, de manera que lo almacena en la sesión. La variable <code>user</code> es una clase propia que hemos definido nosotros con los atributos básicos de un usuario,el cual se encuentra en el archivo <code>models.py</code>:</p>
-<div class="highlight"><span class="filename">models.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">flask_login</span> <span class="kn">import</span> <span class="n">UserMixin</span>
-<span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">UserMixin</span><span class="p">):</span>
-<span class="hll"><span class="linenos" data-linenos=" 4 "></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">rol</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
-</span><span class="linenos" data-linenos=" 5 "></span>        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
-<span class="linenos" data-linenos=" 6 "></span>        <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
-<span class="linenos" data-linenos=" 7 "></span>        <span class="bp">self</span><span class="o">.</span><span class="n">nombre</span> <span class="o">=</span> <span class="n">nombre</span>
-<span class="linenos" data-linenos=" 8 "></span>        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
-<span class="linenos" data-linenos=" 9 "></span>        <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">=</span> <span class="n">rol</span>
-<span class="linenos" data-linenos="10 "></span>        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="linenos" data-linenos="11 "></span>
-<span class="linenos" data-linenos="12 "></span>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="linenos" data-linenos="13 "></span>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">)&quot;</span>
-</code></pre></div>
-<p>Como se puede observar, la clase define los atributos básicos de un usuario. El atributo <code>parent</code> lo vamos a emplear para que los clientes almacenen el email del técnico que tienen asignado.</p>
-<h3 id="plantillas">Plantillas<a class="headerlink" href="#plantillas" title="Permanent link">&para;</a></h3>
-<p>Las diferentes plantillas heredan de una plantilla <code>base.html</code>, la cual emplea el framework <a href="https://bulma.io/"><em>Bulma</em></a> para la apariencia de la web. Su funcionamiento es muy similar a Bootstrap.</p>
-<p>Por ejemplo, vamos a revisar un fragmento de la plantilla base para ver cómo gestionamos la visualización del menú dependiendo del rol del usuario:</p>
-<div class="highlight"><span class="filename">base.html</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>...
-<span class="linenos" data-linenos=" 2 "></span><span class="p">&lt;</span><span class="nt">section</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;hero is-white is-fullheight&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos=" 3 "></span>    <span class="p">&lt;</span><span class="nt">nav</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar is-transparent&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos=" 4 "></span>        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar-brand&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos=" 5 "></span>            <span class="p">&lt;</span><span class="nt">a</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar-item&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;https://piafplara.es&quot;</span><span class="p">&gt;</span>
-<span class="hll"><span class="linenos" data-linenos=" 6 "></span>            <span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;{{ url_for(&#39;static&#39;, filename=&#39;pialara.png&#39;) }}&quot;</span> <span class="na">alt</span><span class="o">=</span><span class="s">&quot;PIA Lara: un proyecto que habla por ti&quot;</span> <span class="na">width</span><span class="o">=</span><span class="s">&quot;112&quot;</span> <span class="na">height</span><span class="o">=</span><span class="s">&quot;28&quot;</span><span class="p">&gt;</span>
-</span><span class="linenos" data-linenos=" 7 "></span>            <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos=" 8 "></span>            <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar-burger burger&quot;</span> <span class="na">data-target</span><span class="o">=</span><span class="s">&quot;navbarPIALara&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos=" 9 "></span>            <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="10 "></span>            <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="11 "></span>            <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="12 "></span>            <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="13 "></span>        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="14 "></span>
-<span class="linenos" data-linenos="15 "></span>        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;navbarPIALara&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar-menu&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="16 "></span>            <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar-start&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="17 "></span>            <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;{{ url_for(&#39;main.index&#39;) }}&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar-item&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="18 "></span>                Inicio
-<span class="linenos" data-linenos="19 "></span>            <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-<span class="hll"><span class="linenos" data-linenos="20 "></span>            {% if not current_user.is_authenticated %}
-</span><span class="linenos" data-linenos="21 "></span>                <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;{{ url_for(&#39;auth.login&#39;) }}&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar-item&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="22 "></span>                    Login
-<span class="linenos" data-linenos="23 "></span>                <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="24 "></span>            {% endif %}
-<span class="linenos" data-linenos="25 "></span>            {% if current_user.is_authenticated %}
-<span class="linenos" data-linenos="26 "></span>                <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;{{ url_for(&#39;main.profile&#39;) }}&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar-item&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="27 "></span>                    Perfil
-<span class="linenos" data-linenos="28 "></span>                <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-<span class="hll"><span class="linenos" data-linenos="29 "></span>                {% if current_user.rol == &quot;Administrador&quot; %}
-</span><span class="linenos" data-linenos="30 "></span>                <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar-item has-dropdown is-hoverable&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="31 "></span>                <span class="p">&lt;</span><span class="nt">a</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar-link&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;#&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="32 "></span>                    Usuarios
-<span class="linenos" data-linenos="33 "></span>                <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="34 "></span>                <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar-dropdown is-hidden-mobile is-boxed&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="35 "></span>                    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar-item&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;{{ url_for(&#39;main.user_create&#39;) }}&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="36 "></span>                    Alta
-<span class="linenos" data-linenos="37 "></span>                    <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="38 "></span>                    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;navbar-item&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;{{ url_for(&#39;main.user_list&#39;) }}&quot;</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="39 "></span>                    Listado
-<span class="linenos" data-linenos="40 "></span>                    <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="41 "></span>                <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="42 "></span>                <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-<span class="linenos" data-linenos="43 "></span>                {% endif %}         
-<span class="linenos" data-linenos="44 "></span>...
-</code></pre></div>
-<p>En la línea 6 utilizamos la función <code>url_for</code> con el parámetro <code>static</code> para indicarle que cargue la imagen con el logo del proyecto desde la carpeta <code>static</code>.</p>
-<p>Al utilizar la librería <em>Flask Login</em>, tendremos siempre disponible el usuario logueado en la variable <code>current_user</code>. Además de las propiedades que hayamos definido en la clase, disponemos de la función <code>is_authenticated</code> para comprobar si está autenticado (línea 20). De igual forma, podemos comprobar el rol y condicionar el contenido dependiendo de si es <code>Administrador</code>, <code>Técnico</code> o <code>Cliente</code> (línea 24).</p>
-<h3 id="acceso-a-los-datos">Acceso a los datos<a class="headerlink" href="#acceso-a-los-datos" title="Permanent link">&para;</a></h3>
-<p>Todo el acceso a los datos los hemos encapsulado en el archivo <code>db.py</code>:</p>
-<div class="highlight"><span class="filename">db.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">bson.objectid</span> <span class="kn">import</span> <span class="n">ObjectId</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">ASCENDING</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">current_app</span><span class="p">,</span> <span class="n">g</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="kn">from</span> <span class="nn">werkzeug.local</span> <span class="kn">import</span> <span class="n">LocalProxy</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="kn">from</span> <span class="nn">project.models</span> <span class="kn">import</span> <span class="n">User</span>
-<span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span><span class="k">def</span> <span class="nf">get_db</span><span class="p">():</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="linenos" data-linenos="10 "></span><span class="sd">    Método de configuración para obtener una instancia de db</span>
-<span class="linenos" data-linenos="11 "></span><span class="sd">    &quot;&quot;&quot;</span>
-<span class="hll"><span class="linenos" data-linenos="12 "></span>    <span class="n">db</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s2">&quot;_database&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-</span><span class="linenos" data-linenos="13 "></span>
-<span class="linenos" data-linenos="14 "></span>    <span class="n">PIALARA_DB_URI</span> <span class="o">=</span> <span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;PIALARA_DB_URI&quot;</span><span class="p">]</span>
-<span class="linenos" data-linenos="15 "></span>    <span class="n">PIALARA_DB_DB_NAME</span> <span class="o">=</span> <span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;PIALARA_DB_NAME&quot;</span><span class="p">]</span>
-<span class="linenos" data-linenos="16 "></span>
-<span class="linenos" data-linenos="17 "></span>    <span class="k">if</span> <span class="n">db</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="hll"><span class="linenos" data-linenos="18 "></span>        <span class="n">db</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">_database</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span>
-</span><span class="linenos" data-linenos="19 "></span>            <span class="n">PIALARA_DB_URI</span><span class="p">,</span>
-<span class="linenos" data-linenos="20 "></span>            <span class="n">maxPoolSize</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-<span class="linenos" data-linenos="21 "></span>            <span class="n">timeoutMS</span><span class="o">=</span><span class="mi">2500</span>
-<span class="linenos" data-linenos="22 "></span>       <span class="p">)[</span><span class="n">PIALARA_DB_DB_NAME</span><span class="p">]</span>
-<span class="linenos" data-linenos="23 "></span>    <span class="k">return</span> <span class="n">db</span>
-<span class="linenos" data-linenos="24 "></span>
-<span class="linenos" data-linenos="25 "></span><span class="c1"># Utilizamos LocalProxy para leer la variable global usando sólo db</span>
-<span class="hll"><span class="linenos" data-linenos="26 "></span><span class="n">db</span> <span class="o">=</span> <span class="n">LocalProxy</span><span class="p">(</span><span class="n">get_db</span><span class="p">)</span>
+<p>En el método <code>index()</code> estamos haciendo una redirección a la plantilla <code>index.html</code> que habíamos definido previamente mediante el método <a href="https://flask.palletsprojects.com/es/stable/api/#flask.render_template"><code>render_template</code></a>. Además, hemos creado dos nuevas rutas para cada uno de los enlaces.</p>
+<p>A continuación, vamos a cambiar la salida de los métodos <code>hola()</code> y <code>adios()</code>, para que redirijan la petición a una nueva plantilla, que será la encargada de mostrar el mensaje. El código de la plantilla destino, la cual se basa en <a href="https://palletsprojects.com/projects/jinja/">Jinja</a>, será similar a:</p>
+<div class="highlight"><span class="filename">resultado.html</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Resultado<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span>Nuestra aplicación con Flask nos dice:
+<span class="linenos" data-linenos="4 "></span>
+<span class="hll"><span class="linenos" data-linenos="5 "></span><span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>{{ mensaje }}<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
 </span></code></pre></div>
-<p>La función <code>get_db</code> utiliza el objeto <a href="https://flask.palletsprojects.com/en/2.2.x/api/#flask.g"><code>g</code></a>, el cual en Flask, es un objeto especial que es único para cada petición. Se utiliza para almacenar datos que serán accesibles desde múltiples funciones durante el <code>request</code>. Así pues, almacenamos la conexión, mejor dicho, el pool de conexiones a MongoDB en vez de crear un nuevo pool cada vez que queramos obtener acceso a la base de datos.</p>
-<p>A continuación, creamos un <a href="https://werkzeug.palletsprojects.com/en/2.2.x/local/#werkzeug.local.LocalProxy"><code>LocalProxy</code></a> para leer la variable global usando sólo la referencia <code>db</code>, de manera que internamente cada referencia a <code>db</code> realmente está llamando a <code>get_db()</code>.</p>
-<p>A continuación, mostramos un par de métodos del mismo archivo que muestran cómo obtenemos datos desde <em>MongoDB</em> haciendo uso de <em>PyMongo</em>:</p>
-<div class="highlight"><span class="filename">db.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">def</span> <span class="nf">get_all_users</span><span class="p">():</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="sd">    Devuelve una lista con todos los usuarios del sistema</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="sd">    &quot;&quot;&quot;</span>
-<span class="linenos" data-linenos=" 5 "></span>    <span class="k">try</span><span class="p">:</span>
-<span class="hll"><span class="linenos" data-linenos=" 6 "></span>        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">find</span><span class="p">({})</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;nombre&quot;</span><span class="p">,</span> <span class="n">ASCENDING</span><span class="p">))</span>
-</span><span class="linenos" data-linenos=" 7 "></span>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 8 "></span>        <span class="k">return</span> <span class="n">e</span>
+<p>Si nos fijamos en la línea 5, mediante <code>{{</code> y <code>}}</code> le indica que muestre el valor de una variable que recibirá que se llamará <code>mensaje</code>.</p>
+<p>Tras esto, modificamos de nuevo el enrutador, de manera que ahora cada método redirecciona a la vista <code>resultado.html</code>, adjuntado una frase como variable en la respuesta (la cual hemos llamado <code>mensaje</code> para que cuadre con la plantilla):</p>
+<div class="highlight"><span class="filename">app.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">render_template</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;index.html&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 9 "></span>
-<span class="linenos" data-linenos="10 "></span><span class="k">def</span> <span class="nf">get_user_by_id</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
-<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="linenos" data-linenos="12 "></span><span class="sd">    Devuelve un objeto User a partir de su id</span>
-<span class="linenos" data-linenos="13 "></span><span class="sd">    &quot;&quot;&quot;</span>
-<span class="linenos" data-linenos="14 "></span>    <span class="k">try</span><span class="p">:</span>
-<span class="hll"><span class="linenos" data-linenos="15 "></span>        <span class="n">usuario</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">&quot;_id&quot;</span><span class="p">:</span><span class="n">ObjectId</span><span class="p">(</span><span class="nb">id</span><span class="p">)})</span>
-</span><span class="linenos" data-linenos="16 "></span>
-<span class="hll"><span class="linenos" data-linenos="17 "></span>        <span class="n">usuario_obj</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span> <span class="nb">id</span><span class="o">=</span><span class="n">usuario</span><span class="p">[</span><span class="s2">&quot;_id&quot;</span><span class="p">],</span>
-</span><span class="linenos" data-linenos="18 "></span>                            <span class="n">email</span><span class="o">=</span><span class="n">usuario</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;email&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="19 "></span>                            <span class="n">nombre</span><span class="o">=</span><span class="n">usuario</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nombre&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="20 "></span>                            <span class="n">password</span><span class="o">=</span><span class="n">usuario</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="21 "></span>                            <span class="n">rol</span><span class="o">=</span><span class="n">usuario</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rol&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos="22 "></span>                            <span class="n">parent</span><span class="o">=</span><span class="n">usuario</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parent&quot;</span><span class="p">))</span>
-<span class="linenos" data-linenos="23 "></span>
-<span class="linenos" data-linenos="24 "></span>        <span class="k">return</span> <span class="n">usuario_obj</span>
-<span class="linenos" data-linenos="25 "></span>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="linenos" data-linenos="26 "></span>        <span class="k">return</span> <span class="n">e</span>
-<span class="linenos" data-linenos="27 "></span><span class="o">...</span>
+<span class="linenos" data-linenos="10 "></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/hola&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="11 "></span><span class="k">def</span> <span class="nf">hola</span><span class="p">():</span>
+<span class="hll"><span class="linenos" data-linenos="12 "></span>    <span class="n">frase</span> <span class="o">=</span> <span class="s2">&quot;¡Hola IABD desde Flask!&quot;</span>
+</span><span class="hll"><span class="linenos" data-linenos="13 "></span>    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;resultado.html&quot;</span><span class="p">,</span> <span class="n">mensaje</span><span class="o">=</span><span class="n">frase</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="14 "></span>
+<span class="linenos" data-linenos="15 "></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/adios&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="16 "></span><span class="k">def</span> <span class="nf">adios</span><span class="p">():</span>
+<span class="hll"><span class="linenos" data-linenos="17 "></span>    <span class="n">frase</span> <span class="o">=</span> <span class="s2">&quot;¡Adios IABD desde Flask!&quot;</span>
+</span><span class="hll"><span class="linenos" data-linenos="18 "></span>    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;resultado.html&quot;</span><span class="p">,</span> <span class="n">mensaje</span><span class="o">=</span><span class="n">frase</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="flask-pymongo">Flask + PyMongo<a class="headerlink" href="#flask-pymongo" title="Permanent link">&para;</a></h3>
+<p>Todo el acceso a los datos los vamos a encarpsular en el archivo <code>db.py</code>, de manera que definimos un objeto global con los datos de la conexión:</p>
+<div class="highlight"><span class="filename">db.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">g</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="k">def</span> <span class="nf">get_db</span><span class="p">():</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span>    <span class="n">db</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s2">&quot;_database&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="n">MONGODB_URI</span> <span class="o">=</span> <span class="s2">&quot;mongodb://prelara:pr3l4r4m3c@27.0.172.67/&quot;</span>
+<span class="linenos" data-linenos=" 9 "></span>    <span class="n">MONGODB_DB_NAME</span> <span class="o">=</span> <span class="s2">&quot;prelara&quot;</span>
+<span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span>    <span class="k">if</span> <span class="n">db</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos" data-linenos="12 "></span>        <span class="n">db</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">_database</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span>
+<span class="linenos" data-linenos="13 "></span>            <span class="n">MONGODB_URI</span><span class="p">,</span>
+<span class="linenos" data-linenos="14 "></span>            <span class="n">maxPoolSize</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span>            <span class="n">timeoutMS</span><span class="o">=</span><span class="mi">2500</span>
+<span class="linenos" data-linenos="16 "></span>       <span class="p">)[</span><span class="n">MONGODB_DB_NAME</span><span class="p">]</span>
+<span class="linenos" data-linenos="17 "></span>
+<span class="linenos" data-linenos="18 "></span>    <span class="k">return</span> <span class="n">db</span>
 </code></pre></div>
-<p>Cuando recuperamos un usuario por su <code>id</code>, lo convertimos en un objeto <code>User</code> para que <em>Flask Login</em> falicita la gestión de la autenticación. En cambio, en el listado de todos los usuarios, vamos a acceder al cursor de usuarios que ofrece <em>MongoDB</em>.</p>
+<p>La función <code>get_db</code> utiliza el objeto <code>g</code>, el cual en <em>Flask</em>, es un objeto especial que es único para cada petición. Se utiliza para almacenar datos que serán accesibles desde múltiples funciones durante el <em>request</em>. Así pues, almacenamos la conexión, mejor dicho, el pool de conexiones a <em>MongoDB</em> en vez de crear un nuevo pool cada vez que queramos obtener acceso a la base de datos.</p>
+<p>A continuación, en <code>app.py</code> añadimos una nueva ruta donde hacemos nuestra consulta con <em>PyMongo</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">db</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/listar&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span><span class="k">def</span> <span class="nf">listado</span><span class="p">():</span>
+<span class="linenos" data-linenos="5 "></span>    <span class="n">midb</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_db</span><span class="p">()</span>
+<span class="linenos" data-linenos="6 "></span>    <span class="n">coleccion</span> <span class="o">=</span> <span class="n">midb</span><span class="o">.</span><span class="n">usuarios</span>
+<span class="linenos" data-linenos="7 "></span>    <span class="n">usuarios</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">coleccion</span><span class="o">.</span><span class="n">find</span><span class="p">({})</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;nombre&quot;</span><span class="p">,</span> <span class="n">ASCENDING</span><span class="p">))</span>
+<span class="linenos" data-linenos="8 "></span>
+<span class="linenos" data-linenos="9 "></span>    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;listado.html&quot;</span><span class="p">,</span> <span class="n">lista</span><span class="o">=</span><span class="n">usuarios</span><span class="p">)</span>
+</code></pre></div>
+<p>Y finalmente, creamos una nueva plantilla para mostrar los datos:</p>
+<div class="highlight"><span class="filename">listado.html</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Resultado<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span>Listado de usuarios:
+<span class="linenos" data-linenos=" 4 "></span>
+<span class="linenos" data-linenos=" 5 "></span><span class="p">&lt;</span><span class="nt">ul</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos=" 6 "></span>{% for usuario in lista %}
+<span class="linenos" data-linenos=" 7 "></span>    <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos=" 8 "></span>        Nombre: {{ usuario[&quot;nombre&quot;] }} // Sexo {{ usuario.sexo }}
+<span class="linenos" data-linenos=" 9 "></span>    <span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos="10 "></span>{% endfor %}
+<span class="linenos" data-linenos="11 "></span><span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
+</code></pre></div>
+<p>En resumen, la estructura del proyecto con todos los archivos y plantillas será similar a:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>├───app.py
+<span class="linenos" data-linenos="2 "></span>├───db.py
+<span class="linenos" data-linenos="3 "></span>├───templates
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span>└───index.html
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span>└───listado.html
+<span class="linenos" data-linenos="6 "></span><span class="w">    </span>└───resultado.html
+</code></pre></div>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://pymongo.readthedocs.io/en/stable/tutorial.html">Tutorial oficial de PyMongo</a></li>
 <li><a href="https://www.mongodb.com/developer/languages/python/python-acid-transactions/">Introduction to Multi-Document ACID Transactions in Python</a></li>
 <li><a href="https://www.digitalocean.com/community/tutorials/how-to-use-transactions-in-mongodb">How To Use Transactions in MongoDB</a></li>
+<li><a href="https://flask.palletsprojects.com/es/stable/quickstart">Flask Quickstart</a></li>
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 4p) A partir del caso de uso de PIA Login, se pide:</p>
-<ul>
-<li>(0.25) Configurar la URI de Mongo Atlas para atacar vuestra propia base de datos.</li>
-<li>(0.25) Modificar la migración para introducir más usuarios (al menos uno más de cada rol)</li>
-<li>(0.75) Cuando un usuario pulsa sobre su nombre, actualmente aparece un formulario para editar sus datos, pero no puede cambiar la contraseña. Modifica (o crea) el/los formulario/s adecuado/s para que cada usuario pueda cambiar su propia contraseña.</li>
-<li>(0.75) Desde el rol <code>Administrador</code>, al crear un usuario, si es un cliente, debe mostrar un desplegable con todos los técnicos disponibles.</li>
-<li>(1) Tanto el <code>Técnico</code> como el <code>Cliente</code>, al dar de alta o editar un cliente, almacenarán datos necesarios para el proyecto, como son el sexo, la fecha de nacimiento y la patología.</li>
-<li>(1) Cuando un <code>Técnico</code> visualiza el listado de sus clientes, debe recuperar únicamente el nombre, el sexo, la edad y su patología.</li>
-</ul>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 2p) Haciendo uso de <em>PyMongo</em>, y utilizando la base de datos compartida en <em>Aules</em> se pide:</p>
+<ol>
+<li>Recupera la cantidad de audios que hay grabados de cada categoría (<code>tag</code>).</li>
+<li>Recupera la cantidad de audios que hay grabados de cada categoría (<code>tag</code>) para un usuario en concreto.</li>
+<li>
+<p>Muestra los usuarios técnicos (<code>_id</code>, <code>mail</code> y <code>nombre</code>) que no tienen ningún cliente asignado.</p>
+<p>Para ello, crea una consulta que recupere todos los usuarios técnicos (por ejemplo, sólo su <code>email</code>) y aparte, crea otra consulta que recupere los técnicos que aparecen como <code>parent</code> en los clientes.</p>
+<p>A continuación, mediante <em>Python</em> y una resta de conjuntos, puedes obtener el resultado:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nb">list</span><span class="p">(</span> <span class="nb">set</span><span class="p">(</span><span class="n">todosTecnicos</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">tecnicosConClientes</span><span class="p">)</span> <span class="p">)</span>
+</code></pre></div>
+</li>
+</ol>
+</li>
+<li>
+<p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr> / 2p) Mediante una aplicación hecha en <em>Flask</em>, se pide:</p>
+<ol>
+<li>Crea una página que tras seleccionar un cliente, muestre quién es su técnico actual y permita modificarlo por otro. </li>
+<li>Crea una página que permita modificar la contraseña de un usuario. Tras importar <code>from werkzeug.security import generate_password_hash</code>, debes utilizar <code>generate_password_hash(contrasenya, method='sha256')</code> para encriptar la contraseña antes de introducirla en <em>MongoDB</em>.</li>
+<li>Aprovechando el listado de la actividad <code>1.a</code>, para cada técnico sin clientes, define un enlace que permita eliminarlo.</li>
+</ol>
 </li>
 </ol>
 
@@ -5316,10 +5073,10 @@
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.56dfad97.min.js"></script>
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>
