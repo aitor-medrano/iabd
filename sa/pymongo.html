@@ -4767,15 +4767,16 @@
 </code></pre></div>
 <p>La función <code>get_db</code> utiliza el objeto <code>g</code>, el cual en <em>Flask</em>, es un objeto especial que es único para cada petición. Se utiliza para almacenar datos que serán accesibles desde múltiples funciones durante el <em>request</em>. Así pues, almacenamos la conexión, mejor dicho, el pool de conexiones a <em>MongoDB</em> en vez de crear un nuevo pool cada vez que queramos obtener acceso a la base de datos.</p>
 <p>A continuación, en <code>app.py</code> añadimos una nueva ruta donde hacemos nuestra consulta con <em>PyMongo</em>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">db</span>
-<span class="linenos" data-linenos="2 "></span>
-<span class="linenos" data-linenos="3 "></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/listar&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="4 "></span><span class="k">def</span> <span class="nf">listado</span><span class="p">():</span>
-<span class="linenos" data-linenos="5 "></span>    <span class="n">midb</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_db</span><span class="p">()</span>
-<span class="linenos" data-linenos="6 "></span>    <span class="n">coleccion</span> <span class="o">=</span> <span class="n">midb</span><span class="o">.</span><span class="n">usuarios</span>
-<span class="linenos" data-linenos="7 "></span>    <span class="n">usuarios</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">coleccion</span><span class="o">.</span><span class="n">find</span><span class="p">({})</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;nombre&quot;</span><span class="p">,</span> <span class="n">ASCENDING</span><span class="p">))</span>
-<span class="linenos" data-linenos="8 "></span>
-<span class="linenos" data-linenos="9 "></span>    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;listado.html&quot;</span><span class="p">,</span> <span class="n">lista</span><span class="o">=</span><span class="n">usuarios</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">db</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">ASCENDING</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/listar&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="k">def</span> <span class="nf">listado</span><span class="p">():</span>
+<span class="linenos" data-linenos=" 6 "></span>    <span class="n">midb</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_db</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 7 "></span>    <span class="n">coleccion</span> <span class="o">=</span> <span class="n">midb</span><span class="o">.</span><span class="n">usuarios</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="n">usuarios</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">coleccion</span><span class="o">.</span><span class="n">find</span><span class="p">({})</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;nombre&quot;</span><span class="p">,</span> <span class="n">ASCENDING</span><span class="p">))</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span>    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;listado.html&quot;</span><span class="p">,</span> <span class="n">lista</span><span class="o">=</span><span class="n">usuarios</span><span class="p">)</span>
 </code></pre></div>
 <p>Y finalmente, creamos una nueva plantilla para mostrar los datos:</p>
 <div class="highlight"><span class="filename">listado.html</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Resultado<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
@@ -4789,6 +4790,15 @@
 <span class="linenos" data-linenos=" 9 "></span>    <span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
 <span class="linenos" data-linenos="10 "></span>{% endfor %}
 <span class="linenos" data-linenos="11 "></span><span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
+</code></pre></div>
+<p>Y sólo nos queda editar la plantilla de inicio para poner un enlace que nos permite acceder al listado:</p>
+<div class="highlight"><span class="filename">index.html</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hola IABD<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="p">&lt;</span><span class="nt">ul</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/hola&quot;</span><span class="p">&gt;</span>Saludar<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos="5 "></span>    <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/adios&quot;</span><span class="p">&gt;</span>Despedir<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos="6 "></span>    <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/listar&quot;</span><span class="p">&gt;</span>Listas usuarios<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+<span class="linenos" data-linenos="7 "></span><span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
 </code></pre></div>
 <p>En resumen, la estructura del proyecto con todos los archivos y plantillas será similar a:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>├───app.py
