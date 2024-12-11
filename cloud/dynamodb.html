@@ -621,6 +621,14 @@
     Cloud
   </span>
   
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
 
       </a>
     </li>
@@ -3961,7 +3969,7 @@
 </ul>
 <p>Por ejemplo, una tabla donde especificamos un rendimiento garantizado de 1000 millones lecturas y 1 millón de escrituras al mes, con una coherencia eventual (es decir, que permite desorden de peticiones) nos costará $67,17 al mes.</p>
 <h2 id="hola-dynamodb">Hola DynamoDB<a class="headerlink" href="#hola-dynamodb" title="Permanent link">&para;</a></h2>
-<p>A continuación vamos a crear un ejemplo donde tras crear una tabla, la cargaremos con datos para posteriormente realizar alguna consulta.</p>
+<p>A continuación, vamos a crear un ejemplo donde tras crear una tabla, la cargaremos con datos para posteriormente realizar alguna consulta.</p>
 <p>Supongamos que tenemos datos relativos a un catálogo de productos, almacenados en el archivo <a href="resources/ProductCatalog.json">ProductCatalog.json</a>, el cual queremos poder consultar.</p>
 <p>Si visualizamos el primer registro podemos observar su estructura, la cual es específica de <em>DynamoDB</em>, ya que indica en el primer elemento el nombre de la tabla (en nuestro caso <code>ProductCatalog</code>), y a continuación el tipo de operación (<code>PutRequest</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
@@ -4030,7 +4038,7 @@
 </ol>
 <div class="admonition tip">
 <p class="admonition-title">Nombre de las tablas</p>
-<p>En <em>DynamoDB</em> no hay concepto de base de datos, por lo tanto, todas las tablas conviven en el mismo espacio de nombres. Un buena práctica de uso es anteponer un prefijo a todas las tablas relacionadas por aplicación, por ejemplo, <code>s8a-ProductCatalog</code>.</p>
+<p>En <em>DynamoDB</em> no hay concepto de base de datos, por lo tanto, todas las tablas conviven en el mismo espacio de nombres. Una buena práctica de uso es anteponer un prefijo a todas las tablas relacionadas por aplicación, por ejemplo, <code>s8a-ProductCatalog</code>.</p>
 </div>
 <p>Si queremos comprobar qué tablas tenemos creadas podemos utilizar el comando <a href="https://awscli.amazonaws.com/v2/documentation/api/latest/reference/dynamodb/list-tables.html">list-tables</a> de AWS CLI:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>dynamodb<span class="w"> </span>list-tables
@@ -4215,7 +4223,7 @@
 <span class="linenos" data-linenos="7 "></span><span class="p">)</span>
 </code></pre></div>
 <h3 id="modificando-datos">Modificando datos<a class="headerlink" href="#modificando-datos" title="Permanent link">&para;</a></h3>
-<p>Ya hemos comentado, que si la clave coincide, la operación <code>put_item</code> sobrescribirá los datos. Pero, ¿y si unicamente queremos cambiar algunos campos?</p>
+<p>Ya hemos comentado que, si la clave coincide, la operación <code>put_item</code> sobrescribirá los datos. Pero ¿y si unicamente queremos cambiar algunos campos?</p>
 <p>Para ello, necesitamos modificar los datos haciendo uso de la operación <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/update_item.html"><code>update_item</code></a>:</p>
 <div class="admonition inline end caution">
 <p class="admonition-title">Float y boto3</p>
@@ -4236,7 +4244,7 @@
 <p>Mediante <code>UpdateExpression</code> podemos indicar una expresión: </p>
 <ul>
 <li><code>SET</code> para añadir un atributo, por ejemplo <code>SET attr1 = :attr1val</code>, <code>SET attr1 = attr2 + :attr2val</code>, <code>SET attr1 = :attr1val, attr2 = :attr2val</code></li>
-<li><code>REMOVE</code> para eliminarlo, por ejemplo <code>REMOVE attr1</code>, <code>REMOVE attr1, attr2</code>.</li>
+<li><code>REMOVE</code> para eliminarlo, por ejemplo, <code>REMOVE attr1</code>, <code>REMOVE attr1, attr2</code>.</li>
 <li>todas las variables deben empezar por <code>:</code></li>
 </ul>
 </li>
@@ -4422,7 +4430,7 @@
 <span class="linenos" data-linenos="22 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----Películas de 2016 cuyo título empieza desde A hasta L&quot;</span><span class="p">)</span>
 <span class="hll"><span class="linenos" data-linenos="23 "></span><span class="n">resp</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
 </span><span class="hll"><span class="linenos" data-linenos="24 "></span>    <span class="n">ProjectionExpression</span><span class="o">=</span><span class="s2">&quot;#yr, title, info.genres, info.actors[0]&quot;</span><span class="p">,</span>
-</span><span class="hll"><span class="linenos" data-linenos="25 "></span>    <span class="c1"># year es una palabra clave, por tanto necesitamos crear un alias</span>
+</span><span class="hll"><span class="linenos" data-linenos="25 "></span>    <span class="c1"># year es una palabra clave, por tanto, necesitamos crear un alias</span>
 </span><span class="hll"><span class="linenos" data-linenos="26 "></span>    <span class="n">ExpressionAttributeNames</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;#yr&quot;</span><span class="p">:</span> <span class="s2">&quot;year&quot;</span><span class="p">},</span>
 </span><span class="hll"><span class="linenos" data-linenos="27 "></span>    <span class="n">KeyConditionExpression</span><span class="o">=</span><span class="n">Key</span><span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">anyo</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Key</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="n">letraInicial</span><span class="p">,</span> <span class="n">letraFinal</span><span class="p">)</span> <span class="p">)</span>
 </span><span class="linenos" data-linenos="28 "></span>
@@ -4451,7 +4459,7 @@
 </div>
 <p>La clase <code>DecimalEncoder</code> se utiliza para transformar los campos <code>Decimal</code> que utiliza <em>DynamoDB</em> para almacenar contenido numérico a tipo entero o flotante según necesite.</p>
 <h3 id="full-scan">Full scan<a class="headerlink" href="#full-scan" title="Permanent link">&para;</a></h3>
-<p>Cuando en <em>PartiQL</em> no le indicamos en la condición una expresión que busque por una de las claves, se realizará un <em>full scan</em> sobre toda la tabla, lo que puede implicar unos costes inesperados, tanto económicos como a nivel rendimiento. Es por ello, que en la medida de la posible, siempre debemos intentar recuperar los documentos por la clave (o una parte de ella).</p>
+<p>Cuando en <em>PartiQL</em> no le indicamos en la condición una expresión que busque por una de las claves, se realizará un <em>full scan</em> sobre toda la tabla, lo que puede implicar unos costes inesperados, tanto económicos como a nivel rendimiento. Es por ello que, en la medida de la posible, siempre debemos intentar recuperar los documentos por la clave (o una parte de ella).</p>
 <p>El método <code>scan</code> lee cada elemento de la tabla y devuelve todos los datos de la tabla. Se le puede pasar una <code>FilterExpression</code> opcional para que sólo devuelva los elementos que cumplan el criterio. Sin embargo, el filtrado se aplica tras escanear toda la tabla.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Ejemplo scan</label><label for="__tabbed_5_2">Full scan con PartiQL</label></div>
 <div class="tabbed-content">
@@ -4528,7 +4536,7 @@
 </code></pre></div>
 <h2 id="caso-de-uso-3-de-s3-a-dynamodb">Caso de uso 3 - De S3 a DynamoDB<a class="headerlink" href="#caso-de-uso-3-de-s3-a-dynamodb" title="Permanent link">&para;</a></h2>
 <p>En la sesión de S3 trabajamos con Python con un dataset de películas, el cual filtramos mediante <a href="s3.html#s3-select">S3Select</a> y nos quedamos con el título, la nota media y la trama siempre y cuando hayan recibido al menos 10.000 votos, el cual almacenamos en <a href="resources/TMDb_filtered.csv"><code>TMDb_filtered.csv</code></a>.</p>
-<p>Una vez creado el fichero en S3, vamos cargar los datos en DynamoDB haciendo uso de una operación <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/table/batch_writer.html"><code>batch_writer</code></a> que acelera las inserciones al realizarlas por lotes. Como el dataset no contenía la fecha de la película, en nuestro caso le vamos a poner a todas las películas que son del 2023:</p>
+<p>Una vez creado el fichero en S3, vamos a cargar los datos en <em>DynamoDB</em> haciendo uso de una operación <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/table/batch_writer.html"><code>batch_writer</code></a> que acelera las inserciones al realizarlas por lotes. Como el dataset no contenía la fecha de la película, en nuestro caso le vamos a poner a todas las películas que son del 2023:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">boto3</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span>
@@ -4564,7 +4572,7 @@
 </div>
 <p>Vamos a utilizar la instancia de base de datos <code>instituto</code> que tenemos en RDS con la base de datos <code>retail_db</code>.</p>
 <h3 id="mariadbmysql-y-python">MariaDB/MySQL y Python<a class="headerlink" href="#mariadbmysql-y-python" title="Permanent link">&para;</a></h3>
-<p>Para acceder a la base de datos desde Python necesitamos instalar la librería correspondiente:</p>
+<p>Para acceder a la base de datos desde <em>Python</em> necesitamos instalar la librería correspondiente:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip3<span class="w"> </span>install<span class="w"> </span>mariadb
 <span class="linenos" data-linenos="2 "></span>pip3<span class="w"> </span>install<span class="w"> </span>mysql-connector-python
 </code></pre></div>
@@ -4718,7 +4726,7 @@ TODO: Crear función Lambda que monitorize S3 e inserte en DynamoDB
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha determinado la importancia de los sistemas de almacenamiento para depositar y procesar grandes cantidades de cualquier tipo de datos rápidamente.">CEBDA.2a</abbr> / 1p) Siguiendo el ejemplo de <em>Hola DynamoDB</em>, crea la tabla (<code>ProductCatalog</code>), cárgala con los datos del ejemplo y realiza un consulta para obtener las bicicletas híbridas.</p>
+<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha determinado la importancia de los sistemas de almacenamiento para depositar y procesar grandes cantidades de cualquier tipo de datos rápidamente.">CEBDA.2a</abbr> / 1p) Siguiendo el ejemplo de <em>Hola DynamoDB</em>, crea la tabla (<code>ProductCatalog</code>), cárgala con los datos del ejemplo y realiza una consulta para obtener las bicicletas híbridas.</p>
 <p>Adjunta capturas de la tabla donde se vean los datos y de los comandos AWS CLI o pantallas empleadas para realizar las operaciones. </p>
 </li>
 <li>
@@ -4874,7 +4882,7 @@ DynamoDB comes with two capacity modes: on demand and provisioned. The on-demand
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      2023-2024 Aitor Medrano - <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">Licencia CC BY-NC-SA</a>
+      2023-2025 Aitor Medrano - <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">Licencia CC BY-NC-SA</a>
     </div>
   
   
