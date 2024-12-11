@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.35f28582.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -810,6 +810,15 @@
   <a href="#hola-rds" class="md-nav__link">
     <span class="md-ellipsis">
       Hola RDS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS CLI
     </span>
   </a>
   
@@ -3519,6 +3528,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#aws-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS CLI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#uso-de-instantaneas" class="md-nav__link">
     <span class="md-ellipsis">
       Uso de instantáneas
@@ -3600,7 +3618,7 @@
   <h1>RDS</h1>
 
 <p>Ya hemos visto que el almacenamiento en la nube ofrece un gran número de ventajas. Otro de los productos estrella de la computación en la nube es el uso de bases de datos, ya sean distribuidas o no.</p>
-<p>La principal ventaja de utilizar un servicio de base de datos basado en la nube es que no requieren de la administración por parte del usuario. Éste sólo utiliza el servicio sin necesidad de tener conocimientos avanzados sobre su administración. Estos servicios se conocen como <strong>administrados</strong>, ya que la propia plataforma cloud se encarga de gestionar el escalado, las copias de seguridad automáticas, la tolerancia a errores y la alta disponibilidad, y por tanto, estos servicios forman parte de una solución PaaS.</p>
+<p>La principal ventaja de utilizar un servicio de base de datos basado en la nube es que no requieren de la administración por parte del usuario. Éste sólo utiliza el servicio sin necesidad de tener conocimientos avanzados sobre su administración. Estos servicios se conocen como <strong>administrados</strong>, ya que la propia plataforma <em>cloud</em> se encarga de gestionar el escalado, las copias de seguridad automáticas, la tolerancia a errores y la alta disponibilidad, y por tanto, estos servicios forman parte de una solución PaaS.</p>
 <p>Si nosotros creásemos una instancia EC2 e instalásemos cualquier sistema gestor de base de datos, como <em>MariaDB</em> o <em>PostgreSQL</em>, seríamos responsables de varias tareas administrativas, como el mantenimiento del servidor y la huella energética, el software, la instalación, la implementación de parches y las copias de seguridad de la base de datos, así como de garantizar su alta disponibilidad, de planificar la escalabilidad y la seguridad de los datos, y de instalar el sistema operativo e instalarle los respectivos parches.</p>
 <h2 id="datos-relacionales-amazon-rds">Datos relacionales - <em>Amazon RDS</em><a class="headerlink" href="#datos-relacionales-amazon-rds" title="Permanent link">&para;</a></h2>
 <p>AWS ofrece <em>Amazon RDS</em> (<a href="https://aws.amazon.com/es/rds/">https://aws.amazon.com/es/rds/</a>) como servicio administrado que configura y opera una base de datos relacional en la nube, de manera que como desarrolladores sólo hemos de enfocar nuestros esfuerzos en los datos y optimizar nuestras aplicaciones.</p>
@@ -3637,7 +3655,7 @@
 
 <p>Por lo tanto, si la instancia de base de datos principal falla en una implementación Multi-AZ, <em>RDS</em> activa automáticamente la instancia de base de datos en espera como la nueva instancia principal.</p>
 <h4 id="replica-de-lectura">Réplica de lectura<a class="headerlink" href="#replica-de-lectura" title="Permanent link">&para;</a></h4>
-<p>RDS también admite la creación de <a href="https://aws.amazon.com/es/rds/features/read-replicas/">réplicas de lectura</a> para MySQL, MariaDB, PostgreSQLy Amazon Aurora. </p>
+<p>RDS también admite la creación de <a href="https://aws.amazon.com/es/rds/features/read-replicas/">réplicas de lectura</a> para <em>MySQL</em>, <em>MariaDB</em>, <em>PostgreSQL</em> y <em>Amazon Aurora</em>. </p>
 <figure style="float: right;">
     <img src="images/06rdsReplicaLectura.png">
     <figcaption>Réplica de lectura</figcaption>
@@ -3647,19 +3665,19 @@
 <p>Las réplicas de lectura también pueden convertirse en la instancia de base de datos principal, pero, debido a la replicación asíncrona, este proceso debe hacerse de forma manual.</p>
 <p>Las réplicas de lectura pueden crearse en una región diferente a la utilizada por la base de datos principal, lo que puede mejorar la recuperación de desastres y/o disminuir la latencia al dirigir las lecturas a una réplica de lectura lo más cercana al usuario.</p>
 <h3 id="casos-de-uso">Casos de uso<a class="headerlink" href="#casos-de-uso" title="Permanent link">&para;</a></h3>
-<p>AmazonRDS es ideal para las aplicaciones web y móviles que necesitan una base de datos con alto rendimiento, enorme escalabilidad en el almacenamiento y alta disponibilidad.</p>
+<p><em>RDS</em> es ideal para las aplicaciones web y móviles que necesitan una base de datos con alto rendimiento, enorme escalabilidad en el almacenamiento y alta disponibilidad.</p>
 <p>Se recomienda <em>RDS</em> cuando nuestra aplicación necesite:</p>
 <ul>
-<li>Transacciones o consultas complejas</li>
-<li>Tasa de consulta o escritura media a alta: hasta 30.000 IOPS (15.000 lecturas + 15.000 escrituras)</li>
-<li>No más de una única partición o nodo de trabajo</li>
-<li>Alta durabilidad</li>
+<li>Transacciones o consultas complejas.</li>
+<li>Tasa de consulta o escritura media a alta: hasta 30.000 IOPS (15.000 lecturas + 15.000 escrituras).</li>
+<li>No más de una única partición o nodo de trabajo.</li>
+<li>Alta durabilidad.</li>
 </ul>
 <p>En cambio, no se recomienda cuando:</p>
 <ul>
-<li>Tasas de lectura o escritura muy grandes (por ejemplo, 150.000 escrituras por segundo)</li>
-<li>Fragmentación causada por el gran tamaño de los datos o las altas demandas de rendimiento</li>
-<li>Solicitudes y consultas GET o PUT simples que una base de datos NoSQL puede manejar</li>
+<li>Tasas de lectura o escritura muy grandes (por ejemplo, 150.000 escrituras por segundo).</li>
+<li>Fragmentación causada por el gran tamaño de los datos o las altas demandas de rendimiento.</li>
+<li>Solicitudes y consultas GET o PUT simples que una base de datos NoSQL puede manejar.</li>
 <li>Personalización del sistema de administración de bases de datos relacionales (en este caso, es mejor instalar por nuestra cuenta el SGBD que necesitemos en una instancia EC2).</li>
 </ul>
 <h3 id="costes">Costes<a class="headerlink" href="#costes" title="Permanent link">&para;</a></h3>
@@ -3670,10 +3688,10 @@
 <li>almacenamiento aprovisionado: el almacenamiento para copias de seguridad de hasta el 100% del almacenamiento de nuestra base de datos activa es gratuito. Una vez que se termina la instancia de base de datos, el almacenamiento para copias de seguridad se factura por GB por mes.</li>
 <li>cantidad de solicitudes de entrada y de salida.</li>
 </ul>
-<p>Aunque se recomienda utilizar la <a href="https://calculator.aws/#/addService">calculadora de costes</a> para afinar en el presupuesto, por ejemplo, una base de datos con MariaDB con una instancia <code>db.m4.large</code> con 2 procesadores y 8GB de RAM, en una única AZ, con un porcentaje de utilización del 100% y 30GB para almacenar los datos, cuesta alrededor de 131$ mensuales. En cambio si la cambiamos por dos instancias más potentes, como puede ser la <code>db.m4.4xlarge</code>, con 16 procesadores y 64 GB de RAM, en multi-AZ ya sube a unos 4.100$ al mes.</p>
+<p>Aunque se recomienda utilizar la <a href="https://calculator.aws/#/addService">calculadora de costes</a> para afinar en el presupuesto, por ejemplo, una base de datos con <em>MariaDB</em> con una instancia <code>db.m4.large</code> con 2 procesadores y 8GB de RAM, en una única AZ, con un porcentaje de utilización del 100% y 30GB para almacenar los datos, cuesta alrededor de 131$ mensuales. En cambio si la cambiamos por dos instancias más potentes, como puede ser la <code>db.m4.4xlarge</code>, con 16 procesadores y 64 GB de RAM, en multi-AZ ya sube a unos 4.100$ al mes.</p>
 <p>Es importante recordar que si reservamos las instancias estos costes se reducirían en proporción a 2350$ (reserva de un año) o 1526$ (reserva de tres años).</p>
 <h3 id="hola-rds">Hola RDS<a class="headerlink" href="#hola-rds" title="Permanent link">&para;</a></h3>
-<p>A continuación vamos a hacer un ejemplo sencillo donde vamos a crear una base de datos con la información que vimos en el bloque de SQL. Para ello, crearemos una instancia de <em>MariaDB</em> y nos conectaremos desde <a href="https://dbeaver.io/"><em>DBeaver</em></a>:</p>
+<p>A continuación realizaremos un ejemplo sencillo donde vamos a crear una base de datos. Para ello, crearemos una instancia de <em>MariaDB</em> y nos conectaremos desde <a href="https://dbeaver.io/"><em>DBeaver</em></a>:</p>
 <figure style="align: center;">
     <img src="images/06rds-instituto1.png" alt="Creación de la BD en RDS" width="800px">
     <figcaption>Creación de la BD en RDS</figcaption>
@@ -3709,6 +3727,57 @@
 </figure>
 
 <p>Una vez conectado, ya procedemos de la misma manera que si tuviéramos la base de datos en un entorno local.</p>
+<h3 id="aws-cli">AWS CLI<a class="headerlink" href="#aws-cli" title="Permanent link">&para;</a></h3>
+<p>También es posible crear una instancia de RDS directamente desde AWS CLI. Para ello, el primer paso es crear el grupo de seguridad mediante <code>ec2 create-security-group</code>, al cual le ponemos un nombre para luego poder referenciarlo:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>ec2<span class="w"> </span>create-security-group<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="2 "></span><span class="w">    </span>--group-name<span class="w"> </span>rds-public<span class="w"> </span><span class="se">\</span>
+</span><span class="linenos" data-linenos="3 "></span><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Acceso abierto para RDS MariaDB&quot;</span>
+</code></pre></div>
+<p>Tras su creación, obtendremos su identificador:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span>
+<span class="hll"><span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">&quot;GroupId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sg-03b19c935d87f01a0&quot;</span><span class="p">,</span>
+</span><span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">&quot;SecurityGroupArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:ec2:us-east-1:533267238455:security-group/sg-03b19c935d87f01a0&quot;</span>
+<span class="linenos" data-linenos="4 "></span><span class="p">}</span>
+</code></pre></div>
+<p>A continuación, configuramos el grupo de seguridad y le añadimos una regla de entrada mediante <code>ec2 authorize-security-group-ingress</code> para permitir las conexiones al puerto de <em>MariaDB</em> desde cualquier dirección:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos="2 "></span><span class="w">    </span>--group-name<span class="w"> </span>rds-public<span class="w"> </span><span class="se">\</span>
+</span><span class="linenos" data-linenos="3 "></span><span class="w">    </span>--protocol<span class="w"> </span>tcp<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span>--port<span class="w"> </span><span class="m">3306</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span>--cidr<span class="w"> </span><span class="m">0</span>.0.0.0/0
+</code></pre></div>
+<p>Tras su ejecución, obtendremos de nuevo su identificador:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">&quot;Return&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">&quot;SecurityGroupRules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">        </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">            </span><span class="nt">&quot;SecurityGroupRuleId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sgr-0d90f0e63a9ba67d2&quot;</span><span class="p">,</span>
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="w">            </span><span class="nt">&quot;GroupId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sg-03b19c935d87f01a0&quot;</span><span class="p">,</span>
+</span><span class="linenos" data-linenos=" 7 "></span><span class="w">            </span><span class="nt">&quot;GroupOwnerId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;533267238455&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">            </span><span class="nt">&quot;IsEgress&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">            </span><span class="nt">&quot;IpProtocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">            </span><span class="nt">&quot;FromPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">            </span><span class="nt">&quot;ToPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">            </span><span class="nt">&quot;CidrIpv4&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">            </span><span class="nt">&quot;SecurityGroupRuleArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:ec2:us-east-1:533267238455:security-group-rule/sgr-0d90f0e63a9ba67d2&quot;</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">        </span><span class="p">}</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="p">]</span>
+<span class="linenos" data-linenos="16 "></span><span class="p">}</span>
+</code></pre></div>
+<p>Finalmente, ya tenemos todo preparado para crear la instancia mediante <code>rds create-db-instance</code>, indicando la clase de la instancia, el usuario y contraseña, así como las diferentes características que hemos configurado de forma visual en el apartado anterior (recuerda modificar el identificador del grupo de seguridad por el identificador que hayas obtenido en los pasos previos):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>aws<span class="w"> </span>rds<span class="w"> </span>create-db-instance<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span>--db-instance-identifier<span class="w"> </span>iabd-rds<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span>--db-instance-class<span class="w"> </span>db.t3.micro<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span>--engine<span class="w"> </span>mariadb<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span>--master-username<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span>--master-user-password<span class="w"> </span>adminadmin<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span>--publicly-accessible<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span>--allocated-storage<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos" data-linenos=" 9 "></span><span class="w">    </span>--vpc-security-group-ids<span class="w"> </span>sg-03b19c935d87f01a0<span class="w"> </span><span class="se">\</span>
+</span><span class="linenos" data-linenos="10 "></span><span class="w">    </span>--db-name<span class="w"> </span>MiBaseDeDatos<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span>--port<span class="w"> </span><span class="m">3306</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">    </span>--region<span class="w"> </span>us-east-1
+</code></pre></div>
 <h3 id="uso-de-instantaneas">Uso de instantáneas<a class="headerlink" href="#uso-de-instantaneas" title="Permanent link">&para;</a></h3>
 <p>Por defecto, al crear una instancia en RDS se crean copias de seguridad diarias que se retienen automáticamente hasta 7 días.</p>
 <p>Si editamos la instancia, en la <em>Configuración adicional</em> podemos configurar la <em>Copias de seguridad</em> para cambiar cuantos días debe retener las copias de seguridad realizadas, así como la franja horaria en la que se realizará la copia cada día.</p>
@@ -4038,10 +4107,10 @@ CloudWatch metrics allow you to monitor your database, for example, to debug per
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="../assets/javascripts/bundle.56dfad97.min.js"></script>
       
     
   </body>
