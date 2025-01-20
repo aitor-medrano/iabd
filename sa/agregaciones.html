@@ -4887,11 +4887,15 @@
 </code></pre></div>
 </li>
 <li>
-<p>(0.5) Recupera las 5 películas más comentadas (los comentarios se almacenan en la colección <code>comments</code>), devolviendo el título, su género y la cantidad de comentarios. Además, queremos almacenar el resultado en la colección <code>movies_most_commented</code>.</p>
+<p>(0.5) Recupera las 5 películas más comentadas pero sin utilizar la propiedad <code>num_mflix_comments</code>, devolviendo el título, su género y la cantidad de comentarios existentes. Para ello, hay que contar los comentarios almacenados en la colección <code>comments</code>. Finalmente, queremos almacenar el resultado en la colección <code>most_commented_movies</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">&gt;</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">most_commented_movies</span><span class="p">.</span><span class="nx">findOne</span><span class="p">()</span>
 <span class="linenos" data-linenos="2 "></span><span class="o">&lt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">_id</span><span class="o">:</span><span class="w"> </span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&quot;573a13bff29313caabd5e91e&quot;</span><span class="p">),</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nx">sumComments</span><span class="o">:</span><span class="w"> </span><span class="mf">161</span><span class="p">,</span>
-<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="nx">movie</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">imdb</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">rating</span><span class="o">:</span><span class="w"> </span><span class="mf">6.4</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;The Taking of Pelham 1 2 3&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="nx">movie</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">imdb</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">rating</span><span class="o">:</span><span class="w"> </span><span class="mf">6.4</span><span class="w"> </span><span class="p">},</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">      </span><span class="nx">genres</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Action&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Crime&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Thriller&quot;</span><span class="p">],</span><span class="w">  </span>
+<span class="linenos" data-linenos="6 "></span><span class="w">      </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;The Taking of Pelham 1 2 3&#39;</span>
+<span class="linenos" data-linenos="7 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos="8 "></span><span class="w">  </span><span class="p">}</span>
 </code></pre></div>
 </li>
 </ol>
@@ -4910,7 +4914,7 @@
 <span class="linenos" data-linenos="10 "></span><span class="p">];</span>
 <span class="linenos" data-linenos="11 "></span><span class="nx">db</span><span class="p">.</span><span class="nx">movies</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span><span class="nx">pipeline</span><span class="p">)</span>
 </code></pre></div>
-<p>Adjunta una captura inicial y otra final, y la exportación de la agregación a <em>Python</em>.</p>
+<p>Adjunta una captura inicial y otra final, donde se vean las fases en <em>MongoDBCompass</em>, y la exportación de la agregación a <em>Python</em>.</p>
 </li>
 </ol>
 <!--
