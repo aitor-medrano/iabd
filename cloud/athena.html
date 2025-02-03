@@ -3963,6 +3963,20 @@ La virtualización de datos puede considerarse una herramienta que amplía el la
 <span class="linenos" data-linenos="7 "></span>[&#39;9&#39;, &#39;Mary&#39;, &#39;Perez&#39;]
 <span class="linenos" data-linenos="8 "></span>...
 </code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">AWS Wrangler</p>
+<p>Si nos salimos de la librería oficial <em>boto3</em>, podemos emplear la librería <a href="https://pypi.org/project/awswrangler/"><code>awswrangler</code></a> que facilita el uso de AWS dotándole de la potencia y facilidad de <em>Pandas</em>.</p>
+<p>Tras instalarla:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>awswrangler
+</code></pre></div>
+<p>podemos hacer una consulta a <em>Athena</em> de una forma más sencilla:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">awswrangler</span> <span class="k">as</span> <span class="nn">wr</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="linenos" data-linenos="3 "></span>
+<span class="linenos" data-linenos="4 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">wr</span><span class="o">.</span><span class="n">athena</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM customers&quot;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s2">&quot;s8a_retail&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Más información en la <a href="https://aws-sdk-pandas.readthedocs.io/en/stable/index.html">documentación oficial</a>.</p>
+</div>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://docs.aws.amazon.com/es_es/athena/latest/ug/what-is.html">Guía de usuario de AWS Athena</a></li>
