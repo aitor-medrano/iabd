@@ -4112,6 +4112,11 @@ Si queremos que se vuelvan a cargar los datos pero no se cree de nuevo la tabla 
 <p class="admonition-title">Instalación driver Java</p>
 <p>Para que funcione correctamente, si partes desde una instalación propia de <em>Spark</em>, debes descargar el <a href="resources/mongo-java-driver-3.12.12.jar">driver <em>Java</em> de <em>MongoDB</em></a> y colocarlo en la carpeta <code>/opt/spark-3.3.1/jars</code></p>
 </div>
+<div class="admonition tip">
+<p class="admonition-title">MongoDB y Databricks</p>
+<p>Para conectar con <em>MongoDB</em> desde <em>Databricks</em> se recomienda leer el siguiente artículo: <a href="https://docs.databricks.com/external-data/mongodb.html">Interact with MongoDB on Databricks</a> e instalar la librería adecuada.</p>
+<p>A marzo de 2025, la versión 15.4 LTS de Databricks, funciona con la versión 2.12 del conector de Spark y MongoDB. Para ello, una vez creado el cluster, accede a la pestaña de librerías, y via Maven, instala <code>org.mongodb.spark:mongo-spark-connector_2.12:10.4.1</code>.</p>
+</div>
 <p>Una vez recuperada la sesión de <em>Spark</em>, a la hora de leer datos le debemos indicar que el formato es <code>mongodb</code> y a continuación configurar tanto la <code>connection.uri</code> (si queremos acceder a la base de datos local usaremos como cadena de conexión <code>mongodb://127.0.0.1:27017</code>), como los parámetros <code>database</code>y <code>collection</code> con la base de datos y colección a la que queremos acceder:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="n">mongo_spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
@@ -4152,10 +4157,6 @@ Si queremos que se vuelvan a cargar los datos pero no se cree de nuevo la tabla 
 <span class="linenos" data-linenos="8 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;collection&quot;</span><span class="p">,</span><span class="s2">&quot;espias_nuevo&quot;</span><span class="p">)</span> \
 <span class="linenos" data-linenos="9 "></span>    <span class="o">.</span><span class="n">save</span><span class="p">()</span>
 </code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">MongoDB y Databricks</p>
-<p>Para conectar con <em>MongoDB</em> desde <em>Databricks</em> se recomienda leer el siguiente artículo: <a href="https://docs.databricks.com/external-data/mongodb.html">Interact with MongoDB on Databricks</a></p>
-</div>
 <p>Más información en la documentación oficial en <a href="https://www.mongodb.com/docs/spark-connector/current/">https://www.mongodb.com/docs/spark-connector/current/</a></p>
 <h2 id="spark-sql-catalog">Spark SQL Catalog<a class="headerlink" href="#spark-sql-catalog" title="Permanent link">&para;</a></h2>
 <p>Los catálogos de datos son un elemento esencial dentro de una organización, al ofrecer una vista de los datos disponibles, los cuales se pueden extender para describir su creación (persona, equipo u organización). Este catálogo lo gestionan los <strong><em>data stewards</em></strong>, un rol muy específico de los equipos <em>big data</em> que no solo se encargan de administrar el uso y los enfoques de los datos en la empresa, sino que tratan de asegurar la calidad de la información, el cumplimiento de las políticas de privacidad, la correcta comunicación entre los diferentes departamentos y la educación informática y tecnológica de los empleados relacionada con el mundo del dato.</p>
@@ -4261,7 +4262,7 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connect
 <h4 id="persistiendo-tablas">Persistiendo tablas<a class="headerlink" href="#persistiendo-tablas" title="Permanent link">&para;</a></h4>
 <p>Cuando tenemos un <em>DataFrame</em> lo podemos persistir como una tabla, lo que en terminología de <em>Hive</em> sería una tabla interna o gestionada, mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.saveAsTable.html"><code>saveAsTable</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">jdbcDF</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;errorIfExists&quot;</span><span class="p">)</span> \  <span class="c1"># (1)!</span>
-<span class="linenos" data-linenos="2 "></span>      <span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;clientes&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span>      <span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;clientes_t&quot;</span><span class="p">)</span>
 </code></pre></div>
 <ol>
 <li>Hemos configurado el modo de escritura a <code>errorIfExists</code> para asegurarnos que no borramos ningún datos de nuestro <em>datalake</em>.</li>
@@ -4269,10 +4270,10 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connect
 <p>Si volvemos a comprobar las tablas, podemos ver como la nueva tabla ahora forma parte de la base de datos <code>s8a</code> y que tu tipo es <code>MANAGED</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listTables</span><span class="p">()</span>
 <span class="linenos" data-linenos="2 "></span><span class="c1"># [Table(name=&#39;clientes&#39;, database=&#39;s8a&#39;, description=None, tableType=&#39;MANAGED&#39;, isTemporary=False),</span>
-<span class="linenos" data-linenos="3 "></span><span class="c1">#  Table(name=&#39;clientes&#39;, database=None, description=None, tableType=&#39;TEMPORARY&#39;, isTemporary=True)]</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1">#  Table(name=&#39;clientes_t&#39;, database=None, description=None, tableType=&#39;TEMPORARY&#39;, isTemporary=True)]</span>
 </code></pre></div>
 <p>Podemos configurar diferentes opciones a la hora de persistir las tablas. Por ejemplo, si queremos persistir la tabla en formato JSON sobrescribiendo los datos hemos de indicarlo con <code>format('json')</code> y <code>mode('overwrite')</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">jdbcDF</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;clientesj&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">jdbcDF</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;clientes_j&quot;</span><span class="p">)</span>
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Por defecto en formato Parquet</p>
@@ -4283,7 +4284,7 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connect
 <p>Vamos a crear una tabla de clientes con los datos que tenemos almacenados en HDFS que <a href="../hadoop/hive1.html#caso-1-creacion-y-borrado-de-tablas">cargamos mediante Sqoop en la sesión de Hive</a> en la ruta <code>/user/iabd/hive/customer</code>.</p>
 <p>Así pues, nuestra sentencia DDL sería:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="s2">CREATE EXTERNAL TABLE IF NOT EXISTS clientese</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="s2">CREATE EXTERNAL TABLE IF NOT EXISTS clientes_e</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="s2">(</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="s2">  custId INT,</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="s2">  fName STRING,</span>
@@ -4297,9 +4298,9 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connect
 </code></pre></div>
 <p>Si volvemos a comprobar las tablas, veremos que que la ha marcado <code>EXTERNAL</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listTables</span><span class="p">()</span>
-<span class="linenos" data-linenos="2 "></span><span class="c1"># [Table(name=&#39;clientes&#39;, database=&#39;s8a&#39;, description=&#39;Datos de clientes obtenidos desde retail_db.customers&#39;, tableType=&#39;MANAGED&#39;, isTemporary=False),</span>
-<span class="hll"><span class="linenos" data-linenos="3 "></span><span class="c1">#  Table(name=&#39;clientese&#39;, database=&#39;s8a&#39;, description=None, tableType=&#39;EXTERNAL&#39;, isTemporary=False),</span>
-</span><span class="linenos" data-linenos="4 "></span><span class="c1">#  Table(name=&#39;clientesj&#39;, database=&#39;s8a&#39;, description=None, tableType=&#39;MANAGED&#39;, isTemporary=False)]</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># [Table(name=&#39;clientes_t&#39;, database=&#39;s8a&#39;, description=&#39;Datos de clientes obtenidos desde retail_db.customers&#39;, tableType=&#39;MANAGED&#39;, isTemporary=False),</span>
+<span class="hll"><span class="linenos" data-linenos="3 "></span><span class="c1">#  Table(name=&#39;clientes_e&#39;, database=&#39;s8a&#39;, description=None, tableType=&#39;EXTERNAL&#39;, isTemporary=False),</span>
+</span><span class="linenos" data-linenos="4 "></span><span class="c1">#  Table(name=&#39;clientes_j&#39;, database=&#39;s8a&#39;, description=None, tableType=&#39;MANAGED&#39;, isTemporary=False)]</span>
 </code></pre></div>
 <p>Y si realizamos una consulta, obtenemos los mismos datos que hay almacenados en HDFS:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;select * from clientese limit 3&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
@@ -4482,9 +4483,13 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connect
 <p>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RASBD.1</abbr> / <abbr title="Se ha extraído de forma automática información y conocimiento a partir de grandes volúmenes de datos.">CESBD.1b</abbr> y <abbr title="Se ha construido un conjunto de datos complejos y se han relacionado entre sí.">CESBD.1d</abbr>) En las siguientes actividades vamos a familiarizarnos con el uso del API de <em>Spark JDBC</em>, el acceso al catálogo y <em>DeltaLake</em>.</p>
 <ol>
 <li>(1p) Vamos a repetir una actividad que realizamos durante la sesión de <em>Hive</em>. Para ello, se pide recuperar desde la base de datos <code>retail_db</code> las tablas <code>customers</code> y <code>orders</code> en dos dataframes tal como hemos hecho en <a href="#leyendo-datos">el apartado Leyendo Datos</a>, y a continuación, realizar un <em>join</em> de manera que contenga la información de cada pedido y la ciudad del cliente.</li>
-<li>(0.5p) Conecta con <em>MongoDB</em> y persiste el resultado del join en una colección llamada <code>pedidos_ciudad</code>. Conéctate a <em>MongoDB</em> desde <code>mongosh</code> y comprueba que se han almacenado los datos.</li>
-<li>(2p) Además, sobre el <em>dataframe</em> anterior, y mediante el <em>Spark Catalog</em>, en la base de datos <code>iabd</code>, crea una tabla gestionada en el catálogo cuyo nombre sea <code>pedidos_ciudad</code>, y añade comentarios tanto a la tabla como a sus columnas (al menos las más importantes). A continuación, crea una tabla externa llamada <code>pedidos_ciudad_ext</code> desde <em>Spark</em> con la misma información que <code>pedidos_ciudad</code>.</li>
-<li>(0.5p) Conéctate a <em>MySQL</em> y recupera la información de las tablas creadas en estos ejercicios y sus parámetros.</li>
+<li>(1p) Conecta con <em>MongoDB</em> y persiste el resultado del join en una colección llamada <code>pedidos_ciudad</code>. Conéctate a <em>MongoDB</em> desde <code>mongosh</code> y comprueba que se han almacenado los datos.</li>
+<li>
+<p>(2p) Además, sobre el <em>dataframe</em> anterior, y mediante el <em>Spark Catalog</em>, en la base de datos <code>iabd</code>, crea una tabla gestionada en el catálogo cuyo nombre sea <code>pedidos_ciudad</code>, y añade comentarios tanto a la tabla como a sus columnas (al menos las más importantes). A continuación, crea una tabla externa llamada <code>pedidos_ciudad_ext</code> desde <em>Spark</em> con la misma información que <code>pedidos_ciudad</code>.</p>
+</li>
+<li>
+<p>(opcional) Conéctate a <em>MySQL</em> y recupera la información de las tablas creadas en estos ejercicios y sus parámetros.</p>
+</li>
 </ol>
 
 
