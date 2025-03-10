@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Apuntes y ejercicios sobre Delta Lake, creación de tablas y operaciones DML sobre los datos.">
+        <meta name="description" content="Apuntes y ejercicios sobre Delta Lake, creación de tablas y operaciones DML sobre los datos. Arquitectura Medallion mediante Delta Lake.">
       
       
       
@@ -73,7 +73,7 @@
       
         <meta  property="og:title"  content="Delta Lake. - Inteligencia Artificial y Big Data" >
       
-        <meta  property="og:description"  content="Apuntes y ejercicios sobre Delta Lake, creación de tablas y operaciones DML sobre los datos." >
+        <meta  property="og:description"  content="Apuntes y ejercicios sobre Delta Lake, creación de tablas y operaciones DML sobre los datos. Arquitectura Medallion mediante Delta Lake." >
       
         <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/spark/deltalake.png" >
       
@@ -89,7 +89,7 @@
       
         <meta  name="twitter:title"  content="Delta Lake. - Inteligencia Artificial y Big Data" >
       
-        <meta  name="twitter:description"  content="Apuntes y ejercicios sobre Delta Lake, creación de tablas y operaciones DML sobre los datos." >
+        <meta  name="twitter:description"  content="Apuntes y ejercicios sobre Delta Lake, creación de tablas y operaciones DML sobre los datos. Arquitectura Medallion mediante Delta Lake." >
       
         <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/spark/deltalake.png" >
       
@@ -4239,7 +4239,7 @@ FIXME: https://learn.microsoft.com/es-es/azure/databricks/lakehouse/medallion
 <h2 id="el-ecosistema-delta">El ecosistema Delta<a class="headerlink" href="#el-ecosistema-delta" title="Permanent link">&para;</a></h2>
 <p><em>Delta Lake</em> se utiliza en su mayor medida como <em>lakehouse</em> por más de 7000 empresas, procesando exabytes de datos por día.</p>
 <p>Sin embargo, los <em>data warehouses</em> y las aplicaciones de <em>machine learning</em> no son el único objetivo de <em>Delta Lake</em>, ya que el soporte transaccional ACID aporta confiabilidad al <em>data lake</em> y permite ingestar y consumir datos tanto en <em>streaming</em> como por lotes.</p>
-<p>El ecosistema de <em>DeltaLake</em> se compone de una conjunto de componentes individuales entre los que destacan <em>Delta Lake Storage</em>, <em>Delta Sharing</em>, y <em>Delta Connectors</em>.</p>
+<p>El ecosistema de <em>Delta Lake</em> se compone de una conjunto de componentes individuales entre los que destacan <em>Delta Lake Storage</em>, <em>Delta Sharing</em>, y <em>Delta Connectors</em>.</p>
 <h3 id="delta-lake-storage">Delta Lake Storage<a class="headerlink" href="#delta-lake-storage" title="Permanent link">&para;</a></h3>
 <p>Se trata de una capa de almacenamiento que corre sobre los lagos de datos basados en el cloud, como son <em>Azure Data Lake Storage</em> (ADLS), <em>AWS S3</em> o <em>Google Cloud Storage</em> (GCS), añadiendo transaccionalidad al lago de datos y las tablas, y por tanto, ofreciendo características de un <em>data warehouse</em> a un <em>data lake</em>.</p>
 <p>Se trata del componente principal, ya que el resto de elementos del ecosistema dependen de él.</p>
@@ -4258,7 +4258,7 @@ FIXME: https://learn.microsoft.com/es-es/azure/databricks/lakehouse/medallion
 </ul>
 <p>Más información sobre el ecosistema de <em>Delta Sharing</em> en la página de <a href="https://delta.io/sharing"><em>Sharing</em></a> de <em>Delta Lake</em>.</p>
 <h3 id="delta-connectors">Delta Connectors<a class="headerlink" href="#delta-connectors" title="Permanent link">&para;</a></h3>
-<p>El principal objetivo de los conectores <em>Delta</em> es llevar <em>Delta Lake</em> a otros motores de procesamiento ajenos a <em>Spark</em>. Para ello, ofrece conectores open source que realizan la conexión directa a <em>DeltaLake</em> sin necesidad de pasar por <em>Spark</em>.</p>
+<p>El principal objetivo de los conectores <em>Delta</em> es llevar <em>Delta Lake</em> a otros motores de procesamiento ajenos a <em>Spark</em>. Para ello, ofrece conectores open source que realizan la conexión directa a <em>Delta Lake</em> sin necesidad de pasar por <em>Spark</em>.</p>
 <p>Los conectores más destacados son:</p>
 <ul>
 <li><em>Delta Standalone</em>: librerías Java/Python/Rust/etc... para desarrollar aplicaciones que leen y escriben en <em>Delta Lake</em>. En el apartado de <a href="#delta-lake-y-python">Delta Lake y Python</a> veremos un ejemplo del acceso mediante <em>Python</em>.</li>
@@ -4275,7 +4275,7 @@ Hacer un ejemplo de sql-delta-import sobre la tabla customers
 <h2 id="hola-delta">Hola Delta<a class="headerlink" href="#hola-delta" title="Permanent link">&para;</a></h2>
 <div class="admonition info">
 <p class="admonition-title">Probando Delta Lake</p>
-<p>Para poder realizar los ejemplos y practicar <em>DeltaLake</em>, en esta sesión nos vamos a centrar en la instalación de nuestra máquina virtual o mediante la cuenta creada previamente en <em>DataBricks</em>.</p>
+<p>Para poder realizar los ejemplos y practicar <em>Delta Lake</em>, en esta sesión nos vamos a centrar en la instalación de nuestra máquina virtual o mediante la cuenta creada previamente en <em>DataBricks</em>.</p>
 <p>Si quieres probar con <em>Docker</em>, puedes descargar la imagen <code>deltaio/delta-docker</code> desde <a href="https://hub.docker.com/r/deltaio/delta-docker">https://hub.docker.com/r/deltaio/delta-docker</a> o arrancar el contenedor mediante:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">x86</label><label for="__tabbed_1_2">ARM</label></div>
 <div class="tabbed-content">
@@ -4403,7 +4403,7 @@ Hacer un ejemplo de sql-delta-import sobre la tabla customers
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Fusionando el esquema</p>
-<p>Si los tipos de los datos no cuadran con el esquema almacenado en <em>DeltaLake</em>, tendremos un error. Para habilitar que fusione los esquemas podemos indicarlo con <code>.option("mergeSchema", "true")</code>:</p>
+<p>Si los tipos de los datos no cuadran con el esquema almacenado en <em>Delta Lake</em>, tendremos un error. Para habilitar que fusione los esquemas podemos indicarlo con <code>.option("mergeSchema", "true")</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">nuevosClientes</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;mergeSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
 </code></pre></div>
 </div>
@@ -4514,15 +4514,15 @@ Hacer un ejemplo de sql-delta-import sobre la tabla customers
 </code></pre></div>
 <p>Si en vez de SQL queremos hacerlo mediante <em>Python</em>, utilizando el <em>DataFrame</em> de <code>nuevosClientes</code> creado anteriormente y la tabla <em>Delta</em> <code>dtabla</code> del apartado anterior, haríamos algo similar a utilizando el método <a href="https://docs.delta.io/latest/api/python/spark/index.html#delta.tables.DeltaTable.merge"><code>merge</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">dtabla</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;destino&quot;</span><span class="p">)</span> \
-<span class="linenos" data-linenos=" 2 "></span>    <span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-<span class="linenos" data-linenos=" 3 "></span>        <span class="n">nuevosClientes</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;origen&quot;</span><span class="p">),</span>
+<span class="hll"><span class="linenos" data-linenos=" 2 "></span>    <span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+</span><span class="linenos" data-linenos=" 3 "></span>        <span class="n">nuevosClientes</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;origen&quot;</span><span class="p">),</span>
 <span class="linenos" data-linenos=" 4 "></span>        <span class="s2">&quot;destino.customer_id = origen.customer_id&quot;</span>
 <span class="linenos" data-linenos=" 5 "></span>    <span class="p">)</span> \
-<span class="linenos" data-linenos=" 6 "></span>    <span class="o">.</span><span class="n">whenMatchedUpdate</span><span class="p">(</span>
-<span class="linenos" data-linenos=" 7 "></span>        <span class="nb">set</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;customer_fname&quot;</span><span class="p">:</span> <span class="s2">&quot;origen.customer_fname&quot;</span><span class="p">,</span> <span class="s2">&quot;customer_lname&quot;</span><span class="p">:</span> <span class="s2">&quot;origen.customer_lname&quot;</span><span class="p">}</span>
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span>    <span class="o">.</span><span class="n">whenMatchedUpdate</span><span class="p">(</span>
+</span><span class="linenos" data-linenos=" 7 "></span>        <span class="nb">set</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;customer_fname&quot;</span><span class="p">:</span> <span class="s2">&quot;origen.customer_fname&quot;</span><span class="p">,</span> <span class="s2">&quot;customer_lname&quot;</span><span class="p">:</span> <span class="s2">&quot;origen.customer_lname&quot;</span><span class="p">}</span>
 <span class="linenos" data-linenos=" 8 "></span>    <span class="p">)</span> \
-<span class="linenos" data-linenos=" 9 "></span>    <span class="o">.</span><span class="n">whenNotMatchedInsert</span><span class="p">(</span>
-<span class="linenos" data-linenos="10 "></span>        <span class="n">values</span><span class="o">=</span><span class="p">{</span>
+<span class="hll"><span class="linenos" data-linenos=" 9 "></span>    <span class="o">.</span><span class="n">whenNotMatchedInsert</span><span class="p">(</span>
+</span><span class="linenos" data-linenos="10 "></span>        <span class="n">values</span><span class="o">=</span><span class="p">{</span>
 <span class="linenos" data-linenos="11 "></span>            <span class="s2">&quot;customer_id&quot;</span><span class="p">:</span> <span class="s2">&quot;origen.customer_id&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="12 "></span>            <span class="s2">&quot;customer_fname&quot;</span><span class="p">:</span> <span class="s2">&quot;origen.customer_fname&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="13 "></span>            <span class="s2">&quot;customer_lname&quot;</span><span class="p">:</span> <span class="s2">&quot;origen.customer_lname&quot;</span>
@@ -4531,7 +4531,7 @@ Hacer un ejemplo de sql-delta-import sobre la tabla customers
 <span class="linenos" data-linenos="16 "></span>    <span class="o">.</span><span class="n">execute</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="viajando-en-el-tiempo">Viajando en el tiempo<a class="headerlink" href="#viajando-en-el-tiempo" title="Permanent link">&para;</a></h3>
-<p>Podemos realizar consultas sobre <em>snapshots</em> de nuestras tablas Delta mediante el <a href="https://docs.delta.io/latest/delta-batch.html#-deltatimetravel"><strong><em>time travel</em></strong></a>. <em>DeltaLake</em> permite viajar en el tiempo a versiones previas de las tablas a partir de una versión o <em>timestamp</em>, por ejemplo, para volver a realizar analíticas o informes que necesitemos depurar o auditar, corregir errores en los datos u obtener aislamiento sobre los datos en tablas que no paran de cambiar.</p>
+<p>Podemos realizar consultas sobre <em>snapshots</em> de nuestras tablas Delta mediante el <a href="https://docs.delta.io/latest/delta-batch.html#-deltatimetravel"><strong><em>time travel</em></strong></a>. <em>Delta Lake</em> permite viajar en el tiempo a versiones previas de las tablas a partir de una versión o <em>timestamp</em>, por ejemplo, para volver a realizar analíticas o informes que necesitemos depurar o auditar, corregir errores en los datos u obtener aislamiento sobre los datos en tablas que no paran de cambiar.</p>
 <p>En cualquier momento podemos consultar el histórico de cambios de una tabla mediante <a href="https://docs.databricks.com/en/sql/language-manual/delta-describe-history.html"><code>describe history</code></a> o el método <a href="https://docs.delta.io/latest/delta-utility.html#retrieve-delta-table-history"><code>history</code></a>:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Spark SQL</label><label for="__tabbed_2_2">Python</label></div>
 <div class="tabbed-content">
@@ -4570,9 +4570,9 @@ Hacer un ejemplo de sql-delta-import sobre la tabla customers
 <span class="linenos" data-linenos=" 8 "></span><span class="c1"># |      88888|         Aitor|       Medrano|          null|             null|            null|         null|          null|            null|</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="c1"># |      12435|         Laura|        Horton|     XXXXXXXXX|        XXXXXXXXX|5736 Honey Downs|  Summerville|            SC|           29483|</span>
 <span class="linenos" data-linenos="10 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+----------------+-------------+--------------+----------------+</span>
-<span class="hll"><span class="linenos" data-linenos="11 "></span>
-</span><span class="linenos" data-linenos="12 "></span><span class="n">tclientes_delta_inicial</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;versionAsOf&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;clientes_delta&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="13 "></span><span class="n">tclientes_delta_inicial</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;customer_id&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="hll"><span class="linenos" data-linenos="12 "></span><span class="n">tclientes_delta_inicial</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;versionAsOf&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;clientes_delta&quot;</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="13 "></span><span class="n">tclientes_delta_inicial</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;customer_id&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="linenos" data-linenos="14 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+--------------------+-------------+--------------+----------------+</span>
 <span class="linenos" data-linenos="15 "></span><span class="c1"># |customer_id|customer_fname|customer_lname|customer_email|customer_password|     customer_street|customer_city|customer_state|customer_zipcode|</span>
 <span class="linenos" data-linenos="16 "></span><span class="c1"># +-----------+--------------+--------------+--------------+-----------------+--------------------+-------------+--------------+----------------+</span>
@@ -4885,16 +4885,22 @@ https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.
 <li><a href="https://books.japila.pl/delta-lake-internals/features/">The Internals of Delta Lake</a></li>
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
-<p>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RASBD.1</abbr> / <abbr title="Se ha extraído de forma automática información y conocimiento a partir de grandes volúmenes de datos.">CESBD.1b</abbr> y <abbr title="Se ha construido un conjunto de datos complejos y se han relacionado entre sí.">CESBD.1d</abbr>) En las siguientes actividades vamos a practicar con el uso de <em>DeltaLake</em> y el concepto de <em>Data Lakehouse</em>. Para ello, vamos a utilizar los datos de ventas (<a href="resources/salesdata.zip">salesdata.zip</a>) de la actividad opcional de la sesión anterior, donde renombrábamos columnas y posteriormente una serie de agregaciones para visualizar en gráficos el resultado. </p>
+<p>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RASBD.1</abbr> / <abbr title="Se ha extraído de forma automática información y conocimiento a partir de grandes volúmenes de datos.">CESBD.1b</abbr> y <abbr title="Se ha construido un conjunto de datos complejos y se han relacionado entre sí.">CESBD.1d</abbr>) En las siguientes actividades vamos a practicar con el uso de <em>Delta Lake</em> y el concepto de <em>Data Lakehouse</em>. Para ello, vamos a utilizar los datos de ventas (<a href="resources/salesdata.zip">salesdata.zip</a>) de la actividad opcional de la sesión anterior, donde renombrábamos columnas y posteriormente una serie de agregaciones para visualizar en gráficos el resultado. </p>
 <ol>
 <li>
-<p>(2p) Siguendo la arquitectura <em>Medallion</em>, se pide:</p>
+<p>(2p) Haciendo uso de <em>Databricks</em> y siguendo la arquitectura <em>Medallion</em>, se pide:</p>
 <ol>
 <li>
 <p>Capa <em>Bronze</em>:</p>
 <ol>
-<li>Carga en un <em>DataFrame</em> todos los datos de ventas.</li>
-<li>Añade una columna <code>ingestion_time</code> con la fecha actual, y otra columna <code>source_system</code> donde le asignes el valor <code>carga inicial CSV</code>.</li>
+<li>
+<p>Carga en un <em>DataFrame</em> todos los datos de ventas. Para ello, descomprime el zip en tu ordenador, y sube los archivo a una carpeta ventas de DBFS. Posteriormente, puedes leer todos los datos mediante:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df_ventas</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;dbfs:/FileStore/ventas/*.csv&quot;</span><span class="p">)</span>
+</code></pre></div>
+</li>
+<li>
+<p>Añade una columna <code>ingestion_time</code> con la fecha actual, y otra columna <code>source_system</code> donde le asignes el valor <code>carga inicial CSV</code>.</p>
+</li>
 <li>Almacena el <em>DataFrame</em> en <code>/delta/bronze/sales/</code> con formato Delta.</li>
 </ol>
 </li>
@@ -4928,8 +4934,9 @@ https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.
 </ol>
 </li>
 <li>
-<p>Almacena sus resultados en formato Delta en <code>/delta/gold/sales/ventas2019</code> y <code>/delta/gold/sales/top10ciudades</code></p>
+<p>Almacena sus resultados en formato Delta en <code>/delta/gold/sales/ventas2019</code> y <code>/delta/gold/sales/top10ciudades</code>.</p>
 </li>
+<li>Almacena ambos <em>DataFrames</em> como tablas con los nombres <code>ventas2019_delta</code> y <code>top10ciudades_delta</code>.</li>
 </ol>
 </li>
 </ol>
