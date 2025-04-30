@@ -4577,7 +4577,7 @@ Hacer un ejemplo de sql-delta-import sobre la tabla customers
 <h3 id="uso-de-tablas">Uso de tablas<a class="headerlink" href="#uso-de-tablas" title="Permanent link">&para;</a></h3>
 <p>Si no nos interesa recuperar el contenido de <em>Delta Lake</em> como un <em>DataFrame</em> ni realizar las operaciones mediante <em>SQL</em>, podemos trabajar directamente con tablas Delta. Para ello, <em>Delta Lake</em> ofrece un API para realizar modificaciones condicionales, borrados o <em>upserts</em> de datos en las tablas.</p>
 <p>Para ello, el primer paso obtener una tabla <em>delta</em> mediante el método <a href="https://docs.delta.io/latest/api/python/spark/index.html"><code>DeltaTable.forPath</code></a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">delta.tables</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">delta.tables</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">dtabla</span> <span class="o">=</span> <span class="n">DeltaTable</span><span class="o">.</span><span class="n">forPath</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/delta/raw/clientes&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="4 "></span><span class="n">dtablaDatabricks</span> <span class="o">=</span> <span class="n">DeltaTable</span><span class="o">.</span><span class="n">forPath</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s2">&quot;dbfs:/user/hive/warehouse/clientes_delta&quot;</span><span class="p">)</span>
@@ -4798,7 +4798,7 @@ Hacer un ejemplo de sql-delta-import sobre la tabla customers
 <span class="linenos" data-linenos="2 "></span><span class="c1"># []</span>
 </code></pre></div>
 <p>Tras crear la tabla, la vamos a rellenar con los datos descargados:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">to_date</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_date</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;parquet&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;*.parquet&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="4 "></span>
@@ -4888,8 +4888,8 @@ https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.
 
 <h3 id="tablas-particionadas">Tablas particionadas<a class="headerlink" href="#tablas-particionadas" title="Permanent link">&para;</a></h3>
 <p>Hemos visto que podemos crear una tabla a partir de una ruta. Si queremos definirla desde cero, podemos hacer uso de <a href="https://docs.delta.io/latest/api/python/index.html#module-delta.tables"><code>DeltaTable.createIfNotExists</code></a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">DateType</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">delta.tables</span> <span class="kn">import</span> <span class="n">DeltaTable</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">DateType</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">delta.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeltaTable</span>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">DeltaTable</span><span class="o">.</span><span class="n">createIfNotExists</span><span class="p">(</span><span class="n">spark</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 5 "></span>    <span class="o">.</span><span class="n">tableName</span><span class="p">(</span><span class="s2">&quot;iabd.covid_por_fecha&quot;</span><span class="p">)</span>
@@ -4950,9 +4950,9 @@ https://nwdataconsulting.com/delta-lake-up-&-running_er2.pdf
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>deltalake
 </code></pre></div>
 <p>En el siguiente <em>script</em> probamos las diferentes características de <em>Delta Lake</em>, por ejemplo, mediante las operaciones <a href="https://delta-io.github.io/delta-rs/api/delta_writer/#deltalake.write_deltalake"><code>write_deltalake</code></a>, la clase <a href="https://delta-io.github.io/delta-rs/api/delta_table/"><code>DeltaTable</code></a> y sus respectivos métodos, como por ejemplo, para obtener el histórico mediante <a href="https://delta-io.github.io/delta-rs/api/delta_table/#deltalake.DeltaTable.history"><code>history</code></a> o viajar en el tiempo con <a href="https://delta-io.github.io/delta-rs/api/delta_table/#deltalake.DeltaTable.load_as_version"><code>load_as_version</code></a>:</p>
-<div class="highlight"><span class="filename">hello_delta.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">deltalake.writer</span> <span class="kn">import</span> <span class="n">write_deltalake</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">deltalake</span> <span class="kn">import</span> <span class="n">DeltaTable</span>
+<div class="highlight"><span class="filename">hello_delta.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">deltalake.writer</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_deltalake</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">deltalake</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeltaTable</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;datos&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)})</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="c1"># Persistimos un DataFrame de Pandas</span>

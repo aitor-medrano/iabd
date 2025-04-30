@@ -4276,7 +4276,7 @@ A lo largo de estas sesiones iremos combinando ambos interfaces para conocer las
 <div class="admonition note">
 <p class="admonition-title">Recuerda importar el contexto</p>
 <p>Todos los ejemplos que se muestran a continuación requieren definir el contexto tal como vimos en la <a href="spark.html#sparkcontext-vs-sparksession">sesión anterior</a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 <span class="linenos" data-linenos="4 "></span><span class="n">sc</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span>
@@ -4339,7 +4339,7 @@ A lo largo de estas sesiones iremos combinando ambos interfaces para conocer las
 <span class="linenos" data-linenos="2 "></span><span class="k">lambda</span> <span class="n">par1</span><span class="p">,</span> <span class="n">par2</span><span class="p">:</span> <span class="n">expresión</span>
 </code></pre></div>
 <p>Por ejemplo, si tuviéramos una función que suma dos números, podríamos hacerla en <em>Python</em> de estas dos maneras:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">def</span> <span class="nf">suma</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">def</span><span class="w"> </span><span class="nf">suma</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
 <span class="linenos" data-linenos="2 "></span>    <span class="k">return</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span>
 <span class="linenos" data-linenos="4 "></span><span class="n">sumaL</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
@@ -4858,7 +4858,7 @@ FIXME: revisar <https://techmagie.wordpress.com/2015/12/19/understanding-spark-p
 <p>La función que recibe como parámetro recogerá como entrada un iterador con los elementos de cada partición:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">rdd</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">parallelize</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span>
-<span class="linenos" data-linenos="3 "></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">iterator</span><span class="p">):</span> <span class="k">yield</span> <span class="nb">sum</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">iterator</span><span class="p">):</span> <span class="k">yield</span> <span class="nb">sum</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
 <span class="linenos" data-linenos="4 "></span><span class="n">resultadoRdd</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 <span class="linenos" data-linenos="5 "></span><span class="n">resultadoRdd</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>  <span class="c1"># [6, 15]</span>
 <span class="linenos" data-linenos="6 "></span>
@@ -4872,7 +4872,7 @@ FIXME: revisar <https://www.mytechmint.com/pyspark-mappartitions/> y <https://sp
 
 <h3 id="mappartitionswithindex">mapPartitionsWithIndex<a class="headerlink" href="#mappartitionswithindex" title="Permanent link">&para;</a></h3>
 <p>De forma similar al caso anterior, pero ahora <a href="https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.RDD.mapPartitionsWithIndex.html"><code>mapPartitionsWithIndex</code></a> recibe una función cuyos parámetros son el índice de la partición y el iterador con los datos de la misma:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">def</span> <span class="nf">mpwi</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> <span class="n">iterador</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">def</span><span class="w"> </span><span class="nf">mpwi</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> <span class="n">iterador</span><span class="p">):</span>
 <span class="linenos" data-linenos="2 "></span>    <span class="k">return</span> <span class="p">[(</span><span class="n">indice</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">iterador</span><span class="p">))]</span>
 <span class="linenos" data-linenos="3 "></span>
 <span class="linenos" data-linenos="4 "></span><span class="n">resultadoRdd</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitionsWithIndex</span><span class="p">(</span><span class="n">mpwi</span><span class="p">)</span>
@@ -4900,8 +4900,8 @@ accumulators to aggregate information and broadcast variables to efficiently dis
 
 broadcast variables, allows the program to efficiently send a large, read-only value to all the worker nodes for use in one or more Spark operations. They come in handy, for example, if your application needs to send a large, read-only lookup table to all the nodes, or even a large feature vector in a machine learning algorithm.
 
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;app1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 5 "></span>
@@ -4916,7 +4916,7 @@ broadcast variables, allows the program to efficiently send a large, read-only v
 <span class="linenos" data-linenos="14 "></span><span class="n">accum</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">accumulator</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="linenos" data-linenos="15 "></span><span class="n">sumatorioError</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="linenos" data-linenos="16 "></span>
-<span class="linenos" data-linenos="17 "></span><span class="k">def</span> <span class="nf">myFunc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="linenos" data-linenos="17 "></span><span class="k">def</span><span class="w"> </span><span class="nf">myFunc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <span class="linenos" data-linenos="18 "></span>  <span class="k">global</span> <span class="n">sumatorioError</span>
 <span class="linenos" data-linenos="19 "></span>
 <span class="linenos" data-linenos="20 "></span>  <span class="n">accum</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>

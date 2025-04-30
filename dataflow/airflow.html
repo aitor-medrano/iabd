@@ -4675,9 +4675,9 @@ Así pues, el valor <code>@yearly</code> es similar a <code>0 0 1 1 *</code>, ya
 <span class="linenos" data-linenos="5 "></span>...
 </code></pre></div>
 <p>Antes de crear nuestro primer DAG, vamos a crear la función para leer el archivo CSV y pasarlo a JSON haciendo uso de <em>Pandas</em> (las rutas pueden variar entre la máquina virtual y Dropbox). Para ello, crea el siguiente script dentro de la carpeta <code>/opt/airflow-2.5.0/dags</code> y coloca los datos en <code>/opt/airflow-2.5.0/data</code> (si es la primera vez, es probable que tengas que crear dichas carpetas en la máquina virtual):</p>
-<div class="highlight"><span class="filename">01csv2json.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight"><span class="filename">01csv2json.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="linenos" data-linenos="2 "></span>
-<span class="linenos" data-linenos="3 "></span><span class="k">def</span> <span class="nf">csvToJson</span><span class="p">():</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">def</span><span class="w"> </span><span class="nf">csvToJson</span><span class="p">():</span>
 <span class="linenos" data-linenos="4 "></span>    <span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/opt/airflow-2.5.0/data/datos-faker.csv&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="5 "></span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">r</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
 <span class="linenos" data-linenos="6 "></span>        <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">])</span>
@@ -4685,8 +4685,8 @@ Así pues, el valor <code>@yearly</code> es similar a <code>0 0 1 1 *</code>, ya
 </code></pre></div>
 <h3 id="definicion-del-dag">Definición del DAG<a class="headerlink" href="#definicion-del-dag" title="Permanent link">&para;</a></h3>
 <p>A continuación vamos a definir un diccionario con las propiedades del DAG, como son el propietario, fecha de inicio, cantidad de reintentos y retraso entre cada reintento:</p>
-<div class="highlight"><span class="filename">01csv2json.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
-<span class="linenos" data-linenos="2 "></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<div class="highlight"><span class="filename">01csv2json.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dt</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">timedelta</span>
 <span class="linenos" data-linenos="3 "></span>
 <span class="linenos" data-linenos="4 "></span><span class="n">default_args</span> <span class="o">=</span> <span class="p">{</span>
 <span class="linenos" data-linenos="5 "></span>    <span class="s1">&#39;owner&#39;</span><span class="p">:</span> <span class="s1">&#39;aitor-medrano&#39;</span><span class="p">,</span>
@@ -4697,9 +4697,9 @@ Así pues, el valor <code>@yearly</code> es similar a <code>0 0 1 1 *</code>, ya
 </code></pre></div>
 <p>A continuación definimos propiamente el DAG con sus tareas. Para ello, creamos un objeto <a href="https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/dag/index.html#airflow.models.dag.DAG"><code>DAG</code></a> donde vamos a definir su identificador, pasarle el diccionario que acabamos de crear y configurar su planificación.</p>
 <p>Para configurar la planificación completaremos el atributo <code>schedule_interval</code>, ya sea mediante <a href="https://docs.python.org/3/library/datetime.html#datetime.timedelta"><code>timedelta</code></a> para definir su periodicidad o haciendo uso de expresiones <em>crontab</em>:</p>
-<div class="highlight"><span class="filename">01csv2json.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">airflow</span> <span class="kn">import</span> <span class="n">DAG</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">airflow.operators.bash_operator</span> <span class="kn">import</span> <span class="n">BashOperator</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">airflow.operators.python_operator</span> <span class="kn">import</span> <span class="n">PythonOperator</span>
+<div class="highlight"><span class="filename">01csv2json.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow.operators.bash_operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">BashOperator</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow.operators.python_operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">PythonOperator</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="k">with</span> <span class="n">DAG</span><span class="p">(</span><span class="s1">&#39;HolaAirflow-CSV&#39;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 6 "></span>         <span class="n">default_args</span><span class="o">=</span><span class="n">default_args</span><span class="p">,</span>
@@ -4830,10 +4830,10 @@ Es decir, si planificar un DAG con hoy como valor de <code>start_date</code> y e
 <p>Así pues, vamos a crear una función que realice la lectura de los datos y otra que los persista en S3.</p>
 <h3 id="conectando-con-la-bd">Conectando con la BD<a class="headerlink" href="#conectando-con-la-bd" title="Permanent link">&para;</a></h3>
 <p>Así pues, empezamos con la función de lectura de datos:</p>
-<div class="highlight"><span class="filename">02db2s3.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">mysql.connector</span>
+<div class="highlight"><span class="filename">02db2s3.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">mysql.connector</span>
 <span class="linenos" data-linenos=" 3 "></span>
-<span class="hll"><span class="linenos" data-linenos=" 4 "></span><span class="k">def</span> <span class="nf">consultaMariaDB</span><span class="p">():</span>
+<span class="hll"><span class="linenos" data-linenos=" 4 "></span><span class="k">def</span><span class="w"> </span><span class="nf">consultaMariaDB</span><span class="p">():</span>
 </span><span class="linenos" data-linenos=" 5 "></span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">mysql</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
 <span class="linenos" data-linenos=" 6 "></span>        <span class="n">user</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 7 "></span>        <span class="n">password</span><span class="o">=</span><span class="s2">&quot;adminadmin&quot;</span><span class="p">,</span>
@@ -4858,9 +4858,9 @@ Es decir, si planificar un DAG con hoy como valor de <code>start_date</code> y e
 <p>Recuerda copiar las credencias de AWS Academy y copiarlas en <code>~/.aws/credentials</code>.</p>
 </div>
 <p>A continuación, creamos una función que mediante <em>boto3</em> transfiera el archivo recién creado a S3 (suponemos que ya tenemos creado el bucket con permisos para escribir en él):</p>
-<div class="highlight"><span class="filename">02db2s3.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">boto3</span>
+<div class="highlight"><span class="filename">02db2s3.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 <span class="linenos" data-linenos="2 "></span>
-<span class="hll"><span class="linenos" data-linenos="3 "></span><span class="k">def</span> <span class="nf">envioS3</span><span class="p">():</span>
+<span class="hll"><span class="linenos" data-linenos="3 "></span><span class="k">def</span><span class="w"> </span><span class="nf">envioS3</span><span class="p">():</span>
 </span><span class="linenos" data-linenos="4 "></span>    <span class="n">s3r</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-east-1&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="5 "></span>
 <span class="linenos" data-linenos="6 "></span>    <span class="n">nombreBucket</span> <span class="o">=</span> <span class="s2">&quot;iabd-s8a&quot;</span>
@@ -4911,9 +4911,9 @@ Es decir, si planificar un DAG con hoy como valor de <code>start_date</code> y e
 </code></pre></div>
 <p>Para utilizar el proveedor, hemos de emplear un <a href="https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/hooks/index.html">Hook</a>, entendido como un interfaz de alto nivel que nos facilita interactuar con el proveedor sin necesidad de conocer su propia API.</p>
 <p>Para utilizar el <em>Hook</em>, lo haremos a través del identificador de conexión que acabamos de crear. Así pues, cambiamos la función <code>consultaMariaDB</code> para acceder a la conexión almacenada mediante <a href="https://airflow.apache.org/docs/apache-airflow/1.10.6/_api/airflow/hooks/mysql_hook/index.html"><code>MySqlHook</code></a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">airflow.hooks.mysql_hook</span> <span class="kn">import</span> <span class="n">MySqlHook</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow.hooks.mysql_hook</span><span class="w"> </span><span class="kn">import</span> <span class="n">MySqlHook</span>
 <span class="linenos" data-linenos="2 "></span>
-<span class="linenos" data-linenos="3 "></span><span class="k">def</span> <span class="nf">consultaMariaDBHook</span><span class="p">():</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">def</span><span class="w"> </span><span class="nf">consultaMariaDBHook</span><span class="p">():</span>
 <span class="hll"><span class="linenos" data-linenos="4 "></span>    <span class="n">mysql_hook</span> <span class="o">=</span> <span class="n">MySqlHook</span><span class="p">(</span><span class="n">mysql_conn_id</span><span class="o">=</span><span class="s1">&#39;MariaDBid&#39;</span><span class="p">)</span>
 </span><span class="linenos" data-linenos="5 "></span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">mysql_hook</span><span class="o">.</span><span class="n">get_conn</span><span class="p">()</span>
 <span class="linenos" data-linenos="6 "></span>    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="s2">&quot;select customer_fname, customer_lname, customer_zipcode from customers&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
@@ -4927,9 +4927,9 @@ Es decir, si planificar un DAG con hoy como valor de <code>start_date</code> y e
 </figure>
 
 <p>Y a continuación la usamos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">airflow.providers.amazon.aws.hooks.s3</span> <span class="kn">import</span> <span class="n">S3Hook</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow.providers.amazon.aws.hooks.s3</span><span class="w"> </span><span class="kn">import</span> <span class="n">S3Hook</span>
 <span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="k">def</span> <span class="nf">envioS3Hook</span><span class="p">():</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="k">def</span><span class="w"> </span><span class="nf">envioS3Hook</span><span class="p">():</span>
 <span class="hll"><span class="linenos" data-linenos=" 4 "></span>    <span class="n">s3_hook</span> <span class="o">=</span> <span class="n">S3Hook</span><span class="p">(</span><span class="n">aws_conn_id</span><span class="o">=</span><span class="s1">&#39;AWSid&#39;</span><span class="p">)</span>
 </span><span class="linenos" data-linenos=" 5 "></span>    <span class="n">s3_hook</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span>
 <span class="linenos" data-linenos=" 6 "></span>        <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;/tmp/customers.parquet&#39;</span><span class="p">,</span>
@@ -4960,9 +4960,9 @@ Es decir, si planificar un DAG con hoy como valor de <code>start_date</code> y e
 </figure>
 
 <p>A continuación, modificamos nuestro DAG para acceder a la variable utilizando <code>Variable.get()</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">airflow.models</span> <span class="kn">import</span> <span class="n">Variable</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Variable</span>
 <span class="linenos" data-linenos="2 "></span>
-<span class="linenos" data-linenos="3 "></span><span class="k">def</span> <span class="nf">consultaMariaDBHookVar</span><span class="p">():</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">def</span><span class="w"> </span><span class="nf">consultaMariaDBHookVar</span><span class="p">():</span>
 <span class="linenos" data-linenos="4 "></span>    <span class="n">mysql_hook</span> <span class="o">=</span> <span class="n">MySqlHook</span><span class="p">(</span><span class="n">mysql_conn_id</span><span class="o">=</span><span class="s1">&#39;MySQLid&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="5 "></span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">mysql_hook</span><span class="o">.</span><span class="n">get_conn</span><span class="p">()</span>
 <span class="linenos" data-linenos="6 "></span>    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="s2">&quot;select customer_fname, customer_lname, customer_zipcode from customers&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
@@ -4981,7 +4981,7 @@ Es decir, si planificar un DAG con hoy como valor de <code>start_date</code> y e
 <span class="linenos" data-linenos=" 7 "></span>    <span class="n">recuperaDatos</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="s1">&#39;QueryMariaDB&#39;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 8 "></span>         <span class="n">python_callable</span><span class="o">=</span><span class="n">consultaMariaDBHookParam</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 9 "></span>
-<span class="linenos" data-linenos="10 "></span><span class="k">def</span> <span class="nf">consultaMariaDBHookParam</span><span class="p">(</span><span class="o">**</span><span class="n">context</span><span class="p">):</span>
+<span class="linenos" data-linenos="10 "></span><span class="k">def</span><span class="w"> </span><span class="nf">consultaMariaDBHookParam</span><span class="p">(</span><span class="o">**</span><span class="n">context</span><span class="p">):</span>
 <span class="linenos" data-linenos="11 "></span>    <span class="n">mysql_hook</span> <span class="o">=</span> <span class="n">MySqlHook</span><span class="p">(</span><span class="n">mysql_conn_id</span><span class="o">=</span><span class="s1">&#39;MySQLid&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="12 "></span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">mysql_hook</span><span class="o">.</span><span class="n">get_conn</span><span class="p">()</span>
 <span class="linenos" data-linenos="13 "></span>    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="s2">&quot;select customer_fname, customer_lname, customer_zipcode from customers&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
@@ -4991,7 +4991,7 @@ Es decir, si planificar un DAG con hoy como valor de <code>start_date</code> y e
 <h3 id="uso-de-xcom">Uso de XCOM<a class="headerlink" href="#uso-de-xcom" title="Permanent link">&para;</a></h3>
 <p>Vamos a suponer que la primera tarea define el nombre con el que almacenar el archivo en S3. Para ello, necesitamos que se pasen datos de una tarea a otra. Como ya habíamos comentado, hemos de emplear <em>XCOM</em>.</p>
 <p>Para ello, necesitamos pasar una instancia de tareas (<em>task instance</em>) como parámetro a la función llamándola <code>ti</code> y luego utilizar <code>xcom_push</code> para guardar una clave/valor:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">def</span> <span class="nf">consultaMariaDBHookXCom</span><span class="p">(</span><span class="n">ti</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">def</span><span class="w"> </span><span class="nf">consultaMariaDBHookXCom</span><span class="p">(</span><span class="n">ti</span><span class="p">):</span>
 <span class="linenos" data-linenos="2 "></span>    <span class="n">mysql_hook</span> <span class="o">=</span> <span class="n">MySqlHook</span><span class="p">(</span><span class="n">mysql_conn_id</span><span class="o">=</span><span class="s1">&#39;MySQLid&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">mysql_hook</span><span class="o">.</span><span class="n">get_conn</span><span class="p">()</span>
 <span class="linenos" data-linenos="4 "></span>    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="s2">&quot;select customer_fname, customer_lname, customer_zipcode from customers&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
@@ -5001,7 +5001,7 @@ Es decir, si planificar un DAG con hoy como valor de <code>start_date</code> y e
 <span class="linenos" data-linenos="8 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------Datos creados------&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Del mismo modo, en el segundo operador, volvemos a definir <code>ti</code> como parámetro de la función y recuperamos el valor mediante <code>xcom_pull</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">def</span> <span class="nf">envioS3HookXCom</span><span class="p">(</span><span class="n">ti</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">def</span><span class="w"> </span><span class="nf">envioS3HookXCom</span><span class="p">(</span><span class="n">ti</span><span class="p">):</span>
 <span class="linenos" data-linenos="2 "></span>    <span class="n">s3_hook</span> <span class="o">=</span> <span class="n">S3Hook</span><span class="p">(</span><span class="n">aws_conn_id</span><span class="o">=</span><span class="s1">&#39;AWSid&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span>    <span class="n">s3_hook</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span>
 <span class="hll"><span class="linenos" data-linenos="4 "></span>        <span class="n">filename</span><span class="o">=</span><span class="n">ti</span><span class="o">.</span><span class="n">xcom_pull</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;filename&#39;</span><span class="p">,</span> <span class="n">task_ids</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;QueryMariaDB&#39;</span><span class="p">]),</span>
@@ -5026,7 +5026,7 @@ limpiarDatos >> S3limpio
 <h3 id="todo-en-uno">Todo en uno<a class="headerlink" href="#todo-en-uno" title="Permanent link">&para;</a></h3>
 <p>Ya existen proveedores que directamente transfieren información desde una fuente SQL y la almacenan en S3. </p>
 <p>Por ejemplo, con el proveedor que ya hemos instalado previamente, podemos utilizar el operador <a href="https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/transfers/sql_to_s3/index.html#airflow.providers.amazon.aws.transfers.sql_to_s3.FILE_FORMAT"><code>SqlToS3Operator</code></a> el cual nos ahorra mucho código:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">airflow.providers.amazon.aws.transfers.sql_to_s3</span> <span class="kn">import</span> <span class="n">SqlToS3Operator</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow.providers.amazon.aws.transfers.sql_to_s3</span><span class="w"> </span><span class="kn">import</span> <span class="n">SqlToS3Operator</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="hll"><span class="linenos" data-linenos=" 3 "></span><span class="n">sql2s3_task</span> <span class="o">=</span> <span class="n">SqlToS3Operator</span><span class="p">(</span>
 </span><span class="linenos" data-linenos=" 4 "></span>    <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;sql_to_s3_task&quot;</span><span class="p">,</span>
@@ -5061,23 +5061,23 @@ limpiarDatos >> S3limpio
 <ol start="5">
 <li>
 <p>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RASBD.1</abbr> / <abbr title="Se han establecido objetivos y prioridades, secuenciación y organización del tiempo de realización.">CESBD.1e</abbr> / 1p / opcional) Explica que realiza el siguiente DAG y añade comentarios explicando qué hace cada fragmento, destacando para qué utiliza XCom:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">airflow</span> <span class="kn">import</span> <span class="n">DAG</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">airflow.operators.bash</span> <span class="kn">import</span> <span class="n">BashOperator</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">airflow.operators.python</span> <span class="kn">import</span> <span class="n">PythonOperator</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow.operators.bash</span><span class="w"> </span><span class="kn">import</span> <span class="n">BashOperator</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow.operators.python</span><span class="w"> </span><span class="kn">import</span> <span class="n">PythonOperator</span>
 <span class="linenos" data-linenos=" 4 "></span>
-<span class="linenos" data-linenos=" 5 "></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">uniform</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">random</span><span class="w"> </span><span class="kn">import</span> <span class="n">uniform</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 <span class="linenos" data-linenos=" 7 "></span>
 <span class="linenos" data-linenos=" 8 "></span><span class="n">default_args</span> <span class="o">=</span> <span class="p">{</span>
 <span class="linenos" data-linenos=" 9 "></span>    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2023</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="linenos" data-linenos="10 "></span><span class="p">}</span>
 <span class="linenos" data-linenos="11 "></span>
-<span class="linenos" data-linenos="12 "></span><span class="k">def</span> <span class="nf">_training_model</span><span class="p">(</span><span class="n">ti</span><span class="p">):</span>
+<span class="linenos" data-linenos="12 "></span><span class="k">def</span><span class="w"> </span><span class="nf">_training_model</span><span class="p">(</span><span class="n">ti</span><span class="p">):</span>
 <span class="linenos" data-linenos="13 "></span>    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
 <span class="linenos" data-linenos="14 "></span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;model</span><span class="se">\&#39;</span><span class="s1">s accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="15 "></span>    <span class="n">ti</span><span class="o">.</span><span class="n">xcom_push</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;model_accuracy&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">accuracy</span><span class="p">)</span>
 <span class="linenos" data-linenos="16 "></span>
-<span class="linenos" data-linenos="17 "></span><span class="k">def</span> <span class="nf">_choose_best_model</span><span class="p">(</span><span class="n">ti</span><span class="p">):</span>
+<span class="linenos" data-linenos="17 "></span><span class="k">def</span><span class="w"> </span><span class="nf">_choose_best_model</span><span class="p">(</span><span class="n">ti</span><span class="p">):</span>
 <span class="linenos" data-linenos="18 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;choose best model&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="19 "></span>    <span class="n">accuracies</span> <span class="o">=</span> <span class="n">ti</span><span class="o">.</span><span class="n">xcom_pull</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;model_accuracy&#39;</span><span class="p">,</span> <span class="n">task_ids</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;training_model_A&#39;</span><span class="p">,</span> <span class="s1">&#39;training_model_B&#39;</span><span class="p">,</span> <span class="s1">&#39;training_model_C&#39;</span><span class="p">])</span>
 <span class="linenos" data-linenos="20 "></span>    <span class="nb">print</span><span class="p">(</span><span class="n">accuracies</span><span class="p">)</span>

@@ -4148,7 +4148,7 @@
 </code></pre></div>
 <p>Para este apartado nos vamos a centrar en los datos de SQuAD (<em>Stanford Question Answering Dataset</em>), compuesto de un conjunto de artículos de <em>Wikipedia</em>, con respuestas a diferentes preguntas sobre los artículos. En nuestro caso, nos vamos a centrar en una versión en castellano que podemos ver en <a href="https://huggingface.co/datasets/squad_es">https://huggingface.co/datasets/squad_es</a> o descargarlo de desde <a href="https://github.com/ccasimiro88/TranslateAlignRetrieve/tree/master/SQuAD-es-v2.0">https://github.com/ccasimiro88/TranslateAlignRetrieve/tree/master/SQuAD-es-v2.0</a>.</p>
 <p>Si descargamos los archivos y los colocamos en la misma carpeta que el siguiente <em>script</em>, podemos realizar una carga local de los datos:</p>
-<div class="highlight"><span class="filename">squad-es-local.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<div class="highlight"><span class="filename">squad-es-local.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="hll"><span class="linenos" data-linenos="3 "></span><span class="n">squad_dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="s2">&quot;train-v2.0-es.json&quot;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>
 </span><span class="linenos" data-linenos="4 "></span>
@@ -4216,7 +4216,7 @@
 </code></pre></div>
 <h3 id="carga-remota">Carga remota<a class="headerlink" href="#carga-remota" title="Permanent link">&para;</a></h3>
 <p>Si el <em>dataset</em> está almacenado en una URL remota, podemos cargarlos directamente:</p>
-<div class="highlight"><span class="filename">squad-es-remoto.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<div class="highlight"><span class="filename">squad-es-remoto.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/ccasimiro88/TranslateAlignRetrieve/master/SQuAD-es-v2.0/&quot;</span>
 <span class="linenos" data-linenos=" 4 "></span>
@@ -4230,7 +4230,7 @@
 </code></pre></div>
 <h3 id="dividiendo-el-dataset">Dividiendo el dataset<a class="headerlink" href="#dividiendo-el-dataset" title="Permanent link">&para;</a></h3>
 <p>Si en vez de cargar por separado los datos de entrenamiento y los de test, tenemos un único conjunto de datos, podemos dividirlo mediante el método <a href="https://huggingface.co/docs/datasets/v2.18.0/en/package_reference/main_classes#datasets.Dataset.train_test_split"><code>Dataset.train_test_split()</code></a> indicando el tamaño, por ejemplo, de los datos de test:</p>
-<div class="highlight"><span class="filename">squad-es-split.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<div class="highlight"><span class="filename">squad-es-split.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">squad_dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="s2">&quot;train-v2.0-es.json&quot;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
 <span class="hll"><span class="linenos" data-linenos="4 "></span><span class="n">squad_split_dataset</span> <span class="o">=</span> <span class="n">squad_dataset</span><span class="o">.</span><span class="n">train_test_split</span><span class="p">(</span><span class="n">test_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
@@ -4251,8 +4251,8 @@
 <h3 id="cargando-en-pandas">Cargando en Pandas<a class="headerlink" href="#cargando-en-pandas" title="Permanent link">&para;</a></h3>
 <p>Si estamos trabajando con <em>Pandas</em> y queremos cargar un archivo que está en un <em>dataset</em> de <em>Hugging Face</em>, podemos utilizar la librería de <code>huggingface_hub</code> para crear, eliminar, actualizar y recuperar información de los repositorios.</p>
 <p>Por ejemplo, para cargar un dataset CSV con Pandas podríamos hacer:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">huggingface_hub</span> <span class="kn">import</span> <span class="n">hf_hub_download</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">huggingface_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">hf_hub_download</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">REPO_ID</span> <span class="o">=</span> <span class="s2">&quot;aitor-medrano/iabd&quot;</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="n">FICHERO</span> <span class="o">=</span> <span class="s2">&quot;cp_train.csv&quot;</span>
@@ -4285,7 +4285,7 @@
 <p>El <em>dataset</em> de <em>BigCode</em> está configurado para pedir las credenciales de los usuarios que los utilizan. Esto se conoce como un <a href="https://huggingface.co/docs/hub/datasets-gated">Gated dataset</a>. Es por ello que tenemos que hacer login en <em>Hugging Face</em> antes de poder descargarlo.</p>
 </div>
 <p>En nuestro caso, nos vamos a centrar en archivos <code>DockerFile</code> para que el dataset sea asumible (alrededor de 1Gb). Así pues, cargamos los datos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">bigcode_dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;bigcode/the-stack-v2&quot;</span><span class="p">,</span> <span class="s2">&quot;Dockerfile&quot;</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="4 "></span><span class="nb">print</span><span class="p">(</span><span class="n">bigcode_dataset</span><span class="p">)</span>
@@ -4328,7 +4328,7 @@
 <span class="linenos" data-linenos="31 "></span><span class="p">}</span>
 </code></pre></div>
 <p>Si ahora cargamos el <em>dataset</em> mediante <em>streaming</em>, pasándole el parámetros <code>streaming=True</code>, en vez de recuperar un Dataset, obtendremos un <code>IterableDataset</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">streaming_dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;bigcode/the-stack-v2&quot;</span><span class="p">,</span> <span class="s2">&quot;Dockerfile&quot;</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="linenos" data-linenos="4 "></span><span class="nb">print</span><span class="p">(</span><span class="n">streaming_dataset</span><span class="p">)</span>
@@ -4342,7 +4342,7 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">streaming_dataset</span><span class="p">)))</span>
 </code></pre></div>
 <p>Los elementos de un <em>dataset</em> en <em>streaming</em>  se pueden procesar al vuelo es mediante la función <code>map</code> o <code>filter</code>. Por ejemplo, para pasar a mayúsculas el campo <code>license_type</code> haríamos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">def</span> <span class="nf">mayusLicencias</span><span class="p">(</span><span class="n">registro</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">def</span><span class="w"> </span><span class="nf">mayusLicencias</span><span class="p">(</span><span class="n">registro</span><span class="p">):</span>
 <span class="linenos" data-linenos="2 "></span>    <span class="n">registro</span><span class="p">[</span><span class="s2">&quot;license_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">registro</span><span class="p">[</span><span class="s2">&quot;license_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 <span class="linenos" data-linenos="3 "></span>    <span class="k">return</span> <span class="n">registro</span>
 <span class="linenos" data-linenos="4 "></span>
@@ -4402,13 +4402,13 @@
 <h3 id="trabajando-con-map">Trabajando con map<a class="headerlink" href="#trabajando-con-map" title="Permanent link">&para;</a></h3>
 <p>Y la joya de la corona es la función <a href="https://huggingface.co/docs/datasets/v2.18.0/en/package_reference/main_classes#datasets.Dataset.map"><code>Dataset.map()</code></a> para aplicar una transformación a medida.
 Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula haremos:</p>
-<div class="highlight"><span class="filename">squad-map.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<div class="highlight"><span class="filename">squad-map.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="n">ficheros_datos</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;train&quot;</span><span class="p">:</span> <span class="s2">&quot;train-v2.0-es.json&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">:</span> <span class="s2">&quot;dev-v2.0-es.json&quot;</span><span class="p">}</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">squad_dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="n">data_files</span><span class="o">=</span><span class="n">ficheros_datos</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="n">squad_dataset</span> <span class="o">=</span> <span class="n">squad_dataset</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">]</span>
 <span class="linenos" data-linenos=" 6 "></span>
-<span class="linenos" data-linenos=" 7 "></span><span class="k">def</span> <span class="nf">titulo_minus</span><span class="p">(</span><span class="n">registro</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="k">def</span><span class="w"> </span><span class="nf">titulo_minus</span><span class="p">(</span><span class="n">registro</span><span class="p">):</span>
 <span class="linenos" data-linenos=" 8 "></span>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="n">registro</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()}</span>
 <span class="linenos" data-linenos=" 9 "></span>
 <span class="linenos" data-linenos="10 "></span><span class="n">squad_minus</span> <span class="o">=</span> <span class="n">squad_dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">titulo_minus</span><span class="p">)</span>
@@ -4438,13 +4438,13 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 <p>El método <a href="https://huggingface.co/docs/datasets/v2.18.0/en/package_reference/main_classes#datasets.Dataset.map"><code>Dataset.map()</code></a> admite el argumento <code>batched</code> que, si se establece en <code>True</code>, hace que envíe un lote de datos a la función <code>map</code> a la vez (el tamaño del lote es configurable mediante el parámetro <code>batch_size</code>, pero por defecto es de 1000). Al indicar <code>batched=True</code>, la función <code>map</code> recibe un diccionario con los campos del conjunto de datos, pero cada valor es ahora una lista de valores, y no un único valor, y del mismo modo, devuelve un diccionario con los campos que queremos actualizar o añadir a nuestro conjunto de datos, y una lista de valores.</p>
 <p>Por ello, debemos modificar la función que realiza el <code>map</code> para que trabaje con un diccionario de listas.</p>
 <p>Para el siguiente ejemplo, vamos a coger el <em>dataset</em> de <em>SQuAD_es</em> desde <em>Hugging Face</em> que contiene más datos, y vamos a comparar el tiempo de ejecución, recodificando la función para trabajar con un diccionario que contiene una lista por cada campo:</p>
-<div class="highlight"><span class="filename">squad-map-batch.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">time</span>
+<div class="highlight"><span class="filename">squad-map-batch.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="c1"># Cargamos el dataset desde HF</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="n">squad_dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;squad_es&quot;</span><span class="p">,</span> <span class="s2">&quot;v2.0.0&quot;</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>  <span class="c1"># (1)!</span>
 <span class="linenos" data-linenos=" 6 "></span>
-<span class="linenos" data-linenos=" 7 "></span><span class="k">def</span> <span class="nf">titulo_minus</span><span class="p">(</span><span class="n">registro</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="k">def</span><span class="w"> </span><span class="nf">titulo_minus</span><span class="p">(</span><span class="n">registro</span><span class="p">):</span>
 <span class="hll"><span class="linenos" data-linenos=" 8 "></span>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="n">registro</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()}</span>
 </span><span class="linenos" data-linenos=" 9 "></span>
 <span class="linenos" data-linenos="10 "></span><span class="n">inicio</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -4453,7 +4453,7 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 <span class="linenos" data-linenos="13 "></span><span class="n">fin</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 <span class="linenos" data-linenos="14 "></span><span class="nb">print</span><span class="p">(</span><span class="n">fin</span> <span class="o">-</span> <span class="n">inicio</span><span class="p">)</span> <span class="c1"># 3.008699893951416</span>
 <span class="linenos" data-linenos="15 "></span>
-<span class="hll"><span class="linenos" data-linenos="16 "></span><span class="k">def</span> <span class="nf">titulo_minus_batch</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
+<span class="hll"><span class="linenos" data-linenos="16 "></span><span class="k">def</span><span class="w"> </span><span class="nf">titulo_minus_batch</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
 </span><span class="hll"><span class="linenos" data-linenos="17 "></span>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:[</span><span class="n">titulo</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">titulo</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]]}</span>
 </span><span class="linenos" data-linenos="18 "></span>
 <span class="linenos" data-linenos="19 "></span><span class="n">inicio</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -4508,8 +4508,8 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 <p>Si en vez de cargar un <em>dataset</em>, tenemos que crear uno, el primer paso será obtener los datos.</p>
 <p>Ya sea mediante peticiones a URL externas con la librería <code>request</code>, accediendo a bases de datos relacionales, por ejemplo, mediante <em>SQLAlchemy</em> o a <em>MongoDB</em> mediante <code>PyMongo</code>, lo más normal es crear una estructura de datos mediante una lista o un diccionario y luego crear el <em>dataset</em> a partir del mismo.</p>
 <p>Así pues, si en vez de cargar un <em>dataset</em> queremos crear uno desde cero, podemos hacer uso de <code>Dataset.from_dict()</code> o <code>Dataset.from_list()</code> dependiendo de donde tengamos los datos. Por ejemplo, vamos a conectarnos a <em>MongoDB</em> y creamos una lista con todos los datos. A partir de la lista, generamos un <em>Dataset</em>:</p>
-<div class="highlight"><span class="filename">dataset-mongodb.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">Dataset</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
+<div class="highlight"><span class="filename">dataset-mongodb.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">cliente</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s1">&#39;mongodb+srv://iabd:iabdiabd@cluster0.dfaz5er.mongodb.net&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 5 "></span>
@@ -4571,7 +4571,7 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 <span class="linenos" data-linenos="10 "></span>    └── state.json
 </code></pre></div>
 <p>Una vez que hemos persistido el <em>dataset</em>, lo podemos volver a cargar mediante <code>load_from_disk</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_from_disk</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_from_disk</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">squad_disk</span> <span class="o">=</span> <span class="n">load_from_disk</span><span class="p">(</span><span class="s2">&quot;squad_train_test&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Si queremos persistirlos en formato CSV o JSON, por cada uno de los <em>splits</em> se crea un archivo separado. Para ello, podemos iterar sobre las claves mediante <code>DatasetDict.items()</code>:</p>
@@ -4586,7 +4586,7 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 <div class="admonition tip">
 <p class="admonition-title">Login desde un cuaderno Jupyter / Colab</p>
 <p>Si trabajamos con un cuaderno de Jupyter o Colab, podemos utilizar la librería de <em>huggingface_hub</em> y al ejecutarlo, nos aparecerá una ventana donde introducir el token de acceso:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">huggingface_hub</span> <span class="kn">import</span> <span class="n">login</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">huggingface_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">login</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">login</span><span class="p">()</span>
 </code></pre></div>
 <p><figure style="align: center;">
@@ -4616,7 +4616,7 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>datasets<span class="o">[</span>audio<span class="o">]</span>
 </code></pre></div>
 <p>Una vez instalado, vamos a <a href="https://huggingface.co/docs/datasets/audio_load">cargar un <em>dataset</em> que contiene audios</a>, como es <a href="https://huggingface.co/datasets/PolyAI/minds14">PolyAI/minds14</a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">minds</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;PolyAI/minds14&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;es-ES&quot;</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="4 "></span><span class="nb">print</span><span class="p">(</span><span class="n">minds</span><span class="p">)</span>
@@ -4661,9 +4661,9 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 </figure>
 
 <p>Finalmente, si queremos mostrar un gráfico con el espectograma del audio, y haciendo uso de la librería <a href="https://librosa.org/doc/latest/index.html"><em>Librosa</em></a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">librosa</span>
-<span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="linenos" data-linenos="3 "></span><span class="kn">import</span> <span class="nn">librosa.display</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">librosa</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="linenos" data-linenos="3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">librosa.display</span>
 <span class="linenos" data-linenos="4 "></span>
 <span class="linenos" data-linenos="5 "></span><span class="n">array</span> <span class="o">=</span> <span class="n">ejemplo</span><span class="p">[</span><span class="s2">&quot;audio&quot;</span><span class="p">][</span><span class="s2">&quot;array&quot;</span><span class="p">]</span>
 <span class="linenos" data-linenos="6 "></span><span class="n">sampling_rate</span> <span class="o">=</span> <span class="n">ejemplo</span><span class="p">[</span><span class="s2">&quot;audio&quot;</span><span class="p">][</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">]</span>
@@ -4696,7 +4696,7 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 <span class="linenos" data-linenos="4 "></span>third_audio_file.mp3,y en este audio agradezco al público sus abucheos
 </code></pre></div>
 <p>Y a continuación, indicamos como primer parámetro <code>autofolder</code> y con <code>data_dir</code> indicamos la carpeta que contiene los audios:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;audiofolder&quot;</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="s2">&quot;/path/to/folder&quot;</span><span class="p">)</span>
 </code></pre></div>

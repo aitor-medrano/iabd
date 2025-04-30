@@ -4206,7 +4206,7 @@
 <h3 id="hola-traductor">Hola Traductor<a class="headerlink" href="#hola-traductor" title="Permanent link">&para;</a></h3>
 <p>Vamos a comenzar con un par de ejemplos muy sencillos para hacernos una idea de lo que podemos hacer. Nuestro <em>Hola Mundo</em> particular va a ser cargar un modelo que traduce de inglés a castellano. Para ello, vamos a utilizar el modelo <a href="https://huggingface.co/Helsinki-NLP/opus-mt-en-es">Helsinki-NLP/opus-mt-en-es</a> que la <em>Universidad de Helsinki</em> ha entrenado a partir de los corpus de <a href="https://opus.nlpl.eu/">OpusMT</a>, y luego ha liberado en <em>HuggingFace</em>.</p>
 <p>Así pues, haciendo uso de la librería <em>Transformers</em> (ya la estudiaremos en profundidad tanto en el bloque de Redes Neuronales como en NLP) cargamos el modelo y creamos un <em>pipeline</em> donde le indicamos que el modelo es de tipo traducción. Sin entrar en muchos detalles, un <em>pipeline</em> es una abstracción para simplificar el código sin entrar a las particularidades de cada modelo. Posteriormente, invocamos al <em>pipeline</em> creado con la frase de entrada, el cual realiza la inferencia sobre el modelo indicado, y recibimos la frase de salida:</p>
-<div class="highlight"><span class="filename">hola-traductor.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
+<div class="highlight"><span class="filename">hola-traductor.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">frase_en</span> <span class="o">=</span> <span class="s2">&quot;I like to play basketball and being a geek&quot;</span>
 <span class="linenos" data-linenos="4 "></span>
@@ -4220,8 +4220,8 @@
 <h3 id="hola-difusor">Hola Difusor<a class="headerlink" href="#hola-difusor" title="Permanent link">&para;</a></h3>
 <p>¿Y si no queremos utilizar un traductor en nuestras aplicaciones pero sí que queremos generar imágenes? En este caso, en vez de la librería <code>transformers</code> , necesitamos utilizar la librería <code>diffusers</code> para generar datos similares a los datos con los que se ha entrenado.</p>
 <p>En este caso, vamos a utilizar el modelo <em>Stable Diffusion</em> (una librería estándar de generación de imágenes), y con sólo 5 líneas de código  generar una imagen de una ardilla al estilo de Picasso:</p>
-<div class="highlight"><span class="filename">hola-difusor.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">diffusers</span> <span class="kn">import</span> <span class="n">DiffusionPipeline</span>
-<span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">torch</span>
+<div class="highlight"><span class="filename">hola-difusor.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">diffusers</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiffusionPipeline</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="linenos" data-linenos="3 "></span>
 <span class="hll"><span class="linenos" data-linenos="4 "></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">DiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;sd-legacy/stable-diffusion-v1-5&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
 </span><span class="hll"><span class="linenos" data-linenos="5 "></span><span class="n">pipeline</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
@@ -4259,8 +4259,8 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>diffusers<span class="w"> </span>torch<span class="w"> </span>transformers
 </code></pre></div>
 <p>Dependiendo de si tienes tarjeta gráfica o no, necesitarás modificar un poco el código. Si no tienes CPU, necesitarás cambiar el tipo de datos a <code>float32</code> y no utilizar CUDA:</p>
-<div class="highlight"><span class="filename">hola-difusor-nogpu.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">diffusers</span> <span class="kn">import</span> <span class="n">DiffusionPipeline</span>
-<span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">torch</span>
+<div class="highlight"><span class="filename">hola-difusor-nogpu.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">diffusers</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiffusionPipeline</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="linenos" data-linenos="3 "></span>
 <span class="linenos" data-linenos="4 "></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">DiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;runwayml/stable-diffusion-v1-5&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="linenos" data-linenos="5 "></span><span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;Una imagen de una ardilla al estilo Picasso&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;hola-hf.png&quot;</span><span class="p">)</span>
@@ -4274,8 +4274,8 @@
 <p class="admonition-title">Cambiando el modelo</p>
 <p>¿Y si cambiamos el modelo por uno más nuevo?</p>
 <p>Sustituye las primeras líneas con el siguiente fragmento y comprueba si el estilo/calidad de la imagen cambia:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">diffusers</span> <span class="kn">import</span> <span class="n">StableDiffusionPipeline</span>
-<span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">torch</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">diffusers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StableDiffusionPipeline</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="linenos" data-linenos="3 "></span>
 <span class="linenos" data-linenos="4 "></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">StableDiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;stabilityai/stable-diffusion-2-1&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
 <span class="linenos" data-linenos="5 "></span><span class="o">...</span>
@@ -4388,9 +4388,9 @@
 </figure>
 
 <p>En nuestro caso, vamos a añadir la aplicación inicial desde el navegador pulsando sobre el enlace "<em>create the app.py</em>" y añadimos el siguiente fragmento que emplea <em>Gradio</em> y realizamos un <em>commit</em> desde el interfaz web:</p>
-<div class="highlight"><span class="filename">app.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<div class="highlight"><span class="filename">app.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">gradio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
 <span class="linenos" data-linenos="2 "></span>
-<span class="linenos" data-linenos="3 "></span><span class="k">def</span> <span class="nf">saluda</span><span class="p">(</span><span class="n">nombre</span><span class="p">):</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">def</span><span class="w"> </span><span class="nf">saluda</span><span class="p">(</span><span class="n">nombre</span><span class="p">):</span>
 <span class="linenos" data-linenos="4 "></span>    <span class="k">return</span> <span class="s2">&quot;Hola &quot;</span> <span class="o">+</span> <span class="n">nombre</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span>
 <span class="linenos" data-linenos="5 "></span>
 <span class="hll"><span class="linenos" data-linenos="6 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">saluda</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>
@@ -4415,11 +4415,11 @@
 <h3 id="hola-spaces-20">Hola Spaces 2.0<a class="headerlink" href="#hola-spaces-20" title="Permanent link">&para;</a></h3>
 <p>Vamos a reutilizar el ejemplo inicial de generar una imagen desde <em>Stable Difussion</em> para generar un prototipo que nos permita escribir el <em>prompt</em> y visualizar el resultado.</p>
 <p>Para ello, desde la pestaña <em>Files</em>, añadimos un nuevo fichero con el código de nuestra aplicación que ahora llamaremos `stable-app.py" ahora será similar a:</p>
-<div class="highlight"><span class="filename">stable-app.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">diffusers</span> <span class="kn">import</span> <span class="n">DiffusionPipeline</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">torch</span>
+<div class="highlight"><span class="filename">stable-app.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">gradio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">diffusers</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiffusionPipeline</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="linenos" data-linenos=" 4 "></span>
-<span class="linenos" data-linenos=" 5 "></span><span class="k">def</span> <span class="nf">stable</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="k">def</span><span class="w"> </span><span class="nf">stable</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
 <span class="hll"><span class="linenos" data-linenos=" 6 "></span>    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">DiffusionPipeline</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;sd-legacy/stable-diffusion-v1-5&quot;</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </span><span class="linenos" data-linenos=" 7 "></span>    <span class="k">return</span> <span class="n">pipeline</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="linenos" data-linenos=" 8 "></span>
@@ -4595,7 +4595,7 @@
 <h3 id="pipelines">Pipelines<a class="headerlink" href="#pipelines" title="Permanent link">&para;</a></h3>
 <p>Ya hemos estudiado anteriormente que los <em>pipelines</em> son una abstracción para realizar inferencia sobre los modelos, simplificando el código complejo mediante un API dedicada a tareas.</p>
 <p>Por ejemplo, podemos utilizarlo pasándole por parámetro la tarea a realizar o el modelo a utilizar:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;text-classification&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="4 "></span><span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">(</span><span class="s2">&quot;Me encanta venir a clase al IES Severo Ochoa&quot;</span><span class="p">)</span>
@@ -4603,7 +4603,7 @@
 <span class="linenos" data-linenos="6 "></span><span class="c1"># [{&#39;label&#39;: &#39;POSITIVE&#39;, &#39;score&#39;: 0.9526600241661072}]</span>
 </code></pre></div>
 <p>Si queremos, podemos indicarle, además de la tarea, qué modelo queremos emplear:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;text-generation&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai-community/gpt2&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">(</span><span class="s2">&quot;What is big data?&quot;</span><span class="p">)</span>
@@ -4630,7 +4630,7 @@
 </figure>
 
 <p>Si queremos usar el <em>dataset</em>, podemos pulsar sobre el botón <em>Use in Datasets library</em> o codificar el siguiente fragmento:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="n">mnist_dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;mnist&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="nb">print</span><span class="p">(</span><span class="n">mnist_dataset</span><span class="p">)</span>
@@ -4684,7 +4684,7 @@
 <span class="linenos" data-linenos="12 "></span><span class="k">*</span><span class="w"> </span>CP (<span class="sb">`float64`</span>): Capacidad calorífica (J/mol K)
 </code></pre></div>
 <p>Para terminar, si queremos usar nuestro <em>dataset</em>, de la misma forma que antes, usaremos el método <code>load_dataset</code>, indicando el usuario y el nombre del dataset:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">iabd_dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;aitor-medrano/iabd&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="4 "></span><span class="nb">print</span><span class="p">(</span><span class="n">iabd_dataset</span><span class="p">)</span>
@@ -4738,19 +4738,19 @@ https://github.com/huggingface/education-toolkit/tree/main/tutorials/ES
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>(RAPIA.3 / CEPIA.3b, CEPIA.3c / 3p) Crea un entorno virtual e instala las librerías de <em>Hugging Face</em> necesarias para ejecutar tanto el traductor como el modelo 2-1 de <em>Stable Difussion</em>. Genera un par de frases e imágenes. Anota con comentarios en el código el tiempo necesario para la generación de los resultados, y adjunta tanto las traducciones como las imágenes generadas.</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 3p) Crea un entorno virtual e instala las librerías de <em>Hugging Face</em> necesarias para ejecutar tanto el traductor como el modelo 2-1 de <em>Stable Difussion</em>. Genera un par de frases e imágenes. Anota con comentarios en el código el tiempo necesario para la generación de los resultados, y adjunta tanto las traducciones como las imágenes generadas.</p>
 </li>
 <li>
-<p>(RAPIA.3 / CEPIA.3b, CEPIA.3c, CEPIA.3d / 1p) Crea una cuenta en <em>Hugging Face</em>, instala las CLI y tras hacer login, averigua cuanto ocupan los modelos descargados.</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr>, <abbr title="Se ha evaluado como la convergencia tecnológica aporta seguridad en los negocios.">CEPIA.3d</abbr> / 1p) Crea una cuenta en <em>Hugging Face</em>, instala las CLI y tras hacer login, averigua cuanto ocupan los modelos descargados.</p>
 </li>
 <li>
-<p>(RAMIA.1 / CEMIA.1d, CEMIA.1e / 2p) Basándote en lo aprendido a partir de los casos de uso de <a href="#hola-spaces">Hola Spaces</a> y <a href="#hola-spaces-20">Hola Spaces 2.0</a>, mediante <em>Gradio</em> tanto en <em>Hugging Face</em> como en local, crea un nuevo espacio en tu cuenta que permita realizar traducciones a partir de una caja de texto.</p>
+<p>(<abbr title="Caracteriza sistemas de Inteligencia Artificial relacionados con la mejora de la eficiencia operativa de las organizaciones y empresas.">RAMIA.1</abbr> / <abbr title="Se han identificado nuevas formas de interacciones en los negocios que mejore la eficiencia operativa.">CEMIA.1d</abbr>, <abbr title="Se han presentado los resultados y las soluciones al cliente final en una forma fácil de interpretar.">CEMIA.1e</abbr> / 2p) Basándote en lo aprendido a partir de los casos de uso de <a href="#hola-spaces">Hola Spaces</a> y <a href="#hola-spaces-20">Hola Spaces 2.0</a>, mediante <em>Gradio</em> tanto en <em>Hugging Face</em> como en local, crea un nuevo espacio en tu cuenta que permita realizar traducciones a partir de una caja de texto.</p>
 </li>
 <li>
-<p>(RAPIA.3 / CEPIA.3b, CEPIA.3c / opcional) Crea un modelo y siguiendo el ejemplo de <a href="#usando-git">Usando Git</a>, configura tu clave SSH, y añade los archivos necesarios para poder inferir imágenes de perros y gatos desde el interfaz web. Posteriormente, mediante <em>Python</em>, realiza la inferencia del modelo haciendo uso de un <em>Pipeline</em>.</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / opcional) Crea un modelo y siguiendo el ejemplo de <a href="#usando-git">Usando Git</a>, configura tu clave SSH, y añade los archivos necesarios para poder inferir imágenes de perros y gatos desde el interfaz web. Posteriormente, mediante <em>Python</em>, realiza la inferencia del modelo haciendo uso de un <em>Pipeline</em>.</p>
 </li>
 <li>
-<p>(RAPIA.3 / CEPIA.3b, CEPIA.3c / 2p) Crea un <em>dataset</em> en <em>Hugging Face</em> a partir de los datos de entrenamiento (<a href="resources/titanic_train.csv"><code>titanic_train.csv</code></a>) y pruebas (<a href="resources/titanic_test.csv"><code>titanic_test.csv</code></a>) del <a href="https://www.kaggle.com/c/titanic/data">Titanic</a>. A continuación, desde <em>Python</em> mediante la libreria <em>datasets</em>, recupera los datos y muestra sus características.</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 2p) Crea un <em>dataset</em> en <em>Hugging Face</em> a partir de los datos de entrenamiento (<a href="resources/titanic_train.csv"><code>titanic_train.csv</code></a>) y pruebas (<a href="resources/titanic_test.csv"><code>titanic_test.csv</code></a>) del <a href="https://www.kaggle.com/c/titanic/data">Titanic</a>. A continuación, desde <em>Python</em> mediante la libreria <em>datasets</em>, recupera los datos y muestra sus características.</p>
 </li>
 </ol>
 

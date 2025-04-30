@@ -4152,10 +4152,10 @@ La virtualización de datos puede considerarse una herramienta que amplía el la
 <p>Si queremos realizar consultas desde Python, de la misma forma que hemos trabajado con S3, necesitamos la librería <em>boto3</em>. </p>
 <p>En este caso, usaremos el cliente de <code>athena</code>. Primero, vamos a definir una serie de funciones para interactuar con Athena. Hemos de destacar que la ejecución de <em>Athena</em> es asíncrona, y por tanto, al enviar una consulta, del mismo modo que hemos realizado mediante AWS CLI, obtendremos un identificador ( <code>QueryExecutionId</code>), el cual deberemos consultar posteriormente para comprobar si ya ha terminado ( <code>QueryExecution.Status.State</code>) la consulta y recuperar la información.</p>
 <p>Así, la primera consulta es:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">boto3</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">time</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="linenos" data-linenos=" 3 "></span>
-<span class="hll"><span class="linenos" data-linenos=" 4 "></span><span class="k">def</span> <span class="nf">ejecutar_consulta_athena</span><span class="p">(</span><span class="n">consulta</span><span class="p">,</span> <span class="n">basededatos</span><span class="p">,</span> <span class="n">destino_salida</span><span class="p">):</span>
+<span class="hll"><span class="linenos" data-linenos=" 4 "></span><span class="k">def</span><span class="w"> </span><span class="nf">ejecutar_consulta_athena</span><span class="p">(</span><span class="n">consulta</span><span class="p">,</span> <span class="n">basededatos</span><span class="p">,</span> <span class="n">destino_salida</span><span class="p">):</span>
 </span><span class="linenos" data-linenos=" 5 "></span>    <span class="n">response</span> <span class="o">=</span> <span class="n">cliente_athena</span><span class="o">.</span><span class="n">start_query_execution</span><span class="p">(</span>
 <span class="linenos" data-linenos=" 6 "></span>        <span class="n">QueryString</span><span class="o">=</span><span class="n">consulta</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 7 "></span>        <span class="n">QueryExecutionContext</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;Database&#39;</span><span class="p">:</span> <span class="n">basededatos</span> <span class="p">},</span>
@@ -4163,13 +4163,13 @@ La virtualización de datos puede considerarse una herramienta que amplía el la
 <span class="linenos" data-linenos=" 9 "></span>    <span class="p">)</span>
 <span class="linenos" data-linenos="10 "></span>    <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;QueryExecutionId&#39;</span><span class="p">]</span>
 <span class="linenos" data-linenos="11 "></span>
-<span class="hll"><span class="linenos" data-linenos="12 "></span><span class="k">def</span> <span class="nf">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">):</span>
+<span class="hll"><span class="linenos" data-linenos="12 "></span><span class="k">def</span><span class="w"> </span><span class="nf">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">):</span>
 </span><span class="linenos" data-linenos="13 "></span>    <span class="n">response</span> <span class="o">=</span> <span class="n">cliente_athena</span><span class="o">.</span><span class="n">get_query_execution</span><span class="p">(</span>
 <span class="linenos" data-linenos="14 "></span>        <span class="n">QueryExecutionId</span><span class="o">=</span><span class="n">query_execution_id</span>
 <span class="linenos" data-linenos="15 "></span>    <span class="p">)</span>
 <span class="linenos" data-linenos="16 "></span>    <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;QueryExecution&#39;</span><span class="p">][</span><span class="s1">&#39;Status&#39;</span><span class="p">][</span><span class="s1">&#39;State&#39;</span><span class="p">]</span>
 <span class="linenos" data-linenos="17 "></span>
-<span class="hll"><span class="linenos" data-linenos="18 "></span><span class="k">def</span> <span class="nf">obtener_resultado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">):</span>
+<span class="hll"><span class="linenos" data-linenos="18 "></span><span class="k">def</span><span class="w"> </span><span class="nf">obtener_resultado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">):</span>
 </span><span class="linenos" data-linenos="19 "></span>    <span class="n">response</span> <span class="o">=</span> <span class="n">cliente_athena</span><span class="o">.</span><span class="n">get_query_results</span><span class="p">(</span>
 <span class="linenos" data-linenos="20 "></span>        <span class="n">QueryExecutionId</span><span class="o">=</span><span class="n">query_execution_id</span>
 <span class="linenos" data-linenos="21 "></span>    <span class="p">)</span>
@@ -4212,8 +4212,8 @@ La virtualización de datos puede considerarse una herramienta que amplía el la
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>awswrangler
 </code></pre></div>
 <p>podemos hacer una consulta a <em>Athena</em> de una forma más sencilla:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">awswrangler</span> <span class="k">as</span> <span class="nn">wr</span>
-<span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">awswrangler</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">wr</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="linenos" data-linenos="3 "></span>
 <span class="linenos" data-linenos="4 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">wr</span><span class="o">.</span><span class="n">athena</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM customers&quot;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s2">&quot;s8a_retail&quot;</span><span class="p">)</span>
 </code></pre></div>

@@ -4199,9 +4199,9 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Productor</label><label for="__tabbed_2_2">Consumidor</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><span class="filename">producer-cluster.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">kafka</span> <span class="kn">import</span> <span class="n">KafkaProducer</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">dumps</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">time</span>
+<div class="highlight"><span class="filename">producer-cluster.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">kafka</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaProducer</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">json</span><span class="w"> </span><span class="kn">import</span> <span class="n">dumps</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="n">producer</span> <span class="o">=</span> <span class="n">KafkaProducer</span><span class="p">(</span>
 <span class="linenos" data-linenos=" 6 "></span>    <span class="n">value_serializer</span><span class="o">=</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">dumps</span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
@@ -4215,8 +4215,8 @@
 </div>
 <div class="tabbed-block">
 <p>En el consumidor, además hemos modificado la forma de mostrar los mensajes para visualizar más información: </p>
-<div class="highlight"><span class="filename">consumer-cluster.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">kafka</span> <span class="kn">import</span> <span class="n">KafkaConsumer</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">loads</span>
+<div class="highlight"><span class="filename">consumer-cluster.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">kafka</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaConsumer</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">json</span><span class="w"> </span><span class="kn">import</span> <span class="n">loads</span>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">consumer</span> <span class="o">=</span> <span class="n">KafkaConsumer</span><span class="p">(</span>
 <span class="linenos" data-linenos=" 5 "></span>    <span class="s1">&#39;iabd-topic-3p2r&#39;</span><span class="p">,</span>
@@ -4298,11 +4298,11 @@
 <span class="linenos" data-linenos="2 "></span>kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>iabd-aemet-silver<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
 </code></pre></div>
 <p>Y a continuación desarrollamos el productor, que hará uso de la librería <a href="https://requests.readthedocs.io/en/latest/">request</a>:</p>
-<div class="highlight"><span class="filename">productorBronze.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">kafka</span> <span class="kn">import</span> <span class="n">KafkaProducer</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">dumps</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span> <span class="nn">time</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span> <span class="nn">requests</span>
+<div class="highlight"><span class="filename">productorBronze.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">kafka</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaProducer</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">json</span><span class="w"> </span><span class="kn">import</span> <span class="n">dumps</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 <span class="linenos" data-linenos=" 6 "></span>
 <span class="linenos" data-linenos=" 7 "></span><span class="c1"># Creamos el productor de Kafka</span>
 <span class="linenos" data-linenos=" 8 "></span><span class="n">producer</span> <span class="o">=</span> <span class="n">KafkaProducer</span><span class="p">(</span>
@@ -4337,9 +4337,9 @@
 <p>En el consumidor del <em>topic</em> <code>iabd-aemet-bronze</code> vamos a recuperar las peticiones REST almacenadas en JSON y las persistiremos en S3, en el mismo <em>bucket</em> que <a href="nifi2.html#creando-el-bucket">creamos en la sesión de Nifi</a>.</p>
 <p>En este caso, como el mensaje ya está en formato JSON y no queremos tratarlo, no hace falta deserializarlo ni volverlo a serializar.</p>
 <p>El código <em>Python</em> será similar a:</p>
-<div class="highlight"><span class="filename">consumidorBronze.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">kafka</span> <span class="kn">import</span> <span class="n">KafkaConsumer</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">boto3</span>
+<div class="highlight"><span class="filename">consumidorBronze.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">kafka</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaConsumer</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="c1"># Consumidor Kafka</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="n">consumer</span> <span class="o">=</span> <span class="n">KafkaConsumer</span><span class="p">(</span>
@@ -4371,17 +4371,17 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>iabd-aemet-gold<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
 </code></pre></div>
 <p>Así pues, antes de empezar, colocamos las dependencias y la función para transformar un diccionario JSON con todo el contenido en <em>String</em> a diferentes tipos (<em>float</em>, <em>ISODate</em>, ...):</p>
-<div class="highlight"><span class="filename">consumidorSilverProductorGold.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">kafka</span> <span class="kn">import</span> <span class="n">KafkaConsumer</span><span class="p">,</span> <span class="n">KafkaProducer</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">loads</span><span class="p">,</span> <span class="n">dumps</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span> <span class="nn">boto3</span>
+<div class="highlight"><span class="filename">consumidorSilverProductorGold.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">kafka</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaConsumer</span><span class="p">,</span> <span class="n">KafkaProducer</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">json</span><span class="w"> </span><span class="kn">import</span> <span class="n">loads</span><span class="p">,</span> <span class="n">dumps</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 <span class="linenos" data-linenos=" 6 "></span>
-<span class="linenos" data-linenos=" 7 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="linenos" data-linenos=" 9 "></span>
 <span class="linenos" data-linenos="10 "></span><span class="c1"># Convierte un diccionario JSON con todo el contenido en String a diferentes tipos (float, ISODate, ...)</span>
-<span class="linenos" data-linenos="11 "></span><span class="k">def</span> <span class="nf">esquema_json</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
+<span class="linenos" data-linenos="11 "></span><span class="k">def</span><span class="w"> </span><span class="nf">esquema_json</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
 <span class="linenos" data-linenos="12 "></span>    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="linenos" data-linenos="13 "></span>
 <span class="linenos" data-linenos="14 "></span>    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;fecha&#39;</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">):</span>

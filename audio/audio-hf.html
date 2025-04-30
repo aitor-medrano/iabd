@@ -3936,16 +3936,16 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>torchaudio
 </code></pre></div>
 <p>Y a continuación, haciendo uso de un <em>pipeline</em>, vamos a cargar el modelo base y realizar la inferencia. La función <code>transcribe</code> toma un único parámetro un audio como un array <em>NumPy</em> del audio grabado por el usuario. El objeto <code>pipeline</code> lo espera en formato <code>float32</code>, así que primero lo convertimos y luego extraemos el texto transcrito.</p>
-<div class="highlight"><span class="filename">gradio-whisper.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">torch</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<div class="highlight"><span class="filename">gradio-whisper.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">gradio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
 <span class="linenos" data-linenos=" 5 "></span>
 <span class="linenos" data-linenos=" 6 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span>
 <span class="hll"><span class="linenos" data-linenos=" 7 "></span>    <span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai/whisper-base&quot;</span>
 </span><span class="linenos" data-linenos=" 8 "></span><span class="p">)</span>
 <span class="linenos" data-linenos=" 9 "></span>
-<span class="linenos" data-linenos="10 "></span><span class="k">def</span> <span class="nf">transcribe</span><span class="p">(</span><span class="n">audio</span><span class="p">):</span>
+<span class="linenos" data-linenos="10 "></span><span class="k">def</span><span class="w"> </span><span class="nf">transcribe</span><span class="p">(</span><span class="n">audio</span><span class="p">):</span>
 <span class="linenos" data-linenos="11 "></span>    <span class="n">sr</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">audio</span>
 <span class="linenos" data-linenos="12 "></span>    <span class="c1"># Pasamos el array de muestras a tipo NumPy de 32 bits</span>
 <span class="linenos" data-linenos="13 "></span>    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
@@ -3988,15 +3988,15 @@
 <li>Añadir un estado en el interfaz para almacenar el audio grabado por el usuario, a modo de historial</li>
 </ul>
 <p>A medida que se ejecuta la interfaz, se llama a la función <code>transcribe</code>, con un registro de todo el audio hablado previamente en <code>stream</code>, así como el nuevo trozo de audio como <code>nuevo_fragmento</code>, y devuelve  el nuevo audio completo para que pueda ser almacenado de nuevo en el estado, y la nueva transcripción (*no es la solución más optima, ya que no hace falta volver la transcripción de todo el audio almacenado - probablemente, con los últimos 5 segundos sería suficiente):</p>
-<div class="highlight"><span class="filename">gradio-whisper-streaming.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<div class="highlight"><span class="filename">gradio-whisper-streaming.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">gradio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span>
 <span class="linenos" data-linenos=" 6 "></span>    <span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai/whisper-base&quot;</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="p">)</span>
 <span class="linenos" data-linenos=" 8 "></span>
-<span class="hll"><span class="linenos" data-linenos=" 9 "></span><span class="k">def</span> <span class="nf">transcribe</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">nuevo_fragmento</span><span class="p">):</span>
+<span class="hll"><span class="linenos" data-linenos=" 9 "></span><span class="k">def</span><span class="w"> </span><span class="nf">transcribe</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">nuevo_fragmento</span><span class="p">):</span>
 </span><span class="linenos" data-linenos="10 "></span>    <span class="n">sr</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">nuevo_fragmento</span>
 <span class="linenos" data-linenos="11 "></span>    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="linenos" data-linenos="12 "></span>    <span class="n">y</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
@@ -4028,12 +4028,12 @@
 <h3 id="caso-3a-tts-mediante-bark">Caso 3a: TTS mediante Bark<a class="headerlink" href="#caso-3a-tts-mediante-bark" title="Permanent link">&para;</a></h3>
 <p>Como TTS, vamos a utilizar el modelo <a href="https://huggingface.co/suno/bark">Bark</a>, el cual, además de ser multi-idioma, también permite incluir sonidos como música, sonrisas, tos, etc... Puedes probarlo en el siguiente <a href="https://huggingface.co/spaces/suno/bark">Space</a>.</p>
 <p>A la hora de usarlo, tras inferir el texto, obtendremos el audio generado, tanto la tasa de muestreo como el propio audio:</p>
-<div class="highlight"><span class="filename">gradio-bark.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<div class="highlight"><span class="filename">gradio-bark.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">gradio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;text-to-speech&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;suno/bark-small&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 5 "></span>
-<span class="linenos" data-linenos=" 6 "></span><span class="k">def</span> <span class="nf">tts</span><span class="p">(</span><span class="n">frase</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="k">def</span><span class="w"> </span><span class="nf">tts</span><span class="p">(</span><span class="n">frase</span><span class="p">):</span>
 <span class="linenos" data-linenos=" 7 "></span>    <span class="n">audio_generated</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">(</span><span class="n">frase</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 8 "></span>
 <span class="linenos" data-linenos=" 9 "></span>    <span class="k">return</span> <span class="n">audio_generated</span><span class="p">[</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">],</span><span class="n">audio_generated</span><span class="p">[</span><span class="s2">&quot;audio&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
@@ -4055,8 +4055,8 @@
 
 <h4 id="configurando-bark">Configurando Bark<a class="headerlink" href="#configurando-bark" title="Permanent link">&para;</a></h4>
 <p>Si queremos configurar el tono de la voz, si es un hombre o una mujer, incluso "ayudarle" con el idioma a emplear, en vez de acceder via un <em>Pipeline</em>, accederemos mediante un <a href="https://huggingface.co/docs/transformers/main/en/autoclass_tutorial#autoprocessor"><em>AutoProcessor</em></a> y el <a href="https://huggingface.co/docs/transformers/model_doc/bark"><em>BarkModel</em></a>:</p>
-<div class="highlight"><span class="filename">gradio-bark-processor.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoProcessor</span><span class="p">,</span> <span class="n">BarkModel</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<div class="highlight"><span class="filename">gradio-bark-processor.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoProcessor</span><span class="p">,</span> <span class="n">BarkModel</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">gradio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;suno/bark-small&quot;</span>
 <span class="linenos" data-linenos=" 5 "></span>
@@ -4066,7 +4066,7 @@
 <span class="linenos" data-linenos=" 9 "></span><span class="c1"># Selección de voz - Valores: https://suno-ai.notion.site/8b8e8749ed514b0cbf3f699013548683</span>
 <span class="hll"><span class="linenos" data-linenos="10 "></span><span class="n">voice_preset</span> <span class="o">=</span> <span class="s2">&quot;v2/es_speaker_0&quot;</span>
 </span><span class="linenos" data-linenos="11 "></span>
-<span class="linenos" data-linenos="12 "></span><span class="k">def</span> <span class="nf">tts</span><span class="p">(</span><span class="n">frase</span><span class="p">):</span>
+<span class="linenos" data-linenos="12 "></span><span class="k">def</span><span class="w"> </span><span class="nf">tts</span><span class="p">(</span><span class="n">frase</span><span class="p">):</span>
 <span class="linenos" data-linenos="13 "></span>    <span class="c1"># Obtenemos el procesador</span>
 <span class="hll"><span class="linenos" data-linenos="14 "></span>    <span class="n">inputs</span> <span class="o">=</span> <span class="n">processor</span><span class="p">(</span><span class="n">frase</span><span class="p">,</span> <span class="n">voice_preset</span><span class="o">=</span><span class="n">voice_preset</span><span class="p">)</span>
 </span><span class="linenos" data-linenos="15 "></span>
@@ -4089,14 +4089,14 @@
 </code></pre></div>
 <h3 id="caso-3b-uniendo-whisper-con-bark">Caso 3b: Uniendo Whisper con Bark<a class="headerlink" href="#caso-3b-uniendo-whisper-con-bark" title="Permanent link">&para;</a></h3>
 <p>En nuestro caso, necesitamos crear dos <em>pipelines</em>, y en la salida hemos indicado dos componentes, y por lo tanto, la función <code>transcribe</code> devuelve una tupla de valor (el texto y el audio generado):</p>
-<div class="highlight"><span class="filename">gradio-whisper-tts.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<div class="highlight"><span class="filename">gradio-whisper-tts.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">gradio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="hll"><span class="linenos" data-linenos=" 5 "></span><span class="n">transcriber</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai/whisper-base&quot;</span><span class="p">)</span>
 </span><span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="n">tts</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;text-to-speech&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;suno/bark-small&quot;</span><span class="p">)</span>
 </span><span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span><span class="k">def</span> <span class="nf">transcribe</span><span class="p">(</span><span class="n">audio</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="k">def</span><span class="w"> </span><span class="nf">transcribe</span><span class="p">(</span><span class="n">audio</span><span class="p">):</span>
 <span class="linenos" data-linenos=" 9 "></span>    <span class="n">sr</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">audio</span>
 <span class="linenos" data-linenos="10 "></span>    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="linenos" data-linenos="11 "></span>    <span class="n">y</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>

@@ -4140,12 +4140,12 @@
 <h3 id="caso-de-uso-2-desde-cero">Caso de uso 2: Desde cero<a class="headerlink" href="#caso-de-uso-2-desde-cero" title="Permanent link">&para;</a></h3>
 <p>Para este caso, vamos a emplear la crear una función que acceda a <em>MongoDB</em> y nos devuelva un documento.</p>
 <p>Para ello, vamos a crear en local, un archivo con el código a ejecutar. Primero crearemos una carpeta <code>code</code>, y dentro de ella, colocaremos este fragmento de código dentro de un archivo nombrado <a href="resources/lambda/code/lambda_function.py"><code>lambda_function.py</code></a>, y contendrá una función <code>lambda_handler</code>:</p>
-<div class="highlight"><span class="filename">code/lambda_function.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">bson.json_util</span> <span class="kn">import</span> <span class="n">dumps</span>
+<div class="highlight"><span class="filename">code/lambda_function.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">bson.json_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">dumps</span>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s1">&#39;mongodb+srv://iabd:iabdiabd@cluster0.dfaz5er.mongodb.net&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 5 "></span>
-<span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span> <span class="c1"># (1)!</span>
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="k">def</span><span class="w"> </span><span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span> <span class="c1"># (1)!</span>
 </span><span class="linenos" data-linenos=" 7 "></span>
 <span class="linenos" data-linenos=" 8 "></span>    <span class="n">un_doc</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">sample_training</span><span class="o">.</span><span class="n">zips</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>   
 <span class="linenos" data-linenos=" 9 "></span>
@@ -4269,15 +4269,15 @@ En el desencadenador S3, vamos a elegir el *bucket* que creamos en la sesión an
 
 Si nos fijamos en el código fuente creado, veremos que utiliza *boto3* para acceder al *bucket*, el cual recibe sus datos del parámetro `event`:
 
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">urllib.parse</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">boto3</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">urllib.parse</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Loading function&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 6 "></span>
 <span class="hll"><span class="linenos" data-linenos=" 7 "></span><span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
 </span><span class="linenos" data-linenos=" 8 "></span>
-<span class="linenos" data-linenos=" 9 "></span><span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="k">def</span><span class="w"> </span><span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
 <span class="linenos" data-linenos="10 "></span>    <span class="c1">#print(&quot;Received event: &quot; + json.dumps(event, indent=2))</span>
 <span class="linenos" data-linenos="11 "></span>
 <span class="linenos" data-linenos="12 "></span>    <span class="c1"># Get the object from the event and show its content type</span>
@@ -4381,7 +4381,7 @@ Nosotros, como desarrolladores, sólo deberemos cargar el código, elegir el tip
 <li>
 <p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 1p) Realiza el caso de uso 2, pero modifícalo para que tanto la URI de MongoDB como el nombre de la colección los obtenga de variables de entorno configuradas en la función.</p>
 <p>Puede que tengas que añadir código similar al siguiente fragmento para leer las variables:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">uri</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MONGODB_URI&quot;</span><span class="p">]</span>
 </code></pre></div>

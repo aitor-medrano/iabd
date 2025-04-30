@@ -4511,8 +4511,8 @@ Finalmente, añadimos una nueva propiedad para indicar la consulta. En nuestro c
 </ol>
 <p>El resultado del flujo de datos será similar a:</p>
 <figure style="align: center;">
-    <img alt="Flujo completo del caso 3 en Nifi" src="images/04caso3Completo.png">
-    <figcaption>Flujo completo del caso 3</figcaption>
+    <img alt="Flujo completo del caso 2 en Nifi" src="images/04caso3Completo.png">
+    <figcaption>Flujo completo del caso 2</figcaption>
 </figure>
 
 <div class="admonition question">
@@ -4760,7 +4760,7 @@ Finalmente, añadimos una nueva propiedad para indicar la consulta. En nuestro c
 </code></pre></div>
 </div>
 <p>Para poder meter los mensajes en <em>MongoDB</em>, vamos a preparar el contenido para que esté en formato JSON. Además del contenido, vamos a crear un atributo con el nombre del enrutador utilizado para posteriormente poder filtrar los mensajes de error.</p>
-<p>Para poder crear el formato JSON, utilizaremos el procesador <a href="https://nifi.apache.org/docs/nifi-docs/components/org.apache.nifi/nifi-standard-nar/latest/org.apache.nifi.processors.standard.AttributesToJSON/index.html"><em>AttributesToJSON</em></a>. Así pues, previamente necesitamos pasar los mensajes desde el contenido de los FF a los atributos (para ello, igual que en el caso anterior, utilizaremos el procesador <em>ExtracText</em>). A su vez, también crearemos un nuevo atributo con el nombre del enrutador mediante el procesador <em>UpdateAttribute</em>.</p>
+<p>Para poder crear el formato JSON, utilizaremos el procesador <a href="https://nifi.apache.org/docs/nifi-docs/components/org.apache.nifi/nifi-standard-nar/latest/org.apache.nifi.processors.standard.AttributesToJSON/index.html"><em>AttributesToJSON</em></a>. Así pues, previamente necesitamos pasar los mensajes desde el contenido de los FF a los atributos (para ello, igual que en el caso anterior, utilizaremos el procesador <em>ExtractText</em>). A su vez, también crearemos un nuevo atributo con el nombre del enrutador mediante el procesador <em>UpdateAttribute</em>.</p>
 <p>El resultado final será similar al siguiente flujo:</p>
 <figure style="align: center;">
     <img alt="Resultado completo del caso 4 en Nifi" src="images/04caso4Completo.png">
@@ -4845,7 +4845,7 @@ Finalmente, añadimos una nueva propiedad para indicar la consulta. En nuestro c
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <p>En la entrega debes adjuntar una captura de pantalla donde se vea el flujo de datos completo con una nota con tu nombre, y adjuntar la definición de cada flujo (sobre el área de trabajo, con el botón derecho, <em>Download flow definition</em>).</p>
 <ol>
-<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> / 1p) Realiza el caso de uso 1, utilizando un fichero cuyo nombre sea el tuyo y adjunta capturas de la cola y su contenido al leer el fichero y antes de moverlo a la carpeta destino.</li>
+<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> / 1p) Realiza el caso de uso 1, utilizando un fichero cuyo nombre sea el tuyo y adjunta capturas de la cola y su contenido al leer el fichero y antes de moverlo a la carpeta destino o de conflicto.</li>
 <li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> y <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 1.5p) Realiza el caso de uso 2, y compara el resultado de ejecutarlo tal cual está en el caso de uso respecto a configurar el <em>SplitRecord</em> para que contenga 10 filas por cada FF. A continuación, en un nuevo flujo, quita el procesador <em>SplitRecord</em> y realiza el filtrado desde <em>QueryRecord</em> directamente.</li>
 <li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> y <abbr title="Se ha determinado el formato de datos adecuado para el almacenamiento.">CEBDA.1c</abbr> / 1.5p) Realiza el caso de uso 3, pero en vez de llamar al atributo <code>contenido</code> denomínalo <code>datos</code> y almacena el resultado en <em>MongoDB</em> (revisa los procesadores <em>AttributesToJSON</em> y <em>PutMongo</em> empleados en el caso de uso 4)</li>
 </ol>

@@ -4529,9 +4529,9 @@
 </div>
 <p>Para <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/WorkingWithItems.html#WorkingWithItems.WritingData">insertar datos en una tabla</a>, usaremos el método <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/put_item.html">put_item</a>, el cual crea un nuevo registro o lo sustituye si encuentra uno con la misma clave.</p>
 <p>Así pues, una vez creada la tabla, vamos a ver cómo podemos cargar los datos. Haciendo uso de la librería <em>boto3</em> vamos a crear el archivo <code>cargarDatosPeliculas.py</code>:</p>
-<div class="highlight"><span class="filename">cargarDatosPeliculas.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">boto3</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">decimal</span>
+<div class="highlight"><span class="filename">cargarDatosPeliculas.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">decimal</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="hll"><span class="linenos" data-linenos=" 5 "></span><span class="n">dynamodb</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s1">&#39;dynamodb&#39;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-east-1&#39;</span><span class="p">)</span> <span class="c1"># (1)!</span>
 </span><span class="linenos" data-linenos=" 6 "></span>
@@ -4631,7 +4631,7 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Mediante <code>get_item</code></label><label for="__tabbed_2_2">Mediante <code>get_item</code> con excepciones</label><label for="__tabbed_2_3">Mediante PartiQL</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><span class="filename">dynamodb_getitem.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">boto3</span>
+<div class="highlight"><span class="filename">dynamodb_getitem.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="n">dynamodb</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s1">&#39;dynamodb&#39;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-east-1&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">tabla</span> <span class="o">=</span> <span class="n">dynamodb</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="s1">&#39;SeveroPeliculas&#39;</span><span class="p">)</span>
@@ -4650,8 +4650,8 @@
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><span class="filename">dynamodb_getitem_exc.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">boto3</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="kn">import</span> <span class="n">ClientError</span>
+<div class="highlight"><span class="filename">dynamodb_getitem_exc.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">botocore.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientError</span>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">dynamodb</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s1">&#39;dynamodb&#39;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-east-1&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="n">tabla</span> <span class="o">=</span> <span class="n">dynamodb</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="s1">&#39;SeveroPeliculas&#39;</span><span class="p">)</span>
@@ -4677,7 +4677,7 @@
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><span class="filename">dynamodb_select.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">boto3</span>
+<div class="highlight"><span class="filename">dynamodb_select.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="n">clientDDB</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;dynamodb&#39;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-east-1&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 4 "></span>
@@ -4731,8 +4731,8 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Películas de 2016 mediante <code>query</code></label><label for="__tabbed_4_2">Películas cuyo título esté entre la A y la L</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">boto3</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">boto3.dynamodb.conditions</span> <span class="kn">import</span> <span class="n">Key</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3.dynamodb.conditions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Key</span>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="c1"># Mediante query</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="n">dynamodb</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s1">&#39;dynamodb&#39;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-east-1&#39;</span><span class="p">)</span>
@@ -4752,13 +4752,13 @@
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">boto3</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">decimal</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span> <span class="nn">boto3.dynamodb.conditions</span> <span class="kn">import</span> <span class="n">Key</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">decimal</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3.dynamodb.conditions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Key</span>
 <span class="linenos" data-linenos=" 5 "></span>
-<span class="linenos" data-linenos=" 6 "></span><span class="k">class</span> <span class="nc">DecimalEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
-<span class="linenos" data-linenos=" 7 "></span>    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="k">class</span><span class="w"> </span><span class="nc">DecimalEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 7 "></span>    <span class="k">def</span><span class="w"> </span><span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
 <span class="linenos" data-linenos=" 8 "></span>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">):</span>
 <span class="linenos" data-linenos=" 9 "></span>            <span class="k">if</span> <span class="n">o</span> <span class="o">%</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 <span class="linenos" data-linenos="10 "></span>                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
@@ -4810,13 +4810,13 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Ejemplo scan</label><label for="__tabbed_5_2">Full scan con PartiQL</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">boto3</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">decimal</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span> <span class="nn">boto3.dynamodb.conditions</span> <span class="kn">import</span> <span class="n">Key</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">decimal</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3.dynamodb.conditions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Key</span>
 <span class="linenos" data-linenos=" 5 "></span>
-<span class="linenos" data-linenos=" 6 "></span><span class="k">class</span> <span class="nc">DecimalEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
-<span class="linenos" data-linenos=" 7 "></span>    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="k">class</span><span class="w"> </span><span class="nc">DecimalEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 7 "></span>    <span class="k">def</span><span class="w"> </span><span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
 <span class="linenos" data-linenos=" 8 "></span>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">):</span>
 <span class="linenos" data-linenos=" 9 "></span>            <span class="k">if</span> <span class="n">o</span> <span class="o">%</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 <span class="linenos" data-linenos="10 "></span>                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
@@ -4842,8 +4842,8 @@
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span> <span class="nn">boto3</span>
-<span class="linenos" data-linenos="2 "></span><span class="kn">from</span> <span class="nn">boto3.dynamodb.conditions</span> <span class="kn">import</span> <span class="n">Key</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">boto3.dynamodb.conditions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Key</span>
 <span class="linenos" data-linenos="3 "></span>
 <span class="linenos" data-linenos="4 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----Películas de 2016 con PartiQL&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="5 "></span><span class="n">clientDDB</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;dynamodb&#39;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-east-1&#39;</span><span class="p">)</span>
@@ -4883,9 +4883,9 @@
 <h2 id="caso-de-uso-3-de-s3-a-dynamodb">Caso de uso 3 - De S3 a DynamoDB<a class="headerlink" href="#caso-de-uso-3-de-s3-a-dynamodb" title="Permanent link">&para;</a></h2>
 <p>En la sesión de S3, en el caso de uso 2, trabajamos mediante <em>Python</em> con un dataset de películas, el cual filtramos haciendo uso de  <a href="s3.html#s3-select">S3Select</a> y nos quedamos con el título, la nota media y la trama siempre y cuando hayan recibido al menos 10.000 votos, el cual almacenamos en <a href="resources/TMDb_filtered.csv"><code>TMDb_filtered.csv</code></a>.</p>
 <p>Una vez creado el fichero en S3, vamos a cargar los datos en <em>DynamoDB</em> haciendo uso de una operación <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/table/batch_writer.html"><code>batch_writer</code></a> que acelera las inserciones al realizarlas por lotes. Como el dataset no contenía la fecha de la película, en nuestro caso le vamos a poner a todas las películas que son del 2023:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">boto3</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="c1"># 1.- Leemos el fichero desde S3 y lo metemos en un DataFrame</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="n">s3c</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
@@ -4923,8 +4923,8 @@
 <span class="linenos" data-linenos="2 "></span>pip3<span class="w"> </span>install<span class="w"> </span>mysql-connector-python
 </code></pre></div>
 <p>Todo el código a continuación se basa en <em>MariaDB</em> como sistema gestor de base de datos. Si queremos conectarnos, debemos indicar los datos de conexión:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">mariadb</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">mariadb</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="k">try</span><span class="p">:</span>
 <span class="hll"><span class="linenos" data-linenos=" 5 "></span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">mariadb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
@@ -4956,10 +4956,10 @@
 </code></pre></div>
 <h3 id="de-rds-a-s3">De RDS a S3<a class="headerlink" href="#de-rds-a-s3" title="Permanent link">&para;</a></h3>
 <p>Vamos a realizar otro ejemplo sencillo que recupere el nombre, apellido y email de los clientes mediante una consulta que recibe un parámetro:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">mariadb</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span> <span class="nn">boto3</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">mariadb</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 <span class="linenos" data-linenos=" 5 "></span>
 <span class="linenos" data-linenos=" 6 "></span><span class="k">try</span><span class="p">:</span>
 <span class="hll"><span class="linenos" data-linenos=" 7 "></span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">mariadb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
@@ -5003,9 +5003,9 @@
 </figure>
 
 <p>Vamos a modificar el ejemplo anterior para que, una vez recuperado los datos de la base de datos, los almacene directamente en DynamoDB:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">mariadb</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">boto3</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">mariadb</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="k">try</span><span class="p">:</span>
 <span class="hll"><span class="linenos" data-linenos=" 6 "></span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">mariadb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
@@ -5047,9 +5047,9 @@
 <p class="admonition-title">Bases de datos y Pandas</p>
 <p>Si estás interesado en colocar dentro de <em>Pandas</em> los datos que recuperas desde una base de datos, es muy común utilizar <a href="https://www.sqlalchemy.org/">SQLAlchemy</a> el cual ofrece una capa por encima de los <em>drivers</em> (además de ofrecer un framework ORM).</p>
 <p>Un fragmento de código que utiliza <em>Pandas</em> y <em>SQLAlchemy</em> sería similar a:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
-<span class="linenos" data-linenos="2 "></span><span class="kn">import</span> <span class="nn">pymysql</span>
-<span class="linenos" data-linenos="3 "></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pymysql</span>
+<span class="linenos" data-linenos="3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="linenos" data-linenos="4 "></span>
 <span class="linenos" data-linenos="5 "></span><span class="n">sqlEngine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;mysql+pymysql://iabd:@127.0.0.1&#39;</span><span class="p">,</span> <span class="n">pool_recycle</span><span class="o">=</span><span class="mi">3600</span><span class="p">)</span>
 <span class="linenos" data-linenos="6 "></span><span class="n">dbConnection</span> <span class="o">=</span> <span class="n">sqlEngine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
