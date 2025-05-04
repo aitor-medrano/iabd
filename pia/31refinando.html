@@ -1771,7 +1771,7 @@
   
   
   <span class="md-ellipsis">
-    Nifi I
+    Nifi
     
   </span>
   
@@ -1794,7 +1794,7 @@
   
   
   <span class="md-ellipsis">
-    Nifi II
+    Nifi Avanzado
     
   </span>
   
@@ -3886,7 +3886,7 @@
 <p>El primer paso es instalar la librería, y tras hacer login, configurar la entidad a la que pertenecemos y el nombre del proyecto (cada equipo debería crear su propio proyecto):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">wandb</span>
 <span class="linenos" data-linenos="2 "></span>
-<span class="linenos" data-linenos="3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">wandb</span>
+<span class="linenos" data-linenos="3 "></span><span class="kn">import</span> <span class="nn">wandb</span>
 <span class="linenos" data-linenos="4 "></span><span class="n">wandb</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
 <span class="linenos" data-linenos="5 "></span>
 <span class="linenos" data-linenos="6 "></span><span class="n">wandb</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
@@ -3895,7 +3895,7 @@
 <span class="linenos" data-linenos="9 "></span><span class="p">)</span>
 </code></pre></div>
 <p>Y posteriormente, al configurar los parámetros de entrenamiento, le decimos que reporte a <code>wandb</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq2SeqTrainingArguments</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">Seq2SeqTrainingArguments</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">training_args</span> <span class="o">=</span> <span class="n">Seq2SeqTrainingArguments</span><span class="p">(</span>
 <span class="hll"><span class="linenos" data-linenos="4 "></span>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;whisper-base-lara&quot;</span><span class="p">,</span>
@@ -3906,13 +3906,13 @@
 </code></pre></div>
 <h3 id="hugging-face">Hugging Face<a class="headerlink" href="#hugging-face" title="Permanent link">&para;</a></h3>
 <p>En el caso de <em>HuggingFAce</em>, hacemos login desde el cuaderno, y tras introducir el token de acceso con permisos de escritura:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">huggingface_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">notebook_login</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">huggingface_hub</span> <span class="kn">import</span> <span class="n">notebook_login</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="c1"># Login en HF</span>
 <span class="linenos" data-linenos="4 "></span><span class="n">notebook_login</span><span class="p">()</span>
 </code></pre></div>
 <p>Al entrenar le indicamos que publique:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq2SeqTrainingArguments</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">Seq2SeqTrainingArguments</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">training_args</span> <span class="o">=</span> <span class="n">Seq2SeqTrainingArguments</span><span class="p">(</span>
 <span class="hll"><span class="linenos" data-linenos="4 "></span>    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;whisper-base-lara&quot;</span><span class="p">,</span>
@@ -3926,17 +3926,17 @@
 </code></pre></div>
 <h3 id="gradio">Gradio<a class="headerlink" href="#gradio" title="Permanent link">&para;</a></h3>
 <p>A la hora de probar los modelos, por ejemplo, podemos crear un IU que nos permite probar más de un modelo dentro del mismo espacio:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">gradio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="linenos" data-linenos=" 6 "></span>
 <span class="linenos" data-linenos=" 7 "></span><span class="c1"># Utilizamos dos modelos entrenados</span>
 <span class="hll"><span class="linenos" data-linenos=" 8 "></span><span class="n">pipe_base</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;aitor-medrano/lara-base-pushed&quot;</span><span class="p">)</span>
 </span><span class="hll"><span class="linenos" data-linenos=" 9 "></span><span class="n">pipe_small</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;aitor-medrano/whisper-small-lara&quot;</span><span class="p">)</span>
 </span><span class="linenos" data-linenos="10 "></span>
-<span class="linenos" data-linenos="11 "></span><span class="k">def</span><span class="w"> </span><span class="nf">greet</span><span class="p">(</span><span class="n">grabacion</span><span class="p">,</span> <span class="n">modelo</span><span class="o">=</span><span class="s2">&quot;base&quot;</span><span class="p">):</span>
+<span class="linenos" data-linenos="11 "></span><span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">grabacion</span><span class="p">,</span> <span class="n">modelo</span><span class="o">=</span><span class="s2">&quot;base&quot;</span><span class="p">):</span>
 <span class="linenos" data-linenos="12 "></span>
 <span class="linenos" data-linenos="13 "></span>    <span class="n">inicio</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 <span class="linenos" data-linenos="14 "></span>

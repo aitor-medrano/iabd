@@ -1771,7 +1771,7 @@
   
   
   <span class="md-ellipsis">
-    Nifi I
+    Nifi
     
   </span>
   
@@ -1794,7 +1794,7 @@
   
   
   <span class="md-ellipsis">
-    Nifi II
+    Nifi Avanzado
     
   </span>
   
@@ -3856,16 +3856,16 @@
 <p>Para ello, vamos a coger los audios grabados desde nuestro entrenamiento hasta el día de hoy, y tras ello, de la misma forma que hasta ahora, necesitaremos crear un nuevo dataset que persistiremos en una carpeta diferentes al dataset de entrenamiento.</p>
 <p>Por ejemplo, podemos elegir los documentos entre dos fechas de forma similar a:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># Recuperamos todos los audios</span>
-<span class="linenos" data-linenos="2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="linenos" data-linenos="3 "></span><span class="n">cursor</span> <span class="o">=</span> <span class="n">audios_coll</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;fecha&quot;</span><span class="p">:{</span><span class="s2">&quot;$gte&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span><span class="s2">&quot;$lte&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)}},</span>
 <span class="linenos" data-linenos="4 "></span>                          <span class="p">{</span><span class="s2">&quot;_id&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;texto.texto&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;aws_object_id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
 </code></pre></div>
 <h2 id="validacion">Validación<a class="headerlink" href="#validacion" title="Permanent link">&para;</a></h2>
 <p>Tras ello, ya podemos comparar los resultados de las predicciones:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_from_disk</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">WhisperForConditionalGeneration</span><span class="p">,</span> <span class="n">WhisperProcessor</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">evaluate</span><span class="w"> </span><span class="kn">import</span> <span class="n">load</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_from_disk</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">WhisperForConditionalGeneration</span><span class="p">,</span> <span class="n">WhisperProcessor</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">evaluate</span> <span class="kn">import</span> <span class="n">load</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="linenos" data-linenos=" 5 "></span>
 <span class="linenos" data-linenos=" 6 "></span><span class="c1"># Cargar el modelo y el procesador</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="n">model</span> <span class="o">=</span> <span class="n">WhisperForConditionalGeneration</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;/home/rutaAlModelo&quot;</span><span class="p">)</span>
@@ -3875,7 +3875,7 @@
 <span class="linenos" data-linenos="11 "></span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="12 "></span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 <span class="linenos" data-linenos="13 "></span>
-<span class="linenos" data-linenos="14 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">Audio</span>
+<span class="linenos" data-linenos="14 "></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">Audio</span>
 <span class="linenos" data-linenos="15 "></span>
 <span class="linenos" data-linenos="16 "></span><span class="c1"># Cargamos los datos de evaluación</span>
 <span class="linenos" data-linenos="17 "></span><span class="n">lara_eval_dataset</span>  <span class="o">=</span> <span class="n">load_from_disk</span><span class="p">(</span><span class="s2">&quot;/home/jupyter-iabd/audioslara/dataset-eval/&quot;</span><span class="p">)</span>
@@ -3884,7 +3884,7 @@
 <span class="linenos" data-linenos="20 "></span>
 <span class="linenos" data-linenos="21 "></span><span class="n">forced_decoder_ids</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">get_decoder_prompt_ids</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;spanish&quot;</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s2">&quot;transcribe&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="22 "></span>
-<span class="linenos" data-linenos="23 "></span><span class="k">def</span><span class="w"> </span><span class="nf">map_to_pred</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
+<span class="linenos" data-linenos="23 "></span><span class="k">def</span> <span class="nf">map_to_pred</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
 <span class="linenos" data-linenos="24 "></span>    <span class="n">audio</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;audio&quot;</span><span class="p">]</span>
 <span class="linenos" data-linenos="25 "></span>    <span class="n">input_features</span> <span class="o">=</span> <span class="n">processor</span><span class="p">(</span><span class="n">audio</span><span class="p">[</span><span class="s2">&quot;array&quot;</span><span class="p">],</span> <span class="n">sampling_rate</span><span class="o">=</span><span class="n">audio</span><span class="p">[</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">],</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">&quot;pt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">input_features</span>
 <span class="linenos" data-linenos="26 "></span>    <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;reference&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">_normalize</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;texto&#39;</span><span class="p">])</span>
@@ -3916,10 +3916,10 @@
 <p>Hasta ahora, cada vez que se crea un <em>checkpoint</em>, se persiste un modelo en el servidor, lo que implica que llenemos el almacenamiento del mismo. </p>
 <p>Para evitarlo, podemos crear un <em>callback</em> y que se invocará cada vez que vaya al almacenar un modelo (<code>on_save</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Anyadimos los callbacks</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainerCallback</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">TrainerCallback</span>
 <span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="k">class</span><span class="w"> </span><span class="nc">CheckpointCleanupCallback</span><span class="p">(</span><span class="n">TrainerCallback</span><span class="p">):</span>
-<span class="hll"><span class="linenos" data-linenos=" 5 "></span>    <span class="k">def</span><span class="w"> </span><span class="nf">on_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="k">class</span> <span class="nc">CheckpointCleanupCallback</span><span class="p">(</span><span class="n">TrainerCallback</span><span class="p">):</span>
+<span class="hll"><span class="linenos" data-linenos=" 5 "></span>    <span class="k">def</span> <span class="nf">on_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 </span><span class="linenos" data-linenos=" 6 "></span>        <span class="n">checkpoint_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;checkpoint-&quot;</span><span class="p">)]</span>
 <span class="linenos" data-linenos=" 7 "></span>        <span class="n">checkpoint_dirs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
 <span class="linenos" data-linenos=" 8 "></span>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">checkpoint_dirs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> 
@@ -3927,7 +3927,7 @@
 <span class="linenos" data-linenos="10 "></span>                <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">old_checkpoint_dir</span><span class="p">)</span>
 </code></pre></div>
 <p>A la hora de crear el <em>trainer</em>, le pasaremos los <em>callbacks</em>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq2SeqTrainer</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">Seq2SeqTrainer</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">trainer</span> <span class="o">=</span> <span class="n">Seq2SeqTrainer</span><span class="p">(</span>
 <span class="linenos" data-linenos="4 "></span>    <span class="o">...</span>

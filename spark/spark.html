@@ -1988,7 +1988,7 @@
   
   
   <span class="md-ellipsis">
-    Nifi I
+    Nifi
     
   </span>
   
@@ -2011,7 +2011,7 @@
   
   
   <span class="md-ellipsis">
-    Nifi II
+    Nifi Avanzado
     
   </span>
   
@@ -4305,21 +4305,21 @@ Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mi
 </div>
 <h3 id="sparkcontext-vs-sparksession">SparkContext vs SparkSession<a class="headerlink" href="#sparkcontext-vs-sparksession" title="Permanent link">&para;</a></h3>
 <p><em>SparkContext</em> es el punto de entrada a <em>Spark</em> desde las versiones 1.x y se utiliza para crear de forma programativa RDD, acumuladores y variables <em>broadcast</em> en el clúster. Desde Spark 2.0, la mayoría de funcionalidades (métodos) disponibles en <em>SparkContext</em> también los están en <em>SparkSession</em>. Su objeto <code>sc</code> está disponible en el <em>spark-shell</em> y se puede crear de forma programativa mediante la clase <code>SparkContext</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkContext</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">pyspark</span> <span class="kn">import</span> <span class="n">SparkContext</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">sc</span> <span class="o">=</span> <span class="n">SparkContext</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 </code></pre></div>
 <p><em>SparkSession</em> se introdujo en la versión 2.0 y es el punto de entrada para crear <em>RDD</em>, <em>DataFrames</em> y <em>DataSets</em>. El objeto <code>spark</code> se encuentra disponible por defecto en el <em>spark-shell</em> y se puede crear de forma programativa mediante el patrón <em>builder</em> de <code>SparkSession</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span> 
 </code></pre></div>
 <p>Además, desde una sesión de <em>Spark</em> podemos obtener un contexto a través de la propiedad <code>sparkContext</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 <span class="linenos" data-linenos="3 "></span><span class="n">sc</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span>
 </code></pre></div>
 <h3 id="hola-spark">Hola Spark<a class="headerlink" href="#hola-spark" title="Permanent link">&para;</a></h3>
 <p>Lo primero que debemos hacer siempre es conectarnos a la sesión de <em>Spark</em>, el cual le indica a <em>Spark</em> como acceder al clúster. Si utilizamos la imagen de <em>Docker</em>, debemos obtener siempre la sesión a partir de la clase <code>SparkSession</code>:</p>
-<div class="highlight"><span class="filename">ejemploDockerSpark.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
+<div class="highlight"><span class="filename">ejemploDockerSpark.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span> <span class="c1"># SparkSession de forma programativa</span>
 <span class="linenos" data-linenos="4 "></span><span class="n">sc</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span>                    <span class="c1"># SparkContext a partir de la sesión</span>
@@ -4361,7 +4361,7 @@ Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mi
 <h3 id="spark-submit">Spark Submit<a class="headerlink" href="#spark-submit" title="Permanent link">&para;</a></h3>
 <p>De la misma manera que mediante <em>Hadoop</em> podíamos lanzar un proceso al clúster para su ejecución, <em>Spark</em> ofrece el comando <code>spark-submit</code> para enviar un script al driver para su ejecución de forma distribuida.</p>
 <p>Así pues, si colocamos nuestro código en un archivo de <em>Python</em>:</p>
-<div class="highlight"><span class="filename">holaSpark.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
+<div class="highlight"><span class="filename">holaSpark.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">sc</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span>
@@ -4449,7 +4449,7 @@ Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mi
 <p>La principal abstracción de los datos en Spark es el <strong><em>Dataset</em></strong>. Se pueden crear desde las fuentes de entrada de <em>Hadoop</em> (como ficheros que provienen de HDFS o S3) o mediante transformaciones de otros <em>Datasets</em>.
 Dado el cariz de <em>Python</em>, no necesitamos que los <em>Dataset</em> estén fuertemente tipados, por eso, todos los <em>Dataset</em> que usemos serán <code>Dataset[Row]</code> (si trabajásemos mediante <em>Java</em> o <em>Scala</em> sí deberíamos indicar el tipo de sus datos), y por consistencia con el concepto de <em>Pandas</em> y <em>R</em>, los llamaremos <strong><em>DataFrame</em></strong>.</p>
 <p>Por ejemplo, veamos cómo podemos crear un <em>DataFrame</em> a partir de un fichero de texto:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span> 
 <span class="linenos" data-linenos=" 4 "></span>

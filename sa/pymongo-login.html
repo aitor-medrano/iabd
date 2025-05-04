@@ -1769,7 +1769,7 @@
   
   
   <span class="md-ellipsis">
-    Nifi I
+    Nifi
     
   </span>
   
@@ -1792,7 +1792,7 @@
   
   
   <span class="md-ellipsis">
-    Nifi II
+    Nifi Avanzado
     
   </span>
   
@@ -3826,10 +3826,10 @@
 </code></pre></div>
 </div>
 <p>Una vez ya hemos configurado la conexión y antes de arrancar la aplicación, vamos a cargar unos datos básicos con usuarios. Para ello, en la carpeta <code>migrations</code> tenemos el archivo <code>users_migration.py</code>, el cual lee la configuración del archivo anterior, y crea tres usuarios:</p>
-<div class="highlight"><span class="filename">users_migration.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">werkzeug.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_password_hash</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
+<div class="highlight"><span class="filename">users_migration.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">werkzeug.security</span> <span class="kn">import</span> <span class="n">generate_password_hash</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span> <span class="nn">configparser</span>
 <span class="linenos" data-linenos=" 5 "></span>
 <span class="linenos" data-linenos=" 6 "></span><span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;.ini&quot;</span><span class="p">)))</span>
@@ -3884,17 +3884,17 @@
 
 <h2 id="blueprints">Blueprints<a class="headerlink" href="#blueprints" title="Permanent link">&para;</a></h2>
 <p>El archivo .ini que hemos configurado previamente define unos valores que la aplicación va a cargar desde el archivo <code>__init__.py</code>, el cual actúa como factoría de la aplicación y le indica a <em>Flask</em> los <em>blueprints</em> a utilizar:</p>
-<div class="highlight"><span class="filename">__init__.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">flask_login</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoginManager</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span>
+<div class="highlight"><span class="filename">__init__.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">flask_login</span> <span class="kn">import</span> <span class="n">LoginManager</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">db</span>
 <span class="linenos" data-linenos=" 4 "></span>
-<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="kn">import</span> <span class="nn">configparser</span>
 <span class="linenos" data-linenos=" 7 "></span>
 <span class="linenos" data-linenos=" 8 "></span><span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;.ini&quot;</span><span class="p">)))</span>
 <span class="linenos" data-linenos="10 "></span>
-<span class="linenos" data-linenos="11 "></span><span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
+<span class="linenos" data-linenos="11 "></span><span class="k">def</span> <span class="nf">create_app</span><span class="p">():</span>
 <span class="linenos" data-linenos="12 "></span>    <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="linenos" data-linenos="13 "></span>
 <span class="linenos" data-linenos="14 "></span>    <span class="c1"># cargamos la configuración</span>
@@ -3909,15 +3909,15 @@
 <span class="linenos" data-linenos="23 "></span>
 <span class="linenos" data-linenos="24 "></span>    <span class="c1"># función que utiliza flask-login para recuperar el usuario</span>
 <span class="linenos" data-linenos="25 "></span>    <span class="nd">@login_manager</span><span class="o">.</span><span class="n">user_loader</span>
-<span class="linenos" data-linenos="26 "></span>    <span class="k">def</span><span class="w"> </span><span class="nf">load_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+<span class="linenos" data-linenos="26 "></span>    <span class="k">def</span> <span class="nf">load_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
 <span class="linenos" data-linenos="27 "></span>        <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
 <span class="linenos" data-linenos="28 "></span>
 <span class="linenos" data-linenos="29 "></span>    <span class="c1"># blueprint para las rutas de autenticación</span>
-<span class="linenos" data-linenos="30 "></span>    <span class="kn">from</span><span class="w"> </span><span class="nn">.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">auth</span> <span class="k">as</span> <span class="n">auth_blueprint</span>
+<span class="linenos" data-linenos="30 "></span>    <span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">auth</span> <span class="k">as</span> <span class="n">auth_blueprint</span>
 <span class="linenos" data-linenos="31 "></span>    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">auth_blueprint</span><span class="p">)</span>
 <span class="linenos" data-linenos="32 "></span>
 <span class="linenos" data-linenos="33 "></span>    <span class="c1"># blueprint para la aplicación</span>
-<span class="linenos" data-linenos="34 "></span>    <span class="kn">from</span><span class="w"> </span><span class="nn">.main</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">main_blueprint</span>
+<span class="linenos" data-linenos="34 "></span>    <span class="kn">from</span> <span class="nn">.main</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">main_blueprint</span>
 <span class="linenos" data-linenos="35 "></span>    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">main_blueprint</span><span class="p">)</span>
 <span class="linenos" data-linenos="36 "></span>
 <span class="linenos" data-linenos="37 "></span>    <span class="k">return</span> <span class="n">app</span>
@@ -3927,19 +3927,19 @@
 <h2 id="login">Login<a class="headerlink" href="#login" title="Permanent link">&para;</a></h2>
 <p>Para la gestión de la autenticación, nos hemos apoyado en la librería <a href="https://flask-login.readthedocs.io/en/latest/">Flask-login</a> que facilita la gestión la sesión del usuario.</p>
 <p>En archivo <code>auth.py</code> contiene la lógica del <em>login</em> y el <em>logout</em>:</p>
-<div class="highlight"><span class="filename">auth.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">flash</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">flask_login</span><span class="w"> </span><span class="kn">import</span> <span class="n">login_user</span><span class="p">,</span> <span class="n">login_required</span><span class="p">,</span> <span class="n">logout_user</span><span class="p">,</span> <span class="n">current_user</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">werkzeug.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_password_hash</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span>
+<div class="highlight"><span class="filename">auth.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">flash</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">flask_login</span> <span class="kn">import</span> <span class="n">login_user</span><span class="p">,</span> <span class="n">login_required</span><span class="p">,</span> <span class="n">logout_user</span><span class="p">,</span> <span class="n">current_user</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">werkzeug.security</span> <span class="kn">import</span> <span class="n">check_password_hash</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">db</span>
 <span class="linenos" data-linenos=" 5 "></span>
 <span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="n">auth</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;auth&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
 </span><span class="linenos" data-linenos=" 7 "></span>
 <span class="linenos" data-linenos=" 8 "></span><span class="nd">@auth</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="k">def</span><span class="w"> </span><span class="nf">login</span><span class="p">():</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
 <span class="linenos" data-linenos="10 "></span>    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;login.html&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="11 "></span>
 <span class="linenos" data-linenos="12 "></span><span class="nd">@auth</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
-<span class="linenos" data-linenos="13 "></span><span class="k">def</span><span class="w"> </span><span class="nf">login_post</span><span class="p">():</span>
+<span class="linenos" data-linenos="13 "></span><span class="k">def</span> <span class="nf">login_post</span><span class="p">():</span>
 <span class="linenos" data-linenos="14 "></span>    <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="15 "></span>    <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="16 "></span>    <span class="n">remember</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remember&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span>
@@ -3958,17 +3958,17 @@
 <span class="linenos" data-linenos="29 "></span>
 <span class="linenos" data-linenos="30 "></span><span class="nd">@auth</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/logout&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="31 "></span><span class="nd">@login_required</span>
-<span class="linenos" data-linenos="32 "></span><span class="k">def</span><span class="w"> </span><span class="nf">logout</span><span class="p">():</span>
+<span class="linenos" data-linenos="32 "></span><span class="k">def</span> <span class="nf">logout</span><span class="p">():</span>
 <span class="linenos" data-linenos="33 "></span>    <span class="n">logout_user</span><span class="p">()</span>
 <span class="linenos" data-linenos="34 "></span>    <span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Sesión cerrada con éxito&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="35 "></span>    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;auth.login&#39;</span><span class="p">))</span>
 </code></pre></div>
 <p>Los usuarios van a entrar al sistema mediante su email y una contraseña. Así pues, una vez hayamos recuperado un usuario por dicho email, creamos el <em>hash</em> de la contraseña recibida, y vemos si comprueba con la recuperada de la base de datos.</p>
 <p>El método <code>login_user</code> de la línea 27 pertenece a la librería <em>Flask-Login</em> y se utiliza para indicar que el usuario ha sido autenticado, de manera que lo almacena en la sesión. La variable <code>user</code> es una clase propia que hemos definido nosotros con los atributos básicos de un usuario,el cual se encuentra en el archivo <code>models.py</code>:</p>
-<div class="highlight"><span class="filename">models.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">flask_login</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserMixin</span>
+<div class="highlight"><span class="filename">models.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">flask_login</span> <span class="kn">import</span> <span class="n">UserMixin</span>
 <span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">UserMixin</span><span class="p">):</span>
-<span class="hll"><span class="linenos" data-linenos=" 4 "></span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">rol</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">UserMixin</span><span class="p">):</span>
+<span class="hll"><span class="linenos" data-linenos=" 4 "></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">rol</span><span class="p">,</span> <span class="n">parent</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 </span><span class="linenos" data-linenos=" 5 "></span>        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
 <span class="linenos" data-linenos=" 6 "></span>        <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
 <span class="linenos" data-linenos=" 7 "></span>        <span class="bp">self</span><span class="o">.</span><span class="n">nombre</span> <span class="o">=</span> <span class="n">nombre</span>
@@ -3976,7 +3976,7 @@
 <span class="linenos" data-linenos=" 9 "></span>        <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">=</span> <span class="n">rol</span>
 <span class="linenos" data-linenos="10 "></span>        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
 <span class="linenos" data-linenos="11 "></span>
-<span class="linenos" data-linenos="12 "></span>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos" data-linenos="12 "></span>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="linenos" data-linenos="13 "></span>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">)&quot;</span>
 </code></pre></div>
 <p>Como se puede observar, la clase define los atributos básicos de un usuario. El atributo <code>parent</code> lo vamos a emplear para que los clientes almacenen el email del técnico que tienen asignado.</p>
@@ -4032,14 +4032,14 @@
 <p>Al utilizar la librería <em>Flask Login</em>, tendremos siempre disponible el usuario logueado en la variable <code>current_user</code>. Además de las propiedades que hayamos definido en la clase, disponemos de la función <code>is_authenticated</code> para comprobar si está autenticado (línea 20). De igual forma, podemos comprobar el rol y condicionar el contenido dependiendo de si es <code>Administrador</code>, <code>Técnico</code> o <code>Cliente</code> (línea 24).</p>
 <h2 id="acceso-a-los-datos">Acceso a los datos<a class="headerlink" href="#acceso-a-los-datos" title="Permanent link">&para;</a></h2>
 <p>Todo el acceso a los datos los hemos encapsulado en el archivo <code>db.py</code>:</p>
-<div class="highlight"><span class="filename">db.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">bson.objectid</span><span class="w"> </span><span class="kn">import</span> <span class="n">ObjectId</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ASCENDING</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">current_app</span><span class="p">,</span> <span class="n">g</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">werkzeug.local</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalProxy</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">project.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">User</span>
+<div class="highlight"><span class="filename">db.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span> <span class="nn">bson.objectid</span> <span class="kn">import</span> <span class="n">ObjectId</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">ASCENDING</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">current_app</span><span class="p">,</span> <span class="n">g</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="kn">from</span> <span class="nn">werkzeug.local</span> <span class="kn">import</span> <span class="n">LocalProxy</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="kn">from</span> <span class="nn">project.models</span> <span class="kn">import</span> <span class="n">User</span>
 <span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span><span class="k">def</span><span class="w"> </span><span class="nf">get_db</span><span class="p">():</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="k">def</span> <span class="nf">get_db</span><span class="p">():</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos="10 "></span><span class="sd">    Método de configuración para obtener una instancia de db</span>
 <span class="linenos" data-linenos="11 "></span><span class="sd">    &quot;&quot;&quot;</span>
@@ -4062,7 +4062,7 @@
 <p>La función <code>get_db</code> utiliza el objeto <a href="https://flask.palletsprojects.com/en/2.2.x/api/#flask.g"><code>g</code></a>, el cual en Flask, es un objeto especial que es único para cada petición. Se utiliza para almacenar datos que serán accesibles desde múltiples funciones durante el <code>request</code>. Así pues, almacenamos la conexión, mejor dicho, el pool de conexiones a MongoDB en vez de crear un nuevo pool cada vez que queramos obtener acceso a la base de datos.</p>
 <p>A continuación, creamos un <a href="https://werkzeug.palletsprojects.com/en/2.2.x/local/#werkzeug.local.LocalProxy"><code>LocalProxy</code></a> para leer la variable global usando sólo la referencia <code>db</code>, de manera que internamente cada referencia a <code>db</code> realmente está llamando a <code>get_db()</code>.</p>
 <p>A continuación, mostramos un par de métodos del mismo archivo que muestran cómo obtenemos datos desde <em>MongoDB</em> haciendo uso de <em>PyMongo</em>:</p>
-<div class="highlight"><span class="filename">db.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">def</span><span class="w"> </span><span class="nf">get_all_users</span><span class="p">():</span>
+<div class="highlight"><span class="filename">db.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">def</span> <span class="nf">get_all_users</span><span class="p">():</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="sd">    Devuelve una lista con todos los usuarios del sistema</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="sd">    &quot;&quot;&quot;</span>
@@ -4071,7 +4071,7 @@
 </span><span class="linenos" data-linenos=" 7 "></span>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <span class="linenos" data-linenos=" 8 "></span>        <span class="k">return</span> <span class="n">e</span>
 <span class="linenos" data-linenos=" 9 "></span>
-<span class="linenos" data-linenos="10 "></span><span class="k">def</span><span class="w"> </span><span class="nf">get_user_by_id</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+<span class="linenos" data-linenos="10 "></span><span class="k">def</span> <span class="nf">get_user_by_id</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
 <span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos="12 "></span><span class="sd">    Devuelve un objeto User a partir de su id</span>
 <span class="linenos" data-linenos="13 "></span><span class="sd">    &quot;&quot;&quot;</span>
