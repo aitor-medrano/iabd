@@ -1,5 +1,6 @@
 services:
   nifi:
+    container_name: iabd-nifi
     ports:
       - "8443:8443"
     volumes:
@@ -14,9 +15,8 @@ services:
       - mysql
   mysql:
     image: mysql:latest
-    container_name: iabd-mysql
+    container_name: iabd-mysql-nifi
     restart: always
-    command: --default-authentication-plugin=mysql_native_password
     ports:
       - "3306:3306"
     environment:
@@ -26,6 +26,7 @@ services:
       MYSQL_USER: iabd
       MYSQL_PASSWORD: iabd
   mongodb:
+    container_name: iabd-mongodb-nifi
     ports:
       - "27017:27017"
     image: mongo:latest
