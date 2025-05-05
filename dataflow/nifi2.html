@@ -4312,8 +4312,8 @@ El procesador <em>SplitText</em> nos permite dividir cualquier flujo de texto en
 <p>Tras arrancar los contenedores, la primera vez, deberemos cargar la <a href="resources/nifi-mysql-mongodb/create_db.sql">base de datos</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>iabd-mysql-nifi<span class="w"> </span>mysql<span class="w"> </span>-h<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>-P<span class="w"> </span><span class="m">3306</span><span class="w"> </span>-uiabd<span class="w"> </span>-piabd<span class="w"> </span>retail_db<span class="w"> </span>&lt;<span class="w"> </span>create_db.sql
 </code></pre></div>
-<p>A partir de aquí, es importante destacar que la <em>url</em> de conexión a la base de datos, en vez de acceder a <code>localhost</code>, lo hace al nombre del contenedor <code>iabd-mysql</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://iabd-mysql/retail_db&quot;</span>
+<p>A partir de aquí, es importante destacar que la <em>url</em> de conexión a la base de datos, en vez de acceder a <code>localhost</code>, lo hace al nombre del contenedor <code>iabd-mysql-nifi</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://iabd-mysql-nifi/retail_db&quot;</span>
 </code></pre></div>
 </div>
 <p>Para este caso de uso, vamos a conectar la ejecución de SQL del procesador <em>ExecuteSQLRecord</em>, con un procesador <em>SplitText</em> encargado de separar el resultado de la consulta en múltiples <em>flowfiles</em>, para posteriormente insertar estos mediante el procesador <em>PutMongo</em>:</p>
@@ -4339,7 +4339,7 @@ El procesador <em>SplitText</em> nos permite dividir cualquier flujo de texto en
 <h4 id="configurando-la-conexion-a-la-base-de-datos">Configurando la conexión a la base de datos<a class="headerlink" href="#configurando-la-conexion-a-la-base-de-datos" title="Permanent link">&para;</a></h4>
 <p>Al crear el servicio para la conexión a la base de datos, seleccionaremos un <a href="https://nifi.apache.org/docs/nifi-docs/components/org.apache.nifi/nifi-dbcp-service-nar/latest/org.apache.nifi.dbcp.DBCPConnectionPool/index.html">DBCPConnectionPool</a> donde indicaremos:</p>
 <ul>
-<li>la URL para conectarnos a la base de datos: <code>jdbc:mysql://localhost/retail_db</code> (o <code>jdbc:mysql://iabd-mysql-nifi/retail_db</code> si lo hacemos desde <em>Docker</em>) (o <code>jdbc:mysql://iabd-mysql-nifi/retail_db</code> si lo hacemos desde <em>Docker</em>)</li>
+<li>la URL para conectarnos a la base de datos: <code>jdbc:mysql://localhost/retail_db</code> (o <code>jdbc:mysql://iabd-mysql-nifi/retail_db</code> si lo hacemos desde <em>Docker</em>)</li>
 <li>el driver empleado: <code>com.mysql.cj.jdbc.Driver</code></li>
 <li>la ruta donde encontrar el driver: <code>/opt/mysql-connector-j-8.0.31.jar</code> (podéis <a href="resources/mysql-connector-j-8.0.31.jar">descargarlo desde aquí</a> y colocarlo en la carpeta)</li>
 <li>usuario y contraseña de la base de datos: <code>iabd</code> / <code>iabd</code></li>
