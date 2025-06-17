@@ -110,7 +110,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#modelo-de-datos-de-influxdb" class="md-skip">
+        <a href="#elementos" class="md-skip">
           Saltar a contenido
         </a>
       
@@ -3665,9 +3665,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#modelo-de-datos-de-influxdb" class="md-nav__link">
+  <a href="#elementos" class="md-nav__link">
     <span class="md-ellipsis">
-      Modelo de datos de InfluxDB
+      Elementos
     </span>
   </a>
   
@@ -3710,9 +3710,42 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#actividades-practicas" class="md-nav__link">
+  <a href="#influxdb-y-python" class="md-nav__link">
     <span class="md-ellipsis">
-      Actividades prácticas
+      InfluxDB y Python
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="InfluxDB y Python">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#insertando-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Insertando datos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consultando-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consultando datos
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-de-uso-1-monitorizacion-de-temperaturas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caso de Uso 1 - Monitorización de temperaturas
     </span>
   </a>
   
@@ -3788,43 +3821,45 @@
 
   <h1>InfluxDB - Base de datos de series temporales</h1>
 
-<p><strong>InfluxDB</strong> es una base de datos de series temporales (<em>Time Series Database</em>, TSDB) de código abierto desarrollada por InfluxData. Se diseñó para altas tasas de ingestión y consultas eficientes de datos con marcas de tiempo, por lo que es muy utilizada en aplicaciones de monitorización de IoT, métricas DevOps y análisis en tiempo real.</p>
+<p><strong>InfluxDB</strong> es una base de datos de series temporales (<em>Time Series Database</em>, TSDB) de código abierto desarrollada por <a href="https://www.influxdata.com/">InfluxData</a>. Se diseñó para altas tasas de ingestión y consultas eficientes de datos con marcas de tiempo, por lo que es muy utilizada en aplicaciones de monitorización de IoT, métricas DevOps y análisis en tiempo real.</p>
 <p>A diferencia de las bases de datos SQL tradicionales o de documentos como <em>MongoDB</em>, <em>InfluxDB</em> está optimizada específicamente para manejar datos indexados por tiempo: cada punto de datos tiene una marca temporal (<em>timestamp</em>) que actúa como clave primaria.</p>
-<h2 id="modelo-de-datos-de-influxdb">Modelo de datos de InfluxDB<a class="headerlink" href="#modelo-de-datos-de-influxdb" title="Permanent link">&para;</a></h2>
-<p>El modelo de datos de <em>InfluxDB</em> está diseñado en torno al tiempo. Los conceptos clave son:</p>
+<h2 id="elementos">Elementos<a class="headerlink" href="#elementos" title="Permanent link">&para;</a></h2>
+<p>https://awesome.influxdata.com/docs/part-2/influxdb-data-model/#influxdb-data-elements (min 17:11)</p>
+<p>El modelo de datos de <em>InfluxDB</em> está diseñado en torno al tiempo. Los conceptos clave de los modelos de series temporales son:</p>
 <ul>
-<li><strong>Bucket (base de datos)</strong>: Es el contenedor de datos más alto, combina lo que en InfluxDB v1.x se llamaba base de datos (<em>database</em>) y política de retención. Un bucket almacena varias <em>mediciones</em>.</li>
+<li>
+<p><strong>Bucket (base de datos)</strong>: Es el contenedor de datos más alto, combina el concepto de base de datos con las políticas de retención. Todos los datos de <em>InfluxDB</em> se escriben en un <em>bucket</em>, el cual almacena puntos de datos para tantas medidas como queramos.</p>
+<p>Sobre los <em>buckets</em> conviene destacar que:</p>
+<ul>
+<li>se pueden crear <em>tokens</em> que controlan los permisos de lectura y escritura, con alcance a un <em>bucket</em> específico.</li>
+<li>todo <em>bucket</em>, al crearlo, se configura un período de retención, el cual determina cuanto tiempo se almacenarán los datos de series temporales dentro del <em>bucket</em>. Una buena configuración del período de retención implica una gestión óptima del sistema gestor, facilitando deshacerse de los datos inútiles y poniendo el foco en los datos recientes, que aportan mayor valor al proyecto, al mismo tiempo que se reduce los costes de almacenamiento.</li>
 </ul>
-<p>All data in InfluxDB gets written to a bucket. A bucket is a container that can hold points for as many measurements as you like. Buckets have some important properties:</p>
-<p>They can be named whatever you want (within reason).
-You can create tokens that can control read and write permissions for a bucket, scoped only to a specific bucket.
-You must set a retention period on a bucket, upon creation. A retention period determines how long InfluxDB will store your time series data within that bucket. Retention periods are critical for time series database management. They provide users with a convenient solution for automatic expiration of old, useless data which enables them to focus on the recent, valuable data instead while reducing their storage bills.</p>
-<ul>
-<li>
-<p><strong>Medición (measurement)</strong>: Equivale a una “tabla” lógica que agrupa datos de la misma naturaleza. Todos los puntos en una medición comparten el mismo conjunto de etiquetas generales. Por ejemplo, una medición <code>sensor_temp</code> para datos de temperatura. Es análoga a una tabla SQL con la marca temporal como índice clave predefinido.</p>
 </li>
 <li>
-<p><strong>Point (punto de datos)</strong>: Es un registro único que consta de <em>measurement</em>, un conjunto de <em>tags</em>, un conjunto de <em>fields</em> y un <em>timestamp</em>. Por ejemplo:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>name: census
-<span class="linenos" data-linenos="2 "></span>time                   butterflies honeybees location scientist
-<span class="linenos" data-linenos="3 "></span>2015-08-18T00:00:00Z   1          30         1        perpetua
+<p><strong>Medida (<em>measurement</em>)</strong>: Equivale a una tabla lógica que agrupa datos de la misma naturaleza. Todos los puntos en una medición comparten el mismo conjunto de etiquetas generales. Por ejemplo, una medición <code>sensor_temp</code> para datos de temperatura. Es análoga a una tabla SQL con la marca temporal como índice clave predefinido.</p>
+</li>
+<li>
+<p><strong>Puntos de datos (<em>point</em>)</strong>: Es un registro único que consta de medidas, un conjunto de etiquetas, un conjunto de campos y un <em>timestamp</em>. Por ejemplo:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>name: censo
+<span class="linenos" data-linenos="2 "></span>time                   mariposas  abejas  zona    responsable
+<span class="linenos" data-linenos="3 "></span>2025-08-18T00:00:00Z   1          30      1       amedrano
 </code></pre></div>
-<p>Este punto pertenece a la medición <code>census</code>, tiene tags (<code>location=1</code>, <code>scientist=perpetua</code>), fields (<code>butterflies=1</code>, <code>honeybees=30</code>) y su timestamp. Cada punto se identifica de forma única por su serie (ver abajo) más el instante de tiempo.</p>
+<p>Este punto pertenece a la medida <code>censo</code>, tiene etiquetas (<code>zona=1</code>, <code>responsable=amedrano</code>), campos (<code>butterflies=1</code>, <code>honeybees=30</code>) y su <em>timestamp</em>. Cada punto se identifica de forma única por su serie (ver abajo) más el instante de tiempo.</p>
 </li>
 <li>
-<p><strong>Tag (etiqueta)</strong>: Par clave-valor opcional indexado, usado para metadatos de filtrado. Por ejemplo, tags como <code>host=“servidor1”</code> o <code>location=“oficina”</code>. Los tags <strong>son indexados</strong>, por lo que filtrar por tags es muy eficiente. Se recomienda usar tags para información de <em>filtrado o agrupamiento</em> (por ejemplo, ubicación o tipo de sensor) que no cambie frecuentemente.</p>
+<p><strong>Etiqueta (<em>tag</em>)</strong>: Par clave-valor opcional indexado, usado para metadatos de filtrado. Por ejemplo, tags como <code>host=“servidor1”</code> o <code>location=“oficina”</code>. Los tags <strong>son indexados</strong>, por lo que filtrar por tags es muy eficiente. Se recomienda usar tags para información de <em>filtrado o agrupamiento</em> (por ejemplo, ubicación o tipo de sensor) que no cambie frecuentemente.</p>
 </li>
 <li>
-<p><strong>Field (campo)</strong>: Par clave-valor que contiene el dato real (numérico, booleano, texto). Por ejemplo, <code>temperature=23.5</code>. Los campos <strong>no se indexan</strong>, por lo que las consultas que filtran por campos deben escanear los datos y son más lentas. Por eso conviene guardar como campo aquello que cambia cada punto (por ejemplo, una lectura de sensor).</p>
+<p><strong>Campo (<em>field</em>)</strong>: Par clave-valor que contiene el dato real (numérico, booleano, texto). Por ejemplo, <code>temperatura=23.5</code>. Los campos <strong>no se indexan</strong>, por lo que las consultas que filtran por campos deben escanear los datos y son más lentas. Por eso conviene guardar como campo aquello que cambia cada punto (por ejemplo, una lectura de sensor).</p>
 </li>
 <li>
-<p><strong>Timestamp (marca temporal)</strong>: Tiempo exacto asociado a cada punto, en UTC o epoch. InfluxDB ordena los datos internamente por tiempo. En cada medición el campo de tiempo es obligatorio y actúa como clave primaria implícita.</p>
+<p><strong>Timestamp (marca temporal)</strong>: Tiempo exacto asociado a cada punto, en UTC o epoch. <em>InfluxDB</em> ordena los datos internamente por tiempo. En cada medición el campo de tiempo es obligatorio y actúa como clave primaria implícita.</p>
 </li>
 <li>
 <p><strong>Serie (series)</strong>: Es el conjunto de puntos que comparten la misma medición y los mismos valores de tags. Equivale a una combinación única de <em>measurement + tagset</em>. Por ejemplo, para la medición <code>weather</code> con tags <code>city=London</code> y <code>country=UK</code>, todos los puntos con esa combinación de tags forman una serie. Cada serie contiene múltiples puntos con timestamps distintos.</p>
 </li>
 </ul>
-<p>En resumen, la información en InfluxDB se organiza jerárquicamente: <strong>bucket &gt; medición &gt; serie &gt; punto</strong>. Por ejemplo, un registro de temperatura de un sensor puede ser: <em>Bucket “IoTData”, medición “temperatura_sala”, tags <code>{ubicacion=“sala1”}</code>, fields <code>{valor=22.5}</code>, timestamp “2025-05-30T16:00:00Z”</em>.</p>
+<p>En resumen, la información en <em>InfluxDB</em> se organiza jerárquicamente: <strong>bucket &gt; medida &gt; serie &gt; punto</strong>. Por ejemplo, un registro de temperatura de un sensor puede ser: <em>Bucket “IoTData”, medición “temperatura_sala”, tags <code>{ubicacion=“sala1”}</code>, fields <code>{valor=22.5}</code>, timestamp “2025-05-30T16:00:00Z”</em>.</p>
 <h2 id="instalacion-y-primeros-pasos">Instalación y primeros pasos<a class="headerlink" href="#instalacion-y-primeros-pasos" title="Permanent link">&para;</a></h2>
 <p>Para comenzar con InfluxDB se puede instalar de varias formas:</p>
 <ul>
@@ -3839,6 +3874,15 @@ You must set a retention period on a bucket, upon creation. A retention period d
 </li>
 </ul>
 <p>Finalmente, se suele acceder a la interfaz web de InfluxDB (v1.8.x incluye Chronograf; v2.x incluye un UI propio) en <code>http://localhost:8086</code>. Por defecto la interfaz web permite explorar datos, crear consultas y dashboards.</p>
+<div class="admonition tip">
+<p class="admonition-title">Hidrógeno Verde</p>
+<p>Para el PIIAFP de Hidrógeno Verde, crearemos los siguiente elementos:</p>
+<ul>
+<li>Organización: <code>s8a</code></li>
+<li>Bucket: <code>h2v</code></li>
+<li>Medida: <code>temperaturas</code></li>
+</ul>
+</div>
 <h2 id="insercion-de-datos">Inserción de datos<a class="headerlink" href="#insercion-de-datos" title="Permanent link">&para;</a></h2>
 <p>InfluxDB admite varios métodos para insertar datos. Lo fundamental es escribirlos en <strong>line protocol</strong>, un formato de texto específico. Ejemplos de inserción:</p>
 <ul>
@@ -3847,7 +3891,7 @@ You must set a retention period on a bucket, upon creation. A retention period d
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl -XPOST &#39;http://localhost:8086/write?db=miDB&#39; \
 <span class="linenos" data-linenos="2 "></span>     --data-binary &#39;temperatura,ubicacion=sala valor=22.5 1700000000000000000&#39;
 </code></pre></div>
-<p>Aquí <code>temperatura</code> es la medición, <code>ubicacion=sala</code> es un tag, <code>valor=22.5</code> es el field, y el último número es el timestamp (epoch en nanosegundos).</p>
+<p>En este ejemplo, <code>temperatura</code> es la medida, <code>ubicacion=sala</code> es una etiqueta, <code>valor=22.5</code> es el campo, y el último número es el <em>timestamp</em> (epoch en nanosegundos).</p>
 <ul>
 <li><strong>Mediante InfluxQL (INSERT):</strong> InfluxDB v1.x permite la sentencia SQL-like <code>INSERT</code>. Ejemplo en la consola InfluxQL:</li>
 </ul>
@@ -3907,39 +3951,78 @@ You must set a retention period on a bucket, upon creation. A retention period d
 <p><strong>Otras herramientas:</strong> Aunque no se pidió específicamente, es común integrar InfluxDB con Grafana (una plataforma de dashboards muy usada). Sin embargo, con la interfaz propia de InfluxDB o Chronograf ya es posible satisfacer la mayoría de necesidades de consulta y visualización.</p>
 </li>
 </ul>
-<h2 id="actividades-practicas">Actividades prácticas<a class="headerlink" href="#actividades-practicas" title="Permanent link">&para;</a></h2>
-<p>A continuación se proponen ejercicios prácticos por concepto. Cada actividad incluye el enunciado y una solución paso a paso.</p>
-<ol>
-<li><strong>Modelo de datos y consultas:</strong> Supongamos un sistema de monitoreo de temperatura en tres habitaciones (sala, oficina, bodega). Diseña una medición en InfluxDB para almacenar estos datos con los campos y tags adecuados. Luego, inserta algunos puntos y realiza consultas.</li>
-</ol>
-<ul>
-<li>
-<p><strong>Solución:</strong></p>
-<ul>
-<li><strong>Definir estructura:</strong> Creamos la medición <code>temperatura</code>. Usamos un tag para la ubicación, por ejemplo <code>ubicacion</code>, y un field <code>valor</code> para la lectura de temperatura.</li>
-<li><strong>Ejemplo de inserción:</strong> Podemos insertar varios puntos con la API o con InfluxQL. Por ejemplo, con la CLI InfluxQL:</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>CREATE DATABASE miDB;
-<span class="linenos" data-linenos="2 "></span>USE miDB;
-<span class="linenos" data-linenos="3 "></span>INSERT temperatura,ubicacion=sala valor=21.5 1700000000000000000
-<span class="linenos" data-linenos="4 "></span>INSERT temperatura,ubicacion=oficina valor=22.0 1700000060000000000
-<span class="linenos" data-linenos="5 "></span>INSERT temperatura,ubicacion=bodega valor=19.0 1700000120000000000
+<h2 id="influxdb-y-python">InfluxDB y Python<a class="headerlink" href="#influxdb-y-python" title="Permanent link">&para;</a></h2>
+<p>El primer paso es instalar la librería <a href="https://github.com/influxdata/influxdb-client-python">influxdb_client</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>influxdb_client
 </code></pre></div>
-<p>Cada línea inserta un punto distinto con timestamp (epoch).
- * <strong>Consulta básica:</strong> Para ver todos los datos insertados:</p>
-<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;temperatura&quot;</span>
+<p>Tanto para insertar datos, como para consultarlos, vamos a necesitar conectarnos mediante un cliente y los datos de acceso (url del <em>host</em>, token de acceso y organización). Para ello, crearemos un <a href="https://influxdb-client.readthedocs.io/en/stable/api.html#influxdbclient"><code>InfluxDBClient</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>from<span class="w"> </span>influxdb_client<span class="w"> </span>import<span class="w"> </span>InfluxDBClient,<span class="w"> </span>Point
+<span class="linenos" data-linenos=" 2 "></span>from<span class="w"> </span>influxdb_client.client.write_api<span class="w"> </span>import<span class="w"> </span>SYNCHRONOUS
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1"># Parámetros de conexión</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="nv">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;http://localhost:8086&quot;</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="nv">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mi_token_aquí&quot;</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="nv">org</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mi_organización&quot;</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="nv">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mi_bucket&quot;</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># Conexión al cliente</span>
+<span class="linenos" data-linenos="11 "></span><span class="nv">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>InfluxDBClient<span class="o">(</span><span class="nv">url</span><span class="o">=</span>url,<span class="w"> </span><span class="nv">token</span><span class="o">=</span>token,<span class="w"> </span><span class="nv">org</span><span class="o">=</span>org<span class="o">)</span>
 </code></pre></div>
- * <strong>Filtrar por tags:</strong> Para obtener solo la lectura de la oficina:</p>
-<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="ss">&quot;valor&quot;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;temperatura&quot;</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="ss">&quot;ubicacion&quot;</span><span class="o">=</span><span class="s1">&#39;oficina&#39;</span>
+<h3 id="insertando-datos">Insertando datos<a class="headerlink" href="#insertando-datos" title="Permanent link">&para;</a></h3>
+<p>Para insertar un punto de datos, instanciaremos un <code>Point</code> indicando la medida y tantos campos como necesitemos. A continuación, mediante el método <a href="https://influxdb-client.readthedocs.io/en/stable/api.html#influxdb_client.WriteApi.write"><code>write</code></a> de un <a href="https://influxdb-client.readthedocs.io/en/stable/api.html#writeapi"><code>WriteApi</code></a> persistimos el punto y finalmente cerramos la conexión:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># Preparar el punto de datos</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">punto</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="s2">&quot;temperatura&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="s2">&quot;valor&quot;</span><span class="p">,</span> <span class="mf">23.5</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># Enviar el punto</span>
+<span class="linenos" data-linenos="5 "></span><span class="n">write_api</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">write_api</span><span class="p">(</span><span class="n">write_options</span><span class="o">=</span><span class="n">SYNCHRONOUS</span><span class="p">)</span>
+<span class="linenos" data-linenos="6 "></span><span class="n">write_api</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span> <span class="n">org</span><span class="o">=</span><span class="n">org</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="n">punto</span><span class="p">)</span>
+<span class="linenos" data-linenos="7 "></span>
+<span class="linenos" data-linenos="8 "></span><span class="c1"># Cerrar conexión</span>
+<span class="linenos" data-linenos="9 "></span><span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div>
- * <strong>Agrupar por tiempo:</strong> Suponiendo más datos, podríamos calcular la media por hora:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="n">MEAN</span><span class="p">(</span><span class="ss">&quot;valor&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;temperatura&quot;</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="k">time</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="n">h</span>
-<span class="linenos" data-linenos="3 "></span><span class="w">  </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">time</span><span class="p">(</span><span class="mi">30</span><span class="n">m</span><span class="p">)</span>
+<p>Al crear un punto, si queremos indicarle alguna etiqueta o de forma explícita el <em>timestamp</em>, podemos emplear los métodos <code>tag</code> o <code>time</code> respectivamente:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">punto</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos" data-linenos="2 "></span>    <span class="n">Point</span><span class="p">(</span><span class="s2">&quot;temperatura&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="s2">&quot;ubicacion&quot;</span><span class="p">,</span> <span class="s2">&quot;sala1&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="s2">&quot;valor&quot;</span><span class="p">,</span> <span class="mf">23.5</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span>    <span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
+<span class="linenos" data-linenos="6 "></span><span class="p">)</span>
 </code></pre></div>
-</li>
-</ul>
+<h3 id="consultando-datos">Consultando datos<a class="headerlink" href="#consultando-datos" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">query_api</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">query_api</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">consulta</span> <span class="o">=</span> <span class="s1">&#39;from(bucket:&quot;mi_bucket&quot;) |&gt; range(start: -1h)&#39;</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">result</span> <span class="o">=</span> <span class="n">query_api</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">org</span><span class="o">=</span><span class="n">org</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span>
+<span class="linenos" data-linenos="6 "></span><span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+<span class="linenos" data-linenos="7 "></span>    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">records</span><span class="p">:</span>
+<span class="linenos" data-linenos="8 "></span>        <span class="nb">print</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="caso-de-uso-1-monitorizacion-de-temperaturas">Caso de Uso 1 - Monitorización de temperaturas<a class="headerlink" href="#caso-de-uso-1-monitorizacion-de-temperaturas" title="Permanent link">&para;</a></h2>
+<p>Supongamos un sistema de monitorización de temperaturas en tres habitaciones (sala, oficina, entrada).</p>
+<p>A continuación, vamos a diseñar un medida <code>temperatura</code> para almacenar estos datos con los campos y etiquetas adecuados. Para la ubicación de cada sensor usaremos una etiqueta que llamaremos <code>ubicacion</code>, y un campo <code>valor</code> para almacenar la temperatura.</p>
+<p>EL primer paso, es crear el <em>bucket</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">iot</span><span class="o">-</span><span class="n">pruebas</span><span class="p">;</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">USE</span><span class="w"> </span><span class="n">iot</span><span class="o">-</span><span class="n">pruebas</span><span class="p">;</span>
+</code></pre></div>
+<p>Y luego insertamos datos, por ejemplo, mediante <em>InfluxQL</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">INSERT</span><span class="w"> </span><span class="n">temperatura</span><span class="p">,</span><span class="w"> </span><span class="n">ubicacion</span><span class="o">=</span><span class="n">sala</span><span class="w"> </span><span class="n">valor</span><span class="o">=</span><span class="mi">21</span><span class="p">.</span><span class="mi">5</span><span class="w"> </span><span class="mi">1700000000000000000</span>
+<span class="linenos" data-linenos="2 "></span><span class="k">INSERT</span><span class="w"> </span><span class="n">temperatura</span><span class="p">,</span><span class="w"> </span><span class="n">ubicacion</span><span class="o">=</span><span class="n">oficina</span><span class="w"> </span><span class="n">valor</span><span class="o">=</span><span class="mi">22</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="mi">1700000060000000000</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">INSERT</span><span class="w"> </span><span class="n">temperatura</span><span class="p">,</span><span class="w"> </span><span class="n">ubicacion</span><span class="o">=</span><span class="n">entrada</span><span class="w"> </span><span class="n">valor</span><span class="o">=</span><span class="mi">19</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="mi">1700000120000000000</span>
+</code></pre></div>
+<p>Sobre los datos, podríamos realizar diversas consultas:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1">-- Recuperamos todos los datos</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;temperatura&quot;</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1">-- Filtramos los datos de la oficina</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="k">SELECT</span><span class="w"> </span><span class="ss">&quot;valor&quot;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;temperatura&quot;</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="ss">&quot;ubicacion&quot;</span><span class="o">=</span><span class="s1">&#39;oficina&#39;</span>
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1">-- Calculamos la media por hora</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="k">SELECT</span><span class="w"> </span><span class="n">MEAN</span><span class="p">(</span><span class="ss">&quot;valor&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;temperatura&quot;</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="k">time</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="n">h</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">time</span><span class="p">(</span><span class="mi">30</span><span class="n">m</span><span class="p">)</span>
+</code></pre></div>
+<p>Si queremos tener más datos, vamos a simular la inserción de temperaturas cada 10 minutos durante 2 horas en la sala, para luego poder calcula bien la temperatura media en esa sala cada 30 minutos.</p>
 <ol start="2">
 <li><strong>Consulta con agregación:</strong> Continúa con el ejemplo anterior. Inserta datos de temperatura cada 10 minutos durante 2 horas en la sala, luego calcula la temperatura media en esa sala cada 30 minutos.</li>
 </ol>
