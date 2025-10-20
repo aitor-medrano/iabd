@@ -1,0 +1,19 @@
+services:
+  nodered:
+    image: nodered/node-red:latest
+    container_name: iot-nodered
+    ports:
+      - "1880:1880"
+    volumes:
+      - nodered_data:/data
+    environment:
+      - TZ=Europe/Madrid
+    networks:
+      - iot-network
+
+volumes:
+  nodered_data:
+
+networks:
+  iot-network:
+    external: true
