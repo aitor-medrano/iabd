@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Apuntes ...">
+        <meta name="description" content="Apuntes y actividades sobre la carga, filtrado y uso, así como la creación de datasets en Hugging Face.">
       
       
       
@@ -73,7 +73,7 @@
       
         <meta  property="og:title"  content="Cargando datasets en HuggingFace - Inteligencia Artificial y Big Data" >
       
-        <meta  property="og:description"  content="Apuntes ..." >
+        <meta  property="og:description"  content="Apuntes y actividades sobre la carga, filtrado y uso, así como la creación de datasets en Hugging Face." >
       
         <meta  property="og:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/hf/datasets.png" >
       
@@ -89,7 +89,7 @@
       
         <meta  name="twitter:title"  content="Cargando datasets en HuggingFace - Inteligencia Artificial y Big Data" >
       
-        <meta  name="twitter:description"  content="Apuntes ..." >
+        <meta  name="twitter:description"  content="Apuntes y actividades sobre la carga, filtrado y uso, así como la creación de datasets en Hugging Face." >
       
         <meta  name="twitter:image"  content="https://aitor-medrano.github.io/iabd/assets/images/social/hf/datasets.png" >
       
@@ -3719,7 +3719,7 @@
 <span class="linenos" data-linenos="20 "></span><span class="c1"># memory usage: 75.5+ KB</span>
 </code></pre></div>
 <h3 id="cargando-en-streaming">Cargando en streaming<a class="headerlink" href="#cargando-en-streaming" title="Permanent link">&para;</a></h3>
-<p>Si el <em>dataset</em> ocupa varios gigas, con modelos como BERT o GPT, puede que no quedan en memoria RAM. Para ello, la librería <em>datasets</em> gestiona los datos como ficheros mapeados en memoria realizando un <a href="https://huggingface.co/docs/datasets/stream"><em>streaming</em></a> de los datos.</p>
+<p>Si el <em>dataset</em> ocupa varios gigas, con modelos como BERT o GPT, puede que no quepan en memoria RAM. Para ello, la librería <em>datasets</em> gestiona los datos como ficheros mapeados en memoria realizando un <a href="https://huggingface.co/docs/datasets/stream"><em>streaming</em></a> de los datos.</p>
 <figure style="align: center;">
     <img src="images/03hf-streaming.gif" alt="Streaming de un dataset" width="800px">
     <figcaption>Streaming de un dataset - https://huggingface.co/docs/datasets/stream</figcaption>
@@ -3787,7 +3787,7 @@
 <p>Como sugiere el nombre, para acceder a los elementos del <code>IterableDataset</code> necesitamos iterar sobre él:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">streaming_dataset</span><span class="p">)))</span>
 </code></pre></div>
-<p>Los elementos de un <em>dataset</em> en <em>streaming</em>  se pueden procesar al vuelo es mediante la función <code>map</code> o <code>filter</code>. Por ejemplo, para pasar a mayúsculas el campo <code>license_type</code> haríamos:</p>
+<p>Los elementos de un <em>dataset</em> en <em>streaming</em>  se pueden procesar al vuelo mediante la función <code>map</code> o <code>filter</code>. Por ejemplo, para pasar a mayúsculas el campo <code>license_type</code> haríamos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">def</span><span class="w"> </span><span class="nf">mayusLicencias</span><span class="p">(</span><span class="n">registro</span><span class="p">):</span>
 <span class="linenos" data-linenos="2 "></span>    <span class="n">registro</span><span class="p">[</span><span class="s2">&quot;license_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">registro</span><span class="p">[</span><span class="s2">&quot;license_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 <span class="linenos" data-linenos="3 "></span>    <span class="k">return</span> <span class="n">registro</span>
@@ -3799,8 +3799,13 @@
 </code></pre></div>
 <div class="admonition danger">
 <p class="admonition-title">Al vuelo</p>
-<p>Hemos de tener en cuenta que la transformación se realizará al recorrer el <em>dataset</em>, no al invocar a los métodos <code>map</code> o <code>filter</code>.</p>
+<p>Debemos tener en cuenta que la transformación se realizará al recorrer el <em>dataset</em>, no al invocar a los métodos <code>map</code> o <code>filter</code>.</p>
 </div>
+<p>Otras opciones son utilizar las operaciones <a href="https://huggingface.co/docs/datasets/main/en/package_reference/main_classes#datasets.IterableDataset.take"><code>take()</code></a>, <a href="https://huggingface.co/docs/datasets/v4.4.1/en/package_reference/main_classes#datasets.IterableDataset.shuffle"><code>shuffle()</code></a> o <a href="https://huggingface.co/docs/datasets/v4.4.1/en/package_reference/main_classes#datasets.IterableDataset.shuffle"><code>skip()</code></a> dentro del <code>IterableDataset</code> para trabajar con muestras pequeñas de los datos cargados:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">muestra</span> <span class="o">=</span> <span class="n">streaming_dataset</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">muestra_aleatoria</span> <span class="o">=</span> <span class="n">streaming_dataset</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">rango</span> <span class="o">=</span> <span class="n">streaming_dataset</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</code></pre></div>
 <p>Más información en <a href="https://huggingface.co/docs/datasets/stream">https://huggingface.co/docs/datasets/stream</a> y <a href="https://huggingface.co/docs/datasets/about_mapstyle_vs_iterable">https://huggingface.co/docs/datasets/about_mapstyle_vs_iterable</a>.</p>
 <h2 id="limpiando">Limpiando<a class="headerlink" href="#limpiando" title="Permanent link">&para;</a></h2>
 <p>De forma similar a <em>Pandas</em> o <em>Spark</em>, podemos manipular el contenido de los objetos <code>Dataset</code>.</p>
@@ -3812,11 +3817,11 @@
 </span><span class="linenos" data-linenos="5 "></span><span class="nb">print</span><span class="p">(</span><span class="n">squad_train_shuffled</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;title&quot;</span><span class="p">])</span> <span class="c1"># Carnaval</span>
 </code></pre></div>
 <h3 id="seleccionando-filas">Seleccionando filas<a class="headerlink" href="#seleccionando-filas" title="Permanent link">&para;</a></h3>
-<p>Para recuperar filas, usaremos el método <code>Dataset.select()</code> pasándole un iterador con los posiciones a seleccionar:</p>
+<p>Para recuperar filas, usaremos el método <code>Dataset.select()</code> pasándole un iterador con las posiciones a seleccionar:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">tres_filas</span> <span class="o">=</span> <span class="n">squad_train_shuffled</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">15</span><span class="p">])</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">seis_filas</span> <span class="o">=</span> <span class="n">squad_train_shuffled</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
 </code></pre></div>
-<p>Si queremos seleccionar las filas por algún criterio específico, hemos de emplear <code>Dataset.filter()</code> y funciones <em>lambda</em>:</p>
+<p>Si queremos seleccionar las filas por algún criterio específico, debemos emplear <code>Dataset.filter()</code> y funciones <em>lambda</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">empieza_por_b_filas</span> <span class="o">=</span> <span class="n">squad_train_shuffled</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">))</span>
 <span class="linenos" data-linenos="2 "></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">empieza_por_b_filas</span><span class="o">.</span><span class="n">num_rows</span><span class="p">):</span>
 <span class="linenos" data-linenos="3 "></span>    <span class="nb">print</span><span class="p">(</span><span class="n">empieza_por_b_filas</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;title&quot;</span><span class="p">])</span>
@@ -4055,7 +4060,7 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 <p>También se recomienda leer la <a href="https://github.com/huggingface/datasets/blob/main/templates/README_guide.md"><em>Dataset Card Creation Guide</em></a></p>
 </div>
 <h2 id="datasets-multimedia">Datasets multimedia<a class="headerlink" href="#datasets-multimedia" title="Permanent link">&para;</a></h2>
-<p>Si nuestro <em>dataset</em> va a contener elementos multimedia con imágenes o audios, podemos subir los archivos en crudo, lo cual es lo más practico en la mayoría de los casos. Si las <em>dataset</em> de imágenes o audios son muy grandes, se recomienda el formato <a href="https://github.com/webdataset/webdataset">WebDataset</a>, aunque lo más normal, es almacenar el dataset en formato <em>Parquet</em>.</p>
+<p>Si nuestro <em>dataset</em> va a contener elementos multimedia con imágenes o audios, podemos subir los archivos en crudo, lo cual es lo más practico en la mayoría de los casos. Si los <em>dataset</em> de imágenes o audios son muy grandes, se recomienda el formato <a href="https://github.com/webdataset/webdataset">WebDataset</a>, aunque lo más normal, es almacenar el dataset en formato <em>Parquet</em>.</p>
 <p>Dicho esto, vamos a ver como trabajar con datasets que contienen elementos multimedia.</p>
 <h3 id="audios">Audios<a class="headerlink" href="#audios" title="Permanent link">&para;</a></h3>
 <p>Para trabajar con audios, necesitaremos instalar las librerías de audio:</p>
@@ -4125,7 +4130,7 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 
 <h3 id="creando-un-dataset-desde-python">Creando un dataset desde Python<a class="headerlink" href="#creando-un-dataset-desde-python" title="Permanent link">&para;</a></h3>
 <p>Si queremos crear un dataset a partir de audios propios, necesitamos crear un diccionario o una lista con la ruta a nuestros audios, y a continuación, llamar al método <a href="https://huggingface.co/docs/datasets/v2.19.0/en/package_reference/main_classes#datasets.Dataset.cast_column"><code>cast_column</code></a> para transformar la columna a tipo <code>Audio</code> con las características que hemos visto antes.</p>
-<p>Así pues, si tenemos los datos en un diccionario haríamos:</p>
+<p>Así pues, si tenemos los datos en un diccionario podemos hacer:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">audio_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s2">&quot;audio&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;path/to/audio_1&quot;</span><span class="p">,</span> <span class="s2">&quot;path/to/audio_2&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;path/to/audio_n&quot;</span><span class="p">]})</span><span class="o">.</span><span class="n">cast_column</span><span class="p">(</span><span class="s2">&quot;audio&quot;</span><span class="p">,</span> <span class="n">Audio</span><span class="p">())</span>
 </code></pre></div>
 <h3 id="audiofolder">Audiofolder<a class="headerlink" href="#audiofolder" title="Permanent link">&para;</a></h3>
@@ -4171,13 +4176,13 @@ Por ejemplo, si queremos modificar todos los títulos y pasarlos a minúscula ha
 <li>
 <p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 1p) Tenemos un dataset con información sobre <a href="resources/dataset_flights.csv">vuelos retrasados</a> en España y otro con información general sobre los <a href="resources/dataset_airports.csv">aeropuertos</a>. Se pide:</p>
 <ol>
-<li>Une ambos datasets para que la información de los vuelos contengan el nombre y la ciudad de los aeropuertos.</li>
+<li>Une ambos <em>datasets</em> para que la información de los vuelos contengan el nombre y la ciudad de los aeropuertos.</li>
 <li>Persiste los datos (sin elementos repetidos) en un <em>dataset</em> en formato <em>Arrow</em>.</li>
 <li>Publícalo en <em>Hugging Face</em>.</li>
 </ol>
 </li>
 <li>
-<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / opcional ) Sobre la base de datos de MongoDB de <code>sample_training</code> disponible en los datos de muestra de MongoAtlas:</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / opcional ) Sobre la base de datos de <em>MongoDB</em> de <code>sample_training</code> disponible en los datos de muestra de <em>MongoAtlas</em>:</p>
 <ol>
 <li>Carga los de estados de <a href="../sa/resources/states.js"><code>states.js</code></a>.</li>
 <li>Realiza una join entre las colecciones <code>zips</code> y <code>states</code>.</li>
