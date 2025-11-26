@@ -4327,7 +4327,7 @@
 </figure>
 
 <p>Podemos obtener información de la conexión mediante la propiedad <code>state</code>. Por ejemplo, en nuestro caso, nos hemos conectado a <em>MongoAtlas</em> y de la salida del estado podemos ver los diferentes <em>hosts</em> que forman parte del conjunto de réplicas:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">cliente</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s1">&#39;mongodb+srv://iabd:iabdiabd@cluster0.dfaz5er.mongodb.net/&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">cliente</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s1">&#39;mongodb+srv://&lt;usuario&gt;:&lt;contrasenya&gt;@cluster0.dfaz5er.mongodb.net/&#39;</span><span class="p">)</span>
 <span class="hll"><span class="linenos" data-linenos="2 "></span><span class="nb">print</span><span class="p">(</span><span class="n">cliente</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
 </span><span class="linenos" data-linenos="3 "></span><span class="c1"># Database(MongoClient(host=[&#39;ac-opunia9-shard-00-01.dfaz5er.mongodb.net:27017&#39;, &#39;ac-opunia9-shard-00-02.dfaz5er.mongodb.net:27017&#39;, &#39;ac-opunia9-shard-00-00.dfaz5er.mongodb.net:27017&#39;], document_class=dict, tz_aware=False, connect=True, authsource=&#39;admin&#39;, replicaset=&#39;atlas-4wikkb-shard-0&#39;, tls=True), &#39;state&#39;)</span>
 </code></pre></div>
@@ -4358,7 +4358,7 @@
 <span class="linenos" data-linenos="2 "></span><span class="p">[</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="s1">&#39;movies&#39;</span><span class="p">,</span> <span class="s1">&#39;sessions&#39;</span><span class="p">,</span> <span class="s1">&#39;theaters&#39;</span><span class="p">,</span> <span class="s1">&#39;comments&#39;</span><span class="p">]</span>
 </code></pre></div>
 <div class="admonition caution">
-<p class="admonition-title">Tolerancia a fallos!</p>
+<p class="admonition-title">Tolerancia a fallos</p>
 <p>Al crear una conexión, conviene especificar el tamaño del <em>pool</em> y el <em>timeout</em> de las conexiones:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">db</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">URI</span><span class="p">,</span> <span class="n">maxPoolSize</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">wtimeout</span><span class="o">=</span><span class="mi">2500</span><span class="p">)[</span><span class="n">nombreBD</span><span class="p">]</span>
 </code></pre></div>
@@ -4851,12 +4851,12 @@
 <h3 id="insercion">Inserción<a class="headerlink" href="#insercion" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span>
 <span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="n">cliente</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s2">&quot;mongodb+srv://iabd:iabdiabd@cluster0.4hm7u8y.mongodb.net/?retryWrites=true&amp;w=majority&quot;</span><span class="p">,</span> <span class="n">server_api</span><span class="o">=</span><span class="n">ServerApi</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">))</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">cliente</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s2">&quot;mongodb+srv://&lt;usuario&gt;:&lt;contrasenya&gt;@cluster0.4hm7u8y.mongodb.net/?retryWrites=true&amp;w=majority&quot;</span><span class="p">,</span> <span class="n">server_api</span><span class="o">=</span><span class="n">ServerApi</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">))</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="n">bd</span> <span class="o">=</span> <span class="n">cliente</span><span class="o">.</span><span class="n">iabd</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="n">people</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">people</span>
 <span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span><span class="n">yo</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="s2">&quot;Aitor Medrano&quot;</span><span class="p">,</span> <span class="s2">&quot;edad&quot;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span> <span class="s2">&quot;profesion&quot;</span><span class="p">:</span> <span class="s2">&quot;Profesor&quot;</span> <span class="p">}</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">yo</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="s2">&quot;Aitor Medrano&quot;</span><span class="p">,</span> <span class="s2">&quot;edad&quot;</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span> <span class="s2">&quot;profesion&quot;</span><span class="p">:</span> <span class="s2">&quot;Profesor&quot;</span> <span class="p">}</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="n">resultado</span> <span class="o">=</span> <span class="n">people</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">yo</span><span class="p">)</span>
 <span class="linenos" data-linenos="10 "></span>
 <span class="linenos" data-linenos="11 "></span><span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">acknowledged</span><span class="p">)</span>   <span class="c1"># True</span>
@@ -4864,7 +4864,7 @@
 </code></pre></div>
 <p>Tras realizar una operación de inserción con <a href="https://pymongo.readthedocs.io/en/stable/api/pymongo/collection.html#pymongo.collection.Collection.insert_one"><code>insert_one</code></a>, obtenemos un objeto <a href="https://pymongo.readthedocs.io/en/stable/api/pymongo/results.html#pymongo.results.InsertOneResult"><code>InsertOneResult</code></a> del cual cabe destacar dos campos:</p>
 <ul>
-<li><code>acknowledged</code>: un campo booleano que nos indica si la operación ha sido exitosa, o <code>False</code> cuando indicamos un <code>WriteConcern(w=0)</code>, es decir, es escritura <em>fire-and-forget</em>.</li>
+<li><code>acknowledged</code>: un campo booleano que nos indica si la operación ha sido exitosa, o <code>False</code> cuando indicamos un <code>WriteConcern(w=0)</code>, es decir, se trata de una escritura <em>fire-and-forget</em>.</li>
 <li><code>inserted_id</code>: valor del <code>ObjectId</code>.</li>
 </ul>
 <p>Si queremos insertar más de una documento a la vez, usaremos <a href="https://pymongo.readthedocs.io/en/stable/api/pymongo/collection.html#pymongo.collection.Collection.insert_many"><code>insert_many</code></a>, el cual devuelve un objeto <a href="https://pymongo.readthedocs.io/en/stable/api/pymongo/results.html#pymongo.results.InsertManyResult"><code>InsertManyResult</code></a>.</p>
@@ -4894,7 +4894,7 @@
 <span class="linenos" data-linenos="11 "></span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;El usuario #</span><span class="si">{</span><span class="n">usuario_id</span><span class="si">}</span><span class="s2"> ya existe en el sistema.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="borrado">Borrado<a class="headerlink" href="#borrado" title="Permanent link">&para;</a></h3>
-<p>El borrado de documento es similar a la creación, pudiendo utilizar <a href="https://pymongo.readthedocs.io/en/stable/api/pymongo/collection.html#pymongo.collection.Collection.delete_one"><code>delete_one</code></a> para borrar el primer documento encontrado, o <a href="https://pymongo.readthedocs.io/en/stable/api/pymongo/collection.html#pymongo.collection.Collection.delete_many"><code>delete_many</code></a> para borrar todos los documentos encontrados:</p>
+<p>El borrado de documentos es similar a la creación, pudiendo utilizar <a href="https://pymongo.readthedocs.io/en/stable/api/pymongo/collection.html#pymongo.collection.Collection.delete_one"><code>delete_one</code></a> para borrar el primer documento encontrado, o <a href="https://pymongo.readthedocs.io/en/stable/api/pymongo/collection.html#pymongo.collection.Collection.delete_many"><code>delete_many</code></a> para borrar todos los documentos encontrados:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">resultado</span> <span class="o">=</span> <span class="n">people</span><span class="o">.</span><span class="n">delete_many</span><span class="p">({</span> <span class="s2">&quot;edad&quot;</span> <span class="p">:</span> <span class="mi">45</span><span class="p">})</span>
 <span class="linenos" data-linenos="2 "></span><span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">deleted_count</span><span class="p">)</span>
 </code></pre></div>
@@ -5001,7 +5001,7 @@
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo.write_concern</span><span class="w"> </span><span class="kn">import</span> <span class="n">WriteConcern</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo.read_concern</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReadConcern</span>
 <span class="linenos" data-linenos=" 4 "></span>
-<span class="linenos" data-linenos=" 5 "></span><span class="n">uriString</span> <span class="o">=</span> <span class="s1">&#39;mongodb+srv://iabd:iabdiabd@cluster0.4hm7u8y.mongodb.net/?retryWrites=true&amp;w=majority&#39;</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">uriString</span> <span class="o">=</span> <span class="s1">&#39;mongodb+srv://&lt;usuario&gt;:&lt;contrasenya&gt;@cluster0.4hm7u8y.mongodb.net/?retryWrites=true&amp;w=majority&#39;</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="n">cliente</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">uriString</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="n">miWCMajority</span> <span class="o">=</span> <span class="n">WriteConcern</span><span class="p">(</span><span class="s1">&#39;majority&#39;</span><span class="p">,</span> <span class="n">wtimeout</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 8 "></span>
@@ -5220,6 +5220,7 @@
 </ol>
 </li>
 </ol>
+<p>Si quieres, puedes investigar el uso de <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/"><code>$facet</code></a> para crear sub-pipelines.</p>
 <p>Para realizar la entrega, además de subir un zip con el código fuente a Aules (sólo las carpetas <code>migrations</code> y <code>pialara</code>) y algunas capturas que demuestren el funcionamiento, has de realizar un <em>pull-request</em>.</p>
 </li>
 </ol>
