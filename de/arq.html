@@ -3397,7 +3397,7 @@
 <div class="admonition info inline end">
 <p class="admonition-title">WAF</p>
 <p>Los proveedores <em>cloud</em> han definido una serie de principios y prácticas a seguir a la hora de diseñar una arquitectura.</p>
-<p>Te recomendamos consultar nuestro resumen de la propuesta de AWS conocida como <a href="../cloud/waf.html">AWF</a> (<em>AWS Well-Architected Framework</em>).</p>
+<p>Te recomendamos consultar nuestro resumen de la propuesta de AWS conocida como <a href="../cloud/waf.html">WAF</a> (<em>AWS Well-Architected Framework</em>).</p>
 </div>
 <ul>
 <li><em>Escalabilidad</em>: permite aumentar fácilmente las capacidades de procesamiento y almacenamiento de datos.</li>
@@ -3411,7 +3411,7 @@
 <ol>
 <li>Elegir los componentes comunes con sumo cuidado, como pueden ser el almacenamiento de los objetos, el control de versiones, las herramientas de monitorización y orquestación, o los motores de procesamiento.</li>
 <li>Planificar para el fallo. El CTO de AWS, <em>Werner Vogels</em>, tiene una <a href="https://thenextweb.com/news/werner-vogels-everything-fails-all-the-time">cita</a> muy apropiada: <em>"Everything fails, all the time."</em> (todo falla, sin parar). Por ello, hemos de tener en cuenta la disponibilidad y confiabilidad de los sistemas, así como los <a href="https://www.acronis.com/es-es/blog/posts/rto-rpo/">objetivos de tiempos (RTO) y objetivo de puntos (RPO) de recuperación</a>.</li>
-<li>Definir la arquitectura para la escalabilidad, tanto hacía arriba como hacía abajo, es decir, que sea elástica (incluso en algunos casos, como pueden ser los sistemas <em>serverless</em>, llegar hasta cero).</li>
+<li>Definir la arquitectura para la escalabilidad, tanto hacia arriba como hacia abajo, es decir, que sea elástica (incluso en algunos casos, como pueden ser los sistemas <em>serverless</em>, llegar hasta cero).</li>
 <li>La arquitectura está viva, por lo tanto, siempre debe evolucionar de la mano de los cambios tecnológicos y de negocio.</li>
 <li>Buscar el bajo acoplamiento entre sistemas, por ejemplo, con paso de mensajes o uso de microservicios mediante APIs REST, de manera que, dada una necesidad, podamos substituir un componente por otro. El bajo acoplamiento permite modificar un componente sin necesidad de pensar en sus dependencias.</li>
 <li>Facilitar volver a un punto anterior deshaciendo una decisión errónea (y que sea reversible), siguiendo el principio de las <a href="https://tandemsd.com/es/la-incertidumbre-y-las-dos-puertas-de-jeff-bezos/">dos puertas</a> de <em>Jeff Bezos</em>.</li>
@@ -3573,7 +3573,7 @@ Though the original Kappa architecture article came out in 2014, we haven’t se
 <ul>
 <li>Capa de <strong>ingesta</strong>: es la primera capa que recoge los datos que provienen de fuentes diversas. Los datos se categorizan y priorizan, facilitando el flujo de éstos en posteriores capas.</li>
 <li>Capa de <strong>colección</strong>: Centrada en el transporte de los datos desde la ingesta al resto del <em>pipeline</em> de datos. En esta capa los datos se deshacen para facilitar la analítica posterior.</li>
-<li>Capa de <strong>procesamiento</strong>: Esta es la capa principal. Se procesan los datos recogidos en las capas anteriores (ya sea mediante procesos <em>batch</em>, <em>streaming</em> o modelos híbridos), y se clasifican para decidir hacía qué capa se dirige.</li>
+<li>Capa de <strong>procesamiento</strong>: Esta es la capa principal. Se procesan los datos recogidos en las capas anteriores (ya sea mediante procesos <em>batch</em>, <em>streaming</em> o modelos híbridos), y se clasifican para decidir hacia qué capa se dirige.</li>
 <li>Capa de <strong>almacenamiento</strong>: Se centra en decidir donde almacenar de forma eficiente la enorme cantidad de datos. Normalmente en un almacén de archivos distribuido, que da pie al concepto de <em>data lake</em>.</li>
 <li>Capa de <strong>consulta</strong>: capa donde se realiza el procesado analítico, centrándose en obtener valor a partir de los datos.</li>
 <li>Capa de <strong>visualización</strong>: también conocida como capa de presentación, es con la que interactúan los usuarios.</li>
@@ -3623,7 +3623,7 @@ Dado que en ambientes de Big Data el ser capaz de manejar grandes volúmenes de 
 <p>Una pregunta que debemos plantearnos es, ¿el análisis y el procesamiento (sus algoritmos) que vamos a realizar en las capas <em>batch</em> y <em>streaming</em> es el mismo? En ese caso la opción más acertada sería la arquitectura <em>Kappa</em>.</p>
 <p>Sin embargo, en otras ocasiones necesitaremos acceder a todo el conjunto de datos sin penalizar el rendimiento por lo que la <em>Lambda</em> puede ser más apropiada e incluso más fácil de implementar.</p>
 <p>También nos inclinaremos hacia <em>Lambda</em> si nuestros algoritmos de <em>batch</em> y <em>streaming</em> generan resultados muy distintos, como puede suceder con operaciones de procesamiento pesado o en modelos de <em>Machine Learning</em>. En estos casos, los algoritmos <em>batch</em> se pueden optimizar ya que acceden al dataset histórico completo.</p>
-<p>El decidir entre <em>Lamba</em> y <em>Kappa</em> al final es una decisión entre favorecer el rendimiento de ejecución de un proceso <em>batch</em> sobre la simplicidad de compartir código para ambas capas.</p>
+<p>El decidir entre <em>Lambda</em> y <em>Kappa</em> al final es una decisión entre favorecer el rendimiento de ejecución de un proceso <em>batch</em> sobre la simplicidad de compartir código para ambas capas.</p>
 <div class="admonition info">
 <p class="admonition-title">Casos reales</p>
 <p>Un ejemplo real de una arquitectura <em>Kappa</em> sería un sistema de geolocalización de usuarios por la cercanía a una antena de telefonía móvil. Cada vez que se aproximase a una antena que le diese cobertura se generaría un evento. Este evento se procesaría en la capa de <em>streaming</em> y serviría para pintar sobre un mapa su desplazamiento respecto a su posición anterior.</p>
