@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2595,10 +2595,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#funciones-avanzadas" class="md-nav__link">
+  <a href="#uso-del-logger" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Funciones Avanzadas
+        Uso del logger
       
     </span>
   </a>
@@ -3946,10 +3946,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#funciones-avanzadas" class="md-nav__link">
+  <a href="#uso-del-logger" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Funciones Avanzadas
+        Uso del logger
       
     </span>
   </a>
@@ -4271,8 +4271,37 @@
 <p>Tras desplegar el flujo de nuevo, al hacer clic en el nodo <code>inject</code>, veremos que el mensaje mostrado en la consola de depuración una cadena similar a:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Hoy es 17/1/2026 y son las 16:47:10
 </code></pre></div>
-<h3 id="funciones-avanzadas">Funciones Avanzadas<a class="headerlink" href="#funciones-avanzadas" title="Permanent link">&para;</a></h3>
-<p><a href="https://nodered.org/docs/user-guide/writing-functions">text</a></p>
+<div class="admonition info">
+<p class="admonition-title">Funciones avanzadas</p>
+<p>Dentro de los nodos función, podemos por un lado, enviar mensajes a múltiples salidas, y por otro lado, devolver varios valores utilizando un array.</p>
+<p>Por ejemplo, si queremos enviar dos mensajes diferentes a dos salidas distintas, podemos configurar el nodo función para que devuelva un array con dos mensajes:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kd">let</span><span class="w"> </span><span class="nx">fecha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">payload</span><span class="p">);</span>
+<span class="linenos" data-linenos="2 "></span><span class="kd">let</span><span class="w"> </span><span class="nx">dia</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fecha</span><span class="p">.</span><span class="nx">toLocaleDateString</span><span class="p">(</span><span class="s1">&#39;es-ES&#39;</span><span class="p">);</span>
+<span class="linenos" data-linenos="3 "></span><span class="kd">let</span><span class="w"> </span><span class="nx">hora</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fecha</span><span class="p">.</span><span class="nx">toLocaleTimeString</span><span class="p">(</span><span class="s1">&#39;es-ES&#39;</span><span class="p">);</span>
+<span class="linenos" data-linenos="4 "></span><span class="kd">let</span><span class="w"> </span><span class="nx">msg1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">payload</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Hoy es &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">dia</span><span class="w"> </span><span class="p">};</span>
+<span class="linenos" data-linenos="5 "></span><span class="kd">let</span><span class="w"> </span><span class="nx">msg2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">payload</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Son las &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">hora</span><span class="w"> </span><span class="p">};</span>
+<span class="linenos" data-linenos="6 "></span><span class="k">return</span><span class="w"> </span><span class="p">[</span><span class="nx">msg1</span><span class="p">,</span><span class="w"> </span><span class="nx">msg2</span><span class="p">];</span>
+</code></pre></div>
+<p>Pero si lo que queremos es enviar varios mensaje a una única salida, podemos utilizar el método <code>node.send()</code> dentro del nodo función, el cual envía los mensajes de forma asíncrona:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kd">let</span><span class="w"> </span><span class="nx">fecha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">payload</span><span class="p">);</span>
+<span class="linenos" data-linenos="2 "></span><span class="kd">let</span><span class="w"> </span><span class="nx">dia</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fecha</span><span class="p">.</span><span class="nx">toLocaleDateString</span><span class="p">(</span><span class="s1">&#39;es-ES&#39;</span><span class="p">);</span>
+<span class="linenos" data-linenos="3 "></span><span class="kd">let</span><span class="w"> </span><span class="nx">hora</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fecha</span><span class="p">.</span><span class="nx">toLocaleTimeString</span><span class="p">(</span><span class="s1">&#39;es-ES&#39;</span><span class="p">);</span>
+<span class="linenos" data-linenos="4 "></span><span class="nx">node</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">payload</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Hoy es &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">dia</span><span class="w"> </span><span class="p">});</span>
+<span class="linenos" data-linenos="5 "></span><span class="nx">node</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">payload</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Son las &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">hora</span><span class="w"> </span><span class="p">});</span>
+<span class="linenos" data-linenos="6 "></span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"> </span><span class="c1">// No devolvemos nada, ya que hemos enviado los mensajes manualmente</span>
+</code></pre></div>
+</div>
+<h3 id="uso-del-logger">Uso del logger<a class="headerlink" href="#uso-del-logger" title="Permanent link">&para;</a></h3>
+<p>Node-RED incluye un sistema de registro (<a href="https://nodered.org/docs/user-guide/runtime/logging">logging</a>) que nos permite registrar mensajes en diferentes niveles de severidad, como <code>info</code>, <code>warn</code>, <code>error</code>, etc. Esto es útil para depurar y monitorear el comportamiento de nuestros flujos.</p>
+<p>Dentro de un nodo función, podemos utilizar el objeto <code>node</code> para acceder al sistema de logging. Por ejemplo, para registrar un mensaje de información, podemos usar el método <code>node.log()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kd">let</span><span class="w"> </span><span class="nx">fecha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">payload</span><span class="p">);</span>
+<span class="linenos" data-linenos="2 "></span><span class="kd">let</span><span class="w"> </span><span class="nx">dia</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fecha</span><span class="p">.</span><span class="nx">toLocaleDateString</span><span class="p">(</span><span class="s1">&#39;es-ES&#39;</span><span class="p">);</span>
+<span class="linenos" data-linenos="3 "></span><span class="kd">let</span><span class="w"> </span><span class="nx">hora</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fecha</span><span class="p">.</span><span class="nx">toLocaleTimeString</span><span class="p">(</span><span class="s1">&#39;es-ES&#39;</span><span class="p">);</span>
+<span class="linenos" data-linenos="4 "></span><span class="nx">msg</span><span class="p">.</span><span class="nx">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Hoy es &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">dia</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot; y son las &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">hora</span><span class="p">;</span>
+<span class="linenos" data-linenos="5 "></span><span class="nx">node</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Mensaje procesado: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">msg</span><span class="p">.</span><span class="nx">payload</span><span class="p">);</span>
+<span class="linenos" data-linenos="6 "></span><span class="k">return</span><span class="w"> </span><span class="nx">msg</span><span class="p">;</span>
+</code></pre></div>
+<p>Del mismo modo, podemos registrar advertencias y errores utilizando <code>node.warn()</code> y <code>node.error()</code> respectivamente.</p>
 <h3 id="consideraciones">Consideraciones<a class="headerlink" href="#consideraciones" title="Permanent link">&para;</a></h3>
 <p>Ahora que ya hemos trabajado con algunos nodos más, hemos de tener en cuenta algunas consideraciones importantes al trabajar con Node-RED:</p>
 <ul>
@@ -4489,7 +4518,20 @@
 <!-- https://aprendiendoarduino.wordpress.com/2022/06/05/ejercicio-node-red-uso-de-bbdd-locales-y-cloud/ -->
 
 <h2 id="mqtt-con-node-red">MQTT con Node-RED<a class="headerlink" href="#mqtt-con-node-red" title="Permanent link">&para;</a></h2>
-<p><a href="https://mqtt.org/">MQTT</a> (<em>Message Queue Telemetry Transport</em>) es un protocolo ideado por IBM y liberado para que cualquiera podamos usarlo enfocado a la conectividad Machine-to-Machine (M2M). Dicho esto, MQTT es un protocolo pensado para IoT que se situa por encima de TCP/IP, y que está al mimsmo nivel que HTTP.</p>
+<p><a href="https://mqtt.org/">MQTT</a> (<em>Message Queue Telemetry Transport</em>) es un protocolo ideado por IBM y liberado para que cualquiera podamos usarlo enfocado a la conectividad Machine-to-Machine (M2M). Dicho esto, MQTT es un protocolo pensado para IoT que se sitúa por encima de TCP/IP, y que está al mismo nivel que HTTP.</p>
+<figure style="float: right;">
+    <img src="images/mqtt-ilustration.png" alt="Arquitectura MQTT" width="634" />
+    <figcaption>Arquitectura MQTT</figcaption>
+</figure>
+
+<p>MQTT sigue un modelo de comunicación <strong><em>publish</em></strong>-<strong><em>subscribe</em></strong>, donde los dispositivos (clientes) pueden publicar mensajes en temas específicos (<em>topics</em>) o suscribirse a esos temas para recibir mensajes. La comunicación se realiza a través de un intermediario llamado <em>broker</em>, que se encarga de distribuir los mensajes entre los clientes suscritos a los temas correspondientes.</p>
+<p>Algunos de los <em>brokers</em> más conocidos son <a href="https://mosquitto.org/"><em>Mosquitto</em></a>, <a href="https://www.hivemq.com/"><em>HiveMQ</em></a>  o <a href="https://www.rabbitmq.com/"><em>RabbitMQ</em></a>.</p>
+<p>Así pues, un cliente puede actuar como <em>publisher</em> (publicador) enviando mensajes a un tema específico, o como <em>subscriber</em> (suscriptor) recibiendo mensajes de los temas a los que está suscrito. Esta arquitectura permite una comunicación eficiente y escalable entre dispositivos, ya que los clientes no necesitan conocer la existencia de otros clientes para intercambiar mensajes. Además, MQTT es un protocolo ligero y eficiente en términos de ancho de banda y consumo de energía, lo que lo hace ideal para dispositivos con recursos limitados, como sensores y actuadores en entornos IoT.</p>
+<p>Algunos conceptos que conviene conocer son:</p>
+<ul>
+<li><strong><em>QoS</em></strong> (<em>Quality of Service</em>): MQTT ofrece tres niveles de calidad de servicio para la entrega de mensajes: 0 (entrega al menos una vez), 1 (entrega al menos una vez con confirmación) y 2 (entrega exactamente una vez). Esto permite a los desarrolladores elegir el nivel de confiabilidad adecuado según las necesidades de su aplicación.</li>
+<li><strong><em>Retained Messages</em></strong> (Mensajes retenidos): MQTT permite que los mensajes sean retenidos por el <em>broker</em>, lo que significa que el último mensaje publicado en un tema específico se almacena y se envía automáticamente a cualquier nuevo suscriptor que se conecte a ese tema. Esto es útil para garantizar que los nuevos suscriptores reciban la información más reciente sin necesidad de esperar a que se publique un nuevo mensaje.</li>
+</ul>
 <!--
 [text](https://aprendiendoarduino.wordpress.com/2022/04/22/protocolo-mqtt/)
 [text](https://aprendiendoarduino.wordpress.com/2022/04/23/mqtt-y-node-red/)
@@ -4497,13 +4539,20 @@ https://www.influxdata.com/blog/how-use-mqtt-node-red/
 -->
 
 <h3 id="enviando-y-recibiendo">Enviando y recibiendo<a class="headerlink" href="#enviando-y-recibiendo" title="Permanent link">&para;</a></h3>
-<p>Dentro de Node-RED, en la categoría network, disponemos de los nodos <a href="https://flowfuse.com/node-red/core-nodes/mqtt-in/"><code>mqtt in</code></a> y <a href="https://flowfuse.com/node-red/core-nodes/mqtt-out/"><code>mqtt out</code></a> para recibir y enviar datos a un broker MQTT. Para los siguientes ejemplo vamos a utilizar un <em>broker MQTT</em> público como es el de <a href="https://www.hivemq.com/"><em>HiveMQ</em></a>, el cual podemos monitorizar desde su <a href="https://www.mqtt-dashboard.com/"><em>dashboard</em></a>.</p>
+<p>Dentro de Node-RED, en la categoría <em>network</em>, disponemos de los nodos <a href="https://flowfuse.com/node-red/core-nodes/mqtt-in/"><code>mqtt in</code></a> y <a href="https://flowfuse.com/node-red/core-nodes/mqtt-out/"><code>mqtt out</code></a> para recibir y enviar datos a un broker MQTT. Para los siguientes ejemplo vamos a utilizar un <em>broker MQTT</em> público como es el de <a href="https://www.hivemq.com/"><em>HiveMQ</em></a>, el cual podemos monitorizar desde su <a href="https://www.mqtt-dashboard.com/"><em>dashboard</em></a>.</p>
 <p>Los datos de conexión son:</p>
 <ul>
 <li>Host: <code>broker.hivemq.com</code></li>
 <li>TCP Port: <code>1883</code></li>
 </ul>
 <p>Otros brokers gratuitos son <a href="https://www.shiftr.io/try">Shiftr.io</a> o <a href="https://test.mosquitto.org/">Mosquitto</a>.</p>
+<p>Al enviar un mensaje, utilizaremos un nodo de tipo <a href="https://flowfuse.com/node-red/core-nodes/mqtt-out/"><code>mqtt out</code></a> donde configuraremos:</p>
+<ul>
+<li>el broker MQTT: tanto el hostname como el puerto</li>
+<li>el topic donde se publica</li>
+<li>la política de QoS, pudiendo ser 0, 1 o 2.</li>
+<li>el flag de retención, decidiendo entre true o false.</li>
+</ul>
 <p>Cuando recuperamos un mensaje que proviene del nodo mqtt in, obtendremos un JSON que los datos como cadenas o números. Esto quiere decir, que si queremos trabajar con fechas, necesitamos convertir los campos que sean fechas a tipos <code>Date</code>. En nuestro caso, lo más recomendable es añadir un nodo función donde reescribamos la propiedad que nos interese:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1">// cambiamos el tipo para que funcione bien la fecha</span>
 <span class="linenos" data-linenos="2 "></span><span class="nx">msg</span><span class="p">.</span><span class="nx">payload</span><span class="p">.</span><span class="nx">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">payload</span><span class="p">.</span><span class="nx">timestamp</span><span class="p">);</span>
@@ -4529,8 +4578,20 @@ https://www.influxdata.com/blog/how-use-mqtt-node-red/
 <li><a href="https://miot-rpi.github.io/practicas/">Master IoT UCM</a></li>
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<p>Para las siguientes actividades, se valorará tanto la correcta implementación del flujo en Node-RED, como la calidad del código JavaScript empleado en los nodos <code>function</code>, así como la correcta documentación del flujo mediante comentarios.</p>
 <ol>
-<li>(<abbr title="Analiza sistemas robotizados, evaluando opciones de diseño e implementación.">RAMIA.4</abbr> / <abbr title="Se han evaluado diferentes opciones en el diseño e implementación de sistemas robotizados.">CEMIA.4d</abbr> / 2p) Haciendo uso de Node-RED, crea un flujo que simule la lectura de datos de temperatura y humedad generados de manera aleatoria cada 30 segundos. Dichos datos se deben agrupar dentro de un mismo objeto JSON, y posteriormente, deben ser enviados a un nodo <code>debug</code> para su visualización en la consola de depuración.</li>
+<li>
+<p>(<abbr title="Analiza sistemas robotizados, evaluando opciones de diseño e implementación.">RAMIA.4</abbr> / <abbr title="Se han evaluado diferentes opciones en el diseño e implementación de sistemas robotizados.">CEMIA.4d</abbr> / 2p) Crea un flujo que simule la lectura de datos de temperatura interior y exterior, humedad y una alarma (on/off) generados de manera aleatoria cada 30 segundos. Dichos datos se deben agrupar dentro de un mismo objeto JSON, y posteriormente, deben ser enviados a un nodo <code>debug</code> para su visualización en la consola de depuración.</p>
+</li>
+<li>
+<p>(<abbr title="Analiza sistemas robotizados, evaluando opciones de diseño e implementación.">RAMIA.4</abbr> / <abbr title="Se han evaluado diferentes opciones en el diseño e implementación de sistemas robotizados.">CEMIA.4d</abbr> / 2p) Crea un nuevo flujo que a partir de los valores anteriores, sustituya la temperatura exterior por el valor devuelto por el servicio de Open-Meteo para la ciudad de Elche. El flujo debe ejecutarse cada 30 segundos, y los datos resultantes deben almacenarse en MongoDB Atlas dentro de una colección llamada <code>sensores</code>.</p>
+</li>
+<li>
+<p>(<abbr title="Analiza sistemas robotizados, evaluando opciones de diseño e implementación.">RAMIA.4</abbr> / <abbr title="Se han evaluado diferentes opciones en el diseño e implementación de sistemas robotizados.">CEMIA.4d</abbr> / 2p) A partir del flujo anterior, envía los datos a un broker MQTT público en el topic <code>/iabd/sensores/XYZ</code> (siendo <code>XYZ</code> tus iniciales) cada vez que la temperatura interior supere los 25 grados o la humedad sea superior al 70%. A continuación, crea un nuevo flujo que reciba los datos desde el broker MQTT y los almacene en una nueva colección llamada <code>alertas</code> en MongoDB Atlas.</p>
+</li>
+<li>
+<p>(<abbr title="Analiza sistemas robotizados, evaluando opciones de diseño e implementación.">RAMIA.4</abbr> / <abbr title="Se han evaluado diferentes opciones en el diseño e implementación de sistemas robotizados.">CEMIA.4d</abbr> / 2p) Crea un cuadro de mando con Node-RED Dashboard que muestre en tiempo real los datos de temperatura interior y exterior, humedad y estado de la alarma. Además, incluye un gráfico que muestre la evolución de la temperatura interior durante la última hora.</p>
+</li>
 </ol>
 <!--
 Flujo con generación aleatoria de temperaturas y luminosidad cada 30 segundos, mediante dos flujos separados que se unen para crear un único mensaje.
@@ -4807,10 +4868,10 @@ Flujos que realicen operaciones de lectura y escritura de datos en MongoAtlas ha
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
