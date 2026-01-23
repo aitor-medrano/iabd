@@ -4211,11 +4211,13 @@
 
   <h1>Node-RED</h1>
 
-<div class="admonition danger">
-<p class="admonition-title">Apuntes en construcción</p>
-<p>Actualmente estos apuntes están en proceso de creación. Probablemente estén terminados para el 23 de enero del 2026.</p>
+<div class="admonition info inline end">
+<p class="admonition-title">FlowFuse</p>
+<p><a href="https://flowfuse.com/">FlowFuse</a> es una plataforma que amplía las capacidades de Node-RED, proporcionando herramientas adicionales para la creación, gestión y despliegue de flujos de trabajo. Ofrece una interfaz más amigable y funcionalidades avanzadas como colaboración en tiempo real, integración con servicios en la nube y plantillas predefinidas para acelerar el desarrollo.</p>
+<p><em>FlowFuse</em> <strong>no</strong> reemplaza Node‑RED, sino que lo gestiona y lo potencia. Podríamos decir que Node‑RED es el motor y <em>FlowFuse</em> es la plataforma que lo gestiona y lo convierte en una solución empresarial.</p>
 </div>
-<p><a href="https://nodered.org/">Node-RED</a> es una herramienta de programación visual <em>low-code</em> desarrollada en <a href="https://nodejs.org/es">Node.js</a> que se implementa en dispositivos controladores de <em>hardware</em>. Trabaja mostrando de manera visual las relaciones mediante nodos conectados por flujos de manera que se pueda programar sin escribir código. Se dice que es una herramienta <em>low-code</em> porque aunque no es necesario escribir código para crear aplicaciones, sí que se puede hacer uso de código <em>JavaScript</em> para crear nodos personalizados.</p>
+<p><a href="https://nodered.org/">Node-RED</a> es una herramienta de programación visual <em>low-code</em> desarrollada en <a href="https://nodejs.org/es">Node.js</a> que se implementa en dispositivos controladores de <em>hardware</em>. Trabaja mostrando de manera visual las relaciones mediante nodos conectados por flujos de manera que se pueda programar sin escribir código. Se dice que es una herramienta <em>low-code</em> porque, aunque no es necesario escribir código para crear aplicaciones, sí que se puede hacer uso de código <em>JavaScript</em> para crear nodos personalizados.</p>
+<p>Fue desarrollado originalmente por IBM para facilitar la programación de dispositivos IoT, pero ha evolucionado para convertirse en una plataforma versátil utilizada en una amplia variedad de aplicaciones, desde automatización del hogar hasta integración de sistemas empresariales.</p>
 <p>Mediante un interfaz web, se pueden arrastrar y soltar nodos para crear flujos que representen la lógica de la aplicación. Cada nodo representa una función o acción específica, y los flujos conectan estos nodos para definir cómo los datos se mueven y se procesan. Así pues, permite integrar servicios a través de protocolos estándares como REST, MQTT, Websocket, AMQP, etc ... además de ofrecer integración con APIs de terceros, tales como X, MongoDB, S3, InfluxDB, MySQL, etc...</p>
 <h2 id="hola-node-red">Hola Node-RED<a class="headerlink" href="#hola-node-red" title="Permanent link">&para;</a></h2>
 <p>Para arrancar Node-RED mediante <em>Docker</em>, empleamos el comando:</p>
@@ -4515,21 +4517,38 @@
 <span class="linenos" data-linenos="7 "></span><span class="w">    </span><span class="nx">temperatura</span><span class="o">:</span><span class="w"> </span><span class="mf">17</span>
 <span class="linenos" data-linenos="8 "></span><span class="w">  </span><span class="p">}</span>
 </code></pre></div>
+<!--
+Es importante recordar que cuando despleguemos nuestro flujo que conecta con MongoDB, automáticamente realizará una ejecución e insertará un documento en la base de datos.
+-->
+
 <!-- https://aprendiendoarduino.wordpress.com/2022/06/05/ejercicio-node-red-uso-de-bbdd-locales-y-cloud/ -->
 
 <h2 id="mqtt-con-node-red">MQTT con Node-RED<a class="headerlink" href="#mqtt-con-node-red" title="Permanent link">&para;</a></h2>
 <p><a href="https://mqtt.org/">MQTT</a> (<em>Message Queue Telemetry Transport</em>) es un protocolo ideado por IBM y liberado para que cualquiera podamos usarlo enfocado a la conectividad Machine-to-Machine (M2M). Dicho esto, MQTT es un protocolo pensado para IoT que se sitúa por encima de TCP/IP, y que está al mismo nivel que HTTP.</p>
 <figure style="float: right;">
-    <img src="images/mqtt-ilustration.png" alt="Arquitectura MQTT" width="634" />
+    <img src="images/mqtt-ilustration.png" alt="Arquitectura MQTT" width="600"/>
     <figcaption>Arquitectura MQTT</figcaption>
 </figure>
 
 <p>MQTT sigue un modelo de comunicación <strong><em>publish</em></strong>-<strong><em>subscribe</em></strong>, donde los dispositivos (clientes) pueden publicar mensajes en temas específicos (<em>topics</em>) o suscribirse a esos temas para recibir mensajes. La comunicación se realiza a través de un intermediario llamado <em>broker</em>, que se encarga de distribuir los mensajes entre los clientes suscritos a los temas correspondientes.</p>
 <p>Algunos de los <em>brokers</em> más conocidos son <a href="https://mosquitto.org/"><em>Mosquitto</em></a>, <a href="https://www.hivemq.com/"><em>HiveMQ</em></a>  o <a href="https://www.rabbitmq.com/"><em>RabbitMQ</em></a>.</p>
 <p>Así pues, un cliente puede actuar como <em>publisher</em> (publicador) enviando mensajes a un tema específico, o como <em>subscriber</em> (suscriptor) recibiendo mensajes de los temas a los que está suscrito. Esta arquitectura permite una comunicación eficiente y escalable entre dispositivos, ya que los clientes no necesitan conocer la existencia de otros clientes para intercambiar mensajes. Además, MQTT es un protocolo ligero y eficiente en términos de ancho de banda y consumo de energía, lo que lo hace ideal para dispositivos con recursos limitados, como sensores y actuadores en entornos IoT.</p>
+<div class="admonition info">
+<p class="admonition-title">Definición de topics</p>
+<p>A la hora de definir los <em>topics</em> en MQTT, es importante seguir una estructura jerárquica utilizando barras inclinadas (<code>/</code>) para separar los niveles. Por ejemplo, un <em>topic</em> para sensores de temperatura en diferentes ubicaciones podría ser:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sensores/temperatura/salon
+<span class="linenos" data-linenos="2 "></span>sensores/temperatura/cocina
+<span class="linenos" data-linenos="3 "></span>sensores/temperatura/exterior
+</code></pre></div>
+<p>Podemos utilizar caracteres comodín para suscripciones más flexibles:</p>
+<ul>
+<li><code>+</code> (más): representa un solo nivel en la jerarquía del <em>topic</em>. Por ejemplo, <code>/sensores/+/salon</code> coincidiría con <code>/sensores/temperatura/salon</code> y <code>/sensores/humedad/salon</code>.</li>
+<li><code>#</code> (almohadilla): representa múltiples niveles en la jerarquía del <em>topic</em>. Por ejemplo, <code>/sensores/#</code> coincidiría con todos los temas que comienzan con <code>/sensores/</code>, como <code>/sensores/temperatura/salon</code>, <code>/sensores/humedad/cocina</code>, etc.</li>
+</ul>
+</div>
 <p>Algunos conceptos que conviene conocer son:</p>
 <ul>
-<li><strong><em>QoS</em></strong> (<em>Quality of Service</em>): MQTT ofrece tres niveles de calidad de servicio para la entrega de mensajes: 0 (entrega al menos una vez), 1 (entrega al menos una vez con confirmación) y 2 (entrega exactamente una vez). Esto permite a los desarrolladores elegir el nivel de confiabilidad adecuado según las necesidades de su aplicación.</li>
+<li><strong><em>QoS</em></strong> (<em>Quality of Service</em>, o en español calidad del servicio, <em>CdS</em>): MQTT ofrece tres niveles de calidad de servicio para la entrega de mensajes: 0 (entrega al menos una vez), 1 (entrega al menos una vez con confirmación) y 2 (entrega exactamente una vez). Esto permite a los desarrolladores elegir el nivel de confiabilidad adecuado según las necesidades de su aplicación.</li>
 <li><strong><em>Retained Messages</em></strong> (Mensajes retenidos): MQTT permite que los mensajes sean retenidos por el <em>broker</em>, lo que significa que el último mensaje publicado en un tema específico se almacena y se envía automáticamente a cualquier nuevo suscriptor que se conecte a ese tema. Esto es útil para garantizar que los nuevos suscriptores reciban la información más reciente sin necesidad de esperar a que se publique un nuevo mensaje.</li>
 </ul>
 <!--
@@ -4539,34 +4558,94 @@ https://www.influxdata.com/blog/how-use-mqtt-node-red/
 -->
 
 <h3 id="enviando-y-recibiendo">Enviando y recibiendo<a class="headerlink" href="#enviando-y-recibiendo" title="Permanent link">&para;</a></h3>
-<p>Dentro de Node-RED, en la categoría <em>network</em>, disponemos de los nodos <a href="https://flowfuse.com/node-red/core-nodes/mqtt-in/"><code>mqtt in</code></a> y <a href="https://flowfuse.com/node-red/core-nodes/mqtt-out/"><code>mqtt out</code></a> para recibir y enviar datos a un broker MQTT. Para los siguientes ejemplo vamos a utilizar un <em>broker MQTT</em> público como es el de <a href="https://www.hivemq.com/"><em>HiveMQ</em></a>, el cual podemos monitorizar desde su <a href="https://www.mqtt-dashboard.com/"><em>dashboard</em></a>.</p>
-<p>Los datos de conexión son:</p>
-<ul>
-<li>Host: <code>broker.hivemq.com</code></li>
-<li>TCP Port: <code>1883</code></li>
-</ul>
-<p>Otros brokers gratuitos son <a href="https://www.shiftr.io/try">Shiftr.io</a> o <a href="https://test.mosquitto.org/">Mosquitto</a>.</p>
-<p>Al enviar un mensaje, utilizaremos un nodo de tipo <a href="https://flowfuse.com/node-red/core-nodes/mqtt-out/"><code>mqtt out</code></a> donde configuraremos:</p>
-<ul>
-<li>el broker MQTT: tanto el hostname como el puerto</li>
-<li>el topic donde se publica</li>
-<li>la política de QoS, pudiendo ser 0, 1 o 2.</li>
-<li>el flag de retención, decidiendo entre true o false.</li>
-</ul>
-<p>Cuando recuperamos un mensaje que proviene del nodo mqtt in, obtendremos un JSON que los datos como cadenas o números. Esto quiere decir, que si queremos trabajar con fechas, necesitamos convertir los campos que sean fechas a tipos <code>Date</code>. En nuestro caso, lo más recomendable es añadir un nodo función donde reescribamos la propiedad que nos interese:</p>
+<p>Dentro de Node-RED, en la categoría <em>network</em>, disponemos de los nodos <a href="https://flowfuse.com/node-red/core-nodes/mqtt-in/"><code>mqtt in</code></a> y <a href="https://flowfuse.com/node-red/core-nodes/mqtt-out/"><code>mqtt out</code></a> para recibir y enviar datos a un broker MQTT. Para los siguientes ejemplos vamos a utilizar un <em>broker MQTT</em> público como es el de <a href="https://www.hivemq.com/"><em>HiveMQ</em></a>, el cual podemos monitorizar desde su <a href="https://www.mqtt-dashboard.com/"><em>dashboard</em></a>. Otros brokers gratuitos son <a href="https://www.shiftr.io/try">Shiftr.io</a> o <a href="https://test.mosquitto.org/">Mosquitto</a>.</p>
+<p>Vamos a realizar un flujo sencillo donde la salida un nodo función se publique en un topic MQTT, y a su vez, otro nodo MQTT reciba el mensaje y lo muestre en la consola de depuración. Para ello, seguimos los siguientes pasos:</p>
+<ol>
+<li>Arrastramos un nodo <code>inject</code> al área de trabajo y lo configuramos para que envíe un mensaje cada 10 segundos.</li>
+<li>
+<p>Arrastramos un nodo <code>function</code> al área de trabajo y lo conectamos a la salida del nodo <code>inject</code>. En el nodo función, repetimos el mismo código del ejemplo anterior:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kd">let</span><span class="w"> </span><span class="nx">documento</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="s2">&quot;lugar&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Severo Ochoa&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="s2">&quot;fecha&quot;</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">payload</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="s2">&quot;timestamp&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">msg</span><span class="p">.</span><span class="nx">payload</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="s2">&quot;temperatura&quot;</span><span class="o">:</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">30</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">10</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="p">}</span>
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span><span class="nx">msg</span><span class="p">.</span><span class="nx">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">documento</span><span class="p">;</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span><span class="k">return</span><span class="w"> </span><span class="nx">msg</span><span class="p">;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Arrastramos un nodo <a href="https://flowfuse.com/node-red/core-nodes/mqtt-out/"><code>mqtt out</code></a> al área de trabajo y lo conectamos a la salida del nodo <code>function</code>.</p>
+<p><figure style="float: right;">
+    <img src="images/nodered-mqtt-out.jpg" alt="Nodo de MQTT-out en Node-RED" />
+    <figcaption>Nodo de MQTT-out en Node-RED</figcaption>
+</figure></p>
+<ol>
+<li>Creamos un servidor donde indicamos la conexión al broker MQTT público de HiveMQ, indicando como servidor <code>broker.hivemq.com</code> y puerto <code>1883</code>. Al utilizar el broker público de <em>HiveMQ</em>, no es necesario autenticarse, por lo que dejaremos la pestaña de seguridad tal cual.</li>
+<li>Configuramos el topic donde se publicarán los mensajes, en nuestro caso, <code>/s8a/h2v/nodered</code>.</li>
+<li>Configuramos la política de QoS a <code>0</code> (que significa que se asegura que el mensaje sea entregado al menos una vez) y el flag de retención de mensajes a <code>verdadero</code> (lo que permite que otros nodos puedan recibir el último mensaje publicado).</li>
+</ol>
+</li>
+</ol>
+<p>Si desplegamos el flujo y esperamos unos segundos, se enviarán mensajes al broker MQTT. Vamos a crear otro flujo para recibir los mensajes publicados en el topic <code>/s8a/h2v/nodered</code> y comprobar que llegan correctamente:</p>
+<figure style="float: right;">
+    <img src="images/nodered-mqtt-in.jpg" alt="Nodo de MQTT-in en Node-RED" />
+    <figcaption>Nodo de MQTT-in en Node-RED</figcaption>
+</figure>
+
+<ol>
+<li>
+<p>Arrastramos un nodo <a href="https://flowfuse.com/node-red/core-nodes/mqtt-in/"><code>mqtt in</code></a> al área de trabajo.</p>
+<ol>
+<li>Configuramos el mismo servidor MQTT que hemos creado anteriormente.</li>
+<li>Configuramos el topic <code>/s8a/h2v/nodered</code> para suscribirnos a los mensajes publicados en dicho topic. Si quisiéramos recibir todos los mensajes publicados en todos los topics de <code>s8a</code>, podemos usar el comodín <code>/s8a/#</code>.</li>
+<li>Configuramos la política de QoS a <code>0</code> (la misma que hemos usado al publicar).</li>
+</ol>
+</li>
+<li>
+<p>Si conectamos la salida del nodo función a un nodo <code>debug</code> para visualizar los mensajes en la consola de depuración, veremos como cada 10 segundos, recibimos un nuevo mensaje publicado desde el otro flujo con la información enviada:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">&quot;lugar&quot;</span><span class="p">:</span><span class="s2">&quot;Severo Ochoa&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">&quot;fecha&quot;</span><span class="p">:</span><span class="s2">&quot;2026-01-23T08:26:45.327Z&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="mi">1769156805327</span><span class="p">,</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="nt">&quot;temperatura&quot;</span><span class="p">:</span><span class="mi">15</span>
+<span class="linenos" data-linenos="6 "></span><span class="p">}</span>
+</code></pre></div>
+</li>
+</ol>
+<div class="admonition info">
+<p class="admonition-title">Consideraciones al trabajar con fechas</p>
+<p>Cuando recuperamos un mensaje que proviene del nodo <a href="https://flowfuse.com/node-red/core-nodes/mqtt-in/"><code>mqtt in</code></a>, obtendremos un JSON que los datos como cadenas o números. Esto quiere decir, que si queremos trabajar con fechas, necesitamos convertir los campos que sean fechas a tipos <code>Date</code>. En nuestro caso, lo más recomendable es añadir un nodo función donde reescribamos la propiedad que nos interese:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1">// cambiamos el tipo para que funcione bien la fecha</span>
 <span class="linenos" data-linenos="2 "></span><span class="nx">msg</span><span class="p">.</span><span class="nx">payload</span><span class="p">.</span><span class="nx">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">payload</span><span class="p">.</span><span class="nx">timestamp</span><span class="p">);</span>
 <span class="linenos" data-linenos="3 "></span>
 <span class="linenos" data-linenos="4 "></span><span class="k">return</span><span class="w"> </span><span class="nx">msg</span><span class="p">;</span>
 </code></pre></div>
-<p>Es importante recordar que cuando despleguemos nuestro flujo que conecta con MongoDB, automáticamente realizará una ejecución e insertará un documento en la base de datos.</p>
+</div>
+<p>Así pues, tendremos un flujo similar al siguiente:</p>
 <figure style="align: center;">
-    <img src="images/nodered-mqtt.jpg" alt="Flujo con MQTT desde Node-RED" width="850" />
+    <img src="images/nodered-mqtt.jpg" alt="Flujo con MQTT desde Node-RED" />
     <figcaption>Flujo con MQTT desde Node-RED</figcaption>
 </figure>
 
 <h2 id="cuadros-de-mando-con-node-red-dashboard">Cuadros de mando con Node-RED Dashboard<a class="headerlink" href="#cuadros-de-mando-con-node-red-dashboard" title="Permanent link">&para;</a></h2>
-<p><a href="https://flows.nodered.org/node/node-red-dashboard">Node-RED Dashboard</a> es un conjunto de nodos que permite crear interfaces de usuario interactivas y visuales directamente desde Node-RED. Con estos nodos, podemos diseñar paneles de control (dashboards) que muestren datos en tiempo real, gráficos, controles deslizantes, botones y otros elementos visuales.</p>
+<figure style="float: right;">
+    <img src="images/nodered-dashboard-nodes.jpg" alt="Nodos para crear dashboards en Node-RED" />
+    <figcaption>Nodos para crear dashboards en Node-RED</figcaption>
+</figure>
+
+<p>Mediante <em>Node-RED</em> también podemos crear cuadros de mando (<em>dashboards</em>) para visualizar datos en tiempo real. Antiguamente se utilizaba el módulo adicional <a href="https://flows.nodered.org/node/node-red-dashboard"><code>node-red-dashboard</code></a>, el cual proporciona una serie de nodos específicos para crear interfaces de usuario interactivas, pero desde junio de 2024, se considera obsoleto y se recomienda utilizar el módulo <a href="https://dashboard.flowfuse.com/">Flowfuse Dashboard</a>).</p>
+<p>Así pues, nos ofrece un conjunto de nodos que permiten crear interfaces de usuario interactivas y visuales directamente desde Node-RED. Con estos nodos, podemos diseñar paneles de control (<em>dashboards</em>) que muestren datos en tiempo real, gráficos, controles deslizantes, botones y otros elementos visuales.</p>
+<p>El primer paso es instalar el módulo <code>flowfuse-dashboard</code> desde la paleta de nodos, siguiendo los pasos descritos anteriormente, que añadirá una nueva categoría llamada <code>dashboard 2</code> en la paleta de nodos, la cual puedes visualizar en la imagen de la derecha, así como un nuevo panel lateral llamado <code>Dashboard</code> en la parte derecha de la interfaz de Node-RED.</p>
+<p>Antes de entrar a dibujar algunos ejemplos, es importante entender algunos conceptos clave sobre cómo funciona <em>Flowfuse Dashboard</em>. Cada elemento visual que añadimos al <em>dashboard</em> se organiza en una estructura jerárquica compuesta por:</p>
+<ul>
+<li><strong>Página</strong> (<em>Page</em>): Son las páginas principales del <em>dashboard</em>. Podemos tener múltiples tableros para organizar diferentes conjuntos de elementos visuales.</li>
+<li><strong>Grupos</strong> (<em>Groups</em>): Dentro de cada tablero, podemos crear grupos para agrupar elementos relacionados. Esto ayuda a mantener el <em>dashboard</em> organizado y facilita la navegación.</li>
+<li><strong>Elementos</strong> (<em>Widgets</em>): Son los componentes visuales individuales que añadimos al <em>dashboard</em>, como gráficos, indicadores, botones, etc.</li>
+</ul>
+<p>Cada nodo de <em>Flowfuse</em> <em>Dashboard</em> tiene una configuración específica que nos permite personalizar su apariencia y comportamiento. Por ejemplo, al configurar un nodo de gráfico, podemos definir el tipo de gráfico (líneas, barras, pastel, etc.), los ejes, los colores y otros parámetros visuales.</p>
 <!-- https://aprendiendoarduino.wordpress.com/2020/11/25/dashboard-node-red/ https://aprendiendoarduino.wordpress.com/2022/04/27/ejercicios-node-red  https://aprendiendoarduino.wordpress.com/2021/12/15/ejercicios-dashboard-node-red/ -->
 
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
@@ -4594,8 +4673,8 @@ https://www.influxdata.com/blog/how-use-mqtt-node-red/
 </li>
 </ol>
 <!--
-Flujo con generación aleatoria de temperaturas y luminosidad cada 30 segundos, mediante dos flujos separados que se unen para crear un único mensaje.
-Flujos que realicen operaciones de lectura y escritura de datos en MongoAtlas haciendo uso del nodo
+[text](https://aprendiendoarduino.wordpress.com/2021/12/15/ejercicios-dashboard-node-red/)
+[text](https://aprendiendoarduino.wordpress.com/2021/12/16/ejercicios-finales-node-red/)
 -->
 
 
