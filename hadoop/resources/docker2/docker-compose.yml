@@ -1,0 +1,109 @@
+services:
+  namenode:
+    image: apache/hadoop:3.3.6
+    container_name: namenode
+    hostname: namenode
+    user: root  # Añadir esta línea
+    command: >
+      bash -c "
+        mkdir -p /opt/hadoop/dfs/name &&
+        chown -R 1000:1000 /opt/hadoop/dfs/name &&
+        if [ ! -f /opt/hadoop/dfs/name/current/VERSION ]; then
+          hdfs namenode -format -force;
+        fi &&
+        hdfs namenode
+      "
+    ports:
+      - "9870:9870"
+      - "9000:9000"
+    volumes:
+      - namenode_data:/opt/hadoop/dfs/name
+      - ./conf:/opt/hadoop/etc/hadoop
+    networks:
+      - hadoop-net
+
+  datanode1:
+    image: apache/hadoop:3.3.6
+    container_name: datanode1
+    hostname: datanode1
+    user: root
+    command: >
+      bash -c "
+        mkdir -p /opt/hadoop/dfs/data &&
+        chown -R 1000:1000 /opt/hadoop/dfs/data &&
+        hdfs datanode
+      "
+    volumes:
+      - datanode1_data:/opt/hadoop/dfs/data
+      - ./conf:/opt/hadoop/etc/hadoop
+    depends_on:
+      - namenode
+    networks:
+      - hadoop-net
+
+  datanode2:
+    image: apache/hadoop:3.3.6
+    container_name: datanode2
+    user: root
+    command: >
+      bash -c "
+        mkdir -p /opt/hadoop/dfs/data &&
+        chown -R 1000:1000 /opt/hadoop/dfs/data &&
+        hdfs datanode
+      "
+    volumes:
+      - datanode2_data:/opt/hadoop/dfs/data
+      - ./conf:/opt/hadoop/etc/hadoop
+    depends_on:
+      - namenode
+    networks:
+      - hadoop-net
+
+  resourcemanager:
+    image: apache/hadoop:3.3.6
+    container_name: resourcemanager
+    hostname: resourcemanager
+    command: ["bash", "-c", "yarn resourcemanager"]
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./conf:/opt/hadoop/etc/hadoop
+    depends_on:
+      - namenode
+    networks:
+      - hadoop-net
+
+  nodemanager:
+    image: apache/hadoop:3.3.6
+    container_name: nodemanager
+    hostname: nodemanager
+    command: ["bash", "-c", "yarn nodemanager"]
+    volumes:
+      - ./conf:/opt/hadoop/etc/hadoop
+    depends_on:
+      - resourcemanager
+    networks:
+      - hadoop-net
+
+  historyserver:
+    image: apache/hadoop:3.3.6
+    container_name: historyserver
+    hostname: historyserver
+    command: ["bash", "-c", "mapred historyserver"]
+    ports:
+      - "8188:8188"
+    volumes:
+      - ./conf:/opt/hadoop/etc/hadoop
+    depends_on:
+      - namenode
+      - resourcemanager
+    networks:
+      - hadoop-net
+
+volumes:
+  namenode_data:
+  datanode1_data:
+  datanode2_data:
+
+networks:
+  hadoop-net:

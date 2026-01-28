@@ -1,6 +1,7 @@
 services:
    namenode:
       image: apache/hadoop:3
+      container_name: iabd-namenode
       hostname: namenode
       command: ["hdfs", "namenode"]
       ports:
@@ -11,12 +12,14 @@ services:
           ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
    datanode:
       image: apache/hadoop:3
+      container_name: iabd-datanode
       command: ["hdfs", "datanode"]
       env_file:
-        - ./config      
+        - ./config
    resourcemanager:
       image: apache/hadoop:3
       hostname: resourcemanager
+      container_name: iabd-resourcemanager
       command: ["yarn", "resourcemanager"]
       ports:
          - 8088:8088
@@ -26,6 +29,8 @@ services:
         - ./test.sh:/opt/test.sh
    nodemanager:
       image: apache/hadoop:3
+      hostname: nodemanager
+      container_name: iabd-nodemanager
       command: ["yarn", "nodemanager"]
       env_file:
         - ./config

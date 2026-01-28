@@ -1554,6 +1554,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#bloques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloques
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#trabajando-con-hdfs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1637,7 +1648,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bloques" class="md-nav__link">
+  <a href="#bloques_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Bloques
@@ -3887,6 +3898,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#bloques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloques
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#trabajando-con-hdfs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3970,7 +3992,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bloques" class="md-nav__link">
+  <a href="#bloques_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Bloques
@@ -4154,6 +4176,44 @@
 
 
 <h1 id="hdfs">HDFS<a class="headerlink" href="#hdfs" title="Permanent link">&para;</a></h1>
+<p>Es la capa de almacenamiento de <em>Hadoop</em>, y como tal, es un sistema de ficheros distribuido y tolerante a fallos que puede almacenar gran cantidad de datos, escalar de forma incremental y sobrevivir a fallos de hardware sin perder datos. Se basa en el <a href="https://static.googleusercontent.com/media/research.google.com/es//archive/gfs-sosp2003.pdf"><em>paper</em></a> que publicó <em>Google</em> detallando su <em>Google File System</em> en 2003.</p>
+<p>Es un sistema que reparte los datos entre todos los nodos del clúster de <em>Hadoop</em>, dividiendo los ficheros en bloques (cada bloque por defecto es de 128MB) y almacenando copias duplicadas a través de los nodos. Por defecto se replica en 3 nodos distintos (esto se conoce como el <strong>factor de replicación</strong>).</p>
+<p>HDFS asegura que se puedan añadir servidores para incrementar el tamaño de almacenamiento de forma lineal, de manera que al introducir un nuevo nodo, se incrementa tanto la redundancia como la capacidad de almacenamiento.</p>
+<p>Está planteado para escribir los datos una vez y leerlos muchos veces (<em>WORM / Write Once, Read Many</em>). Las escrituras se pueden realizar a mano, o desde herramientas como <em>Flume</em> y <em>Sqoop</em>, que estudiaremos más adelante.</p>
+<p>No ofrece buen rendimiento para:</p>
+<ul>
+<li>Accesos de baja latencia. Realmente se utiliza para almacenar datos de entrada necesarios para procesos de computación.</li>
+<li>Ficheros pequeños (a menos que se agrupen). Funciona mejor con grandes cantidades de ficheros grandes, es decir, mejor millones de ficheros de 100MB que billones de ficheros de 1MB.</li>
+<li>Múltiples escritores.</li>
+<li>Modificaciones arbitrarias de ficheros.</li>
+</ul>
+<p>Además, una vez escritos los datos en HDFS son immutables. Cada fichero de HDFS solo permite añadir contenido (<em>append-only</em>). Una vez se ha creado y escrito en él, solo podemos añadir contenido o eliminarlo. Es decir, <em>a priori</em>, no podemos modificar los datos.</p>
+<div class="admonition tip">
+<p class="admonition-title">HBase / Hive</p>
+<p>Tanto <em>HBase</em> como <em>Hive</em> ofrecen una capa por encima de HDFS para dar soporte a la modificación de los datos, como en cualquier base de datos.</p>
+</div>
+<h2 id="bloques">Bloques<a class="headerlink" href="#bloques" title="Permanent link">&para;</a></h2>
+<p>Un bloque es la cantidad mínima de datos que puede ser leída o escrita. El tamaño predeterminado de HDFS son 128 MB, ya que como hemos comentado, <em>Hadoop</em> está pensado para trabajar con ficheros de gran tamaño.</p>
+<p>Todos los ficheros están divididos en bloques. Esto quiere decir que si subimos un fichero de 600MB, lo dividirá en 5 bloques de 128MB. Estos bloques se distribuyen por todos los nodos de datos del clúster de <em>Hadoop</em>.</p>
+<p>Si un fichero de HDFS es menor que el tamaño de un bloque, es decir, menor de 128MB, ocupará un bloque lógico pero en disco únicamente ocupará el espacio necesario. Es decir, un archivo de 1MB ocupará un bloque de 128MB, pero utilizará 1MB en disco.</p>
+<p>A partir del <em>factor de replicación</em>, cada bloque se almacena varias veces en máquinas distintas. El valor por defecto es 3. Por lo tanto, el archivo de 600MB que teníamos dividido en 5 bloques de 128MB, si lo replicamos tres veces, lo tendremos repartido en 15 bloques entre todos los nodos del clúster.</p>
+<figure style="align: center;">
+    <img src="images/03hdfsReplicacion.png" width="500">
+    <figcaption>Factor de replicación HDFS</figcaption>
+</figure>
+
+<p>Respecto a los permisos de lectura y escritura de los ficheros, sigue la misma filosofía de asignación de usuarios y grupos que se realiza en los sistemas <em>Posix</em>. Es una buena práctica crear una carpeta <code>/user/</code> en el raíz de HDFS, de forma similar al <code>/home/</code> de Linux.</p>
+<p>En HDFS se distinguen las siguientes máquinas:</p>
+<ul>
+<li><em>Namenode</em>: Actúa como máster y almacena todos los metadatos necesarios para construir el sistema de ficheros a partir de sus bloques. Tiene control sobre dónde están todos los bloques.</li>
+<li><em>Datanode</em>: Son los esclavos, se limitan a almacenar los bloques que componen cada fichero.</li>
+<li><em>Secondary Namenode</em>: Su función principal es tomar puntos de control de los metadatos del sistema de archivos presentes en el <em>Namenode</em>.</li>
+</ul>
+<figure style="align: center;">
+    <img src="images/03hdfsArquitectura.png" width="500" alt="Arquitectura HDFS">
+    <figcaption>Arquitectura HDFS</figcaption>
+</figure>
+
 <h2 id="trabajando-con-hdfs">Trabajando con HDFS<a class="headerlink" href="#trabajando-con-hdfs" title="Permanent link">&para;</a></h2>
 <p>Para interactuar con el almacenamiento desde un terminal, se utiliza el comando <code>hdfs</code>. Este comando admite un segundo parámetro con diferentes opciones.</p>
 <p>Antes la duda, es recomendable consultar la <a href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html">documentación oficial</a></p>
@@ -4306,7 +4366,7 @@ Este diseño permite que HDFS escale de manera adecuada, ya que el tráfico de l
 
 <p>Al arrancar HDFS se carga en memoria el último fichero <code>fsimage</code> disponible junto con los <code>edits</code> que no han sido procesados. Mediante el <em>secondary namenode</em>, cuando se llena un bloque, se irán sincronizando los cambios que se producen en <code>edits_inprogress</code> creando un nuevo <code>fsimage</code> y un nuevo <code>edits</code>.</p>
 <p>Así pues, cada vez que se reinicie el <em>namenode</em>, se realizará el <em>merge</em> de los archivos <code>fsimage</code> y <code>edits log</code>.</p>
-<h2 id="bloques">Bloques<a class="headerlink" href="#bloques" title="Permanent link">&para;</a></h2>
+<h2 id="bloques_1">Bloques<a class="headerlink" href="#bloques_1" title="Permanent link">&para;</a></h2>
 <p>A continuación vamos a ver cómo trabaja internamente HDFS con los bloques. Para el siguiente ejemplo, vamos a trabajar con un archivo que ocupe más de un bloque, como pueden ser <a href="https://files.grouplens.org/datasets/movielens/ml-25m.zip">los datos de 25 millones de películas</a>. Una vez descargado y descomprimido, colocaremos el archivo <code>ratings.csv</code> dentro de HDFS.</p>
 <p>Comenzaremos creando un directorio dentro de HDFS llamado <code>prueba-hdfs</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-mkdir<span class="w"> </span>/user/iabd/prueba-hdfs
