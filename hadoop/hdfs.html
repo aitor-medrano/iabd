@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1517,6 +1517,14 @@
   </span>
   
   
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
 
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -1534,6 +1542,14 @@
     
   </span>
   
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -1645,9 +1661,10 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
+    <nav class="md-nav" aria-label="HDFS por dentro">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#bloques_1" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1655,6 +1672,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3989,9 +4011,10 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
+    <nav class="md-nav" aria-label="HDFS por dentro">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#bloques_1" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3999,6 +4022,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4273,13 +4301,13 @@
 
 <p>Vamos a profundizar en sus elementos.</p>
 <h3 id="namenode">Namenode<a class="headerlink" href="#namenode" title="Permanent link">&para;</a></h3>
-<p>Tal como hemos comentado, existen dos tipos de nodos. El principal se conoce como <strong>Namenode</strong>:</p>
+<p>El principal se conoce como <strong>Namenode</strong>:</p>
 <ul>
 <li>Solo existe uno y actúa como servidor principal.</li>
 <li>Nodo al que se tienen que conectar los clientes para realizar las lecturas / escrituras.</li>
 <li>Mantiene el árbol del sistema de archivos (<em>espacio de nombre</em>) y los metadatos para todos los ficheros y directorios en el árbol, de manera que sabe en qué nodo del clúster está cada bloque de información (<em>mapa de bloques</em>)</li>
 <li>Los metadatos se almacenan tanto en memoria (para acelerar su uso) como en disco a la vez, por lo que es un nodo que requiere de mucha memoria RAM.</li>
-<li>Los bloques nunca pasan por el <em>NameNode</em>, se transfieren entre <em>DataNodes</em> y/o el cliente. Es decir, el <em>Namenode</em> no es responsable de almacenar o transferir los datos.</li>
+<li>Los bloques nunca pasan por el <em>Namenode</em>, se transfieren entre <em>Datanodes</em> y/o el cliente. Es decir, el <em>Namenode</em> no es responsable de almacenar o transferir los datos.</li>
 <li>Si se cae, no hay acceso a HDFS, por lo que es crítico el mantenimiento de copias de seguridad.</li>
 </ul>
 <p>El segundo tipo es el <strong>Secondary Namenode</strong>:</p>
@@ -4297,19 +4325,19 @@
 <p>Para hacernos una idea, independientemente del cloud, <em>Facebook</em> utiliza un clúster de 1100 máquinas, con 8800 nodos y cerca de 12 PB de almacenamiento.</p>
 <h3 id="datanode">Datanode<a class="headerlink" href="#datanode" title="Permanent link">&para;</a></h3>
 <ul>
-<li>De este tipo de nodo habrá más de uno en cada clúster. Por cada <em>Namenode</em> podemos tener miles de <em>Datanodes</em></li>
+<li>De este tipo de nodo habrá más de uno en cada clúster. Por cada <em>Namenode</em> podemos tener miles de <em>Datanodes</em>.</li>
 <li>Almacena y lee bloques de datos.</li>
 <li>Recuperado por <em>Namenode</em> clientes.</li>
 <li>Reportan al <em>Namenode</em> la lista de bloques que están almacenando.</li>
 <li>Pueden ir en distintos discos.</li>
-<li>Guarda un <em>checksum</em> del bloque.</li>
+<li>Guarda un <em>checksum</em> (CRC) del bloque.</li>
 </ul>
 <figure style="align: center;">
     <img src="images/03hdfsNodes.png" alt="Relación entre Namenodes y Datanodes HDFS">
     <figcaption>Relación entre Namenodes y Datanodes HDFS</figcaption>
 </figure>
 
-<p>Los <em>Datanodes</em> están organizados en racks (armarios físicos), por ejemplo Rack 1, Rack 2, etc. Cada rack contiene varios nodos (servidores físicos). Por ejemplo: Rack 2 contiene Nodo 5, Nodo 6 y Nodo 7. Es una buena práctica colocar réplicas en racks distintos para evitar perder datos si se cae un rack entero (por ejemplo, un <em>switch</em>).</p>
+<p>Los <em>Datanodes</em> están organizados en <em>racks</em> (armarios físicos), por ejemplo Rack 1, Rack 2, etc. Cada <em>rack</em> contiene varios nodos (servidores físicos). Por ejemplo: Rack 2 contiene Nodo 5, Nodo 6 y Nodo 7. Es una buena práctica colocar réplicas en <em>racks</em> distintos para evitar perder datos si se cae un <em>rack</em> entero (por ejemplo, un <em>switch</em>).</p>
 <h2 id="procesos-de-lectura">Procesos de lectura<a class="headerlink" href="#procesos-de-lectura" title="Permanent link">&para;</a></h2>
 <p>Vamos a revisar como fluyen los datos en un proceso de lectura entre el cliente y HDFS a partir de la siguiente imagen:</p>
 <figure style="align: center;">
@@ -4342,12 +4370,12 @@ Este diseño permite que HDFS escale de manera adecuada, ya que el tráfico de l
 <li>El cliente crea el fichero mediante la llamada al método <code>create()</code> del <em>DistributedFileSystem</em>.</li>
 <li>Este realiza una llamada RPC al <em>namenode</em> para crear el fichero en el sistema de ficheros del <em>namenode</em>, sin ningún bloque asociado a él. El <em>namenode</em> realiza varias comprobaciones para asegurar que el fichero no existe previamente y que el usuario tiene los permisos necesarios para su creación. Tras ello, el <em>namenode</em> determina la forma en que va a dividir los datos en bloques y qué <em>datanodes</em> utilizará para almacenar los bloques.</li>
 <li>El <em>DistributedFileSystem</em> devuelve un <em>FSDataOutputStream</em>  el cual gestiona la comunicación con los datanodes y el <em>namenode</em> para que el cliente comience a escribir los datos de cada bloque en el <em>namenode</em> apropiado.</li>
-<li>Conforme el cliente escribe los datos, el flujo obtiene del <em>namenode</em> una lista de datanodes candidatos para almacenar las réplicas. La lista de nodos forman un <em>pipeline</em>, de manera que si el factor de replicación es 3, habrá 3 nodos en el <em>pipeline</em>. El flujo envía los paquete al primer <em>datanode</em> del pipeline, el cual almacena cada paquete y los reenvía al segundo <em>datanode</em> del <em>pipeline</em>. Y así sucesivamente con el resto de nodos del <em>pipeline</em>.</li>
+<li>Conforme el cliente escribe los datos, el flujo obtiene del <em>namenode</em> una lista de <em>datanodes</em> candidatos para almacenar las réplicas. La lista de nodos forman un <em>pipeline</em>, de manera que si el factor de replicación es 3, habrá 3 nodos en el <em>pipeline</em>. El flujo envía los paquete al primer <em>datanode</em> del pipeline, el cual almacena cada paquete y los reenvía al segundo <em>datanode</em> del <em>pipeline</em>. Y así sucesivamente con el resto de nodos del <em>pipeline</em>.</li>
 <li>Cuando todos los nodos han confirmado la recepción y almacenamiento de los paquetes, envía un paquete de confirmación al flujo.</li>
 <li>Cuando el cliente finaliza con la escritura de los datos, cierra el flujo mediante el método <code>close()</code> el cual libera los paquetes restantes al <em>pipeline</em> de <em>datanodes</em> y queda a la espera de recibir las confirmaciones. Una vez confirmado, le indica al <em>namenode</em> que la escritura se ha completado, informando de los bloques finales que conforman el fichero (puede que hayan cambiado respecto al paso 2 si ha habido algún error de escritura).</li>
 </ol>
 <h2 id="hdfs-por-dentro">HDFS por dentro<a class="headerlink" href="#hdfs-por-dentro" title="Permanent link">&para;</a></h2>
-<p>HDFS utiliza de un conjunto de ficheros que gestionan los cambios que se producen en el clúster.</p>
+<p>HDFS utiliza un conjunto de ficheros que gestionan los cambios que se producen en el clúster.</p>
 <p>Para saber donde se almacenan los datos, primero hemos de entrar en <code>$HADOOP_HOME/etc/hadoop</code> y averiguar la carpeta de datos que tenemos configurada en <code>hdfs-site.xml</code> para el <em>namenode</em>:</p>
 <div class="highlight"><span class="filename">hdfs-site.xml</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nt">&lt;property&gt;</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>dfs.name.dir<span class="nt">&lt;/name&gt;</span>
@@ -4367,7 +4395,7 @@ Este diseño permite que HDFS escale de manera adecuada, ya que el tráfico de l
 
 <p>Al arrancar HDFS se carga en memoria el último fichero <code>fsimage</code> disponible junto con los <code>edits</code> que no han sido procesados. Mediante el <em>secondary namenode</em>, cuando se llena un bloque, se irán sincronizando los cambios que se producen en <code>edits_inprogress</code> creando un nuevo <code>fsimage</code> y un nuevo <code>edits</code>.</p>
 <p>Así pues, cada vez que se reinicie el <em>namenode</em>, se realizará el <em>merge</em> de los archivos <code>fsimage</code> y <code>edits log</code>.</p>
-<h2 id="bloques_1">Bloques<a class="headerlink" href="#bloques_1" title="Permanent link">&para;</a></h2>
+<h3 id="bloques_1">Bloques<a class="headerlink" href="#bloques_1" title="Permanent link">&para;</a></h3>
 <p>A continuación vamos a ver cómo trabaja internamente HDFS con los bloques. Para el siguiente ejemplo, vamos a trabajar con un archivo que ocupe más de un bloque, como pueden ser <a href="https://files.grouplens.org/datasets/movielens/ml-25m.zip">los datos de 25 millones de películas</a>. Una vez descargado y descomprimido, colocaremos el archivo <code>ratings.csv</code> dentro de HDFS.</p>
 <p>Comenzaremos creando un directorio dentro de HDFS llamado <code>prueba-hdfs</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-mkdir<span class="w"> </span>/user/iabd/prueba-hdfs
@@ -4397,7 +4425,7 @@ Este diseño permite que HDFS escale de manera adecuada, ya que el tráfico de l
 <span class="linenos" data-linenos="19 "></span><span class="w"> </span>Total<span class="w"> </span>symlinks:<span class="w">                </span><span class="m">0</span>
 <span class="linenos" data-linenos="20 "></span>...
 </code></pre></div>
-<p>Si queremos utilizar el interfaz gráfico de Hadoop (<a href="http://iabd-virtualbox:9870/explorer.html#/">http://iabd-virtualbox:9870/explorer.html#/</a>), tras localizar el archivo, obtenemos el <em>Block Pool ID</em> del <em>block information</em>:</p>
+<p>Si queremos utilizar el interfaz gráfico de <em>Hadoop</em> (<a href="http://iabd-virtualbox:9870/explorer.html#/">http://iabd-virtualbox:9870/explorer.html#/</a>), tras localizar el archivo, obtenemos el <em>Block Pool ID</em> del <em>block information</em>:</p>
 <figure style="align: center;">
     <img src="images/04hdfs-ratings-blockpoolid.png" width="500px">
     <figcaption>Identificador de bloque</figcaption>
@@ -4443,221 +4471,200 @@ Este diseño permite que HDFS escale de manera adecuada, ya que el tráfico de l
 <span class="linenos" data-linenos="13 "></span><span class="m">1</span>,1217,3.5,1147878326
 <span class="linenos" data-linenos="14 "></span><span class="m">1</span>,1237,5.0,1147868839
 </code></pre></div>
-<!--
-# Flujo detallado: Ejecución de una aplicación en YARN y HDFS
+<div class="admonition info">
+<p class="admonition-title">Ejecución de una aplicación en YARN y HDFS</p>
+<p>Ahora que ya conocemos HDFS, ya podemos entender cómo se realiza el proceso completo desde que se envía una aplicación hasta que los resultados se escriben en HDFS, incluyendo todos los componentes de YARN, destacando como YARN gestiona <ins>dónde y cómo se ejecuta el código</ins>, mientras HDFS gestiona <ins>dónde están los datos</ins>, y la coordinación entre ambos optimiza el rendimiento mediante <em>data locality</em>:</p>
+<ol>
+<li>
+<p>Envío de la aplicación. El cliente envía una aplicación (por ejemplo, un <em>job</em> de <em>Spark</em> o <em>MapReduce</em>) al <em>ResourceManager</em>.</p>
+</li>
+<li>
+<p>Negociación de recursos para <em>Application Master</em>. El <em>ResourceManager</em> consulta al <em>Scheduler</em> para asignar un contenedor inicial donde ejecutar el <em>Application Master</em>. Por ejemplo:</p>
+<ol>
+<li><em>ResourceManager</em> → <em>Scheduler</em>: "¿Dónde puedo lanzar un <em>Application Master</em>?"</li>
+<li><em>Scheduler</em> → <em>ResourceManager</em>: "Hay recursos disponibles en <em>NodeManager-3</em>"</li>
+<li><em>ResourceManager</em> → <em>NodeManager-3</em>: "Lanza un contenedor para <em>Application Master</em>"</li>
+</ol>
+</li>
+<li>
+<p>El <em>NodeManager</em> inicia el <em>Application Master</em> en un contenedor. Por ejemplo:</p>
+<ol>
+<li><em>NodeManager-3</em> → <em>Container</em>: Crea contenedor con recursos asignados</li>
+<li><em>NodeManager-3</em> → <em>Application Master</em>: Inicia AM dentro del contenedor</li>
+<li><em>Application Master</em>: "Estoy listo, necesito analizar qué recursos necesito"</li>
+</ol>
+</li>
+<li>
+<p><em>Application Master</em> analiza el <em>job</em> y solicita recursos al <em>ResourceManager</em> para ejecutar las tareas. Por ejemplo:</p>
+<ol>
+<li><em>Application Master</em> → <em>ResourceManager</em>: "Necesito 10 contenedores con 4GB RAM y 2 cores cada uno"</li>
+<li><em>ResourceManager</em> → <em>Scheduler</em>: "Asigna recursos para estos contenedores"</li>
+</ol>
+<p>A continuación, <em>Application Master</em> también consulta al <em>Namenode</em> de HDFS para conocer dónde están los datos:</p>
+<ol>
+<li><em>Application Master</em> → <em>Namenode</em>: "¿Dónde están los bloques del archivo <code>input.txt</code>?"</li>
+<li><em>Namenode</em> → <em>Application Master</em>: "Bloque 1 en <em>Datanode-2</em>, Bloque 2 en <em>Datanode-5</em>, Bloque 3 en <em>Datanode-7</em>..."</li>
+</ol>
+</li>
+<li>
+<p><em>Scheduler</em> intenta asignar contenedores en nodos donde ya están los datos (<em>data locality</em>). Por ejemplo:</p>
+<ol>
+<li><em>Scheduler</em>: "Bloque 1 está en <em>Datanode-2</em>, asignaré contenedor en <em>NodeManager-2</em>"</li>
+<li><em>Scheduler</em> → <em>ResourceManager</em>: "Contenedores asignados en <em>NodeManager-2</em>, 5, 7..."</li>
+<li><em>ResourceManager</em> → <em>Application Master</em>: "Aquí están tus contenedores asignados"</li>
+</ol>
+<p>Los niveles de <em>data locality</em> son:</p>
+<ul>
+<li><code>NODE_LOCAL</code>: Contenedor en el mismo nodo que los datos (óptimo)</li>
+<li><code>RACK_LOCAL</code>: Contenedor en el mismo <em>rack</em></li>
+<li><code>OFF_SWITCH</code>: Contenedor en diferente <em>rack</em> (requiere transferencia por red)</li>
+</ul>
+</li>
+<li>
+<p><em>Application Master</em> solicita a los <em>NodeManagers</em> que lancen los contenedores:</p>
+<ol>
+<li><em>Application Master</em> → <em>NodeManager-2</em>: "Lanza contenedor y ejecuta <em>Tarea-1</em>"</li>
+<li><em>Application Master</em> → <em>NodeManager-5</em>: "Lanza contenedor y ejecuta <em>Tarea-2</em>"</li>
+<li><em>Application Master</em> → <em>NodeManager-7</em>: "Lanza contenedor y ejecuta <em>Tarea-3</em>"</li>
+</ol>
+<p>A continuación, los <em>NodeManagers</em> crean los contenedores:</p>
+<ol>
+<li><em>NodeManager-2</em> → <em>Container-Tarea1</em>: Crea contenedor con recursos</li>
+<li><em>NodeManager-2</em> → <em>Container-Tarea1</em>: Ejecuta código de la tarea</li>
+</ol>
+</li>
+<li>
+<p>Ejecución de tareas y lectura de HDFS, de manera que cada <em>Task</em>, en su contenedor, lee datos de HDFS:</p>
+<ol>
+<li>Tarea-1 (en NodeManager-2) → <em>Datanode-2</em>: "Dame el Bloque-1"</li>
+<li><em>Datanode-2</em> → Tarea-1: [Datos del bloque]</li>
+<li>Tarea-1: Procesa los datos...</li>
+</ol>
+<p>Como <em>Tarea-1</em> corre en el mismo nodo que <em>Datanode-2</em>, la lectura es local en lugar de por red.</p>
+</li>
+<li>
+<p>Monitoreo y <em>heartbeats</em> (mensajes periódicos para monitorizar el estado), ya que, durante la ejecución, hay comunicación constante:</p>
+<ol>
+<li><em>NodeManager</em> → <em>ResourceManager</em>: <em>Heartbeat</em> cada 3 segundos<ol>
+<li>"Estoy vivo"</li>
+<li>"Contenedor-X usa 2GB RAM, 50% CPU"</li>
+<li>"Tarea-1 completada al 60%"</li>
+</ol>
+</li>
+<li><em>Application Master</em> → <em>ResourceManager</em>: <em>Heartbeat</em><ol>
+<li>"Mi aplicación está al 45%"</li>
+<li>"Necesito 2 contenedores más"</li>
+</ol>
+</li>
+<li><em>Datanode</em> → <em>Namenode</em>: Heartbeat<ol>
+<li>"Estoy vivo"</li>
+<li>"Tengo Bloques 1, 5, 8, 12..."</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p><em>Shuffle</em> y procesamiento intermedio</p>
+<p>En aplicaciones <em>MapReduce</em>, hay una fase de <em>shuffle</em> donde los datos se redistribuyen:</p>
+<ol>
+<li><em>Tarea-Map-1</em> (en <em>NodeManager-2</em>): Termina, genera resultados intermedios</li>
+<li>
+<p><em>Tarea-Map-1</em> → Disco local: Escribe resultados en disco local del nodo</p>
+</li>
+<li>
+<p><em>Application Master</em>: "<em>Mappers</em> completados, lanzar <em>Reducers</em>"</p>
+</li>
+<li>
+<p><em>Application Master</em> → <em>NodeManager-4</em>: "Lanza <em>Reducer-1</em>"</p>
+</li>
+<li>
+<p><em>Tarea-Reducer-1</em> → <em>Tarea-Map-1</em>, Map-2, Map-3: "Dame tus datos intermedios"</p>
+</li>
+<li>[Transferencia de datos por red - <em>shuffle</em>]</li>
+<li><em>Tarea-Reducer-1</em>: Procesa y reduce datos...</li>
+</ol>
+</li>
+<li>
+<p>Cuando las tareas se completan, escriben los resultados a HDFS:</p>
+<ol>
+<li><em>Tarea-Reducer-1</em> → <em>Namenode</em>: "Quiero escribir archivo <code>output/part-00001</code>"</li>
+<li>
+<p><em>Namenode</em> → <em>Tarea-Reducer-1</em>: "Escribe en <em>Datanode-3</em>, <em>Datanode-6</em>, <em>Datanode-9</em>"</p>
+<ol>
+<li><em>Tarea-Reducer-1</em> → <em>Datanode-3</em>: Escribe bloque (réplica 1)</li>
+<li><em>Tarea-Reducer-1</em> → <em>Datanode-6</em>: Escribe bloque (réplica 2)</li>
+<li><em>Tarea-Reducer-1</em> → <em>Datanode-9</em>: Escribe bloque (réplica 3)</li>
+</ol>
+</li>
+<li>
+<p><em>Datanode-3</em>, 6, 9 → <em>Namenode</em>: "Bloque escrito exitosamente"</p>
+</li>
+<li><em>Namenode</em>: Actualiza metadatos del archivo</li>
+</ol>
+<p>El <em>pipeline</em> de escritura en HDFS es:</p>
+<ol>
+<li>El cliente (la tarea) contacta con el <em>Namenode</em></li>
+<li>El <em>Namenode</em> devuelve la lista de <em>Datanodes</em></li>
+<li>El cliente escribe al primer <em>Datanode</em></li>
+<li>El primer <em>Datanode</em> replica al segundo</li>
+<li>Y finalmente, el segundo <em>Datanode</em> replica al tercero (suponiendo un factor de replicación de 3)</li>
+</ol>
+</li>
+<li>
+<p>Finalización y limpieza</p>
+<ol>
+<li><em>Tarea-Reducer-1</em> → <em>Application Master</em>: "Tarea completada exitosamente"</li>
+<li><em>Application Master</em>: "Todas las tareas completadas"</li>
+<li>
+<p><em>Application Master</em> → ResourceManager: "Job completado, libero recursos"</p>
+<ol>
+<li><em>ResourceManager</em> → <em>NodeManager-2</em>, 5, 7, 4: "Liberen contenedores"</li>
+<li><em>NodeManager</em> → <em>Containers</em>: Termina y libera recursos (RAM, CPU)</li>
+</ol>
+</li>
+<li>
+<p><em>Application Master</em> → Cliente: "Job completado exitosamente"</p>
+</li>
+<li><em>Application Master</em>: Se termina a sí mismo</li>
+</ol>
+</li>
+<li>
+<p>Cliente verifica resultados</p>
+<ol>
+<li><em>Cliente</em> → <em>Namenode</em>: "¿Dónde están los archivos <code>output/*</code>?"</li>
+<li><em>Namenode</em> → Cliente: "<code>output/part-00001</code> en Datanodes 3,6,9..."</li>
+<li>Cliente → <em>Datanode-3</em>: "Dame <code>output/part-00001</code>"</li>
+<li>Cliente: Lee y verifica resultados</li>
+</ol>
+</li>
+</ol>
+<p>En resumen, los componentes implicados son:</p>
+<div class="highlight"><pre><span></span><code>YARN (Gestión de Recursos)          HDFS (Almacenamiento)
+================================    ========================
 
-Voy a desarrollar el proceso completo desde que se envía una aplicación hasta que los resultados se escriben en HDFS, incluyendo todos los componentes de YARN.
+ResourceManager (Master)            Namenode (Master)
+├── Scheduler                       └── Metadata Manager
+└── ApplicationsManager
 
-## Paso 1: Envío de la aplicación
+NodeManager (Workers)               Datanode (Workers)
+├── Container Manager               └── Block Storage
+└── Ejecuta Containers
 
-**Cliente** envía una aplicación (ej: un job de Spark o MapReduce) al **ResourceManager**
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Cliente → ResourceManager: &quot;Quiero ejecutar este job&quot;
+Application Master (Por job)
+└── Coordina tareas específicas
 </code></pre></div>
-
-**Componentes involucrados:**
-- **Cliente**: Aplicación que inicia el proceso
-- **ResourceManager (RM)**: Componente maestro de YARN que recibe la solicitud
-
-## Paso 2: Negociación de recursos para Application Master
-
-**ResourceManager** consulta al **Scheduler** para asignar un contenedor inicial donde ejecutar el **Application Master**
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>ResourceManager → Scheduler: &quot;¿Dónde puedo lanzar un Application Master?&quot;
-<span class="linenos" data-linenos="2 "></span>Scheduler → ResourceManager: &quot;Hay recursos disponibles en NodeManager-3&quot;
-<span class="linenos" data-linenos="3 "></span>ResourceManager → NodeManager-3: &quot;Lanza un contenedor para Application Master&quot;
-</code></pre></div>
-
-**Componentes involucrados:**
-- **Scheduler**: Componente interno del ResourceManager que decide la asignación de recursos (ejemplos: CapacityScheduler, FairScheduler)
-- **NodeManager**: Daemon que corre en cada nodo worker, gestiona contenedores en ese nodo
-- **Application Master (AM)**: Coordinador específico de la aplicación que se va a crear
-
-## Paso 3: Inicio del Application Master
-
-**NodeManager** inicia el **Application Master** en un contenedor
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>NodeManager-3 → Container: Crea contenedor con recursos asignados
-<span class="linenos" data-linenos="2 "></span>NodeManager-3 → Application Master: Inicia AM dentro del contenedor
-<span class="linenos" data-linenos="3 "></span>Application Master: &quot;Estoy listo, necesito analizar qué recursos necesito&quot;
-</code></pre></div>
-
-**Componentes involucrados:**
-- **Container**: Unidad de recursos (CPU, RAM) donde se ejecuta código
-- **Application Master**: Ahora está activo y toma control de la aplicación
-
-## Paso 4: Application Master solicita recursos
-
-**Application Master** analiza el job y solicita recursos al **ResourceManager** para ejecutar las tareas
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Application Master → ResourceManager: &quot;Necesito 10 contenedores con 4GB RAM y 2 cores cada uno&quot;
-<span class="linenos" data-linenos="2 "></span>ResourceManager → Scheduler: &quot;Asigna recursos para estos contenedores&quot;
-</code></pre></div>
-
-**Application Master** también consulta al **NameNode** de HDFS para conocer dónde están los datos:
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Application Master → NameNode: &quot;¿Dónde están los bloques del archivo input.txt?&quot;
-<span class="linenos" data-linenos="2 "></span>NameNode → Application Master: &quot;Bloque 1 en DataNode-2, Bloque 2 en DataNode-5, Bloque 3 en DataNode-7...&quot;
-</code></pre></div>
-
-**Componentes involucrados:**
-- **NameNode**: Componente maestro de HDFS que mantiene metadatos (ubicación de bloques)
-- **DataNode**: Nodos que almacenan bloques de datos en HDFS
-
-## Paso 5: Asignación de contenedores (Data Locality)
-
-**Scheduler** intenta asignar contenedores en nodos donde ya están los datos (**data locality**)
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Scheduler: &quot;Bloque 1 está en DataNode-2, asignaré contenedor en NodeManager-2&quot;
-<span class="linenos" data-linenos="2 "></span>Scheduler → ResourceManager: &quot;Contenedores asignados en NodeManager-2, 5, 7...&quot;
-<span class="linenos" data-linenos="3 "></span>ResourceManager → Application Master: &quot;Aquí están tus contenedores asignados&quot;
-</code></pre></div>
-
-**Niveles de data locality:**
-- **NODE_LOCAL**: Contenedor en el mismo nodo que los datos (óptimo)
-- **RACK_LOCAL**: Contenedor en el mismo rack
-- **OFF_SWITCH**: Contenedor en diferente rack (requiere transferencia por red)
-
-## Paso 6: Lanzamiento de contenedores de tareas
-
-**Application Master** solicita a los **NodeManagers** que lancen los contenedores
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Application Master → NodeManager-2: &quot;Lanza contenedor y ejecuta Tarea-1&quot;
-<span class="linenos" data-linenos="2 "></span>Application Master → NodeManager-5: &quot;Lanza contenedor y ejecuta Tarea-2&quot;
-<span class="linenos" data-linenos="3 "></span>Application Master → NodeManager-7: &quot;Lanza contenedor y ejecuta Tarea-3&quot;
-</code></pre></div>
-
-**NodeManagers** crean los contenedores:
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>NodeManager-2 → Container-Tarea1: Crea contenedor con recursos
-<span class="linenos" data-linenos="2 "></span>NodeManager-2 → Container-Tarea1: Ejecuta código de la tarea
-</code></pre></div>
-
-**Componentes involucrados:**
-- **Task**: Unidad de trabajo individual (ej: un mapper o reducer en MapReduce)
-
-## Paso 7: Ejecución de tareas y lectura de HDFS
-
-Cada **Task** en su contenedor lee datos de HDFS:
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Tarea-1 (en NodeManager-2) → DataNode-2: &quot;Dame el Bloque-1&quot;
-<span class="linenos" data-linenos="2 "></span>DataNode-2 → Tarea-1: [Datos del bloque]
-<span class="linenos" data-linenos="3 "></span>Tarea-1: Procesa los datos...
-</code></pre></div>
-
-**Ventaja de data locality**: Como Tarea-1 corre en el mismo nodo que DataNode-2, la lectura es local (disco local) en lugar de por red.
-
-## Paso 8: Monitoreo y heartbeats
-
-Durante la ejecución, hay comunicación constante:
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>NodeManager → ResourceManager: Heartbeat cada 3 segundos
-<span class="linenos" data-linenos=" 2 "></span>   - &quot;Estoy vivo&quot;
-<span class="linenos" data-linenos=" 3 "></span>   - &quot;Contenedor-X usa 2GB RAM, 50% CPU&quot;
-<span class="linenos" data-linenos=" 4 "></span>   - &quot;Tarea-1 completada al 60%&quot;
-<span class="linenos" data-linenos=" 5 "></span>
-<span class="linenos" data-linenos=" 6 "></span>Application Master → ResourceManager: Heartbeat
-<span class="linenos" data-linenos=" 7 "></span>   - &quot;Mi aplicación está al 45%&quot;
-<span class="linenos" data-linenos=" 8 "></span>   - &quot;Necesito 2 contenedores más&quot;
-<span class="linenos" data-linenos=" 9 "></span>
-<span class="linenos" data-linenos="10 "></span>DataNode → NameNode: Heartbeat
-<span class="linenos" data-linenos="11 "></span>   - &quot;Estoy vivo&quot;
-<span class="linenos" data-linenos="12 "></span>   - &quot;Tengo Bloques 1, 5, 8, 12...&quot;
-</code></pre></div>
-
-**Componentes involucrados:**
-- **Heartbeat**: Mensajes periódicos para monitoreo de salud y estado
-
-## Paso 9: Shuffle y procesamiento intermedio
-
-En aplicaciones MapReduce, hay una fase de **shuffle** donde los datos se redistribuyen:
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Tarea-Map-1 (en NodeManager-2): Termina, genera resultados intermedios
-<span class="linenos" data-linenos="2 "></span>Tarea-Map-1 → Disco local: Escribe resultados en disco local del nodo
-<span class="linenos" data-linenos="3 "></span>
-<span class="linenos" data-linenos="4 "></span>Application Master: &quot;Mappers completados, lanzar Reducers&quot;
-<span class="linenos" data-linenos="5 "></span>Application Master → NodeManager-4: &quot;Lanza Reducer-1&quot;
-<span class="linenos" data-linenos="6 "></span>
-<span class="linenos" data-linenos="7 "></span>Tarea-Reducer-1 → Tarea-Map-1, Map-2, Map-3: &quot;Dame tus datos intermedios&quot;
-<span class="linenos" data-linenos="8 "></span>[Transferencia de datos por red - shuffle]
-<span class="linenos" data-linenos="9 "></span>Tarea-Reducer-1: Procesa y reduce datos...
-</code></pre></div>
-
-## Paso 10: Escritura de resultados a HDFS
-
-Cuando las tareas completan, escriben resultados a HDFS:
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Tarea-Reducer-1 → NameNode: &quot;Quiero escribir archivo output/part-00001&quot;
-<span class="linenos" data-linenos="2 "></span>NameNode → Tarea-Reducer-1: &quot;Escribe en DataNode-3, DataNode-6, DataNode-9&quot;
-<span class="linenos" data-linenos="3 "></span>
-<span class="linenos" data-linenos="4 "></span>Tarea-Reducer-1 → DataNode-3: Escribe bloque (réplica 1)
-<span class="linenos" data-linenos="5 "></span>Tarea-Reducer-1 → DataNode-6: Escribe bloque (réplica 2)
-<span class="linenos" data-linenos="6 "></span>Tarea-Reducer-1 → DataNode-9: Escribe bloque (réplica 3)
-<span class="linenos" data-linenos="7 "></span>
-<span class="linenos" data-linenos="8 "></span>DataNode-3, 6, 9 → NameNode: &quot;Bloque escrito exitosamente&quot;
-<span class="linenos" data-linenos="9 "></span>NameNode: Actualiza metadatos del archivo
-</code></pre></div>
-
-**Pipeline de escritura en HDFS:**
-1. Cliente (la tarea) contacta NameNode
-2. NameNode devuelve lista de DataNodes
-3. Cliente escribe al primer DataNode
-4. Primer DataNode replica al segundo
-5. Segundo DataNode replica al tercero (factor de replicación 3)
-
-## Paso 11: Finalización y limpieza
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Tarea-Reducer-1 → Application Master: &quot;Tarea completada exitosamente&quot;
-<span class="linenos" data-linenos="2 "></span>Application Master: &quot;Todas las tareas completadas&quot;
-<span class="linenos" data-linenos="3 "></span>Application Master → ResourceManager: &quot;Job completado, libero recursos&quot;
-<span class="linenos" data-linenos="4 "></span>
-<span class="linenos" data-linenos="5 "></span>ResourceManager → NodeManager-2, 5, 7, 4: &quot;Liberen contenedores&quot;
-<span class="linenos" data-linenos="6 "></span>NodeManager → Containers: Termina y libera recursos (RAM, CPU)
-<span class="linenos" data-linenos="7 "></span>
-<span class="linenos" data-linenos="8 "></span>Application Master → Cliente: &quot;Job completado exitosamente&quot;
-<span class="linenos" data-linenos="9 "></span>Application Master: Se termina a sí mismo
-</code></pre></div>
-
-## Paso 12: Cliente verifica resultados
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Cliente → NameNode: &quot;¿Dónde están los archivos output/*?&quot;
-<span class="linenos" data-linenos="2 "></span>NameNode → Cliente: &quot;output/part-00001 en DataNodes 3,6,9...&quot;
-<span class="linenos" data-linenos="3 "></span>Cliente → DataNode-3: &quot;Dame output/part-00001&quot;
-<span class="linenos" data-linenos="4 "></span>Cliente: Lee y verifica resultados
-</code></pre></div>
-
----
-
-## Diagrama de componentes principales
-
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>YARN (Gestión de Recursos)          HDFS (Almacenamiento)
-<span class="linenos" data-linenos=" 2 "></span>================================    ========================
-<span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span>ResourceManager (Master)            NameNode (Master)
-<span class="linenos" data-linenos=" 5 "></span>├── Scheduler                       └── Metadata Manager
-<span class="linenos" data-linenos=" 6 "></span>└── ApplicationsManager
-<span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span>NodeManager (Workers)               DataNode (Workers)
-<span class="linenos" data-linenos=" 9 "></span>├── Container Manager               └── Block Storage
-<span class="linenos" data-linenos="10 "></span>└── Ejecuta Containers
-<span class="linenos" data-linenos="11 "></span>
-<span class="linenos" data-linenos="12 "></span>Application Master (Por job)
-<span class="linenos" data-linenos="13 "></span>└── Coordina tareas específicas
-</code></pre></div>
-
-## Resumen de responsabilidades
-
-**ResourceManager**: Orquestador global, asigna recursos del cluster
-**Scheduler**: Decide qué aplicación obtiene qué recursos y dónde
-**NodeManager**: Ejecutor local en cada nodo, gestiona contenedores
-**Application Master**: Coordinador específico de cada aplicación
-**Container**: Unidad de ejecución con recursos asignados
-**NameNode**: Directorio de archivos, sabe dónde están los bloques
-**DataNode**: Almacena y sirve bloques de datos
-
-Este flujo muestra cómo YARN y HDFS trabajan juntos: YARN gestiona **dónde y cómo se ejecuta el código**, mientras HDFS gestiona **dónde están los datos**, y la coordinación entre ambos optimiza el rendimiento mediante data locality.
--->
-
+<p>Donde cada uno de ellos tiene las siguientes responsabilidades:</p>
+<ul>
+<li><em>ResourceManager</em>: Orquestador global, asigna recursos del cluster</li>
+<li><em>Scheduler</em>: Componente interno del <em>ResourceManager</em> que decide la asignación de recursos (ejemplos: <em>CapacityScheduler</em>, <em>FairScheduler</em>), tanto qué como dónde.</li>
+<li><em>NodeManager</em>: Ejecutor local en cada nodo <em>worker</em>, gestionando los contenedores en ese nodo</li>
+<li><em>Application Master</em>: Coordinador específico de cada aplicación.</li>
+<li><em>Container</em>: Unidad de ejecución con recursos asignados (CPU, RAM)</li>
+<li><em>Task</em>: Unidad de trabajo individual (ej: un <em>mapper</em> o <em>reducer</em> en <em>MapReduce</em>)</li>
+<li><em>Namenode</em>: Directorio de archivos que mantiene metadatos de manera que sabe dónde están los bloques.</li>
+<li><em>Datanode</em>: Nodos que almacenan y sirven bloques de datos en HDFS.</li>
+</ul>
+</div>
 <h2 id="administracion">Administración<a class="headerlink" href="#administracion" title="Permanent link">&para;</a></h2>
 <p>Algunas de las opciones más útiles para administrar HDFS son:</p>
 <ul>
@@ -5197,10 +5204,10 @@ Pensar en alguna actividad con Python y HDFS
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>
