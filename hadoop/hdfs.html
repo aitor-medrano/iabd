@@ -4179,7 +4179,7 @@
 <p>Es la capa de almacenamiento de <em>Hadoop</em>, y como tal, es un sistema de ficheros distribuido y tolerante a fallos que puede almacenar gran cantidad de datos, escalar de forma incremental y sobrevivir a fallos de hardware sin perder datos. Se basa en el <a href="https://static.googleusercontent.com/media/research.google.com/es//archive/gfs-sosp2003.pdf"><em>paper</em></a> que publicó <em>Google</em> detallando su <em>Google File System</em> en 2003.</p>
 <p>Es un sistema que reparte los datos entre todos los nodos del clúster de <em>Hadoop</em>, dividiendo los ficheros en bloques (cada bloque por defecto es de 128MB) y almacenando copias duplicadas a través de los nodos. Por defecto se replica en 3 nodos distintos (esto se conoce como el <strong>factor de replicación</strong>).</p>
 <p>HDFS asegura que se puedan añadir servidores para incrementar el tamaño de almacenamiento de forma lineal, de manera que al introducir un nuevo nodo, se incrementa tanto la redundancia como la capacidad de almacenamiento.</p>
-<p>Está planteado para escribir los datos una vez y leerlos muchos veces (<em>WORM / Write Once, Read Many</em>). Las escrituras se pueden realizar a mano, o desde herramientas como <em>Flume</em> y <em>Sqoop</em>, que estudiaremos más adelante.</p>
+<p>Está planteado para escribir los datos una vez y leerlos muchos veces (<em>WORM / Write Once, Read Many</em>). Las escrituras se pueden realizar a mano, o desde herramientas como <em>Spark</em>, <em>Flume</em> o <em>Sqoop</em>, que estudiaremos más adelante.</p>
 <p>No ofrece buen rendimiento para:</p>
 <ul>
 <li>Accesos de baja latencia. Realmente se utiliza para almacenar datos de entrada necesarios para procesos de computación.</li>
@@ -4265,7 +4265,7 @@
 </code></pre></div>
 </div>
 <h2 id="namenodes-y-datanodes">Namenodes y Datanodes<a class="headerlink" href="#namenodes-y-datanodes" title="Permanent link">&para;</a></h2>
-<p>En la sesión anterior ya vimos una pequeña introducción a la arquitectura de HDFS.</p>
+<p>Si revisamos la arquitectura de HDFS, vemos que existen dos tipos de nodos principales: <em>Namenode</em> y <em>Datanode</em>:</p>
 <figure style="align: center;">
     <img src="images/03hdfsArquitectura.png" width="600" alt="Arquitectura HDFS">
     <figcaption>Arquitectura HDFS</figcaption>
@@ -4713,7 +4713,7 @@ Este flujo muestra cómo YARN y HDFS trabajan juntos: YARN gestiona **dónde y c
 </code></pre></div>
 <p>Tras reiniciar <em>Hadoop</em>, ya podremos crear los recursos como el usuario <code>iabd</code>.</p>
 <h2 id="hdfs-y-python">HDFS y Python<a class="headerlink" href="#hdfs-y-python" title="Permanent link">&para;</a></h2>
-<p>Para el acceso mediante Python a HDFS podemos utilizar la librería <a href="https://hdfscli.readthedocs.io/en/latest/">HdfsCLI</a>.</p>
+<p>Para el acceso mediante <em>Python</em> a HDFS podemos utilizar la librería <a href="https://hdfscli.readthedocs.io/en/latest/">HdfsCLI</a>.</p>
 <p>Primero hemos de instalarla mediante <code>pip</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>hdfs
 </code></pre></div>
@@ -4722,8 +4722,8 @@ Este flujo muestra cómo YARN y HDFS trabajan juntos: YARN gestiona **dónde y c
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="c1"># Datos de conexión</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">HDFS_HOSTNAME</span> <span class="o">=</span> <span class="s1">&#39;iabd-virtualbox&#39;</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="n">HDFSCLI_PORT</span> <span class="o">=</span> <span class="mi">9870</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="n">HDFSCLI_CONNECTION_STRING</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HDFS_HOSTNAME</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">HDFSCLI_PORT</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">HDFS_PORT</span> <span class="o">=</span> <span class="mi">9870</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">HDFSCLI_CONNECTION_STRING</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HDFS_HOSTNAME</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">HDFS_PORT</span><span class="si">}</span><span class="s1">&#39;</span>
 <span class="linenos" data-linenos=" 7 "></span>
 <span class="linenos" data-linenos=" 8 "></span><span class="c1"># En nuestro caso, al no usar Kerberos, creamos una conexión no segura</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="n">hdfs_client</span> <span class="o">=</span> <span class="n">InsecureClient</span><span class="p">(</span><span class="n">HDFSCLI_CONNECTION_STRING</span><span class="p">)</span>
@@ -4739,28 +4739,59 @@ Este flujo muestra cómo YARN y HDFS trabajan juntos: YARN gestiona **dónde y c
 <span class="linenos" data-linenos="19 "></span><span class="n">datos</span><span class="o">=</span><span class="s2">&quot;nombre,apellidos</span><span class="se">\n</span><span class="s2">Aitor,Medrano</span><span class="se">\n</span><span class="s2">Pedro,Casas&quot;</span>
 <span class="linenos" data-linenos="20 "></span><span class="n">hdfs_client</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;/user/iabd/datos.csv&quot;</span><span class="p">,</span> <span class="n">datos</span><span class="p">)</span>
 </code></pre></div>
-<p>Otra librería que podemos utilizar es <a href="https://snakebite.readthedocs.io/en/latest/">Snakebite</a>, la cual fue creada por <em>Spotify</em> para interactuar con HDFS (aunque a día de hoy ya no se mantiene), y utiliza <em>protobuf</em> como protocolo de comunicación, lo cual incrementa su rendimiento.</p>
-<p>Tras instalarla (es necesario instalar la versión para Python3 y <em>downgradear</em> la librería <em>protobuf</em>):</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>snakebite-py3
-<span class="linenos" data-linenos="2 "></span>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">protobuf</span><span class="o">==</span><span class="m">3</span>.20.*
+<p>Actualmente la librería <a href="https://arrow.apache.org/docs/index.html"><strong><em>PyArrow</em></strong></a> es la más utilizada para trabajar con HDFS desde <em>Python</em>, ya que ofrece un alto rendimiento y soporte para los formatos de datos más comunes en el mundo del <em>Big Data</em> (como <em>Parquet</em> y <em>Avro</em>).</p>
+<p>Así pues, si queremos utilizarla, primero hemos de instalarla:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>pyarrow
 </code></pre></div>
-<p>Ya podemos repetir parte del ejemplo anterior (ya que <em>Snakebite</em> no permite escribir en HDFS):</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">snakebite.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
+<div class="admonition caution">
+<p class="admonition-title">Classpath</p>
+<p>Es probable que el <em>classpath</em> de <em>Hadoop</em> no esté correctamente configurado para que <em>PyArrow</em> pueda encontrar las librerías nativas de <em>Hadoop</em>. Para ello, hemos de exportar la variable de entorno <code>HADOOP_CLASSPATH</code> con el contenido del classpath de <em>Hadoop</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nb">export</span><span class="w"> </span><span class="nv">CLASSPATH</span><span class="o">=</span><span class="k">$(</span><span class="nv">$HADOOP_HOME</span>/bin/hadoop<span class="w"> </span>classpath<span class="w"> </span>--glob<span class="k">)</span>
+</code></pre></div>
+</div>
+<p>Y luego, utilizar la clase <a href="https://arrow.apache.org/docs/python/generated/pyarrow.fs.HadoopFileSystem.html"><code>HadoopFileSystem</code></a> para conectarnos a HDFS. Así pues, podemos repetir el ejemplo anterior:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="kn">import</span> <span class="n">fs</span>
 <span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="n">sb_client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="s1">&#39;iabd-virtualbox&#39;</span><span class="p">,</span> <span class="mi">9000</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="c1"># Mostramos el contenido de /user/iabd</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sb_client</span><span class="o">.</span><span class="n">ls</span><span class="p">([</span><span class="s1">&#39;/user/iabd&#39;</span><span class="p">]):</span>
-<span class="linenos" data-linenos=" 6 "></span>   <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">HDFS_HOSTNAME</span> <span class="o">=</span> <span class="s1">&#39;iabd-virtualbox&#39;</span>
+<span class="hll"><span class="linenos" data-linenos=" 4 "></span><span class="n">HDFS_PORT</span> <span class="o">=</span> <span class="mi">9000</span>  <span class="c1"># Puerto nativo de HDFS (no WebHDFS)</span>
+</span><span class="linenos" data-linenos=" 5 "></span>
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="n">hdfs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">HadoopFileSystem</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">HDFS_HOSTNAME</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">HDFS_PORT</span><span class="p">)</span>
+</span><span class="linenos" data-linenos=" 7 "></span>
 <span class="linenos" data-linenos=" 8 "></span><span class="c1"># Leemos el fichero de &#39;El quijote&#39; que tenemos en HDFS</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="n">fichero</span> <span class="o">=</span> <span class="s1">&#39;/user/iabd/el_quijote.txt&#39;</span>
-<span class="linenos" data-linenos="10 "></span><span class="k">for</span> <span class="n">linea</span> <span class="ow">in</span> <span class="n">sb_client</span><span class="o">.</span><span class="n">text</span><span class="p">([</span><span class="n">fichero</span><span class="p">]):</span>
-<span class="linenos" data-linenos="11 "></span>   <span class="nb">print</span><span class="p">(</span><span class="n">linea</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos="10 "></span><span class="k">with</span> <span class="n">hdfs</span><span class="o">.</span><span class="n">open_input_stream</span><span class="p">(</span><span class="n">fichero</span><span class="p">)</span> <span class="k">as</span> <span class="n">reader</span><span class="p">:</span>
+</span><span class="linenos" data-linenos="11 "></span>    <span class="n">texto</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos="12 "></span>
+<span class="linenos" data-linenos="13 "></span><span class="nb">print</span><span class="p">(</span><span class="n">texto</span><span class="p">)</span>
+<span class="linenos" data-linenos="14 "></span>
+<span class="linenos" data-linenos="15 "></span><span class="c1"># Creamos una cadena con formato CSV y la almacenamos en HDFS</span>
+<span class="linenos" data-linenos="16 "></span><span class="n">datos</span> <span class="o">=</span> <span class="s2">&quot;nombre,apellidos</span><span class="se">\n</span><span class="s2">Aitor,Medrano</span><span class="se">\n</span><span class="s2">Pedro,Casas&quot;</span>
+<span class="hll"><span class="linenos" data-linenos="17 "></span><span class="k">with</span> <span class="n">hdfs</span><span class="o">.</span><span class="n">open_output_stream</span><span class="p">(</span><span class="s2">&quot;/user/iabd/datos.csv&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+</span><span class="linenos" data-linenos="18 "></span>    <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">datos</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
 </code></pre></div>
-<p>En el mundo real, los formatos de los archivos normalmente serán <em>Avro</em> y/o <em>Parquet</em>, y el acceso lo realizaremos en gran medida mediante la librería de <em>Pandas</em>.</p>
+<p>En el mundo real, los formatos de los archivos normalmente serán <em>Avro</em> y/o <em>Parquet</em>, y el acceso lo realizaremos en gran medida mediante la librería de <em>Pandas</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.parquet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pq</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="kn">import</span> <span class="n">fs</span>
+<span class="linenos" data-linenos=" 4 "></span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">HDFS_HOSTNAME</span> <span class="o">=</span> <span class="s1">&#39;iabd-virtualbox&#39;</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">HDFS_PORT</span> <span class="o">=</span> <span class="mi">9000</span> 
+<span class="linenos" data-linenos=" 7 "></span><span class="n">hdfs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">HadoopFileSystem</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">HDFS_HOSTNAME</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">HDFS_PORT</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">datos_dict</span> <span class="o">=</span> <span class="p">{</span>
+<span class="linenos" data-linenos="10 "></span>    <span class="s1">&#39;nombre&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Aitor&#39;</span><span class="p">,</span> <span class="s1">&#39;Pedro&#39;</span><span class="p">],</span>
+<span class="linenos" data-linenos="11 "></span>    <span class="s1">&#39;apellidos&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Medrano&#39;</span><span class="p">,</span> <span class="s1">&#39;Casas&#39;</span><span class="p">]</span>
+<span class="linenos" data-linenos="12 "></span><span class="p">}</span>
+<span class="linenos" data-linenos="13 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">datos_dict</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos="14 "></span><span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s1">&#39;/user/iabd/datos.parquet&#39;</span><span class="p">,</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">hdfs</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="15 "></span>
+<span class="linenos" data-linenos="16 "></span><span class="c1"># Si queremos hacerlo mediante PyArrow directamente sin Pandas:</span>
+<span class="linenos" data-linenos="17 "></span><span class="c1"># tabla = pa.table(datos_dict)</span>
+<span class="linenos" data-linenos="18 "></span><span class="c1"># pq.write_table(tabla, &#39;/user/iabd/datos.parquet&#39;, filesystem=hdfs)</span>
+</code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Otras librerías</p>
-<p>Python ofrece muchas más librerías para trabajar con Hadoop y HDFS:</p>
+<p>Python ofrece muchas más librerías para trabajar con <em>Hadoop</em> y HDFS:</p>
 <ul>
 <li><a href="https://mrjob.readthedocs.io/en/latest/index.html">mrjob</a>: permite ejecutar tareas <em>MapReduce</em> y ejecutarlas en diferentes plataformas, ya sea en local, un cluster Hadoop, AWS EMR, etc..</li>
 <li><a href="https://crs4.github.io/pydoop/">Pydoop</a>: también permite escribir aplicaciones <em>MapReduce</em>, así como ofrece una api para HDFS y trabaja de forma transparente con el formato Avro.</li>
@@ -4802,7 +4833,7 @@ Este flujo muestra cómo YARN y HDFS trabajan juntos: YARN gestiona **dónde y c
 <p>Para los siguientes ejercicios, copia el comando y/o haz una captura de pantalla donde se muestre el resultado de cada acción.</p>
 <ol>
 <li>
-<p>(<abbr title="Genera mecanismos de integridad de los datos, comprobando su mantenimiento en los sistemas de ficheros distribuidos y valorando la sobrecarga que conlleva en el tratamiento de los datos.">RABDA.3</abbr> / <abbr title="Se ha valorado la importancia de la calidad de los datos en los sistemas de ficheros distribuidos.">CEBDA.3a</abbr> y <abbr title="Se ha reconocido que los sistemas de ficheros distribuidos implementan una suma de verificación para la comprobación de los contenidos de los archivos.">CEBDA.3c</abbr> / 1p) En este ejercicio vamos a practicar los comandos básicos de HDFS. Una vez arrancado <em>Hadoop</em>:</p>
+<p>(<abbr title="Genera mecanismos de integridad de los datos, comprobando su mantenimiento en los sistemas de ficheros distribuidos y valorando la sobrecarga que conlleva en el tratamiento de los datos.">RABDA.3</abbr> / <abbr title="Se ha valorado la importancia de la calidad de los datos en los sistemas de ficheros distribuidos.">CEBDA.3a</abbr> y <abbr title="Se ha reconocido que los sistemas de ficheros distribuidos implementan una suma de verificación para la comprobación de los contenidos de los archivos.">CEBDA.3c</abbr> / 1.5p) En este ejercicio vamos a practicar los comandos básicos de HDFS. Una vez arrancado <em>Hadoop</em>:</p>
 <ol>
 <li>Crea la carpeta <code>/user/iabd/ejercicios</code>.</li>
 <li>Sube el archivo <code>el_quijote.txt</code> a la carpeta creada.</li>
@@ -4822,7 +4853,7 @@ Este flujo muestra cómo YARN y HDFS trabajan juntos: YARN gestiona **dónde y c
 </figure></p>
 </li>
 <li>
-<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen">RABDA.4</abbr> / <abbr title="Se ha comprobado la fiabilidad de los datos según respuestas.">CEBDA.4e</abbr> y <abbr title="Se ha analizado la estabilidad de servicios.">CEBDA.4f</abbr> / 1p) Vamos a practicar los comandos de gestión de instantáneas y administración de HDFS. Para ello:</p>
+<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen">RABDA.4</abbr> / <abbr title="Se ha comprobado la fiabilidad de los datos según respuestas.">CEBDA.4e</abbr> y <abbr title="Se ha analizado la estabilidad de servicios.">CEBDA.4f</abbr> / opcional) Vamos a practicar los comandos de gestión de instantáneas y administración de HDFS. Para ello:</p>
 <ol>
 <li>Crea la carpeta <code>/user/iabd/snaps</code>.</li>
 <li>Habilita las <em>snapshots</em> sobre la carpeta creada.</li>
@@ -4847,6 +4878,46 @@ Este flujo muestra cómo YARN y HDFS trabajan juntos: YARN gestiona **dónde y c
 <li>Ahora realiza el checkpoint con el comando <code>hdfs dfsadmin -saveNamespace</code></li>
 <li>Vuelve a entrar al modo normal (saliendo del modo seguro mediante <code>hdfs dfsadmin -safemode leave</code>)</li>
 <li>Accede a la carpeta del <em>namenode</em> y comprueba si los <em>fsimage</em> del <em>namenode</em> son iguales.</li>
+</ol>
+</li>
+<li>
+<p>(<abbr title="Genera mecanismos de integridad de los datos, comprobando su mantenimiento en los sistemas de ficheros distribuidos y valorando la sobrecarga que conlleva en el tratamiento de los datos.">RABDA.3</abbr> / <abbr title="Se ha valorado la importancia de la calidad de los datos en los sistemas de ficheros distribuidos.">CEBDA.3a</abbr> / 1.5p) Haciendo uso de <em>PyArrow</em>, escribe un script en <em>Python</em> que realice las siguientes acciones:</p>
+<ol>
+<li>Conecta con HDFS.</li>
+<li>Lea el archivo <code>el_quijote.txt</code> que tenemos en HDFS</li>
+<li>Muestra las primeras 100 letras del archivo.</li>
+<li>
+<p>Crea un <em>DataFrame</em> de <em>Pandas</em> con los siguientes datos:</p>
+<table>
+<thead>
+<tr>
+<th>nombre</th>
+<th>apellidos</th>
+<th>edad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aitor</td>
+<td>Medrano</td>
+<td>18</td>
+</tr>
+<tr>
+<td><em>Tu nombre</em></td>
+<td><em>Tus apellidos</em></td>
+<td>19</td>
+</tr>
+<tr>
+<td>Bruce</td>
+<td>Wayne</td>
+<td>20</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Almacena el <em>DataFrame</em> en formato <em>Parquet</em> en la ruta <code>/user/iabd/nombres.parquet</code> de HDFS.</p>
+</li>
 </ol>
 </li>
 </ol>
