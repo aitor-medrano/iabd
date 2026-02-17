@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -4060,14 +4060,15 @@
     <figcaption>Logo de Apache Sqoop</figcaption>
 </figure>
 
-<p>Las dos herramientas principales utilizadas para importar/exportar datos en <em>HDFS</em> son <em>Sqoop</em> y <a href="flume.html"><em>Flume</em></a>. En esta sesión nos vamos a centrar en la primera.</p>
-<p><em>Apache Sqoop</em> (<a href="https://sqoop.apache.org">https://sqoop.apache.org</a>) es una herramienta diseñada para transferir de forma eficiente datos crudos entre un cluster de Hadoop y un almacenamiento estructurado, como una base de datos relacional.</p>
+<p>Dentro del ecosistema de <em>Hadoop</em>, las dos herramientas principales utilizadas para importar/exportar datos en <em>HDFS</em> son <em>Sqoop</em> y <a href="flume.html"><em>Flume</em></a>. En esta sesión nos vamos a centrar en la primera.
+Fuera del ecosistema <em>Hadoop</em>, otras herramientas que podemos utilizar para ingestar datos en HDFS son <em>Apache <a href="../dataflow/nifi1.html">Nifi</a></em> o <em>Apache <a href="../spark/spark.html">Spark</a></em>.</p>
+<p><a href="https://sqoop.apache.org"><em>Apache Sqoop</em></a> es una herramienta diseñada para transferir de forma eficiente datos crudos entre un cluster de <em>Hadoop</em> y un almacenamiento estructurado, como una base de datos relacional.</p>
 <div class="admonition caution">
 <p class="admonition-title">Sin continuidad</p>
-<p>Desde Junio de 2021, el proyecto <em>Sqoop</em> ha dejado de mantenerse como proyecto de Apache y forma parte del <em>ático</em>. Aún así, creemos conveniente conocer su uso en el estado actual. Gran parte de las funcionalidad que ofrece <em>Sqoop</em> se pueden realizar mediante <em>Nifi</em> o <em>Spark</em>.</p>
+<p>Desde junio de 2021, el proyecto <em>Sqoop</em> ha dejado de mantenerse como proyecto de Apache y forma parte del <em>ático</em>. Aún así, creemos conveniente conocer su uso en el estado actual.</p>
 </div>
 <p>Un caso típico de uso es el de cargar los datos en un <em>data lake</em>  (ya sea en HDFS o en S3) con datos que importaremos desde una base de datos relacional, como <em>MariaDB</em> o <em>PostgreSQL</em>.</p>
-<p><em>Sqoop</em> utiliza una arquitectura basada en conectores, con soporte para <em>plugins</em> que ofrecen la conectividad a los sistemas externos, como pueden ser <em>Oracle</em> o <em>SqlServer</em>. Internamente, <em>Sqoop</em> utiliza los algoritmos <em>MapReduce</em> para importar y exportar los datos.</p>
+<p><em>Sqoop</em> utiliza una arquitectura basada en conectores, con soporte para <em>plugins</em> que ofrecen la conectividad a los sistemas externos, como pueden ser <em>Oracle</em> o <em>SQL Server</em>. Internamente, <em>Sqoop</em> utiliza los algoritmos <em>MapReduce</em> para importar y exportar los datos.</p>
 <p>Por defecto, todos los trabajos <em>Sqoop</em> ejecutan cuatro mapas de trabajo, de manera que los datos se dividen en cuatro nodos de <em>Hadoop</em>.</p>
 <div class="admonition info">
 <p class="admonition-title">Instalación</p>
@@ -4083,7 +4084,7 @@
 </code></pre></div>
 </div>
 <h2 id="importando-datos">Importando datos<a class="headerlink" href="#importando-datos" title="Permanent link">&para;</a></h2>
-<p>La sintaxis básica de <em>Sqoop</em> para importar datos en <em>HDFS</em> es mediante el comando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_import_literal"><code>sqoop import</code></a>:</p>
+<p>La sintaxis básica de <em>Sqoop</em> para importar datos en <em>HDFS</em> mediante el comando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_import_literal"><code>sqoop import</code></a> es:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://host/nombredb<span class="w"> </span>--table<span class="w"> </span>&lt;nombreTabla&gt;<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="w"> </span>&lt;usuarioMariaDB&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;passwordMariaDB&gt;<span class="w"> </span>-m<span class="w"> </span><span class="m">2</span>
 </code></pre></div>
@@ -4103,9 +4104,9 @@
 <p>En el siguiente caso de uso vamos a importar datos que tenemos en una base de datos de <em>MariaDB</em> a HDFS.</p>
 <div class="admonition caution">
 <p class="admonition-title">Sqoop y las zonas horarias</p>
-<p>Cuando se lanza Sqoop captura los <em>timestamps</em> de nuestra base de datos origen y las convierte a la hora del sistema servidor por lo que tenemos que especificar en nuestra base de datos la zona horaria.</p>
+<p>Cuando se lanza Sqoop captura los <em>timestamps</em> de nuestra base de datos origen y los convierte a la hora del sistema servidor por lo que tenemos que especificar en nuestra base de datos la zona horaria.</p>
 <p>Para realizar estos ajustes simplemente editamos el fichero <code>mysqld.cnf</code> que se encuentra en <code>/etc/mysql/my.cnf/</code> y añadimos la siguiente propiedad para asignarle nuestra zona horaria:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>[mariabd]
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>[mariadb]
 <span class="linenos" data-linenos="2 "></span>default_time_zone = &#39;Europe/Madrid&#39;
 </code></pre></div>
 <p>En nuestra máquina virtual este paso ya está realizado. </p>
@@ -4140,7 +4141,7 @@
 <span class="linenos" data-linenos="5 "></span><span class="w">    </span>--fields-terminated-by<span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="w"> </span>--lines-terminated-by<span class="w"> </span><span class="s1">&#39;\n&#39;</span><span class="w"> </span><span class="c1"># (5)!</span>
 </code></pre></div>
 <ol>
-<li>Indicamos que vamos a importar datos desde un conexión JDBC, donde se indica el SGBD (<code>mysql</code>), el host (<code>localhost</code>) y el nombre de la base de datos (<code>sqoopCaso1</code>).</li>
+<li>Indicamos que vamos a importar datos desde una conexión JDBC, donde se indica el SGBD (<code>mysql</code>), el host (<code>localhost</code>) y el nombre de la base de datos (<code>sqoopCaso1</code>).</li>
 <li>Se configura tanto el usuario como la contraseña del usuario (<code>iabd</code> / <code>iabd</code>) que se conecta a la base de datos.</li>
 <li>Indicamos la tabla que vamos a leer (<code>profesores</code>) y el driver que utilizamos.</li>
 <li>Configuramos el destino HDFS donde se van a importar los datos.</li>
@@ -4249,20 +4250,20 @@
 </code></pre></div>
 <p>Vamos a repasar la salida del log para entender el proceso:</p>
 <ul>
-<li>En la línea 5 vemos como se lanza el generador de código.</li>
+<li>En la línea 5 vemos cómo se lanza el generador de código.</li>
 <li>En las líneas 6, 7 y 15 vemos como ejecuta la consulta para obtener todos los metadatos de la tabla de profesores.</li>
-<li>En la línea 20 obtiene los valores mínimo y máximo para calcular como dividir los datos.</li>
+<li>En la línea 20 obtiene los valores mínimo y máximo para calcular cómo dividir los datos.</li>
 <li>De las líneas 29 a la 34 se ejecuta el proceso <em>MapReduce</em>, donde realmente recupera los datos.</li>
 <li>En el resto se puede observar un resumen estadístico.</li>
 </ul>
 <h3 id="monitorizando-sqoop">Monitorizando Sqoop<a class="headerlink" href="#monitorizando-sqoop" title="Permanent link">&para;</a></h3>
-<p>Si accedemos al interfaz gráfico de YARN (en <code>http://iabd-virtualbox:8088/cluster</code>) podemos ver cómo aparece el proceso como realizado:</p>
+<p>Si accedemos a la interfaz gráfica de YARN (en <code>http://iabd-virtualbox:8088/cluster</code>) podemos ver cómo aparece el proceso como realizado:</p>
 <figure style="align: center;">
     <img src="images/05sqoop-caso1yarn.png" alt="Estado de YARN tras la importación">
     <figcaption>Estado de YARN tras la importación</figcaption>
 </figure>
 
-<p>Si accedemos al interfaz gráfico de <em>Hadoop</em> (recuerda que puedes acceder a él mediante <code>http://iabd-virtualbox:9870</code>) podremos comprobar en el directorio <code>/user/iabd/sqoop</code> que ha creado el directorio que hemos especificado junto con los siguientes archivos:</p>
+<p>A su vez, si accedemos a la interfaz gráfica de <em>Hadoop</em> (recuerda que puedes acceder a él mediante <code>http://iabd-virtualbox:9870</code>) podremos comprobar en el directorio <code>/user/iabd/sqoop</code> que ha creado el directorio que hemos especificado junto con los siguientes archivos:</p>
 <figure style="align: center;">
     <img src="images/05sqoop-caso1a.png" alt="Contenido de /user/iabd/sqoop/profesores_hdfs">
     <figcaption>Contenido de /user/iabd/sqoop/profesores_hdfs</figcaption>
@@ -4274,12 +4275,12 @@
     <figcaption>Contenido de part-m-0000</figcaption>
 </figure>
 
-<p>Si queremos descargar el contenido de una carpeta de HDFS compuesta de varios archivos que contienen la información dividida, deberás emplear el parámetro <a href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html#getmerge"><code>-getmerge</code></a> más la ruta de la carpeta a descargar. Por ejemplo, si queremos descargar los datos de los profesores y almacenarlos en nuestro sistema local como <code>profesores.csv</code> haríamos (cuidado que al fusionar los archivos su tamaño puede crecer de formar considerable):</p>
+<p>Si queremos descargar el contenido de una carpeta de HDFS compuesta de varios archivos que contienen la información dividida, deberás emplear el parámetro <a href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html#getmerge"><code>-getmerge</code></a> más la ruta de la carpeta a descargar. Por ejemplo, si queremos descargar los datos de los profesores y almacenarlos en nuestro sistema local como <code>profesores.csv</code> haríamos (cuidado que al fusionar los archivos su tamaño puede crecer de forma considerable):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-getmerge<span class="w"> </span>/user/iabd/sqoop/profesores_hdfs<span class="w"> </span>profesores.csv
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Importándolo todo</p>
-<p>Si queremos importar todas las tablas de una base de datos, podemos emplear el comando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_import_all_tables_literal"><code>sqoop import-all-tables</code></a>, en el cual ya no indicamos la tabla a importar, sino la carpeta (<code>warehouse-dir</code>) donde creará una carpeta por cada tabla que encuentra en la base de datos:</p>
+<p>Si queremos importar todas las tablas de una base de datos, podemos emplear el comando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_import_all_tables_literal"><code>sqoop import-all-tables</code></a>, en el cual ya no indicamos la tabla a importar, sino la carpeta (<code>warehouse-dir</code>) donde creará una carpeta por cada tabla que encuentre en la base de datos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>sqoop<span class="w"> </span>import-all-tables<span class="w"> </span>--connect<span class="w"> </span>jdbc:mysql://localhost/mi_bd<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span>--username<span class="o">=</span>iabd<span class="w"> </span>--password<span class="o">=</span>iabd<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">    </span>--driver<span class="o">=</span>com.mysql.jdbc.Driver<span class="w"> </span><span class="se">\</span>
@@ -4292,7 +4293,7 @@
 <p class="admonition-title">Tabla no existente</p>
 <p>Si la tabla no existe previamente, recibiremos un error.</p>
 </div>
-<p>Ahora vamos a hacer el paso contrario, desde HDFS vamos a exportar los ficheros a otra tabla mediante el comando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_export_literal"><code>sqoop export</code></a>. Así pues, primero vamos a crear la nueva tabla en una nueva base de datos (aunque podíamos haber reutilizado la base de datos):</p>
+<p>Ahora vamos a hacer el paso contrario, desde HDFS vamos a exportar los ficheros a otra tabla mediante el comando <a href="https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html#_literal_sqoop_export_literal"><code>sqoop export</code></a>. Así pues, primero vamos a crear la nueva tabla en una nueva base de datos (aunque podríamos haber reutilizado la base de datos):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">create</span><span class="w"> </span><span class="k">database</span><span class="w"> </span><span class="n">sqoopCaso2</span><span class="p">;</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">use</span><span class="w"> </span><span class="n">sqoopCaso2</span><span class="p">;</span>
 <span class="linenos" data-linenos="3 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">profesores2</span><span class="p">(</span>
@@ -4483,8 +4484,8 @@ Exportar datos con updates
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <div class="admonition tip">
-<p class="admonition-title">Preparación MariaBD</p>
-<p>Para estos actividades y futuras sesiones, vamos a utilizar la base de datos (<em>retail_db</em>) que contiene información sobre un comercio (clientes, productos, pedidos, etc...).</p>
+<p class="admonition-title">Preparación MariaDB</p>
+<p>Para estas actividades y futuras sesiones, vamos a utilizar la base de datos (<em>retail_db</em>) que contiene información sobre un comercio (clientes, productos, pedidos, etc...).</p>
 <p>Para ello, descargaremos el archivo <a href="resources/create_db.sql">create_db.sql</a> con las sentencias para crear la base de datos y los datos como instrucciones SQL.</p>
 <p>Tras ello, si nos conectamos a <em>MariaDB</em> (<code>mariadb -u iabd -p</code>) desde la misma carpeta que hemos descargado el archivo, ejecutaremos los siguientes comando:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">create</span><span class="w"> </span><span class="k">database</span><span class="w"> </span><span class="n">retail_db</span><span class="p">;</span>
@@ -4500,14 +4501,14 @@ Exportar datos con updates
 <ol>
 <li>
 <p>Todos los pedidos de la tabla <code>orders</code> cuyo campo <code>order_status</code> sea <code>COMPLETE</code>.</p>
-<p>Coloca los datos en <code>user/iabd/sqoop/orders/datos_parquet</code> en formato Parquet, utilizando el tabulador como delimitador de campos y la compresión <em>Snappy</em>. Deberás recuperar 22.899 registros. <!-- (¿o 22.902?) --></p>
+<p>Coloca los datos en <code>/user/iabd/sqoop/orders/datos_parquet</code> en formato Parquet, utilizando el tabulador como delimitador de campos y la compresión <em>Snappy</em>. Deberás recuperar 22.899 registros. <!-- (¿o 22.902?) --></p>
 </li>
 <li>
 <p>Mediante una importación incremental a partir del registro 100, recupera los clientes de la tabla <code>customers</code> cuyo campo <code>state</code> sea <code>CA</code>.</p>
-<p>Coloca los datos en <code>user/iabd/sqoop/customers/datos_avro</code> en formato <em>Avro</em>, utilizando la compresión <em>bzip2</em>. Deberás recuperar las columnas <code>customer_id, customer_fname, customer_lname, customer_state</code>. El resultado contendrá menos de 2012 registros.</p>
+<p>Coloca los datos en <code>/user/iabd/sqoop/customers/datos_avro</code> en formato <em>Avro</em>, utilizando la compresión <em>bzip2</em>. Deberás recuperar las columnas <code>customer_id, customer_fname, customer_lname, customer_state</code>. El resultado contendrá menos de 2012 registros.</p>
 </li>
 </ol>
-<p>Se pide entregar el comando empleado y una captura de la carpeta HDFS, ya sea mediante el interfaz gráfico o por consola.</p>
+<p>Se pide entregar el comando empleado y una captura de la carpeta de HDFS, ya sea mediante el interfaz gráfico o por consola.</p>
 </li>
 </ol>
 <!--
@@ -4785,10 +4786,10 @@ https://eric.nz/posts/sqoop-note-iii/
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>

@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2982,10 +2982,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#nodered" class="md-nav__link">
+  <a href="#node-red-e-influxdb" class="md-nav__link">
     <span class="md-ellipsis">
       
-        NodeRed
+        Node-RED e InfluxDB
       
     </span>
   </a>
@@ -4380,10 +4380,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#nodered" class="md-nav__link">
+  <a href="#node-red-e-influxdb" class="md-nav__link">
     <span class="md-ellipsis">
       
-        NodeRed
+        Node-RED e InfluxDB
       
     </span>
   </a>
@@ -4651,9 +4651,9 @@ treemap-beta
 <p>Por ejemplo, un registro de temperatura de un sensor puede ser:</p>
 <ul>
 <li><em>bucket</em>: <code>IoTData</code></li>
-<li>medida: <code>temperatura_sala</code></li>
+<li>medida: <code>sensor_sala</code></li>
 <li>tag: <code>ubicacion="sala1"</code></li>
-<li>campo: <code>valor=22.5</code></li>
+<li>campo: <code>temp=22.5</code></li>
 <li><em>timestamp</em>: <code>2025-05-30T16:00:00Z</code></li>
 </ul>
 <p>Compartiendo la filosofía de esquemas dinámicos de los sistemas <em>NoSQL</em>, el esquema de un <em>bucket</em> se infiere a partir de los valores almacenados. Es por ello que no tenemos que definir las columnas y sus tipos, no hay que dar valores a todas las etiquetas o campos, podemos añadir etiquetas y campos en cualquier momento, etc...</p>
@@ -4757,47 +4757,48 @@ treemap-beta
 <span class="linenos" data-linenos="13 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKER_INFLUXDB_INIT_ORG=my-org</span>
 <span class="hll"><span class="linenos" data-linenos="14 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKER_INFLUXDB_INIT_BUCKET=my-bucket</span>
 </span><span class="linenos" data-linenos="15 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-secret-token</span>
-<span class="linenos" data-linenos="16 "></span>
-<span class="linenos" data-linenos="17 "></span><span class="w">  </span><span class="nt">telegraf</span><span class="p">:</span>
-<span class="hll"><span class="linenos" data-linenos="18 "></span><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">telegraf:1.30</span>
-</span><span class="linenos" data-linenos="19 "></span><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iot-telegraf</span>
-<span class="linenos" data-linenos="20 "></span><span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
-<span class="linenos" data-linenos="21 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">influxdb</span>
-<span class="linenos" data-linenos="22 "></span><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
-<span class="linenos" data-linenos="23 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./telegraf.conf:/etc/telegraf/telegraf.conf:ro</span>
-<span class="linenos" data-linenos="24 "></span><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-<span class="linenos" data-linenos="25 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HOST_PROC=/host/proc</span>
-<span class="linenos" data-linenos="26 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HOST_SYS=/host/sys</span>
-<span class="linenos" data-linenos="27 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HOST_ETC=/host/etc</span>
-<span class="linenos" data-linenos="28 "></span><span class="w">    </span><span class="nt">privileged</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="linenos" data-linenos="29 "></span>
-<span class="linenos" data-linenos="30 "></span><span class="w">  </span><span class="nt">grafana</span><span class="p">:</span>
-<span class="hll"><span class="linenos" data-linenos="31 "></span><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/grafana:10.3.1</span>
-</span><span class="linenos" data-linenos="32 "></span><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iot-grafana</span>
-<span class="linenos" data-linenos="33 "></span><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="linenos" data-linenos="34 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;3000:3000&quot;</span>
-<span class="linenos" data-linenos="35 "></span><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
-<span class="linenos" data-linenos="36 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana_data:/var/lib/grafana</span>
-<span class="linenos" data-linenos="37 "></span><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-<span class="linenos" data-linenos="38 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GF_SECURITY_ADMIN_USER=admin</span>
-<span class="linenos" data-linenos="39 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GF_SECURITY_ADMIN_PASSWORD=admin</span>
-<span class="linenos" data-linenos="40 "></span>
-<span class="linenos" data-linenos="41 "></span><span class="w">  </span><span class="nt">nodered</span><span class="p">:</span>
-<span class="hll"><span class="linenos" data-linenos="42 "></span><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodered/node-red:latest</span>
-</span><span class="linenos" data-linenos="43 "></span><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iot-nodered</span>
-<span class="linenos" data-linenos="44 "></span><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="linenos" data-linenos="45 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;1880:1880&quot;</span>
-<span class="linenos" data-linenos="46 "></span><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
-<span class="linenos" data-linenos="47 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodered_data:/data</span>
-<span class="linenos" data-linenos="48 "></span><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-<span class="linenos" data-linenos="49 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TZ=Europe/Madrid</span>
-<span class="linenos" data-linenos="50 "></span><span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
-<span class="linenos" data-linenos="51 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">influxdb</span>
-<span class="linenos" data-linenos="52 "></span>
-<span class="linenos" data-linenos="53 "></span><span class="nt">volumes</span><span class="p">:</span>
-<span class="linenos" data-linenos="54 "></span><span class="w">  </span><span class="nt">influxdb_data</span><span class="p">:</span>
-<span class="linenos" data-linenos="55 "></span><span class="w">  </span><span class="nt">grafana_data</span><span class="p">:</span>
-<span class="linenos" data-linenos="56 "></span><span class="w">  </span><span class="nt">nodered_data</span><span class="p">:</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TZ=Europe/Madrid</span>
+<span class="linenos" data-linenos="17 "></span>
+<span class="hll"><span class="linenos" data-linenos="18 "></span><span class="w">  </span><span class="nt">telegraf</span><span class="p">:</span>
+</span><span class="linenos" data-linenos="19 "></span><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">telegraf:1.30</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iot-telegraf</span>
+<span class="linenos" data-linenos="21 "></span><span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="linenos" data-linenos="22 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">influxdb</span>
+<span class="linenos" data-linenos="23 "></span><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="linenos" data-linenos="24 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./telegraf.conf:/etc/telegraf/telegraf.conf:ro</span>
+<span class="linenos" data-linenos="25 "></span><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="linenos" data-linenos="26 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HOST_PROC=/host/proc</span>
+<span class="linenos" data-linenos="27 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HOST_SYS=/host/sys</span>
+<span class="linenos" data-linenos="28 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HOST_ETC=/host/etc</span>
+<span class="linenos" data-linenos="29 "></span><span class="w">    </span><span class="nt">privileged</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="linenos" data-linenos="30 "></span>
+<span class="hll"><span class="linenos" data-linenos="31 "></span><span class="w">  </span><span class="nt">grafana</span><span class="p">:</span>
+</span><span class="linenos" data-linenos="32 "></span><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/grafana:10.3.1</span>
+<span class="linenos" data-linenos="33 "></span><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iot-grafana</span>
+<span class="linenos" data-linenos="34 "></span><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="linenos" data-linenos="35 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;3000:3000&quot;</span>
+<span class="linenos" data-linenos="36 "></span><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="linenos" data-linenos="37 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana_data:/var/lib/grafana</span>
+<span class="linenos" data-linenos="38 "></span><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="linenos" data-linenos="39 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GF_SECURITY_ADMIN_USER=admin</span>
+<span class="linenos" data-linenos="40 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GF_SECURITY_ADMIN_PASSWORD=admin</span>
+<span class="linenos" data-linenos="41 "></span>
+<span class="hll"><span class="linenos" data-linenos="42 "></span><span class="w">  </span><span class="nt">nodered</span><span class="p">:</span>
+</span><span class="linenos" data-linenos="43 "></span><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodered/node-red:latest</span>
+<span class="linenos" data-linenos="44 "></span><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iot-nodered</span>
+<span class="linenos" data-linenos="45 "></span><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="linenos" data-linenos="46 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;1880:1880&quot;</span>
+<span class="linenos" data-linenos="47 "></span><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="linenos" data-linenos="48 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodered_data:/data</span>
+<span class="linenos" data-linenos="49 "></span><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="linenos" data-linenos="50 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TZ=Europe/Madrid</span>
+<span class="linenos" data-linenos="51 "></span><span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="linenos" data-linenos="52 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">influxdb</span>
+<span class="linenos" data-linenos="53 "></span>
+<span class="linenos" data-linenos="54 "></span><span class="nt">volumes</span><span class="p">:</span>
+<span class="linenos" data-linenos="55 "></span><span class="w">  </span><span class="nt">influxdb_data</span><span class="p">:</span>
+<span class="linenos" data-linenos="56 "></span><span class="w">  </span><span class="nt">grafana_data</span><span class="p">:</span>
+<span class="linenos" data-linenos="57 "></span><span class="w">  </span><span class="nt">nodered_data</span><span class="p">:</span>
 </code></pre></div>
 <p>Para crear los contenedores ejecutaremos el comando:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>-p<span class="w"> </span>iot<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>
@@ -4894,6 +4895,11 @@ DnRbPWrRh9vJ1OSvVpaOtHDci1V7YS2ZXe326phBwsz2NIwVY7Bb-xeOjLLCUL9rYyJGm2uaslefc_Fw
 <p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>https://github.com/influxdata/community-templates/blob/master/sample-data/sample-data.yml
 </code></pre></div>
 A continuación, ya podemos ir al <em>Data Explorer</em>, y en el <em>bucket</em> <code>sample_data</code> tendremos diferentes medidas:</p>
+<figure>
+    <img src="images/10-influxdb-sample-data.jpg" style="border: 1px solid grey" alt="Datos de ejemplo en InfluxDB">
+    <figcaption>Datos de ejemplo en InfluxDB</figcaption>
+</figure>
+
 <h3 id="creando-una-tarea">Creando una tarea<a class="headerlink" href="#creando-una-tarea" title="Permanent link">&para;</a></h3>
 <p>Otra posibilidad para añadir datos es mediante el uso de tareas. El primer paso será crear un nuevo <em>bucket</em> para guardar la información. Para ello, podemos hacerlo desde el interfaz gráfico desde la opción <em>Load Data -&gt; Buckets -&gt; Create Bucket</em> (recuerda seleccionar la organización de <code>s8a</code>):</p>
 <figure style="align: center">
@@ -4969,7 +4975,7 @@ A continuación, ya podemos ir al <em>Data Explorer</em>, y en el <em>bucket</em
 <div class="admonition info">
 <p class="admonition-title">InfluxQL</p>
 <p><em>InfluxDB</em> v1.x permite la sentencia SQL-like <a href="https://docs.influxdata.com/influxdb/v2/query-data/influxql/manage-data/#write-data-with-insert"><code>INSERT</code></a>, por ejemplo:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">USE</span><span class="w"> </span><span class="n">miDB</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">USE</span><span class="w"> </span><span class="n">my</span><span class="o">-</span><span class="n">bucket</span>
 <span class="linenos" data-linenos="2 "></span><span class="k">INSERT</span><span class="w"> </span><span class="n">temperatura</span><span class="p">,</span><span class="n">ubicacion</span><span class="o">=</span><span class="n">oficina</span><span class="w"> </span><span class="n">valor</span><span class="o">=</span><span class="mi">21</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="mi">1700003600000000000</span>
 </code></pre></div>
 <p>Esto escribe un punto idéntico al anterior. La sintaxis es <code>INSERT &lt;medición&gt;,&lt;tag&gt;=&lt;valor_tag&gt; &lt;field&gt;=&lt;valor_field&gt; &lt;timestamp&gt;</code>.</p>
@@ -4979,11 +4985,15 @@ A continuación, ya podemos ir al <em>Data Explorer</em>, y en el <em>bucket</em
 <p>Además, dispone de más de 20 <em>plugins</em> de procesamiento para renombrar, emplear expresiones regulares o realizar filtrado o transformaciones sobre los datos.</p>
 <p>Un ejemplo de configuración sería:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">[[outputs.influxdb_v2]]</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="na">urls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[http://localhost:8086]</span>
-<span class="linenos" data-linenos="3 "></span><span class="w">  </span><span class="na">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;my-secret-token&quot;</span>
-<span class="linenos" data-linenos="4 "></span><span class="w">  </span><span class="na">organization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;my-org&quot;</span>
-<span class="linenos" data-linenos="5 "></span><span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;my-bucket&quot;</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="na">urls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[http://localhost:8086]</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="na">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;my-secret-token&quot;</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="na">organization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;my-org&quot;</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;my-bucket&quot;</span>
 </code></pre></div>
+<!--
+TODO: poner fichero de configuración de Telegraf para Docker
+-->
+
 <h3 id="influx-cli_1">Influx CLI<a class="headerlink" href="#influx-cli_1" title="Permanent link">&para;</a></h3>
 <p>Mediante el CLI también podemos escribir datos en <em>InfluxDB</em> de varias formas, pero siempre con la opción <a href="https://docs.influxdata.com/influxdb/v2/write-data/developer-tools/influx-cli/"><code>write</code></a>, ya sea:</p>
 <ul>
@@ -5024,20 +5034,22 @@ A continuación, ya podemos ir al <em>Data Explorer</em>, y en el <em>bucket</em
 <h3 id="librerias-de-cliente">Librerías de cliente<a class="headerlink" href="#librerias-de-cliente" title="Permanent link">&para;</a></h3>
 <p>Existen diferentes librerías para cada lenguaje de programación desde el cual queramos acceder a Influx, ya sea Java, Go, Scala, Python, PHP, C#, Ruby, Arduino, Kotlin, etc...</p>
 <p>Por ejemplo, para acceder desde <em>Python</em>, tras instalar la librería mediante <code>pip install influxdb-client</code>, haremos algo similar a:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">influxdb_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">InfluxDBClient</span><span class="p">,</span> <span class="n">Point</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">influxdb_client.client.write_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">SYNCHRONOUS</span>
-<span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="k">with</span> <span class="n">InfluxDBClient</span><span class="p">(</span>
-<span class="linenos" data-linenos=" 5 "></span>    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:8086&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 6 "></span>    <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;my-secret-token&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cliente</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span>    <span class="n">punto</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="s2">&quot;sensor_sala&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 9 "></span>      <span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="s2">&quot;ubicacion&quot;</span><span class="p">,</span> <span class="s2">&quot;sala1&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="10 "></span>      <span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="s2">&quot;valor&quot;</span><span class="p">,</span> <span class="mf">23.5</span><span class="p">)</span>
-<span class="linenos" data-linenos="11 "></span>      <span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
-<span class="linenos" data-linenos="12 "></span>
-<span class="linenos" data-linenos="13 "></span>    <span class="n">write_api</span> <span class="o">=</span> <span class="n">cliente</span><span class="o">.</span><span class="n">write_api</span><span class="p">(</span><span class="n">write_options</span><span class="o">=</span><span class="n">SYNCHRONOUS</span><span class="p">)</span>
-<span class="linenos" data-linenos="14 "></span>    <span class="n">write_api</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">bucket</span><span class="o">=</span><span class="s2">&quot;my-bucket&quot;</span><span class="p">,</span> <span class="n">org</span><span class="o">=</span><span class="s2">&quot;my-org&quot;</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="n">punto</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">influxdb_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">InfluxDBClient</span><span class="p">,</span> <span class="n">Point</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">influxdb_client.client.write_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">SYNCHRONOUS</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="k">with</span> <span class="n">InfluxDBClient</span><span class="p">(</span>
+<span class="linenos" data-linenos=" 7 "></span>    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:8086&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;my-secret-token&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cliente</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span>    <span class="n">punto</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="s2">&quot;sensor_sala&quot;</span><span class="p">)</span> <span class="o">/</span>
+<span class="linenos" data-linenos="11 "></span>      <span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="s2">&quot;ubicacion&quot;</span><span class="p">,</span> <span class="s2">&quot;sala1&quot;</span><span class="p">)</span> <span class="o">/</span>
+<span class="linenos" data-linenos="12 "></span>      <span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="s2">&quot;valor&quot;</span><span class="p">,</span> <span class="mf">23.5</span><span class="p">)</span>      <span class="o">/</span>
+<span class="linenos" data-linenos="13 "></span>      <span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">))</span>
+<span class="linenos" data-linenos="14 "></span>
+<span class="linenos" data-linenos="15 "></span>    <span class="n">write_api</span> <span class="o">=</span> <span class="n">cliente</span><span class="o">.</span><span class="n">write_api</span><span class="p">(</span><span class="n">write_options</span><span class="o">=</span><span class="n">SYNCHRONOUS</span><span class="p">)</span>
+<span class="linenos" data-linenos="16 "></span>    <span class="n">write_api</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">bucket</span><span class="o">=</span><span class="s2">&quot;my-bucket&quot;</span><span class="p">,</span> <span class="n">org</span><span class="o">=</span><span class="s2">&quot;my-org&quot;</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="n">punto</span><span class="p">)</span>
 </code></pre></div>
 <p>En el apartado de <a href="#influxdb-y-python">InfluxDB y Python</a> profundizaremos en su uso.</p>
 <hr />
@@ -5497,13 +5509,13 @@ A continuación, ya podemos ir al <em>Data Explorer</em>, y en el <em>bucket</em
 <span class="linenos" data-linenos="9 "></span><span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div>
 <p>Al crear un punto, si queremos indicarle alguna etiqueta o de forma explícita el <em>timestamp</em>, podemos emplear los métodos <code>tag</code> o <code>time</code> respectivamente:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">punto</span> <span class="o">=</span> <span class="p">(</span>
 <span class="linenos" data-linenos="4 "></span>    <span class="n">Point</span><span class="p">(</span><span class="s2">&quot;temperatura&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="5 "></span>    <span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="s2">&quot;ubicacion&quot;</span><span class="p">,</span> <span class="s2">&quot;sala1&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="6 "></span>    <span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="s2">&quot;valor&quot;</span><span class="p">,</span> <span class="mf">23.5</span><span class="p">)</span>
-<span class="linenos" data-linenos="7 "></span>    <span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span> <span class="n">WritePrecision</span><span class="o">.</span><span class="n">NS</span><span class="p">)</span>
+<span class="linenos" data-linenos="7 "></span>    <span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span> <span class="n">WritePrecision</span><span class="o">.</span><span class="n">NS</span><span class="p">)</span>
 <span class="linenos" data-linenos="8 "></span><span class="p">)</span>
 </code></pre></div>
 <h3 id="consultando-datos-con-flux">Consultando datos con Flux<a class="headerlink" href="#consultando-datos-con-flux" title="Permanent link">&para;</a></h3>
@@ -5518,17 +5530,17 @@ A continuación, ya podemos ir al <em>Data Explorer</em>, y en el <em>bucket</em
 <span class="linenos" data-linenos="8 "></span>    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">records</span><span class="p">:</span>
 <span class="linenos" data-linenos="9 "></span>        <span class="nb">print</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="nodered">NodeRed<a class="headerlink" href="#nodered" title="Permanent link">&para;</a></h2>
-<p>Para insertar datos en <em>InfluxDB</em> desde <em>NodeRed</em>, necesitamos instalar el conector <a href="https://flows.nodered.org/node/node-red-contrib-influxdb"><em>node-red-contrib-influxdb</em></a> que añadirá los nodos <code>influxdb out</code> para insertar datos en <em>InfluxDB</em>, e <code>influxdb in</code> para cargar datos desde <em>InfluxDB</em> en <em>NodeRed</em>. Para ello, desde la paleta, instalaremos el conector:</p>
+<h2 id="node-red-e-influxdb">Node-RED e InfluxDB<a class="headerlink" href="#node-red-e-influxdb" title="Permanent link">&para;</a></h2>
+<p>Para insertar datos en <em>InfluxDB</em> desde <em>Node-RED</em>, necesitamos instalar el conector <a href="https://flows.nodered.org/node/node-red-contrib-influxdb"><em>node-red-contrib-influxdb</em></a> que añadirá los nodos <code>influxdb out</code> para insertar datos en <em>InfluxDB</em>, e <code>influxdb in</code> para cargar datos desde <em>InfluxDB</em> en <em>NodeRed</em>. Para ello, desde la paleta, instalaremos el conector:</p>
 <figure>
     <img src="images/10-influxdb-nodered-palette.png" width="600px" style="border: 1px solid grey" alt="Conector contrib para InfluxDB en NodeRed">
-    <figcaption>Conector contrib para InfluxDB en NodeRed</figcaption>
+    <figcaption>Conector contrib para InfluxDB en Node-RED</figcaption>
 </figure>
 
 <p>Utilizando un nodo de tipo función, crearemos un mensaje JSON con los datos a introducir. En nuestro caso, simulamos datos de temperatura, humedad y peso de una colmena. Para ello, definimos una lista con dos objetos, el primero con los campos y el segundo con el conjunto de etiquetas:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nx">msg</span><span class="p">.</span><span class="nx">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="c1">// campos</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="w">        </span><span class="nx">temp_Int_1</span><span class="o">:</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">10</span><span class="p">,</span>
+<span class="hll"><span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="c1">// campos</span>
+</span><span class="linenos" data-linenos=" 3 "></span><span class="w">        </span><span class="nx">temp_Int_1</span><span class="o">:</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">10</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="w">        </span><span class="nx">temp_Int_2</span><span class="o">:</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">10</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="w">        </span><span class="nx">humedad_Int</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">11</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="w">        </span><span class="nx">peso</span><span class="o">:</span><span class="w"> </span><span class="mf">11</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">(),</span>
@@ -5537,8 +5549,8 @@ A continuación, ya podemos ir al <em>Data Explorer</em>, y en el <em>bucket</em
 <span class="linenos" data-linenos=" 9 "></span><span class="w">        </span><span class="nx">vel_Viento</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">11</span><span class="p">,</span>
 <span class="linenos" data-linenos="10 "></span><span class="w">        </span><span class="nx">dir_Viento</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">11</span>
 <span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="p">},</span>
-<span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="c1">// etiquetas</span>
-<span class="linenos" data-linenos="13 "></span><span class="w">        </span><span class="nx">colmena</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;pvc&quot;</span><span class="p">,</span>
+<span class="hll"><span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="c1">// etiquetas</span>
+</span><span class="linenos" data-linenos="13 "></span><span class="w">        </span><span class="nx">colmena</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;pvc&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="14 "></span><span class="w">        </span><span class="nx">lugar</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Villena&quot;</span>
 <span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="p">}</span>
 <span class="linenos" data-linenos="16 "></span><span class="p">];</span>
@@ -5941,10 +5953,10 @@ https://university.influxdata.com/learn/courses/15/influxdb-2x-essentials/lesson
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>
