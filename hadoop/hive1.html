@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -4533,7 +4533,7 @@
 
   <h1>Hive I</h1>
 
-<p><em>Apache Hive</em> (<a href="https://hive.apache.org/">https://hive.apache.org/</a>) es una tecnología distribuida diseñada y construida sobre un clúster de <em>Hadoop</em>. Permite leer, escribir y gestionar grandes <em>datasets</em> (con escala de petabytes) que residen en HDFS haciendo uso de un lenguaje dialecto de SQL, conocido como <em>HiveSQL</em>, lo que simplifica mucho el desarrollo y la gestión de <em>Hadoop</em>.</p>
+<p><a href="https://hive.apache.org"><em>Apache Hive</em></a> es una tecnología distribuida diseñada y construida sobre un clúster de <em>Hadoop</em>. Permite leer, escribir y gestionar grandes <em>datasets</em> (con escala de petabytes) que residen en HDFS haciendo uso de un lenguaje dialecto de SQL, conocido como <em>HiveSQL</em>, lo que simplifica mucho el desarrollo y la gestión de <em>Hadoop</em>.</p>
 <figure style="float: right;">
     <img src="images/06hive-logo.jpg" alt="Logo de Apache Hive">
     <figcaption>Logo de Apache Hive</figcaption>
@@ -4598,6 +4598,11 @@ Actualmente ha perdido uso en detrimento de <em>Hive</em>/<em>Impala</em> y de <
 <p>A este servidor nos conectaremos mediante la herramienta <em>Beeline</em> (Beeline CLI).</p>
 <h4 id="hive-metastore">Hive Metastore<a class="headerlink" href="#hive-metastore" title="Permanent link">&para;</a></h4>
 <p>Es el repositorio central para los metadatos de <em>Hive</em>, y se almacena en una base de datos relacional como <em>MySQL</em>, <em>PostgreSQL</em> o <em>Apache Derby</em> (embebida). Mantiene los metadatos, las tablas y sus tipos mediante <em>Hive DDL</em> (<em>Data Definition Language</em>). Además, el sistema se puede configurar para que también almacene estadísticas de las operaciones y registros de autorización para optimizar las consultas.</p>
+<figure style="align: center;">
+    <img src="images/06-hive-metastore.jpg" alt="Metastore de Apache Hive">
+    <figcaption>Metastore de Apache Hive</figcaption>
+</figure>
+
 <p>En las últimas versiones de <em>Hive</em>, este componente se puede desplegar de forma remota e independiente, para no compartir la misma JVM con <em>HiveServer</em>. Dentro del <em>metastore</em> podemos encontrar el <em>Hive Catalog</em> (<em>HCatalog</em>), que permite acceder a sus metadatos, actuando como una API. Al poder desplegarse de forma aislada e independiente, permite que otras aplicaciones hagan uso del <em>schema</em> sin tener que desplegar el motor de consultas de <em>Hive</em>.</p>
 <figure style="float: left;">
     <img src="images/06hive-metastore-configurations.png" alt="Configuraciones del Metastore de Apache Hive" width="500">
@@ -4638,9 +4643,9 @@ Actualmente ha perdido uso en detrimento de <em>Hive</em>/<em>Impala</em> y de <
 <p>Conviene distinguir que <em>Spark SQL</em> no tiene nada que ver con utilizar el motor de ejecución de <em>Spark</em> dentro de <em>Hive</em>. Al utilizar el motor de <em>Hive</em>, podemos hacer un uso completo de las características de Hive, mientras que <em>Spark SQL</em> es un motor diferente que ofrece una alta compatibilidad con <em>Hive</em>, pero tiene sus particularidades.</p>
 </div>
 <h3 id="tipos-de-datos">Tipos de datos<a class="headerlink" href="#tipos-de-datos" title="Permanent link">&para;</a></h3>
-<p>Los tipos de datos que podemos emplear en <em>Hive</em> son muy similares a los que se utilizan en el DDL de SQL.
+<p>Los <a href="https://hive.apache.org/docs/latest/language/languagemanual-types/">tipos de datos</a> que podemos emplear en <em>Hive</em> son muy similares a los que se utilizan en el DDL de SQL.
 Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunque podemos utilizar otros tipos como <code>TINYINT</code>, <code>BIGINT</code>, <code>DOUBLE</code>, <code>DATE</code>, <code>TIMESTAMP</code>, etc...</p>
-<p>Para realizar una conversión explicita de tipos, por ejemplo de un tipo texto a uno numérico, hay que utilizar la función <code>CAST</code>:</p>
+<p>Para realizar una conversión explícita de tipos, por ejemplo de un tipo texto a uno numérico, hay que utilizar la función <code>CAST</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">select</span><span class="w"> </span><span class="k">CAST</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nb">INT</span><span class="p">)</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">tablaPruebas</span><span class="p">;</span>
 </code></pre></div>
 <p>Respecto a los tipos compuestos, tenemos tres tipos:</p>
@@ -4736,10 +4741,10 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 </code></pre></div>
 <h3 id="acceso-remoto">Acceso remoto<a class="headerlink" href="#acceso-remoto" title="Permanent link">&para;</a></h3>
 <p><em>HiveServer2</em> (desde Hive 0.11) tiene su propio cliente conocido como <em>Beeline</em>. En entornos reales, el cliente <em>Hive</em> está en desuso a favor de <em>Beeline</em>, por la falta de múltiples usuarios, seguridad y otras características de <em>HiveServer2</em>.</p>
-<p>Arrancamos <em>HiveServer2</em> (lo hará en el puerto <code>10000</code>) y <em>Beeline</em> en dos pestañas diferentes mediante los comandos <a href="https://cwiki.apache.org/confluence/display/Hive/Setting+Up+HiveServer2#SettingUpHiveServer2-HowtoStart"><code>hiveserver2</code></a> y <a href="https://cwiki.apache.org/confluence/display/hive/hiveserver2+clients#HiveServer2Clients-Beeline%E2%80%93CommandLineShell"><code>beeline</code></a>:</p>
+<p>Arrancamos <em>HiveServer2</em> (lo hará en el puerto <code>10000</code>) y <em>Beeline</em> en dos pestañas diferentes mediante los comandos <a href="https://cwiki.apache.org/confluence/display/Hive/Setting+Up+HiveServer2#SettingUpHiveServer2-HowtoStart"><code>hiveserver2</code></a> y <a href="https://hive.apache.org/docs/latest/user/hiveserver2-clients/#beeline--command-line-shell"><code>beeline</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hiveserver2
 </code></pre></div>
-<p>Esperamos a que arranque completamente y a continuación:</p>
+<p>Esperamos a que arranque completamente y a continuación, en otro terminal, arrancamos el cliente <em>Beeline</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>beeline
 </code></pre></div>
 <p>Una vez dentro de <em>Beeline</em>, puede que nos toque volver a unos segundos a que <em>HiveServer2</em> haya arrancando completamente, nos conectamos al servidor:</p>
@@ -5784,10 +5789,10 @@ Si las columnas de `sort by` y `distribute by` son las mismas, podemos utilizar 
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
