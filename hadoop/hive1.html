@@ -4904,7 +4904,16 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 </code></pre></div>
 <div class="admonition question">
 <p class="admonition-title">Rendimiento</p>
-<p>Prueba a realizar una consulta que cuente la cantidad de clientes en cada una de las tablas ¿Cuál tarda menos? ¿Por qué?</p>
+<p>Prueba a realizar una consulta que cuente la cantidad de clientes en cada una de las tablas ¿Cuál tarda menos? ¿Por qué? </p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">select</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
+<span class="linenos" data-linenos="2 "></span><span class="k">select</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">customersp</span><span class="p">;</span>
+</code></pre></div>
+<p>¿Te dice que la tabla <code>customers</code> contiene 0 registros? ¿Por qué? Prueba a ejecutar el comando <code>describe formatted customers</code> para ver la localización de la tabla y comprobar que los datos siguen ahí.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">describe</span><span class="w"> </span><span class="n">formatted</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
+</code></pre></div>
+<p>A continuación, fuerza a que se vuelvan a calcular las estadísticas de la tabla <code>customers</code> mediante el comando <code>ANALYZE TABLE</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">analyze</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">customers</span><span class="w"> </span><span class="n">compute</span><span class="w"> </span><span class="k">statistics</span><span class="p">;</span>
+</code></pre></div>
 </div>
 <p>Si necesitamos insertar datos en múltiples tablas a la vez lo haremos mediante el comando <em>from-insert</em>, ya que ofrece un mejor rendimiento al sólo necesitar un escaneado de los datos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">FROM</span><span class="w"> </span><span class="n">fuente</span>
@@ -4926,8 +4935,8 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 </code></pre></div>
 <h3 id="modificando-datos">Modificando datos<a class="headerlink" href="#modificando-datos" title="Permanent link">&para;</a></h3>
 <p>Acabamos de añadir datos, y en teoría podemos realizar operaciones <code>UPDATE</code> y <code>DELETE</code> sobre las filas de una tabla.</p>
-<p>HDFS no se diseñó pensando en las modificaciones de archivos, con lo que los cambios resultantes de las inserciones, modificaciones y borrados se almacenan en archivos delta. Por cada transacción, se crea un conjunto de archivo delta que altera la tabla (o partición). Los ficheros delta se fusionan periódicamente con los ficheros base de las tablas mediante <em>jobs MapReduce</em> que el metastore ejecuta en <em>background</em>.</p>
-<p>Para poder modificar o borrar los datos, Hive necesita trabajar en un contexto transaccional, por lo que necesitamos activar las siguientes variables:</p>
+<p>HDFS no se diseñó pensando en las modificaciones de archivos, con lo que los cambios resultantes de las inserciones, modificaciones y borrados se almacenan en archivos <strong>delta</strong>. Por cada transacción, se crea un conjunto de archivo delta que altera la tabla (o partición). Los ficheros delta se fusionan periódicamente con los ficheros base de las tablas mediante <em>jobs MapReduce</em> que el <em>metastore</em> ejecuta en <em>background</em>.</p>
+<p>Para poder modificar o borrar los datos, <em>Hive</em> necesita trabajar en un contexto transaccional, por lo que necesitamos activar las siguientes variables:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>set hive.support.concurrency=true;
 <span class="linenos" data-linenos="2 "></span>set hive.enforce.bucketing=true;
 <span class="linenos" data-linenos="3 "></span>set hive.exec.dynamic.partition.mode=nonstrict;
@@ -4936,10 +4945,10 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <p>Una vez configurado, hemos de crear las tablas con el formato ORC, organizar los datos mediante <em>buckets</em> (los estudiaremos más adelante en esta <a href="hive2.html#buckets">la siguiente sesión</a>) y finalmente indicar mediante <code>TBLPROPERTIES</code> que se trata de una tabla transaccional . Por ejemplo, volvemos a crear la tabla de clientes:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customerstx</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="p">(</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="n">custId</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="n">fName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="n">lName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="n">city</span><span class="w"> </span><span class="n">STRING</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="n">custId</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="n">fName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="n">lName</span><span class="w"> </span><span class="n">STRING</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="n">city</span><span class="w"> </span><span class="n">STRING</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="p">)</span>
 <span class="hll"><span class="linenos" data-linenos=" 8 "></span><span class="n">CLUSTERED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">custId</span><span class="p">)</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="n">BUCKETS</span>
 </span><span class="hll"><span class="linenos" data-linenos=" 9 "></span><span class="n">STORED</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ORC</span>
@@ -4947,7 +4956,7 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 </span></code></pre></div>
 <p>Una vez creada la tabla, la vamos a cargar con los datos de los clientes:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">customerstx</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
 </code></pre></div>
 <p>Un par de minutos después, con los datos datos ya cargados, ya podemos cambiar el nombre de la ciudad <code>Caguas</code> por <code>Elche</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">UPDATE</span><span class="w"> </span><span class="n">customerstx</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">city</span><span class="o">=</span><span class="ss">&quot;Elche&quot;</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">city</span><span class="o">=</span><span class="ss">&quot;Caguas&quot;</span><span class="p">;</span>
