@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1993,6 +1993,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Caso 5: Tabla externa">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#caso-1-externa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caso 1 externa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4417,6 +4434,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Caso 5: Tabla externa">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#caso-1-externa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caso 1 externa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -4639,8 +4673,8 @@ Actualmente ha perdido uso en detrimento de <em>Hive</em>/<em>Impala</em> y de <
 <p>Para indicar que queremos ejecutar <em>Tez</em> como motor de ejecución, ejecutaríamos el siguiente comando:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>SET hive.execution.engine=tez;
 </code></pre></div>
-<p>En nuestro caso no tenemos <em>Tez</em> instalado en la máquina virtual, quedando fuera del alcance del presente curso.</p>
-<p>Conviene distinguir que <em>Spark SQL</em> no tiene nada que ver con utilizar el motor de ejecución de <em>Spark</em> dentro de <em>Hive</em>. Al utilizar el motor de <em>Hive</em>, podemos hacer un uso completo de las características de Hive, mientras que <em>Spark SQL</em> es un motor diferente que ofrece una alta compatibilidad con <em>Hive</em>, pero tiene sus particularidades.</p>
+<p>En nuestro caso no tenemos <em>Tez</em> instalado en la máquina virtual, quedando fuera del alcance del presente curso. En la práctica muchos entornos <em>cloud</em> (<em>AWS EMR</em>, <em>Databricks</em>) ya ni siquiera ofrecen <em>Tez</em>, yendo directamente a <em>Spark</em>.</p>
+<p>Finalmente, conviene distinguir que <em>Spark SQL</em> no tiene nada que ver con utilizar el motor de ejecución de <em>Spark</em> dentro de <em>Hive</em>. Al utilizar el motor de <em>Hive</em>, podemos hacer un uso completo de las características de <em>Hive</em>, mientras que <em>Spark SQL</em> es un motor diferente que ofrece una alta compatibilidad con <em>Hive</em>, pero tiene sus particularidades.</p>
 </div>
 <h3 id="tipos-de-datos">Tipos de datos<a class="headerlink" href="#tipos-de-datos" title="Permanent link">&para;</a></h3>
 <p>Los <a href="https://hive.apache.org/docs/latest/language/languagemanual-types/">tipos de datos</a> que podemos emplear en <em>Hive</em> son muy similares a los que se utilizan en el DDL de SQL.
@@ -4650,7 +4684,7 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 </code></pre></div>
 <p>Respecto a los tipos compuestos, tenemos tres tipos:</p>
 <ul>
-<li>arrays mediante el tipo <code>ARRAY</code>, para agrupar elementos del mismo tipo: <code>["manzana", "pera", "naranja]</code>.</li>
+<li>arrays mediante el tipo <code>ARRAY</code>, para agrupar elementos del mismo tipo: <code>["manzana", "pera", "naranja"]</code>.</li>
 <li>mapas mediante el tipo <code>MAP</code>, para definir parejas de clave-valor: <code>{1: "manzana", 2: "pera"}</code></li>
 <li>estructuras mediante el tipo <code>STRUCT</code>, para definir estructuras con propiedades: <code>{"fruta": "manzana", "cantidad": 1, "tipo": "postre"}</code>.</li>
 </ul>
@@ -4724,8 +4758,8 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <ul>
 <li><code>hive</code>: Herramienta cliente</li>
 <li><code>beeline</code>: Otra herramienta cliente</li>
-<li><code>hiserver2</code>: Nos permite arrancar el servidor de Hive</li>
-<li><code>schematool</code>: Nos permite trabajar contra la base de datos de metadatos (Metastore)</li>
+<li><code>hiveserver2</code>: Nos permite arrancar el servidor de Hive</li>
+<li><code>schematool</code>: Nos permite trabajar contra la base de datos de metadatos (<em>Metastore</em>)</li>
 </ul>
 <p>Una vez arrancado <em>Hadoop</em> y <em>YARN</em>, podemos arrancar <em>Hive</em> mediante el cliente local:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hive
@@ -4808,7 +4842,7 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">default</p>
-<p>Si olvidamos el comando <code>use</code>, se utilizará la base de datos <code>default</code>, la cual reside en <code>/user/hive/warehouse</code> como raíz en HDFS.</p>
+<p>Si olvidamos el comando <code>use</code>, se utilizará la base de datos <code>default</code>, la cual reside en <code>/user/hive/warehouse</code> como raíz en HDFS. Como recomendación, si se trabaja siempre con el prefijo <code>bbdd.tabla</code> (por ejemplo, <code>iabd.customers</code>) ya no necesitamos utilizar el comando <code>use</code>.</p>
 </div>
 <p>A continuación, vamos a crear una tabla que almacene el identificador, nombre, apellido y ciudad de los clientes (como puedes observar, la sintaxis es similar a SQL):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customers</span>
@@ -4846,7 +4880,7 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <p>En ocasiones necesitamos almacenar la salida de una consulta <em>Hive</em> en una nueva tabla. Las definiciones de las columnas de la nueva tabla se deriva de las columnas recuperadas en la consulta. Para ello, usaremos el comando <em>create table-as select</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customers_new</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
 </code></pre></div>
-<p>En el caso de que la consulta falle por algún motivo, la tabla no se crearía.</p>
+<p>En el caso de que la consulta falle por algún motivo, la tabla no se crearía. Si la tabla ya existe sí dará error, por lo que habría que usar <code>CREATE TABLE IF NOT EXISTS</code> o borrarla previamente.</p>
 <p>Otra posibilidad es crear una tabla con la misma estructura que otra ya existente (pero sin datos):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customers2</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
 </code></pre></div>
@@ -4854,12 +4888,16 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">describe</span><span class="w"> </span><span class="n">customers_new</span><span class="p">;</span>
 <span class="linenos" data-linenos="2 "></span><span class="k">describe</span><span class="w"> </span><span class="n">formatted</span><span class="w"> </span><span class="n">customers_new</span><span class="p">;</span>
 </code></pre></div>
-<p>Si empleamos la forma larga, obtendremos mucha más información. Por ejemplo, si nos fijamos, vemos que la localización de la nueva tabla ya no es <code>/user/iabd/hive/customer</code> sino <code>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/customers_new</code>. Esto se debe a que en vez de crear una tabla enlazada a un recurso de HDFS ya existente, ha creado una copia de los datos en el propio almacén de <em>Hive</em> (hemos pasado de una tabla externa a una interna).</p>
+<p>Si empleamos la forma larga, obtendremos mucha más información. Por ejemplo, si nos fijamos, vemos que la localización de la nueva tabla ya no es <code>/user/iabd/hive/customer</code> sino <code>hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db/customers_new</code>. Esto se debe a que en vez de crear una tabla enlazada a un recurso de HDFS ya existente, ha creado una copia de los datos en el propio almacén de <em>Hive</em> (hemos pasado de una tabla donde los datos están en una ruta compartida a una tabla gestionada internamente).</p>
 <p>Igual que las creamos, las podemos eliminar:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">drop</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">customers_new</span><span class="p">;</span>
 <span class="linenos" data-linenos="2 "></span><span class="k">drop</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">customers2</span><span class="p">;</span>
 </code></pre></div>
 <p>Si ejecutamos el comando <code>!tables</code> (o <code>show tables</code> en el cliente <code>hive</code>) veremos que ya no aparecen dichas tablas.</p>
+<div class="admonition question">
+<p class="admonition-title">Autoevaluación</p>
+<p>¿Qué sucede al eliminar la tabla <code>customers_new</code>? ¿Y al eliminar la tabla <code>customers</code>? Comprueba el contenido de ambas rutas en HDFS para ver si los datos siguen ahí o no.</p>
+</div>
 <p>En el caso de que queramos eliminar una base de datos, de la misma manera que en SQL, ejecutaríamos el comando <code>drop database iabd</code>. Si nuestra base de datos contiene tablas y las queremos borrar igualmente, entonces necesitamos un borrado en cascada mediante <code>drop database iabd cascade</code>.</p>
 <h2 id="caso-2-insertando-datos">Caso 2: Insertando datos<a class="headerlink" href="#caso-2-insertando-datos" title="Permanent link">&para;</a></h2>
 <p>Para insertar datos en las tablas de <em>Hive</em> podemos hacerlo de varias formas:</p>
@@ -4936,11 +4974,29 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <h3 id="modificando-datos">Modificando datos<a class="headerlink" href="#modificando-datos" title="Permanent link">&para;</a></h3>
 <p>Acabamos de añadir datos, y en teoría podemos realizar operaciones <code>UPDATE</code> y <code>DELETE</code> sobre las filas de una tabla.</p>
 <p>HDFS no se diseñó pensando en las modificaciones de archivos, con lo que los cambios resultantes de las inserciones, modificaciones y borrados se almacenan en archivos <strong>delta</strong>. Por cada transacción, se crea un conjunto de archivo delta que altera la tabla (o partición). Los ficheros delta se fusionan periódicamente con los ficheros base de las tablas mediante <em>jobs MapReduce</em> que el <em>metastore</em> ejecuta en <em>background</em>.</p>
-<p>Para poder modificar o borrar los datos, <em>Hive</em> necesita trabajar en un contexto transaccional, por lo que necesitamos activar las siguientes variables:</p>
+<p>Así pues, las operaciones ACID con <code>UPDATE</code>/<code>DELETE</code> en <em>Hive</em> requieren formato ORC obligatoriamente, además de necesitar trabajar en un contexto transaccional, por lo que necesitamos activar las siguientes variables:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>set hive.support.concurrency=true;
 <span class="linenos" data-linenos="2 "></span>set hive.enforce.bucketing=true;
 <span class="linenos" data-linenos="3 "></span>set hive.exec.dynamic.partition.mode=nonstrict;
 <span class="linenos" data-linenos="4 "></span>set hive.txn.manager=org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
+</code></pre></div>
+<p>Estas variables, que las podemos activar a nivel de sesión en el propio cliente <code>hive</code> o <code>beeline</code>, también las podemos configurar de forma permanente en el fichero <code>hive-site.xml</code>:</p>
+<div class="highlight"><span class="filename">hive-site.xml</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">&lt;name&gt;</span>hive.support.concurrency<span class="nt">&lt;/name&gt;</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="nt">&lt;value&gt;</span>true<span class="nt">&lt;/value&gt;</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="nt">&lt;/property&gt;</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="nt">&lt;name&gt;</span>hive.enforce.bucketing<span class="nt">&lt;/name&gt;</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">  </span><span class="nt">&lt;value&gt;</span>true<span class="nt">&lt;/value&gt;</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="nt">&lt;/property&gt;</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">  </span><span class="nt">&lt;name&gt;</span>hive.exec.dynamic.partition.mode<span class="nt">&lt;/name&gt;</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">  </span><span class="nt">&lt;value&gt;</span>nonstrict<span class="nt">&lt;/value&gt;</span>
+<span class="linenos" data-linenos="12 "></span><span class="nt">&lt;/property&gt;</span>
+<span class="linenos" data-linenos="13 "></span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">  </span><span class="nt">&lt;name&gt;</span>hive.txn.manager<span class="nt">&lt;/name&gt;</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">  </span><span class="nt">&lt;value&gt;</span>org.apache.hadoop.hive.ql.lockmgr.DbTxnManager<span class="nt">&lt;/value&gt;</span>
+<span class="linenos" data-linenos="16 "></span><span class="nt">&lt;/property&gt;</span>
 </code></pre></div>
 <p>Una vez configurado, hemos de crear las tablas con el formato ORC, organizar los datos mediante <em>buckets</em> (los estudiaremos más adelante en esta <a href="hive2.html#buckets">la siguiente sesión</a>) y finalmente indicar mediante <code>TBLPROPERTIES</code> que se trata de una tabla transaccional . Por ejemplo, volvemos a crear la tabla de clientes:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customerstx</span>
@@ -5001,6 +5057,12 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 </code></pre></div>
 </div>
 <h2 id="caso-3-consultas-con-join">Caso 3: Consultas con <em>join</em><a class="headerlink" href="#caso-3-consultas-con-join" title="Permanent link">&para;</a></h2>
+<!--
+TODO: Continuar revisión Claude
+La explicación de semi-joins es correcta pero un poco escueta. Podría señalarse que en versiones modernas de Hive (3.x con Tez/LLAP) los semi-joins se optimizan automáticamente y el LEFT SEMI JOIN puede ser más eficiente que la subquery con IN.
+En la sección de map joins, se menciona que no funcionan para RIGHT OUTER JOIN ni FULL OUTER JOIN. Correcto, pero también debería mencionarse FULL OUTER JOIN explícitamente, ya que los estudiantes podrían probarlo.
+-->
+
 <p>En este caso de uso vamos a trabajar con los datos de clientes y pedidos que hemos cargado en los dos casos anteriores, tanto en <code>customers</code> como en <code>orders</code>.</p>
 <p>Si queremos relacionar los datos de ambas tablas, tenemos que hacer un <em>join</em> entre la clave ajena de <code>orders</code> (<code>order_customer_id</code>) y la clave primaria de <code>customers</code> (<code>custid</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="hll"><span class="linenos" data-linenos=" 1 "></span><span class="n">hive</span><span class="o">&gt;</span><span class="w"> </span><span class="k">describe</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
@@ -5054,8 +5116,9 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <span class="linenos" data-linenos="4 "></span><span class="w">  </span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">custid</span><span class="o">=</span><span class="n">o</span><span class="p">.</span><span class="n">order_customer_id</span><span class="p">)</span>
 </code></pre></div>
 <p>Hay que tener en cuenta la restricción que las columnas de la tabla de la derecha sólo pueden aparecer en la clausula <code>on</code>, nunca en la expresión <code>select</code>.</p>
+<p>Por último, es importante destacar que los semi-joins pueden ser más eficientes que las subconsultas, ya que permiten a <em>Hive</em> optimizar la consulta y evitar escaneos innecesarios de la tabla de la derecha. En versiones modernas de <em>Hive</em> (3.x con <em>Tez</em>/<em>LLAP</em>), los semi-joins se optimizan automáticamente, y el <code>LEFT SEMI JOIN</code> puede ser más eficiente que la subconsulta con <code>IN</code>.</p>
 <h3 id="map-joins">Map joins<a class="headerlink" href="#map-joins" title="Permanent link">&para;</a></h3>
-<p>Consideramos la consulta inicial de join:</p>
+<p>Consideramos la consulta inicial de <em>join</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">select</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="p">,</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_date</span><span class="p">,</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">city</span>
 <span class="linenos" data-linenos="2 "></span><span class="k">from</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">customers</span><span class="w"> </span><span class="k">c</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">  </span><span class="k">on</span><span class="w"> </span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">order_customer_id</span><span class="o">=</span><span class="k">c</span><span class="p">.</span><span class="n">custid</span><span class="p">);</span>
@@ -5432,9 +5495,30 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <p>Si hacemos una consulta sobre la tabla para ver que están todos los campos obtendremos la misma información que antes:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">empleados_externa</span><span class="p">;</span>
 </code></pre></div>
+<h3 id="caso-1-externa">Caso 1 externa<a class="headerlink" href="#caso-1-externa" title="Permanent link">&para;</a></h3>
+<p>Si volvemos al caso 1, donde creábamos una tabla de clientes, y la creamos como externa, al eliminar la tabla de <em>Hive</em> no se eliminarán los datos de HDFS:</p>
+<div class="highlight"><pre><span></span><code><span class="hll"><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customers_ext</span>
+</span><span class="linenos" data-linenos=" 2 "></span><span class="p">(</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="n">custId</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="n">fName</span><span class="w"> </span><span class="n">STRING</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">&quot;Nombre&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="n">lName</span><span class="w"> </span><span class="n">STRING</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">&quot;Apellido&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="n">city</span><span class="w"> </span><span class="n">STRING</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="p">)</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">DELIMITED</span><span class="w">  </span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">FIELDS</span><span class="w"> </span><span class="n">TERMINATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;|&#39;</span><span class="w">  </span>
+<span class="linenos" data-linenos="10 "></span><span class="n">STORED</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TEXTFILE</span><span class="w">  </span>
+<span class="linenos" data-linenos="11 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;/user/iabd/hive/customer&#39;</span><span class="p">;</span>
+</code></pre></div>
+<p>Así pues, si ahora eliminamos la tabla de <em>Hive</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customers_ext</span><span class="p">;</span>
+</code></pre></div>
+<p>Los datos de HDFS seguirán estando disponibles:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>/user/iabd/hive/customer
+<span class="linenos" data-linenos="2 "></span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-cat<span class="w"> </span>/user/iabd/hive/customer/part-00000
+</code></pre></div>
 <div class="admonition question">
 <p class="admonition-title">Interna o externa</p>
-<p>Como normal general, si todo nuestro procesamiento lo hacemos mediante <em>Hive</em>, es más cómodo utilizar tablas internas. Si no es así, y otras herramientas acceden al mismo dataset, es mejor utilizar tablas externas.</p>
+<p>Como normal general, si todo nuestro procesamiento lo hacemos mediante <em>Hive</em>, es más cómodo utilizar tablas internas. Si no es así, y otras herramientas acceden al mismo <em>dataset</em>, es mejor utilizar tablas externas.</p>
 <p>Un patrón de uso muy común es utilizar una tabla externa para acceder al dataset inicial almacenado en HDFS (creado por otro proceso), y posteriormente crear una transformación en <em>Hive</em> para mover los datos a una tabla interna.</p>
 </div>
 <!--
@@ -5462,8 +5546,8 @@ Si las columnas de `sort by` y `distribute by` son las mismas, podemos utilizar 
 <ul>
 <li>Página oficial de <a href="https://hive.apache.org">Hive</a></li>
 <li><a href="https://www.packtpub.com/product/apache-hive-essentials-second-edition/9781788995092">Apache Hive Essentials - Second Edition</a> de <em>Dayong Du</em>.</li>
-<li><a href="http://hortonworks.com/wp-content/uploads/2016/05/Hortonworks.CheatSheet.SQLtoHive.pdf">Hive Cheatsheet</a></li>
-<li><a href="https://www.tutorialspoint.com/hive/index.htm">Tutorial de Hive</a> de TutorialsPoint.</li>
+<li><a href="resources/SQL-Hive-Cheatsheet.pdf">Hive Cheatsheet</a>.</li>
+<li><a href="https://www.tutorialspoint.com/hive/index.htm">Tutorial de Hive</a> de <em>TutorialsPoint</em>.</li>
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <p>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se ha fijado el objetivo de extraer valor de los datos para lo que es necesario contar con tecnologías eficientes.">CESBD.3b</abbr> y <abbr title="Se han desarrollado sistemas de gestión, almacenamiento y procesamiento de grandes volúmenes de datos de manera eficiente y segura, teniendo en cuenta la normativa existente.">CESBD.3d</abbr>) A partir de los archivos trabajados en la sesión sobre <a href="../de/pentaho.html">Pentaho</a>, vamos a crear diversas tablas y consultas en <em>Hive</em>. Para las siguientes actividades, se pide adjuntar tanto los scripts como comandos empleados, así como una captura de pantalla donde se vea la ejecución de las diferentes instrucciones.</p>
@@ -5799,10 +5883,10 @@ Si las columnas de `sort by` y `distribute by` son las mismas, podemos utilizar 
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
