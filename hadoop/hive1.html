@@ -23,15 +23,15 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
-        <title>Apache Hive. Acceso a HDFS con una interfaz similar a tablas relacionales mediante SQL. - Inteligencia Artificial y Big Data</title>
+        <title>Apache Hive. Consultas SQL sobre grandes volúmenes de datos en HDFS. - Inteligencia Artificial y Big Data</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -73,7 +73,7 @@
     
   
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Apache Hive. Acceso a HDFS con una interfaz similar a tablas relacionales mediante SQL. - Inteligencia Artificial y Big Data" />
+<meta property="og:title" content="Apache Hive. Consultas SQL sobre grandes volúmenes de datos en HDFS. - Inteligencia Artificial y Big Data" />
 <meta property="og:description" content="Apuntes sobre Apache Hive, utilizando tablas internas y externas, realizando joins entre diferentes archivos HDFS." />
 <meta property="og:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/hadoop/hive1.png" />
 <meta property="og:image:type" content="image/png" />
@@ -81,7 +81,7 @@
 <meta property="og:image:height" content="630" />
 <meta property="og:url" content="https://aitor-medrano.github.io/iabd/hadoop/hive1.html" />
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:title" content="Apache Hive. Acceso a HDFS con una interfaz similar a tablas relacionales mediante SQL. - Inteligencia Artificial y Big Data" />
+<meta property="twitter:title" content="Apache Hive. Consultas SQL sobre grandes volúmenes de datos en HDFS. - Inteligencia Artificial y Big Data" />
 <meta property="twitter:description" content="Apuntes sobre Apache Hive, utilizando tablas internas y externas, realizando joins entre diferentes archivos HDFS." />
 <meta property="twitter:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/hadoop/hive1.png" />
 </head>
@@ -138,7 +138,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Apache Hive. Acceso a HDFS con una interfaz similar a tablas relacionales mediante SQL.
+              Apache Hive. Consultas SQL sobre grandes volúmenes de datos en HDFS.
             
           </span>
         </div>
@@ -1472,14 +1472,6 @@
   </span>
   
   
-    
-  
-  
-    <span class="md-status md-status--updated" title="Modificado">
-    </span>
-  
-
-  
 
       </a>
     </li>
@@ -1769,6 +1761,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#formato-de-las-tablas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formato de las tablas
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1821,6 +1824,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Caso 1: Creación y borrado de tablas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gestion-de-tablas-y-bases-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gestión de tablas y bases de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1998,10 +2018,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#caso-1-externa" class="md-nav__link">
+  <a href="#refactor-del-caso-1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Caso 1 externa
+        Refactor del Caso 1
       
     </span>
   </a>
@@ -2068,7 +2088,7 @@
     
   
   
-    <span class="md-status md-status--new" title="Recién añadido">
+    <span class="md-status md-status--updated" title="Modificado">
     </span>
   
 
@@ -4209,6 +4229,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#formato-de-las-tablas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formato de las tablas
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4261,6 +4292,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Caso 1: Creación y borrado de tablas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gestion-de-tablas-y-bases-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gestión de tablas y bases de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4438,10 +4486,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#caso-1-externa" class="md-nav__link">
+  <a href="#refactor-del-caso-1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Caso 1 externa
+        Refactor del Caso 1
       
     </span>
   </a>
@@ -4688,6 +4736,8 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <li>mapas mediante el tipo <code>MAP</code>, para definir parejas de clave-valor: <code>{1: "manzana", 2: "pera"}</code></li>
 <li>estructuras mediante el tipo <code>STRUCT</code>, para definir estructuras con propiedades: <code>{"fruta": "manzana", "cantidad": 1, "tipo": "postre"}</code>.</li>
 </ul>
+<h3 id="formato-de-las-tablas">Formato de las tablas<a class="headerlink" href="#formato-de-las-tablas" title="Permanent link">&para;</a></h3>
+<p>Los formatos de almacenamiento compatibles con <em>Hive</em> (<code>TEXTFILE</code>, <code>SEQUENCEFILE</code>, <code>AVRO</code>, <code>ORC</code> y <code>PARQUET</code>) están descritos en detalle en la sesión de <a href="../de/formatos.html">Formatos de datos</a>. Desde el punto de vista de <em>Hive</em>, la elección del formato tiene una implicación adicional que conviene destacar: <em>ORC</em> es el único formato que soporta tablas transaccionales (operaciones <code>UPDATE</code> y <code>DELETE</code>). Si la tabla no requiere modificaciones a nivel de fila, <em>Parquet</em> es la mejor opción cuando el ecosistema incluye <em>Spark</em> o herramientas externas, mientras que <code>TEXTFILE</code> se reserva para la carga inicial o la interoperabilidad con otros sistemas.</p>
 <h2 id="instalacion-y-configuracion">Instalación y configuración<a class="headerlink" href="#instalacion-y-configuracion" title="Permanent link">&para;</a></h2>
 <div class="admonition important">
 <p class="admonition-title">Máquina virtual</p>
@@ -4877,6 +4927,7 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
     <figcaption>Consultas Hive desde Hue</figcaption>
 </figure></p>
 </div>
+<h3 id="gestion-de-tablas-y-bases-de-datos">Gestión de tablas y bases de datos<a class="headerlink" href="#gestion-de-tablas-y-bases-de-datos" title="Permanent link">&para;</a></h3>
 <p>En ocasiones necesitamos almacenar la salida de una consulta <em>Hive</em> en una nueva tabla. Las definiciones de las columnas de la nueva tabla se deriva de las columnas recuperadas en la consulta. Para ello, usaremos el comando <em>create table-as select</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customers_new</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
 </code></pre></div>
@@ -4998,7 +5049,15 @@ Los tipos simples más comunes son <code>STRING</code> e <code>INT</code>, aunqu
 <span class="linenos" data-linenos="15 "></span><span class="w">  </span><span class="nt">&lt;value&gt;</span>org.apache.hadoop.hive.ql.lockmgr.DbTxnManager<span class="nt">&lt;/value&gt;</span>
 <span class="linenos" data-linenos="16 "></span><span class="nt">&lt;/property&gt;</span>
 </code></pre></div>
-<p>Una vez configurado, hemos de crear las tablas con el formato ORC, organizar los datos mediante <em>buckets</em> (los estudiaremos más adelante en esta <a href="hive2.html#buckets">la siguiente sesión</a>) y finalmente indicar mediante <code>TBLPROPERTIES</code> que se trata de una tabla transaccional . Por ejemplo, volvemos a crear la tabla de clientes:</p>
+<p>Una vez configurado, hemos de crear las tablas con el formato ORC, organizar los datos mediante <em>buckets</em> (los estudiaremos más adelante en esta <a href="hive2.html#buckets">la siguiente sesión</a>) y finalmente indicar mediante <code>TBLPROPERTIES</code> que se trata de una tabla transaccional.</p>
+<p>Dicho de otro modo, en <em>Hive</em>, las operaciones <code>UPDATE</code> y <code>DELETE</code> sólo están disponibles en tablas que cumplan las tres condiciones siguientes:</p>
+<ul>
+<li>Formato <code>STORED AS ORC</code> (o <code>STORED AS ORC TRANSACTIONAL</code> en Hive 4).</li>
+<li>Agrupadas en buckets mediante <code>CLUSTERED BY</code></li>
+<li>Declaradas transaccionales con <code>TBLPROPERTIES ('transactional' = 'true')</code></li>
+</ul>
+<p>Si se omite cualquiera de estas tres condiciones, <em>Hive</em> lanzará un error al intentar ejecutar la operación.</p>
+<p>Veamos un ejemplo de cómo crear una tabla transaccional, cargarla con datos y posteriormente modificar algunos de sus valores. Para ello, volvemos a crear la tabla de clientes:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customerstx</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="p">(</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="n">custId</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
@@ -5495,8 +5554,8 @@ En la sección de map joins, se menciona que no funcionan para RIGHT OUTER JOIN 
 <p>Si hacemos una consulta sobre la tabla para ver que están todos los campos obtendremos la misma información que antes:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">empleados_externa</span><span class="p">;</span>
 </code></pre></div>
-<h3 id="caso-1-externa">Caso 1 externa<a class="headerlink" href="#caso-1-externa" title="Permanent link">&para;</a></h3>
-<p>Si volvemos al caso 1, donde creábamos una tabla de clientes, y la creamos como externa, al eliminar la tabla de <em>Hive</em> no se eliminarán los datos de HDFS:</p>
+<h3 id="refactor-del-caso-1">Refactor del Caso 1<a class="headerlink" href="#refactor-del-caso-1" title="Permanent link">&para;</a></h3>
+<p>Si volvemos al caso 1, donde creábamos una tabla de clientes, y ahora la creamos como externa, al eliminar la tabla de <em>Hive</em> no se eliminarán los datos de HDFS:</p>
 <div class="highlight"><pre><span></span><code><span class="hll"><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">customers_ext</span>
 </span><span class="linenos" data-linenos=" 2 "></span><span class="p">(</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="n">custId</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
@@ -5518,7 +5577,43 @@ En la sección de map joins, se menciona que no funcionan para RIGHT OUTER JOIN 
 </code></pre></div>
 <div class="admonition question">
 <p class="admonition-title">Interna o externa</p>
-<p>Como normal general, si todo nuestro procesamiento lo hacemos mediante <em>Hive</em>, es más cómodo utilizar tablas internas. Si no es así, y otras herramientas acceden al mismo <em>dataset</em>, es mejor utilizar tablas externas.</p>
+<p>Como normal general, si todo nuestro procesamiento lo hacemos mediante <em>Hive</em>, es más cómodo utilizar tablas internas. Si no es así, y otras herramientas acceden al mismo <em>dataset</em>, es mejor utilizar tablas externas. A modo de resumen, tenemos que:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Tabla interna (sin <code>LOCATION</code>)</th>
+<th>Tabla interna (con <code>LOCATION</code>)</th>
+<th>Tabla externa (<code>EXTERNAL</code> + <code>LOCATION</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Datos gestionados por <em>Hive</em></td>
+<td>Sí</td>
+<td>Sí</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>DROP TABLE</code> borra datos en HDFS</td>
+<td>Sí</td>
+<td>Sí</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Ruta personalizada en HDFS</td>
+<td>No (<em>warehouse</em>)</td>
+<td>Sí</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Uso recomendado</td>
+<td>Tablas internas sin integración externa</td>
+<td>Rara vez útil</td>
+<td>Datos compartidos o preexistentes</td>
+</tr>
+</tbody>
+</table>
 <p>Un patrón de uso muy común es utilizar una tabla externa para acceder al dataset inicial almacenado en HDFS (creado por otro proceso), y posteriormente crear una transformación en <em>Hive</em> para mover los datos a una tabla interna.</p>
 </div>
 <!--
@@ -5883,10 +5978,10 @@ Si las columnas de `sort by` y `distribute by` son las mismas, podemos utilizar 
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>

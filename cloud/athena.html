@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1119,6 +1119,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="MetaStore">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#serde" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SerDe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1639,14 +1656,6 @@
   </span>
   
   
-    
-  
-  
-    <span class="md-status md-status--updated" title="Modificado">
-    </span>
-  
-
-  
 
       </a>
     </li>
@@ -1806,7 +1815,7 @@
     
   
   
-    <span class="md-status md-status--new" title="Recién añadido">
+    <span class="md-status md-status--updated" title="Modificado">
     </span>
   
 
@@ -3855,6 +3864,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="MetaStore">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#serde" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SerDe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -4050,7 +4076,7 @@
 
   <h1>Athena</h1>
 
-<p><a href="https://aws.amazon.com/es/athena">AWS Athena</a> es una herramienta <em>serverless</em> que permite realizar consultas SQL sobre datos los cuales están directamente en S3 y que provienen de fuentes dispares como bases de datos, un flujo de datos, contenido web desestructurado, etc... Para ello, <em>Athena</em> almacena metadatos sobre las fuentes de datos, así como las consultas, para poder reutilizarlas o compartirlas con otros usuarios.</p>
+<p><a href="https://aws.amazon.com/es/athena">AWS Athena</a> es una herramienta <em>serverless</em> que permite realizar consultas SQL sobre datos que están directamente en S3 y que provienen de fuentes dispares como bases de datos, un flujo de datos, contenido web desestructurado, etc... Para ello, <em>Athena</em> almacena metadatos sobre las fuentes de datos, así como las consultas, para poder reutilizarlas o compartirlas con otros usuarios.</p>
 <figure style="align: center;">
     <img src="images/07athena-aws.png" alt="Funcionamiento Athena" width="800px">
     <figcaption>Funcionamiento Athena - https://aws.amazon.com/es/athena</figcaption>
@@ -4058,6 +4084,16 @@
 
 <p>Como servicio <em>serverless</em>, no hay infraestructura que aprovisionar ni gestionar, y sólo pagaremos por el volumen de datos escaneados por las consultas que ejecutemos (actualmente su <a href="https://aws.amazon.com/es/athena/pricing">precio</a> es de 5$ por TB escaneado), sin tener que preocuparnos por escalar o redimensionar los recursos necesarios, lo que implica que sea un servicio de consultas que facilita analizar petabytes de datos almacenados en S3 sin necesidad de un <em>data warehouse</em> o un clúster de máquinas que gestionar.</p>
 <p><em>Athena</em> escala las consultas automáticamente para ejecutarse en paralelo y obtener el resultado lo más rápido posible, incluso con grandes conjuntos de datos y consultas complejas. Conviene destacar que permite procesar datos desestructurados, semiestructurados o estructurados, soportando formatos de datos como CSV, JSON, Avro o formatos columnares como <em>Parquet</em> u <em>ORC</em>, tanto en crudo como comprimidos.</p>
+<div class="admonition tip">
+<p class="admonition-title">Consejos económicos</p>
+<p>Al tratarse de un servicio de pago por uso, es importante tener en cuenta una serie de consejos para optimizar el coste de las consultas:</p>
+<ul>
+<li>Usar formato columnar (<em>Parquet</em>/<em>ORC</em>) en vez de <em>CSV</em></li>
+<li>Usar compresión de los datos (por ejemplo, <em>Snappy</em> para <em>Parquet</em>)</li>
+<li>Particionar los datos</li>
+<li>Usar <code>SELECT col1, col2</code> en vez de <code>SELECT *</code></li>
+</ul>
+</div>
 <!--
 Amazon Athena is a serverless solution for using standard SQL queries to query data that exists in a data lake or in other data sources. As soon as a dataset has been written to Amazon S3 and cataloged in AWS Glue Data Catalog, users can run complex SQL queries against the data without needing to set up or manage any infrastructure.
 
@@ -4077,6 +4113,10 @@ At re:Invent 2022, AWS announced Amazon Athena for Apache Spark, a new functiona
 <p>Además de realizar consultas, podemos utilizar sentencias de tipo DML para manipular datos y DDL para interactuar con los metadatos del lago de datos y modificar los esquemas y propiedades de las tablas, así como modificar sus particiones.</p>
 <p>Dentro de DML, es muy común utilizar sentencias <code>create-table-as-select (CTAS)</code> para crear nuevas tablas así como <code>insert into ... select</code> para añadir nuevas particiones al <em>metastore</em>, eliminando la necesidad de gestionar las particiones de forma manual.</p>
 <p>Respecto al dialecto SQL, igual que hemos visto en <a href="../hadoop/hive1.html">Hive</a>, disponemos de tipos complejos como los mapas, las estructuras y los arrays/listas.</p>
+<div class="admonition info">
+<p class="admonition-title">AWS Athena Federated Query</p>
+<p><em>Athena</em> también permite realizar consultas federadas a otras fuentes de datos, como bases de datos relacionales, NoSQL o incluso logs. Para ello, <em>Athena</em> se basa en el concepto de <em>connectors</em>, los cuales son componentes que permiten conectar con otras fuentes de datos y traducir las consultas SQL a la sintaxis específica de cada fuente. AWS proporciona una serie de <em>connectors</em> preconstruidos para conectar con servicios como <em>DynamoDB</em>, <em>RDS</em> o <em>CloudWatch Logs</em>, aunque también es posible crear nuestros propios <em>connectors</em> personalizados.</p>
+</div>
 <h2 id="metastore">MetaStore<a class="headerlink" href="#metastore" title="Permanent link">&para;</a></h2>
 <p>Además de acceder a los datos, <em>Athena</em> necesita almacenar metadatos para que el motor SQL entienda como interpretar los datos almacenados en S3 o cualquier otro lugar. Esta información extra mapea las colecciones de ficheros u objetos S3 para construir tablas, columnas y filas, de forma similar a cómo lo realiza el <em>metastore</em> de <em>Hive</em>. Es decir, ofrece una vista lógica (bases de datos que contienen tablas, que consisten en filas con sus columnas) que se mapean con los ficheros físicos almacenados en S3.</p>
 <p>Por ello, <em>Athena</em> trabaja con <em>metastores</em> compatibles con <em>Hive</em> incluyendo el servicio de <a href="https://docs.aws.amazon.com/glue/latest/dg/catalog-and-crawler.html">AWS Glue Data Catalog</a>.</p>
@@ -4087,6 +4127,47 @@ At re:Invent 2022, AWS announced Amazon Athena for Apache Spark, a new functiona
 <li>El formato de los ficheros u objetos que contiene la tabla (por ejemplo, <em>CSV</em>, <em>Parquet</em> o <em>JSON</em>)</li>
 <li>El nombre de las columnas y los tipos de datos de cada tabla (por ejemplo, nombre es una cadena mientras que sueldo es un decimal (10,2))</li>
 </ul>
+<h3 id="serde">SerDe<a class="headerlink" href="#serde" title="Permanent link">&para;</a></h3>
+<p>Un <a href="https://docs.aws.amazon.com/es_es/athena/latest/ug/serde-reference.html"><strong>SerDe</strong></a> (<em>Serializer/Deserializer</em>) es el componente que indica a <em>Athena</em> cómo leer e interpretar los datos almacenados en S3. Cuando <em>Athena</em> escanea un archivo, necesita saber cómo convertir los bytes del fichero en filas y columnas con las que pueda trabajar el motor SQL. Para ello, en la definición de la tabla, se especifica un SerDe que se encarga de esta tarea., mediante la cláusula <code>ROW FORMAT SERDE</code>.</p>
+<p>Los dos más habituales son:</p>
+<ul>
+<li>
+<p><code>LazySimpleSerDe</code> es el SerDe por defecto para ficheros de texto plano. Interpreta los campos separados por un delimitador simple (coma, tabulador, pipe...) y es adecuado cuando los valores <em>no contienen</em> el carácter delimitador ni están entrecomillados. Es el caso más habitual con CSVs sencillos.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">&#39;org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe&#39;</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="k">WITH</span><span class="w"> </span><span class="n">SERDEPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;field.delim&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+</code></pre></div>
+</li>
+<li>
+<p><code>OpenCSVSerde</code> está diseñado para CSVs más complejos, donde los valores pueden estar entre comillas dobles y el propio texto puede contener comas o saltos de línea. Si los datos provienen de una exportación de base de datos o de una hoja de cálculo, es muy probable que necesites este SerDe.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">&#39;org.opensearch.hadoop.hive.OpenCSVSerde&#39;</span>
+<span class="linenos" data-linenos="2 "></span><span class="k">WITH</span><span class="w"> </span><span class="n">SERDEPROPERTIES</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="s1">&#39;separatorChar&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="s1">&#39;quoteChar&#39;</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span>
+<span class="linenos" data-linenos="5 "></span><span class="p">)</span>
+</code></pre></div>
+<p>Como regla general, si al hacer un <code>SELECT</code>, los valores aparecen con comillas en los resultados o que los campos se desplazan cuando un texto contiene comas, debemos cambiar de <code>LazySimpleSerDe</code> a <code>OpenCSVSerde</code>.</p>
+</li>
+<li>
+<p><code>JsonSerDe</code> es el SerDe adecuado cuando los ficheros almacenados en S3 contienen datos en formato JSON, con un objeto JSON por línea (JSONL). Es muy común cuando los datos provienen de logs de aplicaciones, eventos de IoT o exportaciones de APIs REST.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">&#39;org.apache.hive.hcatalog.data.JsonSerDe&#39;</span>
+</code></pre></div>
+<p>De este manera, podemos manejar de forma nativa tipos complejos como arrays, mapas y estructuras anidadas, mapeándolos directamente a los tipos equivalentes de Athena:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">eventos</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="n">usuario_id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="k">timestamp</span><span class="w">  </span><span class="n">STRING</span><span class="p">,</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="n">etiquetas</span><span class="w">  </span><span class="nb">ARRAY</span><span class="o">&lt;</span><span class="n">STRING</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="n">metadata</span><span class="w">   </span><span class="k">MAP</span><span class="o">&lt;</span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">STRING</span><span class="o">&gt;</span>
+<span class="linenos" data-linenos="6 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="7 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">&#39;org.apache.hive.hcatalog.data.JsonSerDe&#39;</span>
+<span class="linenos" data-linenos="8 "></span><span class="w">    </span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;s3://mi-bucket/eventos/&#39;</span><span class="p">;</span>
+</code></pre></div>
+<p>Debemos tener en cuenta que si el JSON está mal formado o tiene campos que no coinciden exactamente con el esquema declarado, <code>JsonSerDe</code> devuelve <code>NULL</code> para esos campos en lugar de fallar, lo que puede dificultar la detección de errores en los datos.</p>
+</li>
+</ul>
+<div class="admonition caution">
+<p class="admonition-title">Parquet / ORC</p>
+<p>Para formatos binarios como <em>Parquet</em> u <em>ORC</em> no es necesario especificar un <em>SerDe</em> de texto, ya que Athena los gestiona directamente a través del <code>INPUTFORMAT</code> correspondiente.</p>
+</div>
 <h2 id="hola-athena">Hola Athena<a class="headerlink" href="#hola-athena" title="Permanent link">&para;</a></h2>
 <p>En el siguiente supuesto, vamos a crear una aplicación <em>Athena</em>, definiremos una base de datos, crearemos una tabla con sus columnas y tipos de datos, y ejecutaremos consultas sencillas y compuestas.</p>
 <p>Los pasos a realizar son:</p>
@@ -4095,6 +4176,44 @@ At re:Invent 2022, AWS announced Amazon Athena for Apache Spark, a new functiona
 <li>Crear la tabla, mediante el asistente de crear tabla o utilizamos la sintaxis DDL de Hive.</li>
 <li>Consultar los datos, mediante SQL.</li>
 </ol>
+<pre class="mermaid"><code>flowchart LR
+    subgraph Fuentes["📦 Fuentes de datos"]
+        A1[CSV / JSON]
+        A2[Parquet / ORC]
+        A3[Avro / TSV]
+    end
+
+    subgraph S3["☁️ Amazon S3"]
+        B1[("Bucket\ns3://s3severo8a-cli/customers/")]
+        B2[("Bucket resultados\ns3://s3severo8a-cli/athena-results/")]
+    end
+
+    subgraph Catalogo["🗂️ AWS Glue Data Catalog / MetaStore"]
+        C1["Base de datos\n(s8a_retail)"]
+        C2["Tabla\n(customers)"]
+        C3["Esquema\n(columnas + tipos)"]
+        C1 --&gt; C2 --&gt; C3
+    end
+
+    subgraph Athena["⚡ AWS Athena (Presto)"]
+        D1["Query Editor\nDDL / DML / SELECT"]
+        D2["Motor distribuido\n(ejecución paralela)"]
+        D1 --&gt; D2
+    end
+
+    subgraph Cliente["💻 Cliente"]
+        E1[Consola AWS]
+        E2[AWS CLI]
+        E3[Python boto3 /\nawswrangler]
+    end
+
+    A1 &amp; A2 &amp; A3 --&gt;|"subir archivos"| B1
+    B1 --&gt;|"CREATE EXTERNAL TABLE\napunta a S3"| Catalogo
+    Catalogo --&gt;|"metadatos\n(cómo leer los datos)"| D2
+    B1 --&gt;|"escanea datos"| D2
+    E1 &amp; E2 &amp; E3 --&gt;|"SQL query"| D1
+    D2 --&gt;|"resultados CSV\n+ metadata"| B2
+    B2 --&gt;|"descarga / lectura"| E1 &amp; E2 &amp; E3</code></pre>
 <h3 id="preparando-athena">Preparando Athena<a class="headerlink" href="#preparando-athena" title="Permanent link">&para;</a></h3>
 <p>Antes de empezar con <em>Athena</em>, necesitamos indicar un <em>bucket</em> donde almacenar los resultados de nuestras consultas. Así pues, vamos a utilizar uno de los buckets que hemos creado en sesiones anteriores.</p>
 <p>Tras acceder a <em>Athena</em>, en la pestaña de <em>Settings</em> del <em>Query Editor</em>, configuramos donde vamos a guardar los resultados:</p>
@@ -4106,15 +4225,15 @@ At re:Invent 2022, AWS announced Amazon Athena for Apache Spark, a new functiona
 <div class="admonition info">
 <p class="admonition-title">Preparando los datos</p>
 <p>Los datos que vamos a consultar son los datos de los clientes de la base de datos <code>retail_db</code> que hemos utilizado en la sesión de <a href="../hadoop/hive1.html">Hive</a>, los cuales hemos exportado al archivo <a href="resources/customers.csv">customers.csv</a>.</p>
-<p>Para poder leer estos datos, primero hemos de colocarlos en S3. En nuestro caso, hemos decidido crear una carpeta llamada <code>customers</code> dentro del <em>bucket</em> <code>s3severo8a</code>, y dentro de ella, hemos dejado el archivo con los datos:</p>
+<p>Para poder leer estos datos, primero hemos de colocarlos en S3. En nuestro caso, hemos decidido crear una carpeta llamada <code>customers</code> dentro del <em>bucket</em> <code>s3severo8a-cli</code>, y dentro de ella, hemos dejado el archivo con los datos:</p>
 <p><figure style="align: center;">
     <img src="images/07s3customers.png">
     <figcaption>Archivo de customers.csv en S3</figcaption>
 </figure></p>
 </div>
 <h3 id="creando-la-estructura">Creando la estructura<a class="headerlink" href="#creando-la-estructura" title="Permanent link">&para;</a></h3>
-<p>Tras cargar los datos, necesitamos crear la estructura de los datos en el <em>Metastore</em>. 
-En <em>AWS Glue</em>, o directamente en <em>Athena</em>, vamos a crear una base de datos y una tabla de forma similar a como se hace mediante <em>Hive</em>.</p>
+<p>Tras cargar los datos, necesitamos crear la estructura de los datos en el <em>Metastore</em>.</p>
+<p>En <em>AWS Glue</em>, o directamente en <em>Athena</em>, vamos a crear una base de datos y una tabla de forma similar a como se hace mediante <em>Hive</em>.</p>
 <p>A continuación, entramos al <em>Query editor</em>, y a lado de la sección <em>Tables and views</em>, desplegamos el menú <em>Create</em> y creamos una tabla a partir de datos S3, indicándole un nombre para la tabla, otro para la base de datos (o elegimos una existente), así como la localización en S3 de la carpeta donde se encuentren nuestros datos:</p>
 <figure style="align: center;">
     <img src="images/07athenaCreateTable1.png" alt="Athena - Opción para crear la tabla a partir de S3" width="800px">
@@ -4146,20 +4265,30 @@ En <em>AWS Glue</em>, o directamente en <em>Athena</em>, vamos a crear una base 
 </figure>
 
 <p>Finalmente, veremos a modo de resumen una instrucción <code>CREATE TABLE</code> similar a la siguiente y ya podemos pulsar sobre <em>Crear tabla</em>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="o">`</span><span class="n">s8a_retail</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">customers</span><span class="o">`</span><span class="w"> </span><span class="p">(</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="o">`</span><span class="n">custid</span><span class="o">`</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="o">`</span><span class="n">fname</span><span class="o">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="o">`</span><span class="n">lname</span><span class="o">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="o">`</span><span class="n">city</span><span class="o">`</span><span class="w"> </span><span class="n">string</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="o">`</span><span class="n">s8a_retail</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">customers</span><span class="o">`</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="c1">-- (1)!</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="o">`</span><span class="n">custid</span><span class="o">`</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="w">    </span><span class="c1">-- (2)!</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="o">`</span><span class="n">fname</span><span class="o">`</span><span class="w">  </span><span class="n">string</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="o">`</span><span class="n">lname</span><span class="o">`</span><span class="w">  </span><span class="n">string</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="o">`</span><span class="n">city</span><span class="o">`</span><span class="w">   </span><span class="n">string</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="p">)</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">&#39;org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe&#39;</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="k">WITH</span><span class="w"> </span><span class="n">SERDEPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;field.delim&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">&#39;org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe&#39;</span><span class="w"> </span><span class="c1">-- (3)!</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="k">WITH</span><span class="w"> </span><span class="n">SERDEPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;field.delim&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">-- (4)!</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="n">STORED</span><span class="w"> </span><span class="k">AS</span>
-<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="n">INPUTFORMAT</span><span class="w"> </span><span class="s1">&#39;org.apache.hadoop.mapred.TextInputFormat&#39;</span>
-<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="n">OUTPUTFORMAT</span><span class="w"> </span><span class="s1">&#39;org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat&#39;</span>
-<span class="linenos" data-linenos="12 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;s3://s3severo8a-cli/customers/&#39;</span>
-<span class="linenos" data-linenos="13 "></span><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;classification&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;csv&#39;</span><span class="p">);</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">  </span><span class="n">INPUTFORMAT</span><span class="w">  </span><span class="s1">&#39;org.apache.hadoop.mapred.TextInputFormat&#39;</span><span class="w">  </span><span class="c1">-- (5)!</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">  </span><span class="n">OUTPUTFORMAT</span><span class="w"> </span><span class="s1">&#39;org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat&#39;</span><span class="w"> </span><span class="c1">-- (6)!</span>
+<span class="linenos" data-linenos="12 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;s3://s3severo8a-cli/customers/&#39;</span><span class="w"> </span><span class="c1">-- (7)!</span>
+<span class="linenos" data-linenos="13 "></span><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;classification&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;csv&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">-- (8)!</span>
 </code></pre></div>
+<ol>
+<li><code>EXTERNAL TABLE</code>: <em>Athena</em> no gestiona los datos. Si borramos la tabla, los ficheros de S3 permanecen intactos.</li>
+<li>Se definen nombre y tipo de dato. Los nombres en minúscula son la convención en <em>Athena</em>/<em>Hive</em>. Los tipos básicos disponibles son <code>int</code>, <code>string</code>, <code>double</code>, <code>boolean</code>, <code>timestamp</code>, entre otros.</li>
+<li><code>ROW FORMAT SERDE</code>: Indica cómo <em>Athena</em> interpreta los ficheros. <code>LazySimpleSerDe</code> es el adecuado para CSVs sencillos donde los valores no contienen comas ni están entrecomillados. Para CSVs complejos usaríamos <code>OpenCSVSerde</code>.</li>
+<li><code>SERDEPROPERTIES</code>: Propiedades del <em>SerDe</em>. Aquí indicamos que el separador de campos es la coma. Otros valores habituales: <code>\t</code> para TSV o <code>|</code> para pipe-delimited.</li>
+<li><code>INPUTFORMAT</code>: Define cómo se leen los ficheros. <code>TextInputFormat</code> lee ficheros de texto línea a línea, siendo el adecuado para CSV y JSON.</li>
+<li><code>OUTPUTFORMAT</code>: Define cómo se escribirían los datos. <em>Athena</em> apenas lo utiliza al ser <em>serverless</em>, pero <em>Hive</em> lo requiere en el DDL. <code>HiveIgnoreKeyTextOutputFormat</code> escribe texto plano ignorando la clave interna de MapReduce.</li>
+<li><code>LOCATION</code>: Ruta en S3 donde están los ficheros. Debe apuntar a una carpeta, no a un fichero concreto. Athena leerá todos los ficheros que haya dentro de esa ruta, incluidas subcarpetas.</li>
+<li><code>TBLPROPERTIES</code>: Metadatos adicionales para el <em>Glue Data Catalog</em>. <code>classification</code> indica el tipo de fichero.</li>
+</ol>
 <p>¿Y si queremos crear la tabla con otro formato más óptimo para que las consultas sean más eficientes? Si no tenemos los datos almacenados en formato <em>Parquet</em>, podemos hacer uso de la sentencia <code>CREATE TABLE ...  AS SELECT</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">s8a_retail</span><span class="p">.</span><span class="n">customers_parquet</span>
 <span class="linenos" data-linenos="2 "></span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span>
@@ -4185,7 +4314,7 @@ Si hubiéramos querido utilizar el AWS CLI, también podríamos haberlo hecho me
 </figure>
 
 <h2 id="consultas-desde-aws-cli">Consultas desde AWS CLI<a class="headerlink" href="#consultas-desde-aws-cli" title="Permanent link">&para;</a></h2>
-<p>Si queremos ejecutar una consulta mediante AWS CLI utilizaremos el parámetro <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/athena/client/start_query_execution.html"><code>athena start-query-execution</code></a> indicando la consulta y donde almacenar el resultado:</p>
+<p>Si queremos ejecutar una consulta mediante AWS CLI utilizaremos el parámetro <a href="https://docs.aws.amazon.com/cli/latest/reference/athena/start-query-execution.html"><code>athena start-query-execution</code></a> indicando la consulta y donde almacenar el resultado:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>athena<span class="w"> </span>start-query-execution<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">   </span>--query-string<span class="w"> </span><span class="s2">&quot;SELECT * FROM s8a_retail.customers_parquet WHERE city=&#39;Caguas&#39; limit 10&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">   </span>--result-configuration<span class="w"> </span><span class="s2">&quot;OutputLocation=s3://s3severo8a-cli/athena-results&quot;</span>
@@ -4196,7 +4325,7 @@ Si hubiéramos querido utilizar el AWS CLI, también podríamos haberlo hecho me
 <span class="linenos" data-linenos="3 "></span><span class="p">}</span>
 </code></pre></div>
 <p>A partir de dicho identificador, podemos averiguar el estado de la consulta mediante el parámetro <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/athena/client/get_query_results.html"><code>get-query-results</code></a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>athena<span class="w"> </span>get-query-results<span class="w"> </span>--query-execution-id<span class="w"> </span>f025b6cb-d262-4cce-a8fe-7e9d6ca73216x
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>athena<span class="w"> </span>get-query-results<span class="w"> </span>--query-execution-id<span class="w"> </span>f025b6cb-d262-4cce-a8fe-7e9d6ca73216
 </code></pre></div>
 <p>Si la consulta ha fallado, recibiremos un mensaje similar a:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>An error occurred (InvalidRequestException) when calling the GetQueryResults operation:
@@ -4251,45 +4380,45 @@ La virtualización de datos puede considerarse una herramienta que amplía el la
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="linenos" data-linenos=" 3 "></span>
-<span class="hll"><span class="linenos" data-linenos=" 4 "></span><span class="k">def</span><span class="w"> </span><span class="nf">ejecutar_consulta_athena</span><span class="p">(</span><span class="n">consulta</span><span class="p">,</span> <span class="n">basededatos</span><span class="p">,</span> <span class="n">destino_salida</span><span class="p">):</span>
-</span><span class="linenos" data-linenos=" 5 "></span>    <span class="n">response</span> <span class="o">=</span> <span class="n">cliente_athena</span><span class="o">.</span><span class="n">start_query_execution</span><span class="p">(</span>
-<span class="linenos" data-linenos=" 6 "></span>        <span class="n">QueryString</span><span class="o">=</span><span class="n">consulta</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 7 "></span>        <span class="n">QueryExecutionContext</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;Database&#39;</span><span class="p">:</span> <span class="n">basededatos</span> <span class="p">},</span>
-<span class="linenos" data-linenos=" 8 "></span>        <span class="n">ResultConfiguration</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;OutputLocation&#39;</span><span class="p">:</span> <span class="n">destino_salida</span> <span class="p">}</span>
-<span class="linenos" data-linenos=" 9 "></span>    <span class="p">)</span>
-<span class="linenos" data-linenos="10 "></span>    <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;QueryExecutionId&#39;</span><span class="p">]</span>
-<span class="linenos" data-linenos="11 "></span>
-<span class="hll"><span class="linenos" data-linenos="12 "></span><span class="k">def</span><span class="w"> </span><span class="nf">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">):</span>
-</span><span class="linenos" data-linenos="13 "></span>    <span class="n">response</span> <span class="o">=</span> <span class="n">cliente_athena</span><span class="o">.</span><span class="n">get_query_execution</span><span class="p">(</span>
-<span class="linenos" data-linenos="14 "></span>        <span class="n">QueryExecutionId</span><span class="o">=</span><span class="n">query_execution_id</span>
-<span class="linenos" data-linenos="15 "></span>    <span class="p">)</span>
-<span class="linenos" data-linenos="16 "></span>    <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;QueryExecution&#39;</span><span class="p">][</span><span class="s1">&#39;Status&#39;</span><span class="p">][</span><span class="s1">&#39;State&#39;</span><span class="p">]</span>
-<span class="linenos" data-linenos="17 "></span>
-<span class="hll"><span class="linenos" data-linenos="18 "></span><span class="k">def</span><span class="w"> </span><span class="nf">obtener_resultado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">):</span>
-</span><span class="linenos" data-linenos="19 "></span>    <span class="n">response</span> <span class="o">=</span> <span class="n">cliente_athena</span><span class="o">.</span><span class="n">get_query_results</span><span class="p">(</span>
-<span class="linenos" data-linenos="20 "></span>        <span class="n">QueryExecutionId</span><span class="o">=</span><span class="n">query_execution_id</span>
-<span class="linenos" data-linenos="21 "></span>    <span class="p">)</span>
-<span class="linenos" data-linenos="22 "></span>    <span class="c1"># Process and print/query the results</span>
-<span class="linenos" data-linenos="23 "></span>    <span class="k">for</span> <span class="n">fila</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;ResultSet&#39;</span><span class="p">][</span><span class="s1">&#39;Rows&#39;</span><span class="p">]:</span>
-<span class="linenos" data-linenos="24 "></span>        <span class="nb">print</span><span class="p">([</span><span class="n">campo</span><span class="p">[</span><span class="s1">&#39;VarCharValue&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">campo</span> <span class="ow">in</span> <span class="n">fila</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">]])</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">cliente_athena</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;athena&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="k">def</span><span class="w"> </span><span class="nf">ejecutar_consulta_athena</span><span class="p">(</span><span class="n">consulta</span><span class="p">,</span> <span class="n">basededatos</span><span class="p">,</span> <span class="n">destino_salida</span><span class="p">):</span>
+</span><span class="linenos" data-linenos=" 7 "></span>    <span class="n">response</span> <span class="o">=</span> <span class="n">cliente_athena</span><span class="o">.</span><span class="n">start_query_execution</span><span class="p">(</span>
+<span class="linenos" data-linenos=" 8 "></span>        <span class="n">QueryString</span><span class="o">=</span><span class="n">consulta</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span>        <span class="n">QueryExecutionContext</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;Database&#39;</span><span class="p">:</span> <span class="n">basededatos</span> <span class="p">},</span>
+<span class="linenos" data-linenos="10 "></span>        <span class="n">ResultConfiguration</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;OutputLocation&#39;</span><span class="p">:</span> <span class="n">destino_salida</span> <span class="p">}</span>
+<span class="linenos" data-linenos="11 "></span>    <span class="p">)</span>
+<span class="linenos" data-linenos="12 "></span>    <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;QueryExecutionId&#39;</span><span class="p">]</span>
+<span class="linenos" data-linenos="13 "></span>
+<span class="hll"><span class="linenos" data-linenos="14 "></span><span class="k">def</span><span class="w"> </span><span class="nf">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">):</span>
+</span><span class="linenos" data-linenos="15 "></span>    <span class="n">response</span> <span class="o">=</span> <span class="n">cliente_athena</span><span class="o">.</span><span class="n">get_query_execution</span><span class="p">(</span>
+<span class="linenos" data-linenos="16 "></span>        <span class="n">QueryExecutionId</span><span class="o">=</span><span class="n">query_execution_id</span>
+<span class="linenos" data-linenos="17 "></span>    <span class="p">)</span>
+<span class="linenos" data-linenos="18 "></span>    <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;QueryExecution&#39;</span><span class="p">][</span><span class="s1">&#39;Status&#39;</span><span class="p">][</span><span class="s1">&#39;State&#39;</span><span class="p">]</span>
+<span class="linenos" data-linenos="19 "></span>
+<span class="hll"><span class="linenos" data-linenos="20 "></span><span class="k">def</span><span class="w"> </span><span class="nf">obtener_resultado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">):</span>
+</span><span class="linenos" data-linenos="21 "></span>    <span class="n">response</span> <span class="o">=</span> <span class="n">cliente_athena</span><span class="o">.</span><span class="n">get_query_results</span><span class="p">(</span>
+<span class="linenos" data-linenos="22 "></span>        <span class="n">QueryExecutionId</span><span class="o">=</span><span class="n">query_execution_id</span>
+<span class="linenos" data-linenos="23 "></span>    <span class="p">)</span>
+<span class="linenos" data-linenos="24 "></span>    <span class="c1"># Process and print/query the results</span>
+<span class="linenos" data-linenos="25 "></span>    <span class="k">for</span> <span class="n">fila</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;ResultSet&#39;</span><span class="p">][</span><span class="s1">&#39;Rows&#39;</span><span class="p">]:</span>
+<span class="linenos" data-linenos="26 "></span>        <span class="nb">print</span><span class="p">([</span><span class="n">campo</span><span class="p">[</span><span class="s1">&#39;VarCharValue&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">campo</span> <span class="ow">in</span> <span class="n">fila</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">]])</span>
 </code></pre></div>
 <p>Y con las funciones definidas, ejecutamos la consulta:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">cliente_athena</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;athena&#39;</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT custId, fName, lName FROM customers_parquet WHERE city=&#39;Caguas&#39; LIMIT 10;&quot;</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="n">bd</span> <span class="o">=</span> <span class="s2">&quot;s8a_retail&quot;</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="n">destino</span> <span class="o">=</span> <span class="s2">&quot;s3://s3severo8a-cli/athena-results/&quot;</span>
-<span class="linenos" data-linenos=" 6 "></span>
-<span class="hll"><span class="linenos" data-linenos=" 7 "></span><span class="n">query_execution_id</span> <span class="o">=</span> <span class="n">ejecutar_consulta_athena</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">bd</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>
-</span><span class="hll"><span class="linenos" data-linenos=" 8 "></span><span class="k">while</span> <span class="n">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;RUNNING&#39;</span> <span class="ow">or</span> <span class="n">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;QUEUED&#39;</span><span class="p">:</span>
-</span><span class="linenos" data-linenos=" 9 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La consulta se está ejecutando...&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="10 "></span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Esperamos unos segundos</span>
-<span class="linenos" data-linenos="11 "></span>
-<span class="hll"><span class="linenos" data-linenos="12 "></span><span class="k">if</span> <span class="n">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;SUCCEEDED&#39;</span><span class="p">:</span>
-</span><span class="linenos" data-linenos="13 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;!Consulta exitosa!&quot;</span><span class="p">)</span>
-<span class="hll"><span class="linenos" data-linenos="14 "></span>    <span class="n">obtener_resultado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span>
-</span><span class="linenos" data-linenos="15 "></span><span class="k">else</span><span class="p">:</span>
-<span class="linenos" data-linenos="16 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La consulta falló o ha sido cancelada&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT custId, fName, lName FROM customers_parquet WHERE city=&#39;Caguas&#39; LIMIT 10;&quot;</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="n">bd</span> <span class="o">=</span> <span class="s2">&quot;s8a_retail&quot;</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">destino</span> <span class="o">=</span> <span class="s2">&quot;s3://s3severo8a-cli/athena-results/&quot;</span>
+<span class="linenos" data-linenos=" 4 "></span>
+<span class="hll"><span class="linenos" data-linenos=" 5 "></span><span class="n">query_execution_id</span> <span class="o">=</span> <span class="n">ejecutar_consulta_athena</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">bd</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="k">while</span> <span class="n">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;RUNNING&#39;</span> <span class="ow">or</span> <span class="n">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;QUEUED&#39;</span><span class="p">:</span>
+</span><span class="linenos" data-linenos=" 7 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La consulta se está ejecutando...&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Esperamos unos segundos</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="hll"><span class="linenos" data-linenos="10 "></span><span class="k">if</span> <span class="n">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;SUCCEEDED&#39;</span><span class="p">:</span>
+</span><span class="linenos" data-linenos="11 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;!Consulta exitosa!&quot;</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos="12 "></span>    <span class="n">obtener_resultado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="13 "></span><span class="k">else</span><span class="p">:</span>
+<span class="linenos" data-linenos="14 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La consulta falló o ha sido cancelada&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Al ejecutar el <a href="resources/athena.py">script anterior</a> obtendremos la siguiente salida:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>La consulta se está ejecutando...
@@ -4324,14 +4453,16 @@ La virtualización de datos puede considerarse una herramienta que amplía el la
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
-<li>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr>, <abbr title="Se ha determinado que se pueden almacenar tantos datos como se desee y decidir cómo utilizarlos más tarde.">CEBDA.2d</abbr> / 1p) Siguiendo el caso de uso de <a href="#hola-athena">Hola Athena</a>, tras cargar en S3 los datos de <a href="resources/customers.csv">clientes</a> y crear la tabla, se pide recuperar la cantidad de clientes que hay de cada ciudad. Sobre los resultados obtenidos, descarga los datos en formato CSV.</li>
+<li>
+<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr>, <abbr title="Se ha determinado que se pueden almacenar tantos datos como se desee y decidir cómo utilizarlos más tarde.">CEBDA.2d</abbr> / 1p) Siguiendo el caso de uso de <a href="#hola-athena">Hola Athena</a>, tras cargar en S3 los datos de <a href="resources/customers.csv">clientes</a> y crear la tabla, se pide recuperar la cantidad de clientes que hay de cada ciudad. Sobre los resultados obtenidos, descarga los datos en formato CSV.</p>
+</li>
 <li>
 <p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr>, <abbr title="Se ha determinado que se pueden almacenar tantos datos como se desee y decidir cómo utilizarlos más tarde.">CEBDA.2d</abbr> / 1p) A partir del archivo <a href="resources/orders.csv"><code>orders.csv</code></a> crea también una tabla en <em>Athena</em> y recupera, para cada cliente (mostrando el id y su nombre completo) de la ciudad <code>Caguas</code>, cuantos pedidos ha realizado.</p>
 <p>Los campos del archivo csv son <code>order_id</code>, <code>order_date</code>, <code>order_customer_id</code> y <code>order_status</code>.</p>
 <p>Para ello, necesitarás utilizar el serializador <code>OpenCSVSerde</code>, utilizando la coma como carácter separador, y las comillas dobles para <code>quoteChar</code>.</p>
 </li>
 <li>
-<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 2p) Tanto mediante <em>AWS CLI</em> como <em>Python</em> repite la consulta del ejercicio anterior y muestra el resultado por pantalla.</p>
+<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha comprobado el poder de procesamiento de su modelo de computación distribuida.">CEBDA.2b</abbr> / 2p) Tanto mediante <em>AWS CLI</em> como <em>Python</em> repite la consulta del ejercicio anterior y muestra el resultado por pantalla. Adjunto tanto los scripts de Python como los comandos de AWS CLI para cada consulta, junto a una captura de pantalla con el resultado obtenido.</p>
 </li>
 </ol>
 <!--
@@ -4610,10 +4741,10 @@ https://www.linkedin.com/pulse/build-etl-pipeline-using-aws-s3-glue-athena-data-
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>

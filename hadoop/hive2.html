@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1472,14 +1472,6 @@
   </span>
   
   
-    
-  
-  
-    <span class="md-status md-status--updated" title="Modificado">
-    </span>
-  
-
-  
 
       </a>
     </li>
@@ -1646,7 +1638,7 @@
     
   
   
-    <span class="md-status md-status--new" title="Recién añadido">
+    <span class="md-status md-status--updated" title="Modificado">
     </span>
   
 
@@ -1672,7 +1664,7 @@
     
   
   
-    <span class="md-status md-status--new" title="Recién añadido">
+    <span class="md-status md-status--updated" title="Modificado">
     </span>
   
 
@@ -1899,6 +1891,17 @@
     <span class="md-ellipsis">
       
         Consultas de agregación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ventanas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ventanas
       
     </span>
   </a>
@@ -4170,6 +4173,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ventanas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ventanas
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4290,7 +4304,7 @@
   <h1>Hive II</h1>
 
 <h2 id="estructuras-de-datos-en-hive">Estructuras de datos en Hive<a class="headerlink" href="#estructuras-de-datos-en-hive" title="Permanent link">&para;</a></h2>
-<p><em>Hive</em> proporciona una estructura basada en tablas sobre HDFS. Soporta tres tipos de estructuras: tablas, particiones y <em>buckets</em>. Las tablas se corresponden con directorios de HDFS, las particiones son las divisiones de las tablas y los <em>buckets</em> son las divisiones de las particiones.</p>
+<p><em>Hive</em> organiza los datos almacenados en HDFS en tres niveles jerárquicos: tablas, particiones y <em>buckets</em>. Las tablas se corresponden con directorios de HDFS, las particiones son las divisiones de las tablas y los <em>buckets</em> son las divisiones de las particiones.</p>
 <p>Acabamos de ver en el apartado anterior que <em>Hive</em> permite crear tablas externas, similares a las tablas en una base de datos, pero a la que se les proporciona una ubicación.</p>
 <h3 id="particiones">Particiones<a class="headerlink" href="#particiones" title="Permanent link">&para;</a></h3>
 <p>Las <strong><em>particiones</em></strong> en <em>Hive</em> consisten en dividir las tablas en varios subdirectorios. Esta estructura permite aumentar el rendimiento cuando utilizamos consultas que filtran los datos mediante la cláusula <em>where</em> basada en la clave de particionado.</p>
@@ -4344,19 +4358,19 @@
 <span class="linenos" data-linenos="3 "></span><span class="k">SELECT</span><span class="w"> </span><span class="n">fecha</span><span class="p">,</span><span class="w"> </span><span class="n">col1</span><span class="p">,</span><span class="w"> </span><span class="n">col2</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fuente</span><span class="p">;</span>
 </code></pre></div>
 <p>Para ello, previamente hay que habilitarlo (por defecto está desactivado para evitar la creación de múltiples particiones sin querer) y configurar el modo no estricto para que no nos obligue a indicar al menos una partición estática:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nb">set</span><span class="w"> </span>hive.exec.dynamic.partition<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nb">set</span><span class="w"> </span>hive.exec.dynamic.partition<span class="w"> </span><span class="o">=</span><span class="w"> </span>true<span class="p">;</span>
 <span class="linenos" data-linenos="2 "></span><span class="nb">set</span><span class="w"> </span>hive.exec.dynamic.partition.mode<span class="w"> </span><span class="o">=</span><span class="w"> </span>nonstrict<span class="p">;</span>
 </code></pre></div>
 </div>
 <h3 id="buckets">Buckets<a class="headerlink" href="#buckets" title="Permanent link">&para;</a></h3>
 <p>Otro concepto importante en <em>Hive</em> son los <strong><em>buckets</em></strong>. Son subdivisiones dentro de una partición en las que los datos se distribuyen en función del valor <em>hash</em> de una columna.</p>
 <p>Mientras que las particiones son una división lógica y visible en el sistema de archivos, los <em>buckets</em> son una división física de datos en archivos basada en una función <em>hash</em>.</p>
-<p>Existen dos razones por las cuales queramos organizar las tablas (o particiones) en <em>buckets</em>. La primera es para conseguir consultas más eficientes, ya que imponen una estructura extra en las tablas. Los buckets pueden acelerar las operaciones de tipo <em>join</em> si las claves de <em>bucketing</em> y de <em>join</em> coinciden, ya que una clave ajena busca únicamente en el <em>bucket</em> adecuado de la clave primaria. Debido a los beneficios de los buckets/particiones, se deben considerar siempre que puedan optimizar el rendimiento de las consultas realizadas.</p>
-<p>Para indicar que nuestras tablas utilicen <em>buckets</em>, hemos de emplear la clausula <code>CLUSTERED BY</code> para indicar la columnas y el número de <em>buckets</em> (se recomienda que la cantidad de <em>buckets</em> sea potencia de 2):</p>
+<p>Existen dos razones por las cuales queramos organizar las tablas (o particiones) en <em>buckets</em>. La primera es para conseguir consultas más eficientes, ya que imponen una estructura extra en las tablas. Los <em>buckets</em> pueden acelerar las operaciones de tipo <em>join</em> si las claves de <em>bucketing</em> y de <em>join</em> coinciden, ya que una clave ajena busca únicamente en el <em>bucket</em> adecuado de la clave primaria. Debido a los beneficios de los <em>buckets</em>/particiones, se deben considerar siempre que puedan optimizar el rendimiento de las consultas realizadas.</p>
+<p>Para indicar que nuestras tablas utilicen <em>buckets</em>, hemos de emplear la clausula <code>CLUSTERED BY</code> para indicar la columnas y el número de <em>buckets</em> (se recomienda que la cantidad de <em>buckets</em> sea potencia de 2, y aunque el número de <em>buckets</em> no tiene por qué coincidir entre tablas para hacer un <em>join</em>, sí es recomendable que sean múltiplos o divisores entre sí para aprovechar el <em>map join</em> entre <em>buckets</em>):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">usuarios_bucketed</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">nombre</span><span class="w"> </span><span class="n">STRING</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">CLUSTERED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="n">BUCKETS</span><span class="p">;</span>
 </code></pre></div>
-<p><em>Bucketing</em> está muy relacionado con el proceso de carga de datos. Para cargar los datos en una tabla con <em>buckets</em>, debemos bien indicar el número máximo de reducers para que coincida con el número de <em>buckets</em>, o habilitar el <em>bucketing</em> (esta es la recomendada):</p>
+<p><em>Bucketing</em> está muy relacionado con el proceso de carga de datos. Para cargar los datos en una tabla con <em>buckets</em>, debemos bien indicar el número máximo de <em>reducers</em> para que coincida con el número de <em>buckets</em>, o habilitar el <em>bucketing</em> (esta es la opción más recomendada para evitar problemas de configuración):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">set</span><span class="w"> </span><span class="k">map</span><span class="p">.</span><span class="n">reduce</span><span class="p">.</span><span class="n">tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
 <span class="linenos" data-linenos="2 "></span><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">enforce</span><span class="p">.</span><span class="n">bucketing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span><span class="w"> </span><span class="c1">-- mejor así</span>
 </code></pre></div>
@@ -4398,7 +4412,7 @@
 <td>En la partición tiene lugar la ejecución más rápida de consultas con el volumen de datos bajo. Por ejemplo, la población de búsqueda de la Ciudad del Vaticano devuelve muy rápido en lugar de buscar la población mundial completa.</td>
 <td>La partición es eficaz para datos de bajo volumen. Pero algunas consultas como agrupar por un gran volumen de datos tardan mucho en ejecutarse. Por ejemplo, agrupar las consultas del mes de Enero tardará más que los viernes de Enero.</td>
 <td>Al utilizar volúmenes similares de datos en cada partición, los <em>map joins</em> serán más rápidos.</td>
-<td></td>
+<td>Dificultad para cambiar el número de buckets una vez creada la tabla</td>
 </tr>
 </tbody>
 </table>
@@ -4476,7 +4490,7 @@ sqoop import --connect jdbc:mysql://localhost/retail_db --username iabd --passwo
 <span class="linenos" data-linenos="6 "></span><span class="n">PARTITIONED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">categoria</span><span class="w"> </span><span class="n">STRING</span><span class="p">)</span>
 <span class="linenos" data-linenos="7 "></span><span class="n">CLUSTERED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="n">BUCKETS</span><span class="p">;</span>
 </code></pre></div>
-<p>Y cargamos los datos con una consulta que realice un join de las tablas <code>categories</code> y <code>products</code> con particionado dinámico (recuerda activarlo mediante <code>set hive.exec.dynamic.partition.mode=nonstrict;</code>), teniendo en cuenta que los datos que forman parte de la partición deben ser las últimas columnas de la consulta:</p>
+<p>Y cargamos los datos con una consulta que realice un join de las tablas <code>categories</code> y <code>products</code> con particionado dinámico (recuerda activarlo mediante <code>set hive.exec.dynamic.partition.mode=nonstrict;</code>), teniendo en cuenta que <strong>los datos que forman parte de la partición deben ser las últimas columnas de la consulta</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">INSERT</span><span class="w"> </span><span class="n">OVERWRITE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">productos</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="p">(</span><span class="n">categoria</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_name</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_price</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">precio</span><span class="p">,</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">category_name</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">categoria</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">categories</span><span class="w"> </span><span class="k">c</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">product_category_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">category_id</span><span class="p">);</span>
@@ -4571,11 +4585,11 @@ sqoop import --connect jdbc:mysql://localhost/retail_db --username iabd --passwo
 </code></pre></div>
 <h3 id="vistas-materializadas">Vistas materializadas<a class="headerlink" href="#vistas-materializadas" title="Permanent link">&para;</a></h3>
 <p>Un tipo especial de vistas son las vistas materializadas, entendidas como una tabla de datos duplicada que se crea mediante la combinación de datos de varias tablas existentes para una recuperación de datos más rápida.</p>
-<p>Este tipo de vistas no son exclusivas de <em>Hive</em>, ya que sistemas relacionales como PostreSQL u Oracle las soportan.</p>
-<p>Con una vista ordinaria, al realizar una consulta, el motor de base de datos calcula dinámicamente los resultados ejecutando la consulta subyacente en las tablas de origen. Los datos de la vista están siempre actualizados porque se derivan directamente de las tablas de origen cada vez que se accede a ellos.
-En cambio, con una vista materializada, los resultados de la consulta específica se almacenan como una tabla física en la base de datos. Los datos de la vista materializada se calculan con anterioridad y se almacenan, lo que significa que los resultados ya están disponibles sin necesidad de volver a calcular la consulta cada vez que se accede a la vista.</p>
-<p>Desde la versión 3.0 de <em>Apache Hive</em>, se introducen las vistas materializadas y reescritura automática de consultas basadas en dichas materializaciones.</p>
-<p>Para crear la vista materializada, debemos indicarla con la <em>keyword</em> <code>MATERIALIZED</code>. Por ejemplo:</p>
+<p>Este tipo de vistas no son exclusivas de <em>Hive</em>, ya que sistemas relacionales como <em>PostreSQL</em> u <em>Oracle</em> las soportan.</p>
+<p>Con una vista ordinaria, al realizar una consulta, el motor de base de datos calcula dinámicamente los resultados ejecutando la consulta subyacente en las tablas de origen. Los datos de la vista están siempre actualizados porque se derivan directamente de las tablas de origen cada vez que se accede a ellos.</p>
+<p>En cambio, con una vista materializada, los resultados de la consulta específica se almacenan como una tabla física en la base de datos. Los datos de la vista materializada se calculan con anterioridad y se almacenan, lo que significa que los resultados ya están disponibles sin necesidad de volver a calcular la consulta cada vez que se accede a la vista.</p>
+<p>Desde la versión 3.0 de <em>Apache Hive</em>, se introducen las vistas materializadas y rescritura automática de consultas basadas en dichas materializaciones. A nivel de restricción, <em>Hive</em> requiere que las tablas subyacentes estén en formato ORC y sean transaccionales para que funcionen correctamente. Además, las vistas materializadas no pueden contener funciones de agregación, funciones de ventana, subconsultas o cláusulas <code>GROUP BY</code> o <code>DISTINCT</code>.</p>
+<p>Dicho esto, para crear la vista materializada, debemos indicarla con la <em>keyword</em> <code>MATERIALIZED</code>. Por ejemplo:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">productos_viewm</span><span class="w"> </span><span class="k">AS</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_name</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_price</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">precio</span><span class="p">,</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">category_name</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">categoria</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">categories</span><span class="w"> </span><span class="k">c</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">product_category_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">category_id</span><span class="p">);</span>
 </code></pre></div>
@@ -4613,7 +4627,7 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>SET hive.materializedview.rewriting.time.window=10min;
 </code></pre></div>
 </div>
-<p>Más información en <a href="https://cwiki.apache.org/confluence/display/Hive/Materialized+views">https://cwiki.apache.org/confluence/display/Hive/Materialized+views</a></p>
+<p>Más información en <a href="https://hive.apache.org/docs/latest/language/materialized-views/">https://hive.apache.org/docs/latest/language/materialized-views/</a></p>
 <h2 id="caso-7-de-flume-a-hive-pasando-por-hdfs">Caso 7: De Flume a Hive pasando por HDFS<a class="headerlink" href="#caso-7-de-flume-a-hive-pasando-por-hdfs" title="Permanent link">&para;</a></h2>
 <p>En este caso de uso, vamos a crear un agente <em>Flume</em> que realice un <em>spooling</em> de una carpeta (por ejemplo, podría estar mapeada con una carpeta enlazada a un servidor FTP) donde se van a colocar datos de clientes, y los vamos a insertar en la tabla <code>customersraw</code> mediante un <a href="https://flume.apache.org/FlumeUserGuide.html#hdfs-sink"><em>HDFS Sink</em></a>. A continuación, crearemos una vista materializada con los datos que nos interesan.</p>
 <h3 id="cargamos-los-datos">Cargamos los datos<a class="headerlink" href="#cargamos-los-datos" title="Permanent link">&para;</a></h3>
@@ -4708,6 +4722,7 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <span class="linenos" data-linenos="3 "></span>  org.apache.flume.sink.hive.HiveWriter$ConnectException: Failed connecting to EndPoint
 <span class="linenos" data-linenos="4 "></span>    {metaStoreUri=&#39;thrift://iabd-virtualbox:9083&#39;, database=&#39;iabd&#39;, table=&#39;customerstx&#39;, partitionVals=[] }
 </code></pre></div>
+<p>La IA me dice que probablemente el <em>Hive Sink</em> de <em>Flume</em> requiere <em>Hive</em> en modo <em>streaming</em> (ACID + ORC + Metastore remoto activo), algo difícil de configurar en un entorno local mediante una máquina virtual.</p>
 <p>Si consigues que te funcione siempre puedes mandarme un email <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#97;&#46;&#109;&#101;&#100;&#114;&#97;&#110;&#111;&#64;&#101;&#100;&#117;&#46;&#103;&#118;&#97;&#46;&#101;&#115;">&#97;&#46;&#109;&#101;&#100;&#114;&#97;&#110;&#111;&#64;&#101;&#100;&#117;&#46;&#103;&#118;&#97;&#46;&#101;&#115;</a> y comentarme qué has hecho o qué debo modificar. ¡Gracias!</p>
 </div>
 <p>Para el último caso de uso, vamos a crear un agente <em>Flume</em> que realice un <em>spooling</em> de una carpeta y los vamos a insertar directamente en la tabla <code>customerstx</code> (en formato <em>ORC</em> mediante 4 <em>buckets</em> y configurada como transaccional) <a href="hive1.html#modificando-datos">creada en el caso 2</a> mediante un <a href="https://flume.apache.org/FlumeUserGuide.html#hive-sink"><em>Hive Sink</em></a>.</p>
@@ -4785,7 +4800,7 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <span class="linenos" data-linenos="4 "></span><span class="c1">--- Resultado: Deberían aparecer los clientes recibidos desde Flume</span>
 </code></pre></div>
 <h2 id="funciones-ventana">Funciones ventana<a class="headerlink" href="#funciones-ventana" title="Permanent link">&para;</a></h2>
-<p>A continuación vamos a realizar diversas consultas utilizando las funciones ventana que soporta <em>Hive</em>. Más información en <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+WindowingAndAnalytics">https://cwiki.apache.org/confluence/display/Hive/LanguageManual+WindowingAndAnalytics</a>.</p>
+<p>A continuación vamos a realizar diversas consultas utilizando las funciones ventana que soporta <em>Hive</em>. Más información en <a href="https://hive.apache.org/docs/latest/language/languagemanual-windowingandanalytics/">https://hive.apache.org/docs/latest/language/languagemanual-windowingandanalytics/</a>.</p>
 <h3 id="consultas-con-enteros-que-cuentanordenan">Consultas con enteros que cuentan/ordenan<a class="headerlink" href="#consultas-con-enteros-que-cuentanordenan" title="Permanent link">&para;</a></h3>
 <div class="admonition warning">
 <p class="admonition-title">Consultas sobre categorías</p>
@@ -4964,7 +4979,12 @@ En cambio, con una vista materializada, los resultados de la consulta específic
 <span class="linenos" data-linenos="32 "></span>| Cobra AMP Cell Drive  | Bike &amp; Skate Shop  | 5         | 0.0    | 179.99   |
 <span class="linenos" data-linenos="33 "></span>+-----------------------+--------------------+-----------+--------+----------+
 </code></pre></div>
-<p>Las consultas que hemos visto en este caso de uso también se conocen como <a href="https://cwiki.apache.org/confluence/display/hive/languagemanual+windowingandanalytics"><strong>funciones ventana</strong></a>, ya que se ejecutan sobre un subconjunto de los datos. La ventana viene dada por la partición o por la posición una vez ordenados los datos.</p>
+<div class="admonition info">
+<p class="admonition-title">Otras funciones ventana</p>
+<p>Además de las funciones que hemos visto, <em>Hive</em> también soporta otras funciones ventana como <code>percent_rank</code>, <code>cume_dist</code>, <code>ntile</code> (divide los datos en n grupos de igual tamaño, muy útil para percentiles y cuartiles) o <code>first_value</code> y <code>last_value</code> entre otras. Puedes consultar la <a href="https://hive.apache.org/docs/latest/language/languagemanual-windowingandanalytics/">documentación oficial</a> para más información.</p>
+</div>
+<h3 id="ventanas">Ventanas<a class="headerlink" href="#ventanas" title="Permanent link">&para;</a></h3>
+<p>Las consultas que hemos visto en este caso de uso también se conocen como <a href="https://hive.apache.org/docs/latest/language/languagemanual-windowingandanalytics/"><strong>funciones ventana</strong></a>, ya que se ejecutan sobre un subconjunto de los datos. La ventana viene dada por la partición o por la posición una vez ordenados los datos.</p>
 <p>Los posibles valores son:</p>
 <ul>
 <li><code>rows between current row and unbounded following</code>: desde la fila actual hasta el final de la ventana/partición.</li>
@@ -5442,10 +5462,10 @@ En cambio, con una vista materializada, los resultados de la consulta específic
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>
