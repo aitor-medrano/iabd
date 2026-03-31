@@ -4413,6 +4413,11 @@ alias pysparkk='pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.
     <figcaption>Arquitectura del stack de Spark con Docker</figcaption>
 </figure>
 
+<p>Una vez arrancado, si accedemos a <code>http://ip-servidor-driver:8080</code> / <code>http://localhost:8888/</code> veremos el IU de <em>Spark</em> con los <em>workers</em> arrancados.</p>
+<!--
+TODO: poner una captura de pantalla del Spark UI donde se vea el cluster con los workers arrancados
+-->
+
 <div class="admonition info">
 <p class="admonition-title">Clúster de Spark</p>
 <p>Si queremos montar nosotros mismos un <em>clúster</em> de <em>Spark</em>, una vez tenemos todas las máquinas instaladas con <em>Java</em>, <em>Python</em> y <em>Spark</em>, debemos distinguir entre:</p>
@@ -4431,9 +4436,8 @@ alias pysparkk='pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.
 </code></pre></div>
 </li>
 </ul>
+<p>En la <a href="https://spark.apache.org/docs/latest/spark-standalone.html">documentación oficial</a> puedes consultar en más detalle todos los parámetros disponibles para configurar el <em>cluster</em> de <em>Spark</em>.</p>
 </div>
-<p>Una vez arrancado, si accedemos a <code>http://ip-servidor-driver:8080</code> / <code>http://localhost:8888/</code>veremos el IU de <em>Spark</em> con los <em>workers</em> arrancados.</p>
-<p>Más información en la <a href="https://spark.apache.org/docs/latest/spark-standalone.html">documentación oficial</a>.</p>
 <h3 id="uso-en-la-nube">Uso en la nube<a class="headerlink" href="#uso-en-la-nube" title="Permanent link">&para;</a></h3>
 <p>Para trabajar con <em>Spark</em> desde la nube disponemos de varias alternativas, ya sean herramientas que permiten trabajar con cuadernos <em>Jupyter</em> como pueden ser <em>Google Colab</em> o <em>Databricks</em>, o montar un clúster mediante AWS EMR (<em>Elastic MapReduce</em>) o <em>Azure HDInsight</em>.</p>
 <h4 id="google-colab">Google Colab<a class="headerlink" href="#google-colab" title="Permanent link">&para;</a></h4>
@@ -4490,6 +4494,10 @@ alias pysparkk='pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.
     <figcaption>Ejemplo de cuaderno en Databricks</figcaption>
 </figure>
 
+<!--
+TODO: Revisar, no está claro que se pueda compartir el cuaderno con la comunidad, aunque sí que se puede compartir con otros usuarios de Databricks, lo cual es muy útil para trabajar en equipo. ... lo mismo con el navegador de archivos, revisar si se puede activar en la versión gratuita, aunque no es algo tan necesario ya que podemos cargar los datos desde cualquier fuente de datos externa (S3, Azure Storage, etc...) o desde el propio almacenamiento de Databricks.
+-->
+
 <p>Si queremos, podemos hacer <a href="https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93eaaa8714f173bcfc/258974416188569/3948890815798328/7969755578738041/latest.html">público</a> el cuaderno y compartirlo con la comunidad.</p>
 <div class="admonition tip">
 <p class="admonition-title">Navegador de archivos DBFS</p>
@@ -4497,7 +4505,7 @@ alias pysparkk='pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.
 Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mismos, lo podemos activar desde el menú superior derecho: <em>Admin Settings</em> → <em>Workspace Admin</em> → <em>Advanced</em>, y en <em>Other</em> ponemos la opción <strong><em>DBFS File Browser</em></strong> a <em>Enabled</em>/<em>On</em>.</p>
 </div>
 <h3 id="sparkcontext-vs-sparksession">SparkContext vs SparkSession<a class="headerlink" href="#sparkcontext-vs-sparksession" title="Permanent link">&para;</a></h3>
-<p><em>SparkContext</em> es el punto de entrada a <em>Spark</em> desde las versiones 1.x y se utiliza para crear de forma programativa RDD, acumuladores y variables <em>broadcast</em> en el clúster.</p>
+<p><em>SparkContext</em> era el punto de entrada a <em>Spark</em> desde las versiones 1.x y se utilizaba para crear de forma programativa RDD, acumuladores y variables <em>broadcast</em> en el clúster.</p>
 <p>Desde Spark 2.0 la mayoría de funcionalidades (métodos) disponibles en <em>SparkContext</em> también los están en <em>SparkSession</em>. Su objeto <code>sc</code> está disponible en el <em>spark-shell</em> y se puede crear de forma programativa mediante la clase <code>SparkContext</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkContext</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">sc</span> <span class="o">=</span> <span class="n">SparkContext</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
@@ -4551,10 +4559,6 @@ Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mi
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;spark-s8a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 </code></pre></div>
 </div>
-<!--
-<https://www.datamechanics.co/blog-post/tutorial-running-pyspark-inside-docker-containers>
--->
-
 <h3 id="spark-submit">Spark Submit<a class="headerlink" href="#spark-submit" title="Permanent link">&para;</a></h3>
 <p>De la misma manera que mediante <em>Hadoop</em> podíamos lanzar un proceso al clúster para su ejecución, <em>Spark</em> ofrece el comando <code>spark-submit</code> para enviar un script al driver para su ejecución de forma distribuida.</p>
 <p>Así pues, si colocamos nuestro código en un archivo de <em>Python</em>:</p>
@@ -4703,18 +4707,16 @@ Dado el cariz de <em>Python</em>, no necesitamos que los <em>Dataset</em> estén
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
-<li>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han aplicado herramientas de monitorización eficiente de los recursos.">CEBDA.4a</abbr>, <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr>  / 2p) Reproduce el ejemplo de <a href="#dataframe"><em>DataFrames</em></a> sobre el fichero de <a href="resources/el_quijote.txt">El Quijote</a> adjuntado varias capturas de pantalla (entorno, ejecución y monitorización) al realizarlo en:<ul>
-<li>la <a href="#puesta-en-marcha">máquina virtual</a> o un <a href="#uso-de-docker">entorno Docker</a>.</li>
+<li>
+<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han aplicado herramientas de monitorización eficiente de los recursos.">CEBDA.4a</abbr>, <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr>  / 2p) Reproduce el ejemplo de <a href="#dataframe"><em>DataFrames</em></a> sobre el fichero de <a href="resources/el_quijote.txt">El Quijote</a> adjuntado varias capturas de pantalla (entorno, ejecución y monitorización) al realizarlo tanto en:</p>
+<ul>
+<li>la <a href="#puesta-en-marcha">máquina virtual</a> o un <a href="#uso-de-docker">entorno Docker</a>, tanto mediante cuadernos <em>Jupyter</em> como mediante el comando <code>spark-submit</code>,</li>
 <li>y en <a href="#databricks">Databricks</a>.</li>
 </ul>
 </li>
-</ol>
-<!--
-TODO: Forzar en el enunciado que usen spark-submit para ejecutar el código, y que monitoricen la ejecución con Spark UI. En el caso de Databricks, que monitoricen la ejecución con su propia herramienta de monitorización.
--->
-
-<ol start="2">
-<li>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado las ventajas que ofrece unificar procesos, servicios, herramientas, métodos y sectores.">CEPIA.3a</abbr>, <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 1p) En esta sesión hemos visto que la plataforma <em>Databricks</em> permite ejecutar código de <em>Spark</em> en un clúster distribuido. Crea una presentación de máximo 6 diapositivas donde expongas qué elementos componen el ecosistema <em>Databricks</em> y como interactúan entre ellos, destacando el concepto de <em>Data Lakehouse</em> y la tecnología <em>Delta Lake</em>.</li>
+<li>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado las ventajas que ofrece unificar procesos, servicios, herramientas, métodos y sectores.">CEPIA.3a</abbr>, <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 1p) En esta sesión hemos visto que la plataforma <em>Databricks</em> permite ejecutar código de <em>Spark</em> en un clúster distribuido. Crea una presentación de mínimo 6 diapositivas donde expongas qué elementos componen el ecosistema <em>Databricks</em> y como interactúan entre ellos, destacando el concepto de <em>Data Lakehouse</em> y la tecnología <em>Delta Lake</em>.</p>
+</li>
 </ol>
 <!--
 https://github.com/PacktPublishing/Apache-Spark-3-for-Data-Engineering-and-Analytics-with-Python-/blob/main/Section%203%20Resources/XYZ%20Research.txt
