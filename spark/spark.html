@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -1837,17 +1837,6 @@
     <span class="md-ellipsis">
       
         Uso de Docker
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cluster-de-spark" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clúster de Spark
       
     </span>
   </a>
@@ -4005,17 +3994,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cluster-de-spark" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clúster de Spark
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#uso-en-la-nube" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4276,8 +4254,13 @@
 <p>La analítica de datos es el proceso de inspeccionar, limpiar, transformar y modelar los datos con el objetivo de descubrir información útil, obtener conclusiones sobre los datos y ayudar en la toma de decisiones.</p>
 <p>Para ello, el uso de <em>Spark</em> de la mano de <em>Python</em>, <em>NumPy</em> y <em>Pandas</em> como interfaz de la analítica es clave en el día a día de un científico/ingeniero de datos.</p>
 <p>Podemos considerar <em>Spark</em> como una navaja suiza, ya que permite trabajar con todo el ciclo del datos, desde la ingesta y la validación de los datos en <em>raw</em>, limpieza, transformación y agregación de los datos, así como la realización de un análisis exploratorio de los mismos.</p>
-<p>La versión 3.0 de <a href="https://spark.apache.org"><em>Apache Spark</em></a> se lanzó en 2020, diez años después de su nacimiento. Esta versión incluye mejoras de rendimiento (el doble en consultas adaptativas), facilidad en el uso del API de Pandas, un nuevo interfaz gráfico para el streaming que facilita el seguimiento y depuración de las consultas y ajustes de rendimiento.</p>
-<p>En la actualidad ya vamos por la versión 3.5.4 (a fecha de enero de 2025).</p>
+<p>La versión 3.0 de <a href="https://spark.apache.org"><em>Apache Spark</em></a> se lanzó en 2020, diez años después de su nacimiento. Esta versión incluye mejoras de rendimiento (el doble en consultas adaptativas), facilidad en el uso del API de Pandas, un nuevo interfaz gráfico para el <em>streaming</em> que facilita el seguimiento y depuración de las consultas y ajustes de rendimiento.</p>
+<!--
+TODO: Revisar y cambiar cuando hayamos aprendido Spark 4.0
+
+A mediados de 2025, *Apache Spark* dio el salto a la serie 4.x, activando el modo ANSI por defecto e introduciendo el tipo de dato `VARIANT` para datos semiestructurados. También incorporó *Spark Connect* con un cliente *Python* ligero de solo 1,5 MB, y añadió SQL UDFs reutilizables, sintaxis PIPE y el operador `transformWithState` para *streaming* con estado. A fecha de marzo de 2026, la última versión estable es la 4.1.1 y ya se encuentra en fase preview la versión 4.2.0.
+-->
+
 <h2 id="introduccion">Introducción<a class="headerlink" href="#introduccion" title="Permanent link">&para;</a></h2>
 <figure style="float: right;">
     <img src="images/01spark-logo.png" width="200">
@@ -4293,10 +4276,10 @@
 <li><ins>Modularidad</ins>: soporte para todo tipo de cargas mediante cualquiera de los lenguajes de programación soportados: <em>Scala</em>, <em>Java</em>, <em>Python</em>, <em>SQL</em> y <em>R</em>, así como los módulos de <em>Spark SQL</em> para consultas interactivas, <em>Spark Structured Streaming</em> para procesamiento de datos en <em>streaming</em>, <em>Spark MLlib</em> para <em>machine learning</em> y <em>GraphX</em> para trabajar con grafos. De esta manera, mediante una única aplicación <em>Spark</em> se puede hacer todo sin necesidad de utilizar APIs separadas.</li>
 <li><ins>Extensibilidad</ins>: Al centrarse unicamente en el procesamiento, la gestión de los datos se puede realizar a partir de <em>Hadoop</em>, <em>Cassandra</em>, <em>HBase</em>, <em>MongoDB</em>, <em>Hive</em> o cualquier SGBD relacional, haciendo todo en memoria. Además, se puede extender el API para utilizar otras fuentes de datos, como <em>Apache Kafka</em>, <em>Amazon S3</em> o <em>Azure Storage</em>.</li>
 </ul>
-<p>En términos de flexibilidad, Spark ofrece un <em>stack</em> unificado que permite resolver múltiples tipos de procesamiento de datos, tanto aplicaciones <em>batch</em> como consultas interactivas, algoritmos de <em>machine learning</em> que requieren muchas iteraciones, aplicaciones de ingesta en <em>streaming</em> con rendimiento cercado al tiempo real, etc... Antes de <em>Spark</em>, para cada uno de estos tipos de procesamiento necesitábamos una herramienta diferente, ahora con Spark tenemos una <em>bala de plata</em> que reduce los costes y recursos necesarios.</p>
+<p>En términos de flexibilidad, Spark ofrece un <em>stack</em> unificado que permite resolver múltiples tipos de procesamiento de datos, tanto aplicaciones <em>batch</em> como consultas interactivas, algoritmos de <em>machine learning</em> que requieren muchas iteraciones, aplicaciones de ingesta en <em>streaming</em> con rendimiento cercano al tiempo real, etc... Antes de <em>Spark</em>, para cada uno de estos tipos de procesamiento necesitábamos una herramienta diferente, ahora con <em>Spark</em> tenemos una solución unificada que reduce los costes y recursos necesarios.</p>
 <h3 id="spark-vs-hadoop">Spark vs Hadoop<a class="headerlink" href="#spark-vs-hadoop" title="Permanent link">&para;</a></h3>
-<p>La principal diferencia es que la computación se realiza en memoria, lo que puede implicar un mejora de hasta 100 veces mejor rendimiento. Para ello, se realiza una evaluación perezosa de las operaciones, de manera, que hasta que no se realiza una operación, los datos realmente no se cargan.</p>
-<p>Para solucionar los problemas asociados a <em>MapReduce</em>, Spark crea un espacio de memoria RAM compartida entre los ordenadores del clúster. Este permite que los <em>NodeManager</em>/<em>WorkerNode</em> compartan variables (y su estado), eliminando la necesidad de escribir los resultados intermedios en disco. Esta zona de memoria compartida se traduce en el uso de RDD, <em>DataFrames</em> y <em>DataSets</em>, permitiendo realizar procesamiento en memoria a lo largo de un clúster con tolerancia a fallos.</p>
+<p>La principal diferencia es que la computación se realiza en memoria, lo que puede implicar un mejora de hasta 100 veces mejor rendimiento. Para ello, se realiza una evaluación perezosa de las operaciones, de manera, que hasta que no se completa una operación, los datos realmente no se cargan.</p>
+<p>Para solucionar los problemas asociados a <em>MapReduce</em>, <em>Spark</em> crea un espacio de memoria RAM compartida entre los ordenadores del clúster. Este permite que los <em>NodeManager</em>/<em>WorkerNode</em> compartan variables (y su estado), eliminando la necesidad de escribir los resultados intermedios en disco. Esta zona de memoria compartida se traduce en el uso de RDD, <em>DataFrames</em> y <em>DataSets</em>, permitiendo realizar procesamiento en memoria a lo largo de un clúster con tolerancia a fallos.</p>
 <h3 id="stack-unificado">Stack unificado<a class="headerlink" href="#stack-unificado" title="Permanent link">&para;</a></h3>
 <p>El elemento principal es <strong><em>Spark Core</em></strong> el cual aporta toda la funcionalidad necesaria para preparar y ejecutar las aplicaciones distribuidas, gestionando la planificación y tolerancia a fallos de las diferentes tareas. Para ello, el núcleo ofrece un entorno <em>NoSQL</em> idóneo para el análisis exploratorio e interactivo de los datos. <em>Spark</em> se puede ejecutar en <em>batch</em> o en modo interactivo y tiene soporte para <em>Python</em>. Independientemente del lenguaje utilizado (ya sea <em>Python</em>, <em>Java</em>, <em>Scala</em>, <em>R</em> o <em>SQL</em>) el código se despliega entre todos los nodos a lo largo del clúster.</p>
 <p>Además, contiene otros 4 grandes componentes construidos sobre el <em>core</em>:</p>
@@ -4348,7 +4331,7 @@
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Jupyter Notebook</p>
-<p>Si instalamos PySpark según las <a href="https://spark.apache.org/docs/latest/api/python/getting_started/install.html">instrucciones de la propia web</a>, al ejecutar <code>pyspark</code> se lanzara el <a href="https://spark.apache.org/docs/latest/quick-start.html"><em>spark-shell</em></a>:</p>
+<p>Si instalamos <em>PySpark</em> según las <a href="https://spark.apache.org/docs/latest/api/python/getting_started/install.html">instrucciones de la propia web</a>, al ejecutar <code>pyspark</code> se lanzara el <a href="https://spark.apache.org/docs/latest/quick-start.html"><em>spark-shell</em></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="o">(</span>base<span class="o">)</span><span class="w"> </span>jovyan@d747fe4a9742:~$<span class="w"> </span>pyspark
 <span class="linenos" data-linenos=" 2 "></span>Python<span class="w"> </span><span class="m">3</span>.10.8<span class="w"> </span><span class="p">|</span><span class="w"> </span>packaged<span class="w"> </span>by<span class="w"> </span>conda-forge<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="o">(</span>main,<span class="w"> </span>Nov<span class="w"> </span><span class="m">22</span><span class="w"> </span><span class="m">2022</span>,<span class="w"> </span><span class="m">08</span>:13:37<span class="o">)</span><span class="w"> </span><span class="o">[</span>GCC<span class="w"> </span><span class="m">10</span>.4.0<span class="o">]</span><span class="w"> </span>on<span class="w"> </span>linux
 <span class="linenos" data-linenos=" 3 "></span>...
@@ -4394,14 +4377,44 @@ alias pysparkk='pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.
 </figure>
 
 <h3 id="uso-de-docker">Uso de Docker<a class="headerlink" href="#uso-de-docker" title="Permanent link">&para;</a></h3>
-<p>Otra posibilidad es utilizar alguna de las imágenes <em>Docker</em> disponibles que facilitan su uso. En nuestro caso, recomendamos las imágenes disponibles en <a href="https://github.com/jupyter/docker-stacks">https://github.com/jupyter/docker-stacks</a>.</p>
+<p>Otra posibilidad es utilizar alguna de las imágenes <em>Docker</em> disponibles que facilitan su uso.</p>
+<p>Si solo quieres practica con <em>Spark</em> sin probar características distribudias, te recomendamos las imágenes disponibles en <a href="https://github.com/jupyter/docker-stacks">https://github.com/jupyter/docker-stacks</a>.</p>
 <p>Para lanzar la imagen de <em>PySpark</em> con cuadernos <em>Jupyter</em> utilizaremos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">8888</span>:8888<span class="w"> </span>-p<span class="w"> </span><span class="m">4040</span>:4040<span class="w"> </span>-p<span class="w"> </span><span class="m">4041</span>:4041<span class="w"> </span>jupyter/pyspark-notebook
 </code></pre></div>
 <p>O si queremos crear un volumen con la carpeta actual:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-v<span class="w"> </span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>:/home/jovyan/work<span class="w"> </span>-p<span class="w"> </span><span class="m">8888</span>:8888<span class="w"> </span>-p<span class="w"> </span><span class="m">4040</span>:4040<span class="w"> </span>-p<span class="w"> </span><span class="m">4041</span>:4041<span class="w"> </span>--name<span class="w"> </span>pyspark<span class="w"> </span>jupyter/pyspark-notebook
 </code></pre></div>
-<h3 id="cluster-de-spark">Clúster de Spark<a class="headerlink" href="#cluster-de-spark" title="Permanent link">&para;</a></h3>
+<p>En nuestro caso, vamos a utilizar una arquitectura más completa que nos va a servir para las siguientes sesiones. De hecho, vamos a montar un clúster de <em>Spark</em> con tres nodos, utilizando la imagen de <em>Docker</em> de <em>Bitnami</em> disponible en <a href="https://github.com/bitnami/bitnami-docker-spark">https://github.com/bitnami/bitnami-docker-spark</a>, así como una base de datos <em>MySQL</em> para configurarla como el <em>Hive Metastore</em>, y los servicios de <em>MinIO</em> y <em>Kafka</em> para utilizarlos como servicios de almanceamiento y <em>streaming de datos</em>.</p>
+<p>Para ello, descomprime el archivo <a href="https://github.com/aitor-medrano/iabd/releases/download/v1.0/spark-cluster.zip">spark-cluster.zip</a> y ejecuta:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Y arrancarán los siguientes servicios:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+<span class="linenos" data-linenos=" 2 "></span><span class="o">[</span>+<span class="o">]</span><span class="w"> </span>up<span class="w"> </span><span class="m">14</span>/14
+<span class="linenos" data-linenos=" 3 "></span><span class="w"> </span>✔<span class="w"> </span>Network<span class="w"> </span>spark-cluster_spark-net<span class="w">         </span>Created<span class="w">         </span><span class="m">0</span>.0ss
+<span class="linenos" data-linenos=" 4 "></span><span class="w"> </span>✔<span class="w"> </span>Volume<span class="w"> </span>spark-cluster_minio_data<span class="w">         </span>Created<span class="w">         </span><span class="m">0</span>.0ss
+<span class="linenos" data-linenos=" 5 "></span><span class="w"> </span>✔<span class="w"> </span>Volume<span class="w"> </span>spark-cluster_mysql_data<span class="w">         </span>Created<span class="w">         </span><span class="m">0</span>.0ss
+<span class="linenos" data-linenos=" 6 "></span><span class="w"> </span>✔<span class="w"> </span>Volume<span class="w"> </span>spark-cluster_kafka_data<span class="w">         </span>Created<span class="w">         </span><span class="m">0</span>.0ss
+<span class="linenos" data-linenos=" 7 "></span><span class="w"> </span>✔<span class="w"> </span>Container<span class="w"> </span>kafka<span class="w">                         </span>Healthy<span class="w">         </span><span class="m">17</span>.9s
+<span class="linenos" data-linenos=" 8 "></span><span class="w"> </span>✔<span class="w"> </span>Container<span class="w"> </span>mysql<span class="w">                         </span>Healthy<span class="w">         </span><span class="m">21</span>.3s
+<span class="linenos" data-linenos=" 9 "></span><span class="w"> </span>✔<span class="w"> </span>Container<span class="w"> </span>minio<span class="w">                         </span>Healthy<span class="w">         </span><span class="m">10</span>.9s
+<span class="linenos" data-linenos="10 "></span><span class="w"> </span>✔<span class="w"> </span>Container<span class="w"> </span>minio-init<span class="w">                    </span>Started<span class="w">         </span><span class="m">11</span>.4s
+<span class="linenos" data-linenos="11 "></span><span class="w"> </span>✔<span class="w"> </span>Container<span class="w"> </span>kafka-ui<span class="w">                      </span>Started<span class="w">         </span><span class="m">18</span>.0s
+<span class="linenos" data-linenos="12 "></span><span class="w"> </span>✔<span class="w"> </span>Container<span class="w"> </span>spark-master<span class="w">                  </span>Started<span class="w">         </span><span class="m">21</span>.5s
+<span class="linenos" data-linenos="13 "></span><span class="w"> </span>✔<span class="w"> </span>Container<span class="w"> </span>hive-init<span class="w">                     </span>Started<span class="w">         </span><span class="m">21</span>.5s
+<span class="linenos" data-linenos="14 "></span><span class="w"> </span>✔<span class="w"> </span>Container<span class="w"> </span>jupyter<span class="w">                       </span>Started<span class="w">         </span><span class="m">21</span>.8s
+<span class="linenos" data-linenos="15 "></span><span class="w"> </span>✔<span class="w"> </span>Container<span class="w"> </span>spark-worker-1<span class="w">                </span>Started<span class="w">         </span><span class="m">21</span>.8s
+<span class="linenos" data-linenos="16 "></span><span class="w"> </span>✔<span class="w"> </span>Container<span class="w"> </span>spark-worker-2<span class="w">                </span>Started<span class="w">         </span><span class="m">21</span>.8s
+</code></pre></div>
+<p>Para entender mejor la arquitectura, vamos a ver cómo interactuan entre ellos mediante el siguiente diagrama:</p>
+<figure style="align: center;">
+    <img src="images/01spark-docker-architecture.svg" alt="Arquitectura del stack de Spark con Docker" width="800">
+    <figcaption>Arquitectura del stack de Spark con Docker</figcaption>
+</figure>
+
+<div class="admonition info">
+<p class="admonition-title">Clúster de Spark</p>
 <p>Si queremos montar nosotros mismos un <em>clúster</em> de <em>Spark</em>, una vez tenemos todas las máquinas instaladas con <em>Java</em>, <em>Python</em> y <em>Spark</em>, debemos distinguir entre:</p>
 <ul>
 <li>
@@ -4414,32 +4427,30 @@ alias pysparkk='pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nv">$SPARK_HOME</span>/sbin/start-worker.sh<span class="w"> </span>spark://&lt;ip-servidor-driver&gt;:7077
 </code></pre></div>
 <p>Sobre los workers, le podemos indicar la cantidad de CPUs mediante la opción <code>-c</code> y la cantidad de RAM con <code>-m</code>. Por ejemplo, si quisiéramos lanzar un worker con 8 núcleos y 16GB de RAM haríamos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nv">$SPARK_HOME</span>/sbin/start-slave.sh<span class="w"> </span>spark://&lt;ip-servidor-driver&gt;:7077<span class="w"> </span>-c<span class="w"> </span><span class="m">8</span><span class="w"> </span>-m<span class="w"> </span>16G
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nv">$SPARK_HOME</span>/sbin/start-worker.sh<span class="w"> </span>spark://&lt;ip-servidor-driver&gt;:7077<span class="w"> </span>-c<span class="w"> </span><span class="m">8</span><span class="w"> </span>-m<span class="w"> </span>16G
 </code></pre></div>
 </li>
 </ul>
-<p>Una vez arrancado, si accedemos a <code>http://ip-servidor-driver:8080</code> veremos el IU de <em>Spark</em> con los <em>workers</em> arrancados.</p>
+</div>
+<p>Una vez arrancado, si accedemos a <code>http://ip-servidor-driver:8080</code> / <code>http://localhost:8888/</code>veremos el IU de <em>Spark</em> con los <em>workers</em> arrancados.</p>
 <p>Más información en la <a href="https://spark.apache.org/docs/latest/spark-standalone.html">documentación oficial</a>.</p>
 <h3 id="uso-en-la-nube">Uso en la nube<a class="headerlink" href="#uso-en-la-nube" title="Permanent link">&para;</a></h3>
 <p>Para trabajar con <em>Spark</em> desde la nube disponemos de varias alternativas, ya sean herramientas que permiten trabajar con cuadernos <em>Jupyter</em> como pueden ser <em>Google Colab</em> o <em>Databricks</em>, o montar un clúster mediante AWS EMR (<em>Elastic MapReduce</em>) o <em>Azure HDInsight</em>.</p>
 <h4 id="google-colab">Google Colab<a class="headerlink" href="#google-colab" title="Permanent link">&para;</a></h4>
 <p>Primero nos vamos a centrar en <em>Google Colab</em>. A lo largo del curso, ya hemos empleado esta herramienta tanto en sistemas de aprendizaje como en el análisis exploratorio de los datos.</p>
 <p>Para que funcione <em>Spark</em> dentro de <em>Google Colab</em>, únicamente hemos de instalar las librerías. Se adjunta un <a href="https://gist.github.com/aitor-medrano/284da4c870452af46469aedba99f7e33">cuaderno con ejemplo de código</a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="gh"># 1. Instalar las dependencias</span>
-<span class="linenos" data-linenos=" 2 "></span>!apt-get install openjdk-8-jdk-headless -qq &gt; /dev/null
-<span class="linenos" data-linenos=" 3 "></span>!wget -q https://downloads.apache.org/spark/spark-3.5.0/spark-3.5.0-bin-hadoop3.tgz
-<span class="linenos" data-linenos=" 4 "></span>!tar xvf spark-3.5.0-bin-hadoop3.tgz
-<span class="linenos" data-linenos=" 5 "></span>!pip install -q pyspark
-<span class="linenos" data-linenos=" 6 "></span>
-<span class="linenos" data-linenos=" 7 "></span><span class="gh"># 2. Configurar el entorno</span>
-<span class="linenos" data-linenos=" 8 "></span>import os
-<span class="linenos" data-linenos=" 9 "></span>os.environ[&quot;JAVA_HOME&quot;] = &quot;/usr/lib/jvm/java-8-openjdk-amd64&quot;
-<span class="linenos" data-linenos="10 "></span>os.environ[&quot;SPARK_HOME&quot;] = f&quot;/content/spark-3.5.0-bin-hadoop3&quot;
-<span class="linenos" data-linenos="11 "></span>
-<span class="linenos" data-linenos="12 "></span><span class="gh"># 3. Cargar Pyspark</span>
-<span class="linenos" data-linenos="13 "></span>from pyspark.sql import SparkSession
-<span class="linenos" data-linenos="14 "></span>spark = SparkSession.builder.appName(&quot;s8a&quot;).master(&quot;local[*]&quot;).getOrCreate()
-<span class="linenos" data-linenos="15 "></span>spark
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="gh"># 1. Instalar dependencias</span>
+<span class="linenos" data-linenos=" 2 "></span>!apt-get install openjdk-17-jdk-headless -qq &gt; /dev/null
+<span class="linenos" data-linenos=" 3 "></span>!pip install -q pyspark==4.1.0
+<span class="linenos" data-linenos=" 4 "></span>
+<span class="linenos" data-linenos=" 5 "></span><span class="gh"># 2. Configurar el entorno</span>
+<span class="linenos" data-linenos=" 6 "></span>import os
+<span class="linenos" data-linenos=" 7 "></span>os.environ[&quot;JAVA_HOME&quot;] = &quot;/usr/lib/jvm/java-17-openjdk-amd64&quot;
+<span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span><span class="gh"># 3. Cargar Pyspark</span>
+<span class="linenos" data-linenos="10 "></span>from pyspark.sql import SparkSession
+<span class="linenos" data-linenos="11 "></span>spark = SparkSession.builder.appName(&quot;s8a&quot;).master(&quot;local[*]&quot;).getOrCreate()
+<span class="linenos" data-linenos="12 "></span>spark
 </code></pre></div>
 <p>El cual podemos observar cómo se ejecuta en Colab:</p>
 <figure style="align: center;">
@@ -4450,22 +4461,32 @@ alias pysparkk='pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.
 <h4 id="databricks">Databricks<a class="headerlink" href="#databricks" title="Permanent link">&para;</a></h4>
 <p><em>Databricks</em> es una plataforma analítica de datos basada en Apache Spark desarrollada por la compañía con el mismo nombre. La empresa, creada en el 2013 por los desarrolladores principales de <em>Spark</em>, permite realizar analítica Big Data e Inteligencia Artificial con <em>Spark</em> de una forma sencilla y colaborativa.</p>
 <p><em>Databricks</em> se integra de forma transparente con <em>AWS</em>, <em>Azure</em> y <em>Google Cloud</em>. En una <a href="https://databricks.com/blog/2021/11/02/databricks-sets-official-data-warehousing-performance-record.html">entrada del blog de la empresa de noviembre de 2021</a>  anuncian un nuevo record de procesamiento que implica que su rendimiento es 3 veces superior a la competencia y con un coste menor.</p>
-<p>Para poder trabajar con <em>Databricks</em> de forma gratuita, podemos hacer uso de <a href="https://community.cloud.databricks.com/login.html">Databricks Community Edition</a>, donde podemos crear nuestros propios cuadernos <em>Jupyter</em> y trabajar con <em>Spark</em> sin necesidad de instalar nada.</p>
-<p>Para crear una cuenta gratuita, clickando sobre <em>Sign up</em>, tras rellenar los datos personales, antes de seleccionar el proveedor <em>cloud</em>, en la parte inferior derecha, hemos de pulsar sobre <em>Get started with Community Edition</em> (botón en negro):</p>
+<div class="admonition info inline end">
+<p class="admonition-title">Databricks Community Edition</p>
+<p>Hasta el 2025, <em>Databricks</em> ofrecía una versión gratuita que permitía lanzar un <em>cluster</em> de <em>Spark</em> con 15.3GB de memoria y dos núcleos, lo cual limitaba bastante qué se podía hacer. Además, muchos de los servicios complementario de <em>Databricks</em> estaban bloqueados.</p>
+</div>
+<p>Para poder trabajar con <em>Databricks</em> de forma gratuita, podemos hacer uso de <a href="https://www.databricks.com/learn/free-edition">Databricks Free Edition</a>, donde podemos crear nuestros propios cuadernos <em>Jupyter</em> y trabajar con <em>Spark</em> sin necesidad de instalar nada. Las restricciones más destacables son que el entorno es <em>serverless</em>, que no se le puede dar un uso comercial y que las <em>features enterprise</em> están deshabilitadas.</p>
+<p>Para crear una cuenta gratuita, haciendo <em>click</em> sobre <em>Sign up</em>, donde introduciremos nuestro correo electrónico y verificaremos la cuenta:</p>
 <figure style="align: center;">
-    <img src="images/01spark-databricks-signup.png" alt="Creación de una cuenta Community en Databricks" width="1024">
-    <figcaption>Creación de una cuenta Community en Databricks</figcaption>
+    <img src="images/01spark-databricks-free-signup.png" alt="Creación de una cuenta Free en Databricks" width="1024">
+    <figcaption>Creación de una cuenta Free en Databricks</figcaption>
 </figure>
 
-<p>El único paso inicial tras registrarnos, es crear un clúster básico (con 15.3GB de memoria y dos núcleos) desde la opción <em>Create</em> del menú de la izquierda:</p>
+<p>Tras configurar el uso que le vamos a dar, aparecerá el panel de inicio sobre el cual podremos, tanto consultar los recursos con los que estamos trabajando, como crear nuevos cuadernos, consultas, cuadros de mandos, etc...</p>
 <figure style="align: center;">
-    <img src="images/01spark-databricks-cluster.png" alt="Creación de un clúster en Databricks" width="800">
-    <figcaption>Creación de un clúster en Databricks</figcaption>
+    <img src="images/01spark-databricks-free-ui.png" alt="Panel de inicio en Databricks" width="800">
+    <figcaption>Panel de inicio en Databricks</figcaption>
 </figure>
 
-<p>Tras un par de minutos se habrá creado y lanzado el clúster, ya estaremos listos para crear un nuevo <em>notebook</em> y tener acceso a <em>Spark</em> directamente desde el objeto <code>spark</code>:</p>
+<p>Tras un par de minutos se habrá creado y lanzado el clúster, ya estaremos listos para crear un nuevo <em>notebook</em>:</p>
 <figure style="align: center;">
-    <img src="images/01spark-databricks-pm.png" alt="Ejemplo de cuaderno en Databricks" width="960">
+    <img src="images/01spark-databricks-free-create-notebook.png" alt="Creando un cuaderno en Databricks" width="960">
+    <figcaption>Creando un cuaderno en Databricks</figcaption>
+</figure>
+
+<p>Y tener acceso a <em>Spark</em> directamente desde el objeto <code>spark</code>, lo cual nos permitirá trabajar con él de forma sencilla y rápida, o las propiedades <code>spark.version</code> o <code>spark.conf.getAll</code> para consultar la versión de <em>Spark</em> o la configuración del entorno:</p>
+<figure style="align: center;">
+    <img src="images/01spark-databricks-free-notebook.png" alt="Ejemplo de cuaderno en Databricks" width="960">
     <figcaption>Ejemplo de cuaderno en Databricks</figcaption>
 </figure>
 
@@ -4476,43 +4497,47 @@ alias pysparkk='pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.
 Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mismos, lo podemos activar desde el menú superior derecho: <em>Admin Settings</em> → <em>Workspace Admin</em> → <em>Advanced</em>, y en <em>Other</em> ponemos la opción <strong><em>DBFS File Browser</em></strong> a <em>Enabled</em>/<em>On</em>.</p>
 </div>
 <h3 id="sparkcontext-vs-sparksession">SparkContext vs SparkSession<a class="headerlink" href="#sparkcontext-vs-sparksession" title="Permanent link">&para;</a></h3>
-<p><em>SparkContext</em> es el punto de entrada a <em>Spark</em> desde las versiones 1.x y se utiliza para crear de forma programativa RDD, acumuladores y variables <em>broadcast</em> en el clúster. Desde Spark 2.0, la mayoría de funcionalidades (métodos) disponibles en <em>SparkContext</em> también los están en <em>SparkSession</em>. Su objeto <code>sc</code> está disponible en el <em>spark-shell</em> y se puede crear de forma programativa mediante la clase <code>SparkContext</code>.</p>
+<p><em>SparkContext</em> es el punto de entrada a <em>Spark</em> desde las versiones 1.x y se utiliza para crear de forma programativa RDD, acumuladores y variables <em>broadcast</em> en el clúster.</p>
+<p>Desde Spark 2.0 la mayoría de funcionalidades (métodos) disponibles en <em>SparkContext</em> también los están en <em>SparkSession</em>. Su objeto <code>sc</code> está disponible en el <em>spark-shell</em> y se puede crear de forma programativa mediante la clase <code>SparkContext</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkContext</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">sc</span> <span class="o">=</span> <span class="n">SparkContext</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 </code></pre></div>
-<p><em>SparkSession</em> se introdujo en la versión 2.0 y es el punto de entrada para crear <em>RDD</em>, <em>DataFrames</em> y <em>DataSets</em>. El objeto <code>spark</code> se encuentra disponible por defecto en el <em>spark-shell</em> y se puede crear de forma programativa mediante el patrón <em>builder</em> de <code>SparkSession</code>.</p>
+<p><em>SparkSession</em> se introdujo en la versión 2.0 y es el punto de entrada para crear <em>RDD</em>, <em>DataFrames</em> y <em>DataSets</em>. El objeto <code>spark</code> se encuentra disponible por defecto en el <em>spark-shell</em> y se puede crear de forma programativa mediante el patrón <em>builder</em> de <code>SparkSession</code>. Así pues, esta es la forma correcta de obtener la sesión de <em>Spark</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span> 
 </code></pre></div>
-<p>Además, desde una sesión de <em>Spark</em> podemos obtener un contexto a través de la propiedad <code>sparkContext</code>:</p>
+<p>Además, desde una sesión de <em>Spark</em> podemos obtener un contexto a través de la propiedad <code>sparkContext</code> de manera que podemos seguir utilizando el contexto para crear <em>RDD</em> o utilizar las funcionalidades que solo están disponibles en el contexto:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 <span class="linenos" data-linenos="3 "></span><span class="n">sc</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span>
 </code></pre></div>
 <h3 id="hola-spark">Hola Spark<a class="headerlink" href="#hola-spark" title="Permanent link">&para;</a></h3>
-<p>Lo primero que debemos hacer siempre es conectarnos a la sesión de <em>Spark</em>, el cual le indica a <em>Spark</em> como acceder al clúster. Si utilizamos la imagen de <em>Docker</em>, debemos obtener siempre la sesión a partir de la clase <code>SparkSession</code>:</p>
-<div class="highlight"><span class="filename">ejemploDockerSpark.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
-<span class="linenos" data-linenos="2 "></span>
-<span class="linenos" data-linenos="3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span> <span class="c1"># SparkSession de forma programativa</span>
-<span class="linenos" data-linenos="4 "></span><span class="n">sc</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span>                    <span class="c1"># SparkContext a partir de la sesión</span>
-<span class="linenos" data-linenos="5 "></span>
-<span class="linenos" data-linenos="6 "></span><span class="c1"># Suma de los 100 primeros números</span>
-<span class="linenos" data-linenos="7 "></span><span class="n">rdd</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">100</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-<span class="linenos" data-linenos="8 "></span><span class="n">rdd</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<p>Así pues, el primer paso siempre es obtener la sesión de <em>Spark</em> para poder trabajar con ella. </p>
+<p>Para el caso más sencillo, aunque todavía no hayamos aprendido a trabajar con <em>Spark</em>, podemos realizar una suma de los 100 primeros números para comprobar que todo funciona correctamente:</p>
+<div class="highlight"><span class="filename">ejemploDockerSpark.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">functions</span> <span class="k">as</span> <span class="n">F</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1"># Creamos la sesión de Spark</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span> 
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># Suma de los 100 primeros números</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>  <span class="c1"># Crea un DataFrame con columna &quot;id&quot; de 0 a 100</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> 
+<span class="linenos" data-linenos="11 "></span><span class="c1"># +-------+</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1"># |sum(id)|</span>
+<span class="linenos" data-linenos="13 "></span><span class="c1"># +-------+</span>
+<span class="linenos" data-linenos="14 "></span><span class="c1"># |   5050|</span>
+<span class="linenos" data-linenos="15 "></span><span class="c1"># +-------+</span>
 </code></pre></div>
-<p>En cambio, si utilizamos la instalación de <em>PySpark</em> (o la solución de <em>Databricks</em>) que tenemos en la máquina virtual, directamente podemos acceder a la instancia de <code>SparkSession</code> a través del objeto global <code>spark</code>:</p>
-<div class="highlight"><span class="filename">ejemploPySpark.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">sc</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span>     <span class="c1"># spark es una instancia de la clase SparkSession</span>
-<span class="linenos" data-linenos="2 "></span>
-<span class="linenos" data-linenos="3 "></span><span class="n">rdd</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">100</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-<span class="linenos" data-linenos="4 "></span><span class="n">rdd</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-</code></pre></div>
-<p>En ambos casos, si mostramos el contenido del contexto obtendremos algo similar a:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Version
-<span class="linenos" data-linenos="2 "></span>    v3.3.1
-<span class="linenos" data-linenos="3 "></span>Master
-<span class="linenos" data-linenos="4 "></span>    local[*]
-<span class="linenos" data-linenos="5 "></span>AppName
-<span class="linenos" data-linenos="6 "></span>    PySparkShell
+<p>Si mostramos el contenido del contexto obtendremos algo similar a:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># Version</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1">#     v4.1.0</span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># Master</span>
+<span class="linenos" data-linenos="5 "></span><span class="c1">#     local[*]</span>
+<span class="linenos" data-linenos="6 "></span><span class="c1"># AppName</span>
+<span class="linenos" data-linenos="7 "></span><span class="c1">#     pyspark-shell</span>
 </code></pre></div>
 <p>A continuación podemos ver el resultado completo en su ejecución dentro de un cuaderno <em>Jupyter</em>:</p>
 <figure style="align: center;">
@@ -4534,27 +4559,31 @@ Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mi
 <p>De la misma manera que mediante <em>Hadoop</em> podíamos lanzar un proceso al clúster para su ejecución, <em>Spark</em> ofrece el comando <code>spark-submit</code> para enviar un script al driver para su ejecución de forma distribuida.</p>
 <p>Así pues, si colocamos nuestro código en un archivo de <em>Python</em>:</p>
 <div class="highlight"><span class="filename">holaSpark.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
-<span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="n">sc</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">functions</span> <span class="k">as</span> <span class="n">F</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 5 "></span>
 <span class="linenos" data-linenos=" 6 "></span><span class="c1"># Suma de los 100 primeros números</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="n">rdd</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">100</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="n">suma</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--------------&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="10 "></span><span class="nb">print</span><span class="p">(</span><span class="n">suma</span><span class="p">)</span>
-<span class="linenos" data-linenos="11 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--------------&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>  <span class="c1"># Crea un DataFrame con columna &quot;id&quot; de 0 a 100</span>
+<span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> 
+<span class="linenos" data-linenos="10 "></span><span class="c1"># +-------+</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># |sum(id)|</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1"># +-------+</span>
+<span class="linenos" data-linenos="13 "></span><span class="c1"># |   5050|</span>
+<span class="linenos" data-linenos="14 "></span><span class="c1"># +-------+</span>
 </code></pre></div>
-<p>Lo podemos ejecutar mediante (en nuestra máquina virtual antes debemos resetear una variable de entorno para que no ejecute automáticamente el cuaderno jupyter: <strong><em><code>unset PYSPARK_DRIVER_PYTHON</code></em></strong>):</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>spark-submit<span class="w"> </span>holaMundo.py
+<p>Lo podemos ejecutar mediante :</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>spark-submit<span class="w"> </span>holaSpark.py
 </code></pre></div>
-<p>Si nuestro servidor estuviera en otra dirección IP, deberíamos indicarle donde encontrar el <em>master</em>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>spark-submit<span class="w"> </span>--master<span class="w"> </span>spark://&lt;ip-servidor-driver&gt;:7077<span class="w"> </span>holaMundo.py
+<p>Recuerda que en nuestra máquina virtual antes debemos resetear una variable de entorno para que no ejecute automáticamente el cuaderno jupyter: <strong><em><code>unset PYSPARK_DRIVER_PYTHON</code></em></strong>)</p>
+<p>Por ejemplo, para ejecutarlo desde <em>Docker</em>, si nos conectamos desde el contenedor de <em>jupyter</em>, debemos indicarle donde encontrar el <em>master</em> mediante el parámetro <code>--master</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>spark-submit<span class="w"> </span>--master<span class="w"> </span>spark://spark-master:7077<span class="w"> </span>holaSpark.py
 </code></pre></div>
 <p>Más información en la <a href="https://spark.apache.org/docs/latest/submitting-applications.html">documentación oficial</a></p>
 <div class="admonition tip">
 <p class="admonition-title">AWS desde Spark</p>
-<p>Para conectar a AWS desde Spark hace falta:</p>
+<p>Aunque nuestra instalación mediante <em>Docker</em> ya está configurada, si quieres crear un entorno desde cero, pPara conectar a <em>AWS</em> desde <em>Spark</em> hace falta:</p>
 <ol>
 <li>Descargar dos librerías y configurarlas en <code>$SPARK_HOME/conf/spark-defaults.conf</code> (o colocarlas directamente en la carpeta <code>$SPARK_HOME/jars</code>):</li>
 </ol>
@@ -4568,7 +4597,7 @@ Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mi
 <p>Configurar las credencias de AWS en <code>.aws/credentials</code> (esto lo hicimos varias veces en las sesiones de <em>cloud</em>)</p>
 </li>
 <li>
-<p>Tras crear la sesión de Spark, configurar el proveedor de credenciales:</p>
+<p>Tras crear la sesión de <em>Spark</em>, configurar el proveedor de credenciales:</p>
 </li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
@@ -4674,16 +4703,18 @@ Dado el cariz de <em>Python</em>, no necesitamos que los <em>Dataset</em> estén
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
-<li>
-<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han aplicado herramientas de monitorización eficiente de los recursos.">CEBDA.4a</abbr>, <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr>  / 2p) Reproduce el ejemplo de <a href="#dataframe"><em>DataFrames</em></a> sobre el fichero de <a href="resources/el_quijote.txt">El Quijote</a> adjuntado varias capturas de pantalla (entorno, ejecución y monitorización) al realizarlo en:</p>
-<ul>
+<li>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han aplicado herramientas de monitorización eficiente de los recursos.">CEBDA.4a</abbr>, <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr>  / 2p) Reproduce el ejemplo de <a href="#dataframe"><em>DataFrames</em></a> sobre el fichero de <a href="resources/el_quijote.txt">El Quijote</a> adjuntado varias capturas de pantalla (entorno, ejecución y monitorización) al realizarlo en:<ul>
 <li>la <a href="#puesta-en-marcha">máquina virtual</a> o un <a href="#uso-de-docker">entorno Docker</a>.</li>
 <li>y en <a href="#databricks">Databricks</a>.</li>
 </ul>
 </li>
-<li>
-<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado las ventajas que ofrece unificar procesos, servicios, herramientas, métodos y sectores.">CEPIA.3a</abbr>, <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 1p) En esta sesión hemos visto que la plataforma <em>Databricks</em> permite ejecutar código de <em>Spark</em> en un clúster distribuido. Crea una presentación de máximo 6 diapositivas donde expongas qué elementos componen el ecosistema <em>Databricks</em> y como interactúan entre ellos, destacando el concepto de <em>Data Lakehouse</em> y la tecnología <em>Delta Lake</em>.</p>
-</li>
+</ol>
+<!--
+TODO: Forzar en el enunciado que usen spark-submit para ejecutar el código, y que monitoricen la ejecución con Spark UI. En el caso de Databricks, que monitoricen la ejecución con su propia herramienta de monitorización.
+-->
+
+<ol start="2">
+<li>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado las ventajas que ofrece unificar procesos, servicios, herramientas, métodos y sectores.">CEPIA.3a</abbr>, <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 1p) En esta sesión hemos visto que la plataforma <em>Databricks</em> permite ejecutar código de <em>Spark</em> en un clúster distribuido. Crea una presentación de máximo 6 diapositivas donde expongas qué elementos componen el ecosistema <em>Databricks</em> y como interactúan entre ellos, destacando el concepto de <em>Data Lakehouse</em> y la tecnología <em>Delta Lake</em>.</li>
 </ol>
 <!--
 https://github.com/PacktPublishing/Apache-Spark-3-for-Data-Engineering-and-Analytics-with-Python-/blob/main/Section%203%20Resources/XYZ%20Research.txt

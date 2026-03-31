@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -4608,7 +4608,7 @@
 <span class="linenos" data-linenos="2 "></span><span class="c1"># cada fichero se lee entero como un registro</span>
 <span class="linenos" data-linenos="3 "></span><span class="n">dfTXT</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;wholetext&quot;</span><span class="p">,</span> <span class="n">true</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;datos/&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="4 "></span>
-<span class="linenos" data-linenos="5 "></span><span class="n">dfTXT</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;datos.txt&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="n">dfTXT</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;datos.txt&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Más información en la <a href="https://spark.apache.org/docs/latest/sql-data-sources-text.html">documentación oficial</a></p>
 </div>
@@ -4790,7 +4790,7 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 </div>
 <h2 id="dataframe-api">DataFrame API<a class="headerlink" href="#dataframe-api" title="Permanent link">&para;</a></h2>
 <p>Una vez tenemos un <em>DataFrame</em> podemos trabajar con los datos mediante un conjunto de operaciones estructuradas, muy similares al lenguaje relacional. Estas operaciones también se clasifican en transformaciones y acciones, recordando que las transformaciones utilizan una evaluación perezosa.</p>
-<p>Es muy importante tener en cuenta que todas las operaciones que vamos a realizar a continuación son immutables, es decir, nunca van a modificar el <em>DataFrame</em> sobre el que realizamos la transformación. Así pues, realizaremos encadenamiento de transformaciones (<em>transformation chaining</em>) o asignaremos el resultado a un nuevo <em>DataFrame</em>.</p>
+<p>Es muy importante tener en cuenta que todas las operaciones que vamos a realizar a continuación son inmutables, es decir, nunca van a modificar el <em>DataFrame</em> sobre el que realizamos la transformación. Así pues, realizaremos encadenamiento de transformaciones (<em>transformation chaining</em>) o asignaremos el resultado a un nuevo <em>DataFrame</em>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Preparación</p>
 <p>Para los siguientes apartados, vamos a trabajar sobre el siguiente <em>DataFrame</em> con el fichero de <a href="resources/pdi_sales_small.csv">ventas</a> que hemos utilizado a lo largo del curso:</p>
@@ -5244,7 +5244,7 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 <span class="linenos" data-linenos="16 "></span><span class="n">spark</span><span class="o">.</span><span class="n">newSession</span><span class="p">()</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;select count(*) from global_temp.ventasg where trim(Country)=&#39;Canada&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="eliminando-vistas">Eliminando vistas<a class="headerlink" href="#eliminando-vistas" title="Permanent link">&para;</a></h3>
-<p>Para borrar una vista que hayamos creado, necesitamos acceder al <em>Spark Catalog</em> que veremos en una [sesión posterior(catalog#spark-sql-catalog), y utilizar el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.dropTempView.html"><code>dropTempView</code></a> o <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.dropGlobalTempView.html"><code>dropGlobalTempView</code></a>
+<p>Para borrar una vista que hayamos creado, necesitamos acceder al <em>Spark Catalog</em> que veremos en una <a href="catalog.html#spark-sql-catalog">sesión posterior</a>, y utilizar el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.dropTempView.html"><code>dropTempView</code></a> o <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.dropGlobalTempView.html"><code>dropGlobalTempView</code></a>
 dependiendo del tipo de vista:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">dropTempView</span><span class="p">(</span><span class="s2">&quot;ventas&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">dropGlobalTempView</span><span class="p">(</span><span class="s2">&quot;ventasg&quot;</span><span class="p">)</span>
