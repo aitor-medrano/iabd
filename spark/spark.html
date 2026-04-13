@@ -1745,6 +1745,14 @@
   </span>
   
   
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
 
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -1762,6 +1770,14 @@
     
   </span>
   
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -1982,6 +1998,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2060,6 +2087,14 @@
     
   </span>
   
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -4132,6 +4167,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4271,15 +4317,36 @@ A mediados de 2025, *Apache Spark* dio el salto a la [serie 4.x](https://www.dat
 <p>En el caso de tener la necesidad de almacenar los datos o gestionar los recursos, se apoya en sistemas ya existentes como <em>HDFS</em>, <em>YARN</em> o <em>Apache Mesos</em>. Por lo tanto, <em>Hadoop</em> y <em>Spark</em> son sistemas complementarios.</p>
 <p>El diseño de <em>Spark</em> se basa principalmente en cuatro características:</p>
 <ul>
-<li><ins>Velocidad</ins>: enfocado al uso en un clúster de <em>commodity hardware</em> con una gestión eficiente del multihilo y procesamiento paralelo. <em>Spark</em> construye sus consultas mediante un grafo dirigido acíclico (DAG) y utiliza un planificador para descomponer el grafo en tareas que se ejecutan en paralelo en los nodos de los clústers. Finalmente, utiliza un motor de ejecución (<em>Tungsten</em>) que genera código compacto para optimizar la ejecución. Todo ello teniendo en cuenta que los resultados intermedios se almacenan en memoria.</li>
-<li><ins>Facilidad de uso</ins>: <em>Spark</em> ofrece varias capas de abstracción sobre los datos, como son los <em>RDD</em>, <em>DataFrames</em> y <em>Dataset</em>. Al ofrecer un conjunto de transformaciones y acciones como operaciones de su API, <em>Spark</em> facilita el desarrollo de aplicaciones <em>Big data</em>.</li>
+<li>
+<p><ins>Velocidad</ins>: enfocado al uso en un clúster de <em>commodity hardware</em> con una gestión eficiente del multihilo y procesamiento paralelo. <em>Spark</em> construye sus consultas mediante un grafo dirigido acíclico (DAG) y utiliza un planificador para descomponer el grafo en tareas que se ejecutan en paralelo en los nodos de los clústers.  </p>
+<p>Para ello, <em>Spark</em> utiliza dos motores internos que trabajan en tándem:</p>
+<ul>
+<li>
+<p>El <strong>Catalyst Optimizer</strong> analiza el plan lógico generado por el código del usuario
+(transformaciones sobre DataFrames o consultas SQL) y aplica reglas de optimización
+automáticas: elimina filtros redundantes, reordena operaciones, empuja los filtros lo más
+cerca posible de la fuente de datos (<em>predicate pushdown</em>), etc. El resultado es un plan
+físico optimizado listo para ejecutarse.</p>
+</li>
+<li>
+<p>El motor de ejecución <strong>Tungsten</strong> toma ese plan físico y lo materializa generando código
+binario compacto en tiempo de ejecución (<em>whole-stage code generation</em>), gestionando la
+memoria directamente fuera del <em>heap</em> de Java para minimizar la sobrecarga de la
+serialización y acercar el rendimiento al del hardware nativo.</p>
+</li>
+</ul>
+<p>Todo ello teniendo en cuenta que los resultados intermedios se almacenan en memoria.</p>
+</li>
+<li>
+<p><ins>Facilidad de uso</ins>: <em>Spark</em> ofrece varias capas de abstracción sobre los datos, como son los <em>RDD</em>, <em>DataFrames</em> y <em>Dataset</em>. Al ofrecer un conjunto de transformaciones y acciones como operaciones de su API, <em>Spark</em> facilita el desarrollo de aplicaciones <em>Big data</em>.</p>
+</li>
 <li><ins>Modularidad</ins>: soporte para todo tipo de cargas mediante cualquiera de los lenguajes de programación soportados: <em>Scala</em>, <em>Java</em>, <em>Python</em>, <em>SQL</em> y <em>R</em>, así como los módulos de <em>Spark SQL</em> para consultas interactivas, <em>Spark Structured Streaming</em> para procesamiento de datos en <em>streaming</em>, <em>Spark MLlib</em> para <em>machine learning</em> y <em>GraphX</em> para trabajar con grafos. De esta manera, mediante una única aplicación <em>Spark</em> se puede hacer todo sin necesidad de utilizar APIs separadas.</li>
 <li><ins>Extensibilidad</ins>: Al centrarse unicamente en el procesamiento, la gestión de los datos se puede realizar a partir de <em>Hadoop</em>, <em>Cassandra</em>, <em>HBase</em>, <em>MongoDB</em>, <em>Hive</em> o cualquier SGBD relacional, haciendo todo en memoria. Además, se puede extender el API para utilizar otras fuentes de datos, como <em>Apache Kafka</em>, <em>Amazon S3</em> o <em>Azure Storage</em>.</li>
 </ul>
 <p>En términos de flexibilidad, Spark ofrece un <em>stack</em> unificado que permite resolver múltiples tipos de procesamiento de datos, tanto aplicaciones <em>batch</em> como consultas interactivas, algoritmos de <em>machine learning</em> que requieren muchas iteraciones, aplicaciones de ingesta en <em>streaming</em> con rendimiento cercano al tiempo real, etc... Antes de <em>Spark</em>, para cada uno de estos tipos de procesamiento necesitábamos una herramienta diferente, ahora con <em>Spark</em> tenemos una solución unificada que reduce los costes y recursos necesarios.</p>
 <h3 id="spark-vs-hadoop">Spark vs Hadoop<a class="headerlink" href="#spark-vs-hadoop" title="Permanent link">&para;</a></h3>
-<p>La principal diferencia es que la computación se realiza en memoria, lo que puede implicar un mejora de hasta 100 veces mejor rendimiento. Para ello, se realiza una evaluación perezosa de las operaciones, de manera, que hasta que no se completa una operación, los datos realmente no se cargan.</p>
-<p>Para solucionar los problemas asociados a <em>MapReduce</em>, <em>Spark</em> crea un espacio de memoria RAM compartida entre los ordenadores del clúster. Este permite que los <em>NodeManager</em>/<em>WorkerNode</em> compartan variables (y su estado), eliminando la necesidad de escribir los resultados intermedios en disco. Esta zona de memoria compartida se traduce en el uso de RDD, <em>DataFrames</em> y <em>DataSets</em>, permitiendo realizar procesamiento en memoria a lo largo de un clúster con tolerancia a fallos.</p>
+<p>La principal diferencia es que la computación se realiza en memoria, lo que puede implicar un mejora de hasta 100 veces mejor rendimiento. Para ello, <em>Spark</em> utiliza una <strong>evaluación perezosa</strong> (<em>lazy evaluation</em>) de las operaciones. Por ejemplo, cuando se invoca una transformación (como un filtro o una proyección), <em>Spark</em> no la ejecuta de inmediato, sino que la registra en un grafo dirigido acíclico (DAG). Los datos realmente no se cargan ni se procesan hasta que se llama a una acción (como <code>collect()</code>, <code>count()</code> o <code>show()</code>). Este comportamiento permite al optimizador analizar el plan de ejecución completo antes de lanzar ninguna tarea, eliminando pasos redundantes y minimizando el movimiento de datos entre nodos.</p>
+<p>Además, para solucionar los problemas asociados a <em>MapReduce</em>, <em>Spark</em> crea un espacio de memoria RAM compartida entre los ordenadores del clúster. Este permite que los <em>NodeManager</em>/<em>WorkerNode</em> compartan variables (y su estado), eliminando la necesidad de escribir los resultados intermedios en disco. Esta zona de memoria compartida se traduce en el uso de RDD, <em>DataFrames</em> y <em>DataSets</em>, permitiendo realizar procesamiento en memoria a lo largo de un clúster con tolerancia a fallos.</p>
 <h3 id="stack-unificado">Stack unificado<a class="headerlink" href="#stack-unificado" title="Permanent link">&para;</a></h3>
 <p>El elemento principal es <strong><em>Spark Core</em></strong> el cual aporta toda la funcionalidad necesaria para preparar y ejecutar las aplicaciones distribuidas, gestionando la planificación y tolerancia a fallos de las diferentes tareas. Para ello, el núcleo ofrece un entorno <em>NoSQL</em> idóneo para el análisis exploratorio e interactivo de los datos. <em>Spark</em> se puede ejecutar en <em>batch</em> o en modo interactivo y tiene soporte para <em>Python</em>. Independientemente del lenguaje utilizado (ya sea <em>Python</em>, <em>Java</em>, <em>Scala</em>, <em>R</em> o <em>SQL</em>) el código se despliega entre todos los nodos a lo largo del clúster.</p>
 <p>Además, contiene otros 4 grandes componentes construidos sobre el <em>core</em>:</p>
@@ -4499,11 +4566,6 @@ TODO: Revisar, no está claro que se pueda compartir el cuaderno con la comunida
 -->
 
 <p>Si queremos, podemos hacer <a href="https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93eaaa8714f173bcfc/258974416188569/3948890815798328/7969755578738041/latest.html">público</a> el cuaderno y compartirlo con la comunidad.</p>
-<div class="admonition tip">
-<p class="admonition-title">Navegador de archivos DBFS</p>
-<p>Por defecto, el navegador del sistema de archivos de <em>DataBricks</em> está oculto.
-Para facilitar el acceso a los datos y visualizar la estructura y ruta de los mismos, lo podemos activar desde el menú superior derecho: <em>Admin Settings</em> → <em>Workspace Admin</em> → <em>Advanced</em>, y en <em>Other</em> ponemos la opción <strong><em>DBFS File Browser</em></strong> a <em>Enabled</em>/<em>On</em>.</p>
-</div>
 <h3 id="sparkcontext-vs-sparksession">SparkContext vs SparkSession<a class="headerlink" href="#sparkcontext-vs-sparksession" title="Permanent link">&para;</a></h3>
 <p><em>SparkContext</em> era el punto de entrada a <em>Spark</em> desde las versiones 1.x y se utilizaba para crear de forma programativa RDD, acumuladores y variables <em>broadcast</em> en el clúster.</p>
 <p>Desde Spark 2.0 la mayoría de funcionalidades (métodos) disponibles en <em>SparkContext</em> también los están en <em>SparkSession</em>. Su objeto <code>sc</code> está disponible en el <em>spark-shell</em> y se puede crear de forma programativa mediante la clase <code>SparkContext</code>.</p>
@@ -4667,10 +4729,16 @@ Dado el cariz de <em>Python</em>, no necesitamos que los <em>Dataset</em> estén
 <span class="linenos" data-linenos="11 "></span><span class="c1"># Las transformaciones se pueden encadenar</span>
 <span class="linenos" data-linenos="12 "></span><span class="n">quijoteTxt</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">quijoteTxt</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;Quijote&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>     <span class="c1"># idem - 584</span>
 </code></pre></div>
-<p>En este caso, el fichero de texto debe residir en la misma carpeta que nuestro <em>script</em> o cuaderno de <em>Jupyter</em>. Si estamos utilizando <em>Databricks</em>, y hemos subido el archivo mediante <em>DBFS</em>, para acceder al archivo usaremos el protocolo <code>dbfs</code> junto a la ruta donde hayamos colocado el archivo. Por ejemplo:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">quijoteTxt</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;dbfs:/FileStore/el_quijote.txt&quot;</span><span class="p">)</span>
+<p>En este caso, el fichero de texto debe residir en la misma carpeta que nuestro <em>script</em> o cuaderno de <em>Jupyter</em>. Si estamos utilizando <em>Databricks</em>, tras acceder al <em>Databricks Catalog</em>, necesitamos crear un volumen (botón <em>Create</em> en la esquina superior derecha) y subir nuestro archivo (en nuestro caso, hemos llamado al volumen gestionado <code>iabd</code> y le hemos asignado el catálogo <em>workspace</em> y es esquema <em>default</em>):</p>
+<figure style="align: center;">
+    <img src="images/01spark-databricks-catalog-volume.png" width="761" alt="Creando un volumen en Databricks Catalog">
+    <figcaption>Creando un volumen en Databricks Catalog</figcaption>
+</figure>
+
+<p>Posteriormente, accederemos a él mediante la ruta absoluta:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">quijoteTxt</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;/Volumes/workspace/default/iabd/el_quijote.txt&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Estudiaremos los <em>DataFrame</em> en profundidad en las <a href="dataframeAPI.html">próximas sesiones</a>.</p>
+<p>Estudiaremos los <em>DataFrame</em> en profundidad en su propia sesión sobre <a href="dataframeAPI.html">DataFrame API</a>, así como el uso del <em>Databricks Catalog</em> en la sesión de <a href="catalog.html">Spark Catalog</a>.</p>
 <h2 id="spark-ui">Spark UI<a class="headerlink" href="#spark-ui" title="Permanent link">&para;</a></h2>
 <p>Si accedemos a la dirección <a href="http://127.0.0.1:4040/">http://127.0.0.1:4040/</a>, veremos un interfaz gráfico donde podemos monitorizar y analizar el código <em>Spark</em> ejecutado. La barra superior muestra un menú con las opciones para visualizar los <em>jobs</em>, <em>stages</em>, el almacenamiento, el entorno y sus variables de configuración, y finalmente los ejecutores:</p>
 <figure style="align: center;">
@@ -4678,12 +4746,15 @@ Dado el cariz de <em>Python</em>, no necesitamos que los <em>Dataset</em> estén
     <figcaption>Spark Shell UI</figcaption>
 </figure>
 
-<p>Por ejemplo, si ejecutamos el ejemplo de <a href="rdd.html#groupbykey"><code>groupByKey</code> de la siguiente sesión</a>, obtenemos el siguiente DAG:</p>
+<p>Por ejemplo, si ejecutamos el ejemplo de <a href="rdd.html#groupbykey"><code>groupByKey</code> de la sesión de RDDs</a>, obtenemos el siguiente DAG:</p>
 <figure style="align: center;">
     <img src="images/01spark-ui-dag.png" width="1024" alt="Ejemplo de DAG">
     <figcaption>Ejemplo de DAG</figcaption>
 </figure>
 
+<p>El grafo que muestra la <em>Spark UI</em> es el <ins>plan de ejecución físico</ins> generado por el
+<em>Catalyst Optimizer</em>. Cada nodo del DAG representa una operación, y cada corte entre
+<em>stages</em> indica un <em>shuffle</em> de datos entre nodos del clúster.</p>
 <p>Si pulsamos por ejemplo sobre la fase de <code>groupBy</code> obtendremos sus estadísticas de ejecución:</p>
 <figure style="align: center;">
     <img src="images/01spark-ui-statistics.png" width="1024" alt="Estadísticas de una fase">
@@ -4692,12 +4763,54 @@ Dado el cariz de <em>Python</em>, no necesitamos que los <em>Dataset</em> estén
 
 <div class="admonition tip">
 <p class="admonition-title">Spark UI en Databricks</p>
-<p>Para acceder a la herramienta de monitorización en Databricks, una vez creado un clúster, en la opción <em>Compute</em>/Calcular podremos seleccionar el clúster creado y en la pestaña <em>IU de Spark</em> acceder al mismo interfaz gráfico:</p>
+<p>En Databricks <em>Free Edition</em>, al trabajar en modo <em>serverless</em>, no podemos acceder al <em>Spark UI</em> de la forma tradicional, pero sí que podemos a <em>logs</em> y métricas de ejecución, aunque no con el mismo nivel de detalle que en un entorno local.</p>
 <p><figure style="align: center;">
-    <img src="images/01spark-databricks-ui.png" width="1024" alt="Spark UI en Databricks">
-    <figcaption>Spark UI en Databricks</figcaption>
+    <img src="images/01spark-databricks-serverless.png" width="1024" alt="Spark logs en modo Serverless en Databricks">
+    <figcaption>Spark logs en modo Serverless en Databricks</figcaption>
+</figure></p>
+<p>Lo que sí que podemos hacer es sobre una celda que realiza una consulta o transformación, si pulsamos sobre <em>View performance"</em>, ver el tiempo total, el número de <em>tasks</em> e información sobre la ejecución</p>
+<p><figure style="align: center;">
+    <img src="images/01spark-databricks-view-performance.png" width="1024" alt="View performance en Databricks">
+    <figcaption>View performance en Databricks</figcaption>
+</figure></p>
+<p>Finalmente, si pulsamos sobre la propia consulta ya obtenemos una visión completa de la ejecución de la consulta:</p>
+<p><figure style="align: center;">
+    <img src="images/01spark-databricks-query-stats.png" width="1024" alt="Query stats en Databricks">
+    <figcaption>Query stats en Databricks</figcaption>
+</figure></p>
+<p>y mediante el <em>query profile</em> ya visualizamos el DAG de la consulta, las fases, las tareas, etc...</p>
+<p><figure style="align: center;">
+    <img src="images/01spark-databricks-query-profile.png" width="1024" alt="Query profile en Databricks">
+    <figcaption>Query profile en Databricks</figcaption>
 </figure></p>
 </div>
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<p>A continuación se recogen preguntas habituales sobre los conceptos de esta sesión que suelen realizarse en entrevistas de trabajo para puestos de ingeniería o ciencia de datos.</p>
+<p>Despliega cada pregunta para ver una respuesta orientativa; no hay una única respuesta correcta, pero sí aspectos clave que conviene mencionar.</p>
+<details class="question">
+<summary>¿Qué es <em>Apache Spark</em> y en qué se diferencia de <em>Hadoop MapReduce</em>?</summary>
+<p><em>Spark</em> es un framework de computación distribuida que procesa los datos principalmente en memoria, lo que lo hace hasta 100 veces más rápido que <em>Hadoop MapReduce</em> para cargas iterativas. <em>MapReduce</em> escribe los resultados intermedios en disco tras cada paso, mientras que <em>Spark</em> los mantiene en memoria siempre que es posible. <em>Hadoop</em> y <em>Spark</em> son complementarios: <em>Spark</em> puede usar <em>HDFS</em> como sistema de ficheros y <em>YARN</em> como gestor de recursos.</p>
+</details>
+<details class="question">
+<summary>¿Qué es la evaluación perezosa (<em>lazy evaluation</em>) y por qué la utiliza <em>Spark</em>?</summary>
+<p><em>Spark</em> no ejecuta las transformaciones (como <code>filter</code>, <code>map</code> o <code>select</code>) en el momento en que se invocan. En su lugar, las registra en un grafo dirigido acíclico (DAG) y solo las materializa cuando se llama a una acción (<code>collect()</code>, <code>count()</code>, <code>show()</code>...). Esto permite al Catalyst Optimizer analizar el plan de ejecución completo antes de lanzar ninguna tarea, eliminando pasos redundantes y reordenando operaciones para maximizar la eficiencia.</p>
+</details>
+<details class="question">
+<summary>¿Qué es el <em>Catalyst Optimizer</em>?</summary>
+<p><em>Catalyst</em> es el optimizador de consultas de la <em>DataFrame API</em> y <em>Spark SQL</em>. Toma el plan lógico del código del usuario, aplica reglas de optimización (eliminación de filtros redundantes, reordenación de joins, <em>predicate pushdown</em>…) y genera uno o varios planes físicos, seleccionando el más eficiente. Es la razón principal por la que los DataFrames tienen mejor rendimiento que los RDD escritos a mano.</p>
+</details>
+<details class="question">
+<summary>¿Qué es el motor <em>Tungsten</em>?</summary>
+<p><em>Tungsten</em> es el motor de ejecución física de <em>Spark</em>. Trabaja por debajo de la <em>DataFrame API</em> y gestiona la memoria directamente fuera del heap de <em>Java</em> (<em>off-heap</em>), genera código binario compacto en tiempo de ejecución (<em>whole-stage code generation</em>) y minimiza los costes de serialización. Su objetivo es aproximar el rendimiento de <em>Spark</em> al del hardware nativo.</p>
+</details>
+<details class="question">
+<summary>¿Cuáles son los gestores de clúster compatibles con <em>Spark</em>?</summary>
+<p><em>Spark</em> soporta cuatro modos de despliegue: <em>Standalone</em> (gestor propio de <em>Spark</em>, sin dependencias externas, ideal para desarrollo), <em>YARN</em> (el gestor de recursos de <em>Hadoop</em>, el más habitual en entornos on-premise), <em>Apache Mesos</em> (gestor multipropósito, hoy en desuso progresivo) y <em>Kubernetes</em> (el estándar emergente en entornos <em>cloud-native</em>). La elección del gestor no afecta a la API de Spark.</p>
+</details>
+<details class="question">
+<summary>¿Cuál es el papel del <em>Driver</em> y de los <em>Executors</em> en una aplicación <em>Spark</em>?</summary>
+<p>El <em>Driver</em> es el proceso que contiene el método <code>main()</code> de la aplicación. Crea la <code>SparkSession</code>, construye el DAG de operaciones, negocia recursos con el gestor de clúster y coordina las tareas. Los <em>Executors</em> son procesos que se ejecutan en los nodos del clúster: cada uno recibe un conjunto de tareas del <em>Driver</em>, las ejecuta en sus núcleos asignados y devuelve los resultados. Si un <em>Executor</em> falla, el <em>Driver</em> puede relanzar sus tareas en otro nodo.</p>
+</details>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://spark.apache.org/docs/latest/">Documentación oficial de Apache Spark</a></li>
@@ -4713,9 +4826,10 @@ Dado el cariz de <em>Python</em>, no necesitamos que los <em>Dataset</em> estén
 <li>la <a href="#puesta-en-marcha">máquina virtual</a> o un <a href="#uso-de-docker">entorno Docker</a>, tanto mediante cuadernos <em>Jupyter</em> como mediante el comando <code>spark-submit</code>,</li>
 <li>y en <a href="#databricks">Databricks</a>.</li>
 </ul>
+<p>Respecto a la monitorización, accede a la <em>Spark UI</em> y realiza un análisis de los <em>jobs</em>, <em>stages</em> y <em>tasks</em> generados, así como el DAG de ejecución, explicando por qué aparecen (tanto cada uno de ellos como su cantidad).</p>
 </li>
 <li>
-<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado las ventajas que ofrece unificar procesos, servicios, herramientas, métodos y sectores.">CEPIA.3a</abbr>, <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 1p) En esta sesión hemos visto que la plataforma <em>Databricks</em> permite ejecutar código de <em>Spark</em> en un clúster distribuido. Crea una presentación de mínimo 6 diapositivas donde expongas qué elementos componen el ecosistema <em>Databricks</em> y como interactúan entre ellos, destacando el concepto de <em>Data Lakehouse</em> y la tecnología <em>Delta Lake</em>.</p>
+<p>(<abbr title="Evalúa las mejoras en los negocios integrando convergencia tecnológica.">RAPIA.3</abbr> / <abbr title="Se han identificado las ventajas que ofrece unificar procesos, servicios, herramientas, métodos y sectores.">CEPIA.3a</abbr>, <abbr title="Se han identificado sistemas que facilitan la conexión tecnológica.">CEPIA.3b</abbr>, <abbr title="Se han evaluado las características de dichos sistemas.">CEPIA.3c</abbr> / 1p) En esta sesión hemos visto que la plataforma <em>Databricks</em> permite ejecutar código de <em>Spark</em> en un clúster distribuido. Crea una presentación de mínimo 8 diapositivas donde expongas qué elementos componen el ecosistema <em>Databricks</em> y como interactúan entre ellos, destacando el concepto de <em>Data Lakehouse</em> y la tecnología <em>Delta Lake</em>, así como la integración de los diferentes componentes con <em>Spark</em>.</p>
 </li>
 </ol>
 <!--

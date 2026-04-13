@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Analítica de datos con Spark DataFrames y Spark SQL. Creación de vistas en Spark SQL. Uso de Databricks Community Edition, acceso a archivos y creación de cuadros de mandos.">
+        <meta name="description" content="Analítica de datos con Spark DataFrames y Spark SQL. Creación de vistas en Spark SQL. Uso de Databricks, acceso a archivos y creación de cuadros de mandos.">
       
       
       
@@ -74,7 +74,7 @@
   
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Analítica de datos con Spark DataFrames / SQL - Inteligencia Artificial y Big Data" />
-<meta property="og:description" content="Analítica de datos con Spark DataFrames y Spark SQL. Creación de vistas en Spark SQL. Uso de Databricks Community Edition, acceso a archivos y creación de cuadros de mandos." />
+<meta property="og:description" content="Analítica de datos con Spark DataFrames y Spark SQL. Creación de vistas en Spark SQL. Uso de Databricks, acceso a archivos y creación de cuadros de mandos." />
 <meta property="og:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/spark/dataframeAPI.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
@@ -82,7 +82,7 @@
 <meta property="og:url" content="https://aitor-medrano.github.io/iabd/spark/dataframeAPI.html" />
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:title" content="Analítica de datos con Spark DataFrames / SQL - Inteligencia Artificial y Big Data" />
-<meta property="twitter:description" content="Analítica de datos con Spark DataFrames y Spark SQL. Creación de vistas en Spark SQL. Uso de Databricks Community Edition, acceso a archivos y creación de cuadros de mandos." />
+<meta property="twitter:description" content="Analítica de datos con Spark DataFrames y Spark SQL. Creación de vistas en Spark SQL. Uso de Databricks, acceso a archivos y creación de cuadros de mandos." />
 <meta property="twitter:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/spark/dataframeAPI.png" />
 </head>
   
@@ -1736,6 +1736,14 @@
   </span>
   
   
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
 
       </a>
     </li>
@@ -1801,6 +1809,14 @@
   </span>
   
   
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
 
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -1818,6 +1834,14 @@
     
   </span>
   
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -2139,6 +2163,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
   
 </li>
       
@@ -4342,6 +4377,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4447,55 +4493,44 @@
 
 
 <h1 id="spark-dataframes-sql">Spark DataFrames / SQL<a class="headerlink" href="#spark-dataframes-sql" title="Permanent link">&para;</a></h1>
-<p>En la sesiones anteriores hemos introducido Spark y el uso de RDD para interactuar con los datos. Tal como comentamos, los RDD permiten trabajar a bajo nivel, siendo más cómodo y eficiente hacer uso de <em>DataFrames</em> y el lenguaje SQL.</p>
+<p>En la sesiones anteriores hemos introducido <em>Spark</em> y el uso de RDD para interactuar con los datos. Tal como comentamos, los RDD permiten trabajar a bajo nivel, siendo más cómodo y eficiente hacer uso de <em>DataFrames</em> y el lenguaje SQL.</p>
 <h2 id="dataframes">DataFrames<a class="headerlink" href="#dataframes" title="Permanent link">&para;</a></h2>
-<p>Un <em>DataFrame</em> es una estructura equivalente a una tabla de base de datos relacional, con un motor bien optimizado para el trabajo en un clúster. Los datos se almacenan en filas y columnas y ofrece un conjunto de operaciones para manipular los datos.</p>
+<p>Los <em>DataFrames</em> son la forma principal de trabajar con datos en <em>Spark</em>. A diferencia de los RDD, que operan a bajo nivel, los <em>DataFrames</em> ofrecen una abstracción estructurada similar a una tabla de base de datos relacional: los datos se organizan en filas y columnas con un esquema definido, y el motor de optimización <em>Catalyst</em> se encarga de planificar la ejecución de forma eficiente en el clúster.</p>
+<p>Su uso es predominante en cualquier desarrollo moderno con <em>Spark</em>, y permiten trabajar tanto mediante una API de objetos como directamente con SQL estándar. Los RDD siguen existiendo como capa interna, pero en la práctica no es necesario trabajar con ellos directamente.</p>
 <p>El trabajo con <em>DataFrames</em> es más sencillo y eficiente que el procesamiento con RDD, por eso su uso es predominante en los nuevos desarrollos con <em>Spark</em>.</p>
 <p>A continuación veremos cómo podemos obtener y persistir <em>DataFrames</em> desde diferentes fuentes y formatos de datos</p>
 <h3 id="creando-dataframes">Creando Dataframes<a class="headerlink" href="#creando-dataframes" title="Permanent link">&para;</a></h3>
-<p>El caso más básico es crear un <em>DataFrame</em> a partir de un RDD mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.toDF.html"><code>toDF</code></a>:</p>
+<p>La forma más directa de crear un <em>DataFrame</em> es a partir de datos en memoria mediante el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.SparkSession.createDataFrame.html"><code>createDataFrame</code></a> de la <code>SparkSession</code>, indicando los datos y los nombres de las columnas:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
-<span class="linenos" data-linenos="2 "></span>
-<span class="linenos" data-linenos="3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span> <span class="c1"># SparkSession de forma programativa</span>
-<span class="linenos" data-linenos="4 "></span><span class="c1"># Creamos un RDD</span>
-<span class="linenos" data-linenos="5 "></span><span class="n">datos</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Aitor&quot;</span><span class="p">,</span> <span class="mi">182</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Pedro&quot;</span><span class="p">,</span> <span class="mi">178</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Marina&quot;</span><span class="p">,</span> <span class="mi">161</span><span class="p">)]</span>
-<span class="linenos" data-linenos="6 "></span><span class="n">rdd</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="n">datos</span><span class="p">)</span>
-<span class="linenos" data-linenos="7 "></span><span class="c1"># Creamos un DataFrame y mostramos su esquema</span>
-<span class="linenos" data-linenos="8 "></span><span class="n">dfRDD</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>
-<span class="linenos" data-linenos="9 "></span><span class="n">dfRDD</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">datos</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Aitor&quot;</span><span class="p">,</span> <span class="mi">182</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Pedro&quot;</span><span class="p">,</span> <span class="mi">178</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Marina&quot;</span><span class="p">,</span> <span class="mi">161</span><span class="p">)]</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">columnas</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;nombre&quot;</span><span class="p">,</span> <span class="s2">&quot;altura&quot;</span><span class="p">]</span>
+<span class="linenos" data-linenos="5 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">datos</span><span class="p">,</span> <span class="n">columnas</span><span class="p">)</span>
+<span class="linenos" data-linenos="6 "></span><span class="n">df</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
 </code></pre></div>
-<p>Y mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.printSchema.html"><code>printSchema</code></a> obtenemos un resumen del esquema del <em>DataFrame</em> , donde para cada columna se indica el nombre, el tipo y si admite valores nulos:</p>
+<p>Mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.printSchema.html"><code>printSchema</code></a> obtenemos un resumen del esquema del <em>DataFrame</em>, donde para cada columna se indica el nombre, el tipo y si admite valores nulos:
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>root
-<span class="linenos" data-linenos="2 "></span> |-- _1: string (nullable = true)
-<span class="linenos" data-linenos="3 "></span> |-- _2: long (nullable = true)
+<span class="linenos" data-linenos="2 "></span>|-- nombre: string (nullable = true)
+<span class="linenos" data-linenos="3 "></span>|-- altura: long (nullable = true)
 </code></pre></div>
-<p>Podemos ver como los nombres de las columnas son <code>_1</code> y <code>_2</code>. Para asignarle un nombre adecuado podemos pasarle una lista con los nombres a la hora de crear el <em>DataFrame</em>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">columnas</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;nombre&quot;</span><span class="p">,</span><span class="s2">&quot;altura&quot;</span><span class="p">]</span>
-<span class="linenos" data-linenos="2 "></span><span class="n">dfRDD</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">toDF</span><span class="p">(</span><span class="n">columnas</span><span class="p">)</span>
-<span class="linenos" data-linenos="3 "></span><span class="n">dfRDD</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+Si queremos mostrar sus datos, haremos uso del método <code>show</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># +------+------+</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1"># |nombre|altura|</span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># +------+------+</span>
+<span class="linenos" data-linenos="5 "></span><span class="c1"># | Aitor|   182|</span>
+<span class="linenos" data-linenos="6 "></span><span class="c1"># | Pedro|   178|</span>
+<span class="linenos" data-linenos="7 "></span><span class="c1"># |Marina|   161|</span>
+<span class="linenos" data-linenos="8 "></span><span class="c1"># +------+------+</span>
 </code></pre></div>
-<p>Y ahora obtenemos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>root
-<span class="linenos" data-linenos="2 "></span> |-- nombre: string (nullable = true)
-<span class="linenos" data-linenos="3 "></span> |-- altura: long (nullable = true)
-</code></pre></div>
-<p>Si queremos mostrar sus datos, haremos uso del método <code>show</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>df.show<span class="o">()</span>
-</code></pre></div>
-<p>Obteniendo una vista de los datos en forma de tabla:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>+------+------+
-<span class="linenos" data-linenos="2 "></span>|nombre|altura|
-<span class="linenos" data-linenos="3 "></span>+------+------+
-<span class="linenos" data-linenos="4 "></span>| Aitor|   182|
-<span class="linenos" data-linenos="5 "></span>| Pedro|   178|
-<span class="linenos" data-linenos="6 "></span>|Marina|   161|
-<span class="linenos" data-linenos="7 "></span>+------+------+
-</code></pre></div>
-<p>También podemos crear un <em>DataFrame</em> directamente desde una <em>SparkSession</em> sin crear un RDD previamente mediante el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.SparkSession.createDataFrame.html"><code>createDataFrame</code></a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># También podemos crear un DF desde SparkSession</span>
-<span class="linenos" data-linenos="2 "></span><span class="n">dfDesdeDatos</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">datos</span><span class="p">,</span> <span class="n">columnas</span><span class="p">)</span>
-<span class="linenos" data-linenos="3 "></span><span class="n">dfDesdeDatos</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
-</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Creando un DataFrame desde un RDD</p>
+<p>Si en algún momento trabajamos con código heredado que devuelve un RDD, podemos convertirlo a <em>DataFrame</em> mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.toDF.html"><code>toDF</code></a>. Si no le indicamos nombres de columna, Spark asignará nombres genéricos (<code>_1</code>, <code>_2</code>, …):
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">rdd</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="n">datos</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">dfRDD</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">toDF</span><span class="p">()</span>           <span class="c1"># columnas: _1, _2</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">dfRDD</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">toDF</span><span class="p">(</span><span class="n">columnas</span><span class="p">)</span>   <span class="c1"># columnas: nombre, altura</span>
+</code></pre></div></p>
+</div>
 <h3 id="mostrando-los-datos">Mostrando los datos<a class="headerlink" href="#mostrando-los-datos" title="Permanent link">&para;</a></h3>
 <p>Para los siguientes apartados, supongamos que queremos almacenar ciertos datos de clientes, como son su nombre y apellidos, ciudad y sueldo:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">clientes</span> <span class="o">=</span> <span class="p">[</span>
@@ -4574,7 +4609,7 @@
 <p>Si únicamente nos interesa saber cuantas filas tiene nuestro <em>DataFrame</em>, podemos hacer uso de <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.count.html">count</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>  <span class="c1"># 5</span>
 </code></pre></div>
-<p>Por último, como un <em>DataFrame</em> por debajo es un RDD, podemos usar <code>collect</code> y <code>take</code> conforme necesitemos y recuperar objetos de tipo <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Row.html">Row</a>:</p>
+<p>Por último, además de <code>show</code>, podemos recuperar todos los registros del <em>DataFrame</em> mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.collect.html"><code>collect</code></a>, o solo los primeros <em>n</em> mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.take.html"><code>take</code></a>. Ambos métodos devuelven una lista de objetos <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Row.html"><code>Row</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">df</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="c1"># [Row(nombre=&#39;Aitor&#39;, apellidos=&#39;Medrano&#39;, ciudad=&#39;Elche&#39;, sueldo=3000),</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="c1">#  Row(nombre=&#39;Pedro&#39;, apellidos=&#39;Casas&#39;, ciudad=&#39;Elche&#39;, sueldo=4000),</span>
@@ -4586,6 +4621,7 @@
 <span class="linenos" data-linenos=" 9 "></span><span class="c1">#  Row(nombre=&#39;Pedro&#39;, apellidos=&#39;Casas&#39;, ciudad=&#39;Elche&#39;, sueldo=4000)]</span>
 <span class="linenos" data-linenos="10 "></span><span class="n">nom</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>        <span class="c1"># &#39;Aitor&#39;</span>
 </code></pre></div>
+<p>Ten en cuenta que <code>collect</code> trae todos los datos al nodo <em>driver</em>, por lo que conviene usarlo solo con conjuntos de datos pequeños o tras haber reducido previamente el <em>DataFrame</em>.</p>
 <h3 id="cargando-diferentes-formatos">Cargando diferentes formatos<a class="headerlink" href="#cargando-diferentes-formatos" title="Permanent link">&para;</a></h3>
 <p>Lo más usual es cargar los datos desde una archivo externo. Para ello, mediante el API de <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameReader.html"><code>DataFrameReader</code></a> cargaremos los datos directamente en un <em>Dataframe</em> mediante diferentes métodos dependiendo del formato (admite tanto el nombre de un recurso como una ruta de una carpeta).</p>
 <p>Para cada formato, existe un método corto que se llama como el formato en sí, y un método general donde mediante <code>format</code> indicamos el formato y que finaliza con el método <code>load</code> siempre dentro de <code>spark.read</code>:</p>
@@ -4680,6 +4716,12 @@
 <div class="admonition tip">
 <p class="admonition-title">Un único archivo de salida</p>
 <p>Por cada partición, Spark generará un archivo de salida. Recuerda que podemos <a href="rdd.html#modificando-las-particiones">reducir el número de particiones</a> mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.RDD.coalesce.html">coalesce</a> o <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.RDD.repartition.html">repartition</a>.</p>
+<p>Por cada partición, <em>Spark</em> generará un archivo de salida independiente. Si necesitamos reducir el número de archivos resultantes (por ejemplo, para obtener un único archivo), podemos reparticionar el <em>DataFrame</em> antes de escribir mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.RDD.coalesce.html">coalesce</a> o <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.RDD.repartition.html">repartition</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">coalesce</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;datos.csv&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;datos.csv&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Mientras que <code>coalesce(1)</code> es la opción más eficiente cuando queremos reducir particiones, ya que evita un <em>shuffle</em> completo de los datos, <code>repartition(1)</code> es más costoso porque implica un <em>shuffle</em> completo para redistribuir los datos en una sola partición.</p>
+<p>Ten en cuenta que esto puede afectar al rendimiento, ya que se pierde paralelismo.</p>
 </div>
 <p>Una vez vista la sintaxis, vamos a ver un ejemplo completo de lectura de un archivo CSV (el archivo <a href="resources/pdi_sales.csv"><code>pdi_sales.csv</code></a> que hemos utilizado durante todo el curso) que está almacenado en HDFS y que tras leerlo, lo guardamos como JSON de nuevo en HDFS:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
@@ -5074,12 +5116,8 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 -->
 
 <h2 id="trabajando-con-datos-sucios">Trabajando con datos sucios<a class="headerlink" href="#trabajando-con-datos-sucios" title="Permanent link">&para;</a></h2>
-<p>Hay tres formas de gestionar la suciedad de los datos o la omisión completa de los mismos:</p>
-<ol>
-<li>Eliminar las filas que tienen valores vacíos en una o más columnas.</li>
-<li>Rellenar los valores nulos con valores que definimos nosotros.</li>
-<li>Sustituir los datos erróneos por algún valor que sepamos cómo gestionarlo.</li>
-</ol>
+<p>En cualquier proyecto real, los datos rara vez llegan limpios. Valores nulos, registros incompletos, errores tipográficos o datos fuera de rango son situaciones habituales que hay que resolver antes de analizar o persistir los datos.</p>
+<p>Spark ofrece tres estrategias básicas para gestionar este tipo de situaciones: eliminar las filas problemáticas, rellenar los valores que faltan con un valor por defecto, o sustituir valores incorrectos por otros válidos. Vamos a ver cada una de ellas.</p>
 <p>Vamos a ver cada uno de estos casos a partir del siguiente <em>dataset</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">malasVentas</span> <span class="o">=</span> <span class="p">[</span>
 <span class="linenos" data-linenos=" 2 "></span>    <span class="p">(</span><span class="mi">6666</span><span class="p">,</span> <span class="s2">&quot;2022-03-22&quot;</span><span class="p">,</span> <span class="s2">&quot;03206&quot;</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mf">3333.33</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">),</span>
@@ -5197,8 +5235,19 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">col</span><span class="p">,</span> <span class="n">trim</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">,</span> <span class="n">trim</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">)))</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;Zip&quot;</span><span class="p">,</span> <span class="n">trim</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;Zip&quot;</span><span class="p">)))</span>
 </code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Inspeccionando el plan de ejecución</p>
+<p>Puedes ver el plan lógico y físico que genera el <em>Catalyst Optimizer</em>
+para cualquier DataFrame llamando a <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.explain.html"><code>explain()</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;Revenue&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2000</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">,</span> <span class="s2">&quot;Revenue&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;formatted&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>El plan lógico refleja las operaciones tal como las has escrito;
+el plan físico muestra lo que <em>Spark</em> ejecutará realmente tras aplicar
+las optimizaciones (reordenación de filtros, <em>predicate pushdown</em>, etc.).</p>
+<p>Puedes visualizar el mismo DAG gráficamente en la <em>Spark UI</em>.</p>
+</div>
 <h2 id="usando-sql">Usando SQL<a class="headerlink" href="#usando-sql" title="Permanent link">&para;</a></h2>
-<p>En la era del big data SQL es la lengua franca, permitiendo a perfiles con pocos conocimientos de programación trabajar de forma eficiente con los datos (siempre poniendo el foco en la analítica de datos, no en el procesamiento transaccional).</p>
+<p>En la era del <em>big data</em>, SQL es la lengua franca, permitiendo a perfiles con pocos conocimientos de programación trabajar de forma eficiente con los datos (siempre poniendo el foco en la analítica de datos, no en el procesamiento transaccional).</p>
 <p><em>Spark</em> soporta el ANSI SQL 2003, ampliamente establecido en el mundo de las bases de datos.</p>
 <p>Para correr SQL en <em>Spark</em> podemos hacerlo a través de:</p>
 <ul>
@@ -5250,29 +5299,45 @@ dependiendo del tipo de vista:</p>
 <span class="linenos" data-linenos="2 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">dropGlobalTempView</span><span class="p">(</span><span class="s2">&quot;ventasg&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="trabajando-con-databricks">Trabajando con <em>Databricks</em><a class="headerlink" href="#trabajando-con-databricks" title="Permanent link">&para;</a></h2>
-<p>En la sesión anterior ya vimos como crear RDDs con <a href="https://community.cloud.databricks.com/login.html"><em>Databricks</em></a>. En esta ocasión, vamos a trabajar mediante <em>DataFrames</em> y SQL para ver toda la flexibilidad que nos aporta.</p>
-<p>Una vez creado de nuevo el cluster, vamos a cargar los datos mediante la opción <em>Data</em>, subiendo el archivo <a href="resources/pdi_sales_small.csv"><code>pdi_sales_small.csv</code></a>:</p>
+<p><em>Databricks</em> es una plataforma en la nube construida sobre <em>Spark</em> que facilita el trabajo con <em>notebooks</em> y clústeres gestionados. En esta sección vamos a ver cómo cargar datos y trabajar con <em>DataFrames</em> y SQL directamente desde su interfaz, aprovechando además sus capacidades de visualización integrada.</p>
+<p>Una vez hemos entrado a <em>Databricks</em>, vamos a cargar los datos mediante la opción <em>Data Engineering</em> → <em>Data Ingestion</em> → <em>Create or modify table</em>, subiendo el archivo <a href="resources/pdi_sales_small.csv"><code>pdi_sales_small.csv</code></a> y poniendo como nombre de la tabla, por ejemplo, <code>ventas</code>. Tras cargarlo, nos aparecerá una visualización de los datos donde veremos que no lo ha hecho correctamente, ya que, en nuestro caso, debemos indicar que el delimitador es <code>;</code>. Por ello, si pulsamos sobre <em>Advanced attributes</em> podremos configurarlo y crear la tabla:</p>
 <figure style="align: center;">
-    <img src="images/02spark-databricks-upload.png">
-    <figcaption>Subiendo datos a Databricks</figcaption>
+    <img src="images/02spark-databricks-catalog-ventas-notebook.png" alt="Creando una tabla con nuestros datos en Databricks">
+    <figcaption>Creando una tabla con nuestros datos en Databricks</figcaption>
 </figure>
 
-<p>Una vez cargado el archivo, pulsamos sobre el botón <strong><em>Create table in notebook</em></strong> de manera que nos crea un cuaderno <em>Jupyter</em> donde podemos consultar los datos y crear una vista temporal:</p>
+<p>Una vez creada, se cargará automática la tabla en el catálogo de <em>Databricks</em> y podremos consultar sus datos desde la pestaña <em>Sample Data</em>, o bien crear una consulta SQL sobre la tabla mediante el botón azul <em>Create</em> → <em>Query</em> o un cuaderno <em>Jupyter</em> mediante <em>Create</em> → <em>Notebook</em> donde podemos trabajar con ella:</p>
 <figure style="align: center;">
-    <img src="images/02spark-databricks-read.png">
-    <figcaption>Cargados los datos en un DataFrame</figcaption>
+    <img src="images/02spark-databricks-notebook.png" alt="Visualizando los datos en un cuaderno en Databricks">
+    <figcaption>Visualizando los datos en un cuaderno en Databricks</figcaption>
 </figure>
 
-<p>Para que funcione correctamente con nuestro datos, vamos a modificar el código:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">infer_schema</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span>
-<span class="linenos" data-linenos="2 "></span><span class="n">first_row_is_header</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span>
-<span class="linenos" data-linenos="3 "></span><span class="n">delimiter</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span>
+<p>Como se puede observar, podemos realizar consultas SQL directamente sobre la tabla creada, mediante una celda de tipo SQL</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">%</span><span class="k">sql</span>
+<span class="linenos" data-linenos="2 "></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">ventas</span><span class="w"> </span><span class="k">limit</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
 </code></pre></div>
-<p>Y tras cargar el <em>dataset</em>, antes de crear la vista, vamos a limpiar los países:</p>
+<p>O acceder mediante <em>Python</em> a la tabla mediante <code>spark.table(nombreTabla)</code>, lo cual nos devolverá un <em>DataFrame</em> de <em>Spark</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;ventas&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div>
+<p>Sobre este <em>DataFrame</em> ya podemos realizar las operaciones que hemos visto a lo largo de la sesión, como limpiar los países para eliminar los espacios en blanco:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">trim</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">,</span> <span class="n">trim</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Country</span><span class="p">))</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
+<figure style="align: center;">
+    <img src="images/02spark-databricks-notebook-dataframe.png" alt="Trabajando con DataFrames en Databricks">
+    <figcaption>Trabajando con DataFrames en Databricks</figcaption>
+</figure>
+
 <h3 id="datos-visuales">Datos visuales<a class="headerlink" href="#datos-visuales" title="Permanent link">&para;</a></h3>
+<p>Sobre las celdas SQL, si pulsamos sobre el icono de la esquina superior derecha, podemos visualizar los datos en modo gráfico, pudiendo elegir entre diferentes tipos de gráficos y configurando sus ejes, leyendas, etc.</p>
+<p>TODO: Crear gif</p>
+<figure style="align: center;">
+    <img src="images/02spark-databricks-visualization.png" alt="Trabajando con DataFrames en Databricks">
+    <figcaption>Trabajando con DataFrames en Databricks</figcaption>
+</figure>
+
 <p>Si volvemos a ejecutar el cuaderno, ahora sí que cargará correctamente los datos. Si nos vamos a la celda que realiza una consulta sobre todos los datos, podemos ver en la parte superior derecha como el lenguaje empleado en la celda es SQL, por ello la primera línea comienza con <code>%sql</code>, y a continuación ya podemos introducir directamente código SQL, teniendo la opción de visualizar los datos tanto en modo texto como mediante gráficos:</p>
 <figure style="align: center;">
     <img src="images/02spark-databricks-sql.gif">
@@ -5307,6 +5372,128 @@ dependiendo del tipo de vista:</p>
     <figcaption>Añadiendo elementos a un cuadro de mandos</figcaption>
 </figure>
 
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<p>A continuación se recogen preguntas habituales sobre los conceptos de esta sesión que suelen realizarse en entrevistas de trabajo para puestos de ingeniería o ciencia de datos.</p>
+<p>Despliega cada pregunta para ver una respuesta orientativa; no hay una única respuesta correcta, pero sí aspectos clave que conviene mencionar.</p>
+<details class="question">
+<summary>¿Cuáles son las diferencias entre RDD, DataFrame y Dataset?</summary>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>RDD</th>
+<th>DataFrame</th>
+<th>Dataset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Abstracción</strong></td>
+<td>Bajo nivel</td>
+<td>Alto nivel</td>
+<td>Alto nivel</td>
+</tr>
+<tr>
+<td><strong>Esquema</strong></td>
+<td>No</td>
+<td>Sí</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><strong>Tipado estático</strong></td>
+<td>Sí (genérico)</td>
+<td>No</td>
+<td>Sí (Scala/Java)</td>
+</tr>
+<tr>
+<td><strong>Optimización</strong></td>
+<td>Manual</td>
+<td>Catalyst + Tungsten</td>
+<td>Catalyst + Tungsten</td>
+</tr>
+<tr>
+<td><strong>API Python</strong></td>
+<td>Sí</td>
+<td>Sí</td>
+<td>No disponible (= <em>DataFrame</em>)</td>
+</tr>
+<tr>
+<td><strong>Recomendado</strong></td>
+<td>Casos de bajo nivel</td>
+<td>Uso general</td>
+<td>Scala/Java con tipos fuertes</td>
+</tr>
+</tbody>
+</table>
+<p>En <em>PySpark</em>, <em>DataFrame</em> y <em>Dataset</em> son equivalentes (<code>Dataset[Row]</code>). Se recomienda siempre usar <em>DataFrames</em> salvo que se necesite acceso de bajo nivel.</p>
+</details>
+<details class="question">
+<summary>¿Qué diferencia hay entre una vista temporal y una vista global?</summary>
+<p>Una vista temporal (<code>createOrReplaceTempView</code>) solo es accesible desde la <code>SparkSession</code> actual y desaparece cuando esta termina. Una vista global (<code>createOrReplaceGlobalTempView</code>) se almacena en la base de datos virtual <code>global_temp</code> y es accesible desde cualquier <code>SparkSession</code> dentro de la misma aplicación <em>Spark</em>. Se consulta prefijando el nombre con <code>global_temp.</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM global_temp.mi_vista&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="question">
+<summary>¿Por qué es mejor definir el esquema explícitamente en lugar de inferirlo?</summary>
+<p>La inferencia de esquema requiere que <em>Spark</em> lea los datos una primera vez para determinar los tipos, duplicando el tiempo de lectura en ficheros grandes. Además puede dar resultados incorrectos (por ejemplo, inferir un campo numérico como <code>string</code> si los primeros valores son nulos). Definir el esquema con <code>StructType</code> es más rápido, predecible y evita errores en producción.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructType</span><span class="p">,</span> <span class="n">StructField</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">,</span> <span class="n">StringType</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">schema</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">([</span>
+<span class="linenos" data-linenos="3 "></span>    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;nombre&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="p">])</span>
+<span class="linenos" data-linenos="6 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;datos.csv&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="question">
+<summary>¿Qué es el <em>predicate pushdown</em> y cómo se aprovecha con Parquet?</summary>
+<p>El <em>predicate pushdown</em> es una optimización del <em>Catalyst Optimizer</em> por la que los filtros (<code>filter</code>/<code>where</code>) se aplican lo más cerca posible de la fuente de datos, antes de cargar los datos en memoria.</p>
+<p>Con el formato Parquet, que almacena estadísticas por <em>row group</em> (valores mínimo y máximo de cada columna), <em>Spark</em> puede descartar enteros bloques de datos sin siquiera leerlos si no satisfacen el filtro. Esto reduce drásticamente el volumen de datos leído del almacenamiento.</p>
+</details>
+<details class="question">
+<summary>¿Cuál es la diferencia entre <code>col()</code> y <code>expr()</code> para referenciar columnas?</summary>
+<p><code>col("nombre")</code> devuelve una referencia a una columna por nombre, lo más habitual para operaciones simples. <code>expr("precio * cantidad")</code> permite escribir expresiones SQL arbitrarias como cadena de texto, incluyendo funciones, operadores y alias.</p>
+<p>Son equivalentes en rendimiento ya que ambas pasan por el <em>Catalyst Optimizer</em>, pero <code>expr()</code> resulta más cómodo para expresiones complejas.</p>
+</details>
+<details class="question">
+<summary>¿Cuál es la diferencia entre <code>filter()</code> y <code>where()</code>?</summary>
+<p>Son exactamente equivalentes: <code>where()</code> es un alias de <code>filter()</code> pensado
+para que el código resulte más legible a quienes vienen de SQL. Ambos
+aceptan tanto una expresión de columna como una cadena SQL:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;sueldo&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4000</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;sueldo &gt; 4000&quot;</span><span class="p">)</span>  <span class="c1"># idéntico resultado</span>
+</code></pre></div>
+</details>
+<details class="question">
+<summary>¿Cuál es la diferencia entre <code>select()</code> y <code>withColumn()</code>?</summary>
+<p><code>select()</code> proyecta el <em>DataFrame</em> devolviendo <ins>solo las columnas indicadas</ins>;
+si no incluyes las columnas existentes, las pierdes. <code>withColumn()</code> añade o
+reemplaza  ^^una única columna ^^ manteniendo el resto intactas. Como regla
+práctica: usa <code>withColumn()</code> para transformar o añadir una columna puntual,
+y <code>select()</code> cuando quieras reestructurar el esquema completo o calcular
+varias columnas a la vez.</p>
+</details>
+<details class="question">
+<summary>¿Cómo se gestionan los valores nulos en Spark?</summary>
+<p><em>Spark</em> representa los nulos con <code>null</code> y ofrece tres mecanismos principales:</p>
+<ul>
+<li><code>dropna(thresh=N)</code> — elimina las filas que tengan menos de N valores no nulos.</li>
+<li><code>fillna(valor)</code> — sustituye los nulos por un valor fijo (puede ser un diccionario <code>{columna: valor}</code>).</li>
+<li><code>replace(valor_original, valor_nuevo)</code> — reemplaza valores concretos en todo el <em>DataFrame</em>.</li>
+</ul>
+<p>En operaciones de agregación, <em>Spark</em> ignora los nulos por defecto (igual que SQL).
+Para detectarlos se usa <code>col("campo").isNull()</code> o <code>col("campo").isNotNull()</code>.</p>
+</details>
+<details class="question">
+<summary>¿Cómo se inspecciona el plan de ejecución de un <em>DataFrame</em>?</summary>
+<p>Mediante <code>explain(mode="formatted")</code>, que muestra el plan lógico (lo que el
+código describe) y el plan físico (lo que <em>Catalyst</em> ejecutará realmente tras
+aplicar sus optimizaciones):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;sueldo&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4000</span><span class="p">)</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;ciudad&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;formatted&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>El plan lógico y el físico pueden diferir si <em>Catalyst</em> reordena filtros,
+aplica <em>predicate pushdown</em> o elimina operaciones redundantes. El mismo DAG
+se puede visualizar gráficamente en la <em>Spark UI</em>.</p>
+</details>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Documentación oficial sobre <a href="https://spark.apache.org/docs/latest/sql-programming-guide.html">Spark SQL, DataFrames and Datasets Guide</a></li>
@@ -5342,14 +5529,14 @@ https://github.com/yukia3e/learning-spark-3/tree/master/src/sql/02_basic
 </ul>
 </li>
 <li>
-<p>(1p) A partir del archivo <a href="resources/nombres.json">nombres.json</a>, crea un <em>DataFrame</em> y realiza las siguientes operaciones:</p>
+<p>(1p) A partir del archivo <a href="resources/nombres.json">nombres.json</a>, crea un <em>DataFrame</em> y realiza las siguientes operaciones mediante el API de <em>DataFrames</em>:</p>
 <ol>
 <li>Crea una nueva columna (columna <code>Mayor30</code>) que indique si la persona es mayor de 30 años.</li>
 <li>Crea una nueva columna (columna <code>FaltanJubilacion</code>) que calcule cuantos años le faltan para jubilarse (supongamos que se jubila a los 67 años)</li>
 <li>Crea una nueva columna (columna <code>Apellidos</code>) que contenga <code>XYZ</code> (puedes utilizar la función <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.lit.html"><code>lit</code></a>)</li>
 <li>Elimina las columna <code>Mayor30</code> y <code>Apellidos</code>.</li>
 <li>Crea una nueva columna (columna <code>AnyoNac</code>) con el año de nacimiento de cada persona (puedes utilizar la función <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.current_date.html"><code>current_date</code></a>).</li>
-<li>Añade un id incremental para cada fila (campo <code>Id</code>) y haz que al hacer un <code>show</code> se vea en primer lugar (puedes utilizar la función <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.monotonically_increasing_id.html"><code>monotonically_increasing_id</code></a>) seguidos del <code>Nombre</code>, <code>Edad</code>, <code>AnyoNac</code>, <code>FaltaJubilacion</code> y <code>Ciudad</code></li>
+<li>Añade un id incremental para cada fila (campo <code>Id</code>) y haz que al hacer un <code>show</code> se vea en primer lugar (puedes utilizar la función <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.monotonically_increasing_id.html"><code>monotonically_increasing_id</code></a>) seguidos del <code>Nombre</code>, <code>Edad</code>, <code>AnyoNac</code>, <code>FaltaJubilacion</code> y <code>Ciudad</code>.</li>
 </ol>
 <p>Al realizar los seis pasos, el resultado del <em>DataFrame</em> será similar a :</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>+---+-------+----+-------+----------------+--------+
@@ -5362,6 +5549,11 @@ https://github.com/yukia3e/learning-spark-3/tree/master/src/sql/02_basic
 <span class="linenos" data-linenos="8 "></span>|  4|  Pedro|null|   null|            null|   Elche|
 <span class="linenos" data-linenos="9 "></span>+---+-------+----+-------+----------------+--------+
 </code></pre></div>
+<ol start="7">
+<li>Resuelve los apartados anteriores usando <strong>Spark SQL</strong>: crea una vista
+   temporal sobre el <em>DataFrame</em> y reescribe al menos tres de las consultas
+   anteriores con <code>spark.sql(...)</code>.</li>
+</ol>
 </li>
 <li>
 <p>(1p) A partir del archivo <code>movies.parquet</code> creado en la primera actividad, mediante el <em>DataFrame API</em>:</p>

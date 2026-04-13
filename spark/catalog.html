@@ -1736,6 +1736,14 @@
   </span>
   
   
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
 
       </a>
     </li>
@@ -1791,6 +1799,14 @@
     
   </span>
   
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -2125,6 +2141,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
   
 </li>
       
@@ -4204,6 +4231,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4902,6 +4940,63 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connect
 <span class="linenos" data-linenos=" 9 "></span><span class="c1">#  Column(name=&#39;customer_state&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False),</span>
 <span class="linenos" data-linenos="10 "></span><span class="c1">#  Column(name=&#39;customer_zipcode&#39;, description=None, dataType=&#39;string&#39;, nullable=True, isPartition=False, isBucket=False)]</span>
 </code></pre></div>
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<p>A continuación se recogen preguntas habituales sobre los conceptos de esta sesión que suelen realizarse en entrevistas de trabajo para puestos de ingeniería o ciencia de datos.</p>
+<p>Despliega cada pregunta para ver una respuesta orientativa; no hay una única respuesta correcta, pero sí aspectos clave que conviene mencionar.</p>
+<details class="question">
+<summary>¿Cuáles son los modos de escritura (<em>SaveMode</em>) disponibles en Spark?</summary>
+<p>Al persistir un DataFrame con <code>.write</code>, se puede especificar el comportamiento si ya existen datos en el destino:</p>
+<table>
+<thead>
+<tr>
+<th>Modo</th>
+<th>Comportamiento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>overwrite</code></td>
+<td>Borra los datos existentes y escribe los nuevos.</td>
+</tr>
+<tr>
+<td><code>append</code></td>
+<td>Añade los datos nuevos sin borrar los existentes.</td>
+</tr>
+<tr>
+<td><code>ignore</code></td>
+<td>Si ya existen datos, no hace nada (no lanza error).</td>
+</tr>
+<tr>
+<td><code>error</code> / <code>errorIfExists</code></td>
+<td>Lanza un error si ya existen datos. Es el <strong>comportamiento por defecto</strong>.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;overwrite&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">&quot;ruta/destino&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="question">
+<summary>¿Cuál es la diferencia entre una tabla gestionada (<em>managed</em>) y una tabla externa (<em>external</em>)?</summary>
+<p>En una tabla <strong>gestionada</strong> (<em>managed</em>), Spark controla tanto los metadatos (en el Metastore) como los ficheros físicos. Al hacer <code>DROP TABLE</code>, <strong>se eliminan también los datos</strong> del disco. En una tabla <strong>externa</strong> (<em>external</em>), Spark solo gestiona los metadatos; los datos residen en una ruta definida por el usuario. Al hacer <code>DROP TABLE</code>, solo se eliminan los metadatos, <strong>los datos permanecen intactos</strong>. Las tablas externas son más seguras en producción.</p>
+</details>
+<details class="question">
+<summary>¿Qué es el Metastore de Hive y qué papel juega en Spark?</summary>
+<p>El Metastore de Hive es un repositorio central de metadatos (esquemas, ubicaciones de tablas, definiciones de particiones) que Spark puede usar para persistir la definición de tablas entre sesiones. Sin él, las tablas creadas en Spark solo existen durante la vida de la <code>SparkSession</code> actual. Configurando Spark con soporte Hive, las tablas son permanentes y accesibles desde otras herramientas del ecosistema como Presto, Trino o Hive.</p>
+</details>
+<details class="question">
+<summary>¿Cuándo es más eficiente leer desde JDBC con particionado?</summary>
+<p>Por defecto, Spark lee una tabla JDBC con un único hilo (una sola partición), lo que no aprovecha el paralelismo del clúster. Para paralelizar la lectura, se deben especificar los parámetros <code>partitionColumn</code>, <code>lowerBound</code>, <code>upperBound</code> y <code>numPartitions</code>. Esto hace que Spark divida la lectura en <code>numPartitions</code> rangos sobre la columna indicada, lanzando una consulta por rango en paralelo.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">jdbc</span><span class="p">(</span>
+<span class="linenos" data-linenos="2 "></span>    <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="s2">&quot;ventas&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="3 "></span>    <span class="n">column</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">lowerBound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">upperBound</span><span class="o">=</span><span class="mi">1000000</span><span class="p">,</span> <span class="n">numPartitions</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="n">properties</span><span class="o">=</span><span class="n">props</span>
+<span class="linenos" data-linenos="5 "></span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="question">
+<summary>¿Qué diferencia hay entre una vista temporal y una tabla persistida en el catálogo?</summary>
+<p>Una vista temporal solo existe en memoria durante la sesión actual (<code>createOrReplaceTempView</code>). Una tabla persistida en el catálogo (mediante <code>df.write.saveAsTable("nombre")</code> o <code>CREATE TABLE</code>) queda registrada en el Metastore y es accesible en futuras sesiones o desde otras aplicaciones Spark. Las tablas del catálogo también pueden estar particionadas a nivel de Metastore, lo que permite a Spark hacer <em>partition pruning</em> sin leer todos los datos.</p>
+</details>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://learning.oreilly.com/library/view/modern-data-engineering/9781484274521/">Modern Data Engineering with Apache Spark - Scott Haines - Apress</a></li>

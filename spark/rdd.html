@@ -1736,6 +1736,14 @@
   </span>
   
   
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
 
       </a>
     </li>
@@ -2117,6 +2125,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2178,6 +2197,14 @@
     
   </span>
   
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -4359,6 +4386,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5156,6 +5194,61 @@ broadcast variables, allows the program to efficiently send a large, read-only v
 </code></pre></div>
 -->
 
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<p>A continuación se recogen preguntas habituales sobre los conceptos de esta sesión que suelen realizarse en entrevistas de trabajo para puestos de ingeniería o ciencia de datos.</p>
+<p>Despliega cada pregunta para ver una respuesta orientativa; no hay una única respuesta correcta, pero sí aspectos clave que conviene mencionar.</p>
+<details class="question">
+<summary>¿Qué es el <em>lineage</em> de un RDD y cómo contribuye a la tolerancia a fallos?</summary>
+<p>El <em>lineage</em> es el grafo de transformaciones que describe cómo se construyó un RDD a partir de sus datos de origen. Si una partición se pierde por un fallo de nodo, <em>Spark</em> no necesita datos replicados: reejecutando las transformaciones del <em>lineage</em> puede reconstruir esa partición. Esto hace que la replicación explícita sea innecesaria para la tolerancia a fallos básica en RDDs.</p>
+</details>
+<details class="question">
+<summary>¿Cuál es la diferencia entre <code>cache()</code> y <code>persist()</code>?</summary>
+<p><code>cache()</code> es un alias de <code>persist()</code> con el nivel de almacenamiento por defecto (<code>MEMORY_AND_DISK</code> en <em>DataFrames</em>, <code>MEMORY_ONLY</code> en RDDs). Con <code>persist()</code> se puede especificar el nivel explícitamente:</p>
+<table>
+<thead>
+<tr>
+<th>Nivel</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MEMORY_ONLY</code></td>
+<td>Solo en memoria RAM. Si no cabe, la partición se recalcula.</td>
+</tr>
+<tr>
+<td><code>MEMORY_AND_DISK</code></td>
+<td>En memoria; si no cabe, se vuelca a disco.</td>
+</tr>
+<tr>
+<td><code>DISK_ONLY</code></td>
+<td>Solo en disco.</td>
+</tr>
+<tr>
+<td><code>MEMORY_ONLY_2</code> / <code>MEMORY_AND_DISK_2</code></td>
+<td>Igual que los anteriores, pero con replicación en 2 nodos.</td>
+</tr>
+</tbody>
+</table>
+<p>Se usa <code>cache()</code> cuando el RDD/<em>DataFrame</em> se reutiliza varias veces y cabe en memoria. Se usa <code>persist()</code> con nivel <em>disk</em> cuando los datos son demasiado grandes.</p>
+</details>
+<details class="question">
+<summary>¿Por qué <code>reduceByKey</code> es más eficiente que <code>groupByKey</code>?</summary>
+<p><code>groupByKey</code> envía todos los valores de cada clave a un único reductor a través de la red (<em>full shuffle</em>), lo que genera un elevado tráfico de red y puede causar problemas de memoria si una clave tiene muchos valores. <code>reduceByKey</code> aplica primero la función de reducción localmente en cada partición (<em>map-side combine</em>) antes del shuffle, enviando solo los resultados parciales por la red. Para operaciones conmutativas y asociativas (suma, máximo, conteo…), <code>reduceByKey</code> es siempre preferible.</p>
+</details>
+<details class="question">
+<summary>¿Qué son las <em>broadcast variables</em> y los acumuladores?</summary>
+<p>Las variables <em>broadcast</em> permiten distribuir eficientemente una variable de solo lectura (como un diccionario de traducción o una tabla de dimensiones pequeña) a todos los nodos del clúster sin enviarla con cada tarea individual. Se crean con <code>sc.broadcast(valor)</code> y se leen con <code>.value</code>.</p>
+<p>En cambio, los acumuladores son variables de solo escritura para los <em>workers</em> (solo el <em>driver</em> puede leer su valor). Se usan para contadores y sumas distribuidas, por ejemplo para contar registros erróneos durante un procesamiento sin necesitar una acción adicional.</p>
+</details>
+<details class="question">
+<summary>¿Qué diferencia hay entre una transformación <em>narrow</em> y una <em>wide</em>?</summary>
+<p>En una transformación <em>narrow</em> (estrecha), cada partición del RDD resultante depende de una única partición del RDD padre (por ejemplo, <code>map</code>, <code>filter</code>, <code>flatMap</code>). No hay movimiento de datos entre nodos, por lo que son muy eficientes. En una transformación <em>wide</em> (ancha), cada partición del resultado puede depender de múltiples particiones padre, lo que requiere un <em>shuffle</em> de datos a través de la red (por ejemplo, <code>groupByKey</code>, <code>reduceByKey</code>, <code>join</code>). Los <em>shuffles</em> son las operaciones más costosas en <em>Spark</em>.</p>
+</details>
+<details class="question">
+<summary>¿Qué es el <em>checkpointing</em> y cuándo se usa?</summary>
+<p>El <em>checkpointing</em> guarda el RDD materializado en almacenamiento persistente (HDFS u otro sistema de ficheros distribuido), truncando el <em>lineage</em>. Es útil cuando el grafo de transformaciones es muy largo (por ejemplo, en algoritmos iterativos de ML o en <em>streaming</em>), ya que un <em>lineage</em> excesivamente largo hace que la recuperación ante fallos sea muy lenta. A diferencia de <code>persist()</code>, el <em>checkpointing</em> rompe completamente el linaje y requiere almacenamiento externo.</p>
+</details>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://spark.apache.org/docs/latest/">Documentación oficial de Apache Spark</a></li>
