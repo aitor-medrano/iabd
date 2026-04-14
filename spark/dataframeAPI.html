@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -1941,6 +1941,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Datos y Esquemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tipo-variant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipo VARIANT
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4152,6 +4169,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Datos y Esquemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tipo-variant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipo VARIANT
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -4523,6 +4557,28 @@ Si queremos mostrar sus datos, haremos uso del método <code>show</code>:</p>
 <span class="linenos" data-linenos="7 "></span><span class="c1"># |Marina|   161|</span>
 <span class="linenos" data-linenos="8 "></span><span class="c1"># +------+------+</span>
 </code></pre></div>
+<div class="admonition info">
+<p class="admonition-title"><em>Spark</em> 4.0: Tablas <em>PyArrow</em></p>
+<p>A partir de <em>Spark 4.0</em>, el método <code>createDataFrame()</code> acepta directamente un objeto <code>pyarrow.Table</code>, lo que evita la conversión intermedia a listas o <em>DataFrames</em> de <em>Pandas</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">tabla_arrow</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">({</span>
+<span class="linenos" data-linenos=" 4 "></span>    <span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Aitor&quot;</span><span class="p">,</span> <span class="s2">&quot;Pedro&quot;</span><span class="p">,</span> <span class="s2">&quot;Laura&quot;</span><span class="p">],</span>
+<span class="linenos" data-linenos=" 5 "></span>    <span class="s2">&quot;sueldo&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3000</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">]</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="p">})</span>
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">tabla_arrow</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># +------+------+</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># |nombre|sueldo|</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1"># +------+------+</span>
+<span class="linenos" data-linenos="13 "></span><span class="c1"># | Aitor|  3000|</span>
+<span class="linenos" data-linenos="14 "></span><span class="c1"># | Pedro|  4000|</span>
+<span class="linenos" data-linenos="15 "></span><span class="c1"># | Laura|  5000|</span>
+<span class="linenos" data-linenos="16 "></span><span class="c1"># +------+------+</span>
+</code></pre></div>
+<p>Esto es especialmente útil cuando los datos ya están en formato columnar Arrow (por ejemplo, tras leerlos con <em>DuckDB</em> o <em>Polars</em>), ya que se elimina la sobrecarga de serialización al compartir la memoria columnar directamente.</p>
+</div>
 <div class="admonition tip">
 <p class="admonition-title">Creando un DataFrame desde un RDD</p>
 <p>Si en algún momento trabajamos con código heredado que devuelve un RDD, podemos convertirlo a <em>DataFrame</em> mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.toDF.html"><code>toDF</code></a>. Si no le indicamos nombres de columna, Spark asignará nombres genéricos (<code>_1</code>, <code>_2</code>, …):
@@ -4653,7 +4709,7 @@ Si queremos mostrar sus datos, haremos uso del método <code>show</code>:</p>
 <span class="linenos" data-linenos="2 "></span><span class="n">dfJSON</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;datos.json&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Más información en la <a href="https://spark.apache.org/docs/latest/sql-data-sources-json.html">documentación oficial</a></p>
-<div class="admonition caution">
+<div class="admonition warning">
 <p class="admonition-title">DataFrames desde JSON</p>
 <p><em>Spark</em> espera que cada documento JSON ocupe una única línea (JSONL). Si cada documento ocupa más de una línea, se lo indicamos mediante la opción <code>multiline</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;multiline&quot;</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;inferSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="s2">&quot;datos.json&quot;</span><span class="p">)</span>
@@ -4671,8 +4727,14 @@ Si queremos mostrar sus datos, haremos uso del método <code>show</code>:</p>
 <div class="admonition info">
 <p class="admonition-title">Avro</p>
 <p>La fuente de datos en formato <em>Avro</em> se incluye como un módulo externo, y por lo tanto, para poder leer o escribir datos en dicho formato, previamente hemos de cargar una librería.</p>
-<p>Para ello, al arrancar <em>PySpark</em>, le pasaremos como parámetro <code>--packages org.apache.spark:spark-avro_2.12:3.3.1</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pyspark<span class="w"> </span>--packages<span class="w"> </span>org.apache.spark:spark-avro_2.12:3.3.1
+<p>Para ello, al arrancar <em>PySpark</em>, le pasaremos como parámetro <code>--packages org.apache.spark:spark-avro_2.13:4.1.1</code> (suponiendo que tenemos instalada la versión 4.1.1 de <em>Spark</em>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pyspark<span class="w"> </span>--packages<span class="w"> </span>org.apache.spark:spark-avro_2.13:4.1.1
+</code></pre></div>
+<p>o si estamos usando <em>Spark</em> en modo local o mediante <em>Docker</em>, al arrancar la sesión de <em>Spark</em> le indicamos el mismo parámetro mediante <code>config</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">spark</span> <span class="o">=</span> <span class="p">(</span><span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span>
+<span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.jars.packages&quot;</span><span class="p">,</span> <span class="s2">&quot;org.apache.spark:spark-avro_2.13:4.1.1&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">())</span>
 </code></pre></div>
 <p>Una vez arrancado, ya podemos leer y escribir datos en formato <em>Avro</em> de forma similar al resto:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;avro&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;datos.avro&quot;</span><span class="p">)</span>
@@ -4723,10 +4785,14 @@ Si queremos mostrar sus datos, haremos uso del método <code>show</code>:</p>
 <p>Mientras que <code>coalesce(1)</code> es la opción más eficiente cuando queremos reducir particiones, ya que evita un <em>shuffle</em> completo de los datos, <code>repartition(1)</code> es más costoso porque implica un <em>shuffle</em> completo para redistribuir los datos en una sola partición.</p>
 <p>Ten en cuenta que esto puede afectar al rendimiento, ya que se pierde paralelismo.</p>
 </div>
-<p>Una vez vista la sintaxis, vamos a ver un ejemplo completo de lectura de un archivo CSV (el archivo <a href="resources/pdi_sales.csv"><code>pdi_sales.csv</code></a> que hemos utilizado durante todo el curso) que está almacenado en HDFS y que tras leerlo, lo guardamos como JSON de nuevo en HDFS:</p>
+<p>Una vez vista la sintaxis, vamos a ver un ejemplo completo de lectura de un archivo CSV (el archivo <a href="resources/pdi_sales.csv"><code>pdi_sales.csv</code></a> que hemos utilizado durante todo el curso) que está almacenado en HDFS / Minio (S3) y que tras leerlo, lo guardamos como JSON de nuevo en HDFS / Minio (S3):</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">HDFS</label><label for="__tabbed_3_2">Minio / S3</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Si utilizas la máquina virtual, puedes acceder a los datos almacenados en HDFS utilizando la URL del recurso con el prefijo <code>hdfs://</code> más el <em>host</em> del <em>namenode</em> (en nuestro caso, <code>iabd-virtualbox:9000</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;s8a-dataframe-csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;s8a-dataframe-hdfs-csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="c1"># Lectura de CSV con el ; como separador de columnas y con encabezado</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;delimiter&quot;</span><span class="p">,</span><span class="s2">&quot;;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/pdi_sales.csv&quot;</span><span class="p">)</span>
@@ -4735,9 +4801,42 @@ Si queremos mostrar sus datos, haremos uso del método <code>show</code>:</p>
 <span class="linenos" data-linenos=" 9 "></span>
 <span class="linenos" data-linenos="10 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="s2">&quot;hdfs://iabd-virtualbox:9000/user/iabd/pdi_sales_json&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Es conveniente destacar que para acceder a HDFS, únicamente hemos de indicar la URL del recurso con el prefijo <code>hdfs://</code> más el <em>host</em> del <em>namenode</em>.</p>
+</div>
+<div class="tabbed-block">
+<p>Si utilizamos <em>Docker</em> y <a href="https://www.min.io/"><em>Minio</em></a> para simular un almacenamiento de objetos, para acceder a los datos almacenados en Minio / S3, además de indicar la URL del recurso con el prefijo <code>s3a://</code> (indicando el nombre del bucket y la ruta del recurso), hemos de configurar las credenciales de acceso, el endpoint, así como el driver JDBC (tanto para el nodo <em>driver</em> como para los nodos <em>executor</em>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos" data-linenos=" 4 "></span>    <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;s8a-dataframe-minio-csv&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span>    <span class="c1"># --- JDBC driver + extra jars (driver y executors) ---</span>
+<span class="linenos" data-linenos=" 7 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.driver.extraClassPath&quot;</span><span class="p">,</span> <span class="s2">&quot;/opt/spark/extra-jars/*:/opt/spark/jars/*&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.executor.extraClassPath&quot;</span><span class="p">,</span> <span class="s2">&quot;/opt/spark/extra-jars/*:/opt/spark/jars/*&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span>    <span class="c1"># --- MinIO / S3A ---</span>
+<span class="linenos" data-linenos="11 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.hadoop.fs.s3a.endpoint&quot;</span><span class="p">,</span> <span class="s2">&quot;http://minio:9000&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="12 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.hadoop.fs.s3a.access.key&quot;</span><span class="p">,</span> <span class="s2">&quot;minioadmin&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="13 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.hadoop.fs.s3a.secret.key&quot;</span><span class="p">,</span> <span class="s2">&quot;minioadmin123&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="14 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.hadoop.fs.s3a.path.style.access&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="15 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.hadoop.fs.s3a.impl&quot;</span><span class="p">,</span> <span class="s2">&quot;org.apache.hadoop.fs.s3a.S3AFileSystem&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="16 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.hadoop.fs.s3a.connection.ssl.enabled&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="17 "></span>
+<span class="linenos" data-linenos="18 "></span>    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="linenos" data-linenos="19 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="20 "></span>
+<span class="linenos" data-linenos="21 "></span><span class="c1"># Lectura de CSV con el ; como separador de columnas y con encabezado</span>
+<span class="linenos" data-linenos="22 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;delimiter&quot;</span><span class="p">,</span><span class="s2">&quot;;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;s3a://raw-data/pdi_sales.csv&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="23 "></span>
+<span class="linenos" data-linenos="24 "></span><span class="c1"># df.printSchema()</span>
+<span class="linenos" data-linenos="25 "></span>
+<span class="linenos" data-linenos="26 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="s2">&quot;s3a://processed/pdi_sales_json&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Es conveniente destacar que para acceder a HDFS únicamente hemos de indicar la URL del recurso con el prefijo <code>hdfs://</code> más el <em>host</em> del <em>namenode</em>. En el caso de Minio / S3 utilizaremos rutas con el prefijo <code>s3a://</code>, indicando el nombre del bucket y la ruta del recurso, por ejemplo <code>s3a://raw-data/pdi_sales.csv</code>.</p>
 <h3 id="comprimiendo-los-datos">Comprimiendo los datos<a class="headerlink" href="#comprimiendo-los-datos" title="Permanent link">&para;</a></h3>
-<p>Para configurar el algoritmo de compresión, si los datos está en <em>Parquet</em> o <em>Avro</em>, a nivel de la sesión de Spark, podemos realizar su configuración:</p>
+<p>Para configurar el algoritmo de compresión, si los datos está en <em>Parquet</em> o <em>Avro</em>, a nivel de la sesión de <em>Spark</em>, podemos realizar su configuración:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">setConf</span><span class="p">(</span><span class="s2">&quot;spark.sql.parquet.compression.codec&quot;</span><span class="p">,</span><span class="s2">&quot;snappy&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">spark</span><span class="o">.</span><span class="n">setConf</span><span class="p">(</span><span class="s2">&quot;spark.sql.parquet.compression.codec&quot;</span><span class="p">,</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="n">spark</span><span class="o">.</span><span class="n">setConf</span><span class="p">(</span><span class="s2">&quot;spark.sql.avro.compression.codec&quot;</span><span class="p">,</span><span class="s2">&quot;snappy&quot;</span><span class="p">)</span>
@@ -4754,10 +4853,25 @@ Así pues, cada columna de un <em>DataFrame</em> de <em>Spark</em> se modela med
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos="2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructType</span><span class="p">,</span> <span class="n">StructField</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">IntegerType</span>
 </code></pre></div>
-<div class="admonition info">
-<p class="admonition-title">Tipos</p>
-<p>Además de cadenas y enteros, flotantes (<code>FloatType</code>) o dobles (<code>DoubleType</code>), tenemos tipos booleanos (<code>BooleanType</code>), de fecha (<code>DateType</code> y <code>TimestampType</code>), así como tipos complejos como <code>ArrayType</code>, <code>MapType</code> y <code>StructType</code>.
-Para más información, consultar la <a href="https://spark.apache.org/docs/latest/sql-ref-datatypes.html">documentación oficial</a>.</p>
+<p>Además de cadenas y enteros, flotantes (<code>FloatType</code>) o dobles (<code>DoubleType</code>), tenemos tipos booleanos (<code>BooleanType</code>), de fecha (<code>DateType</code> y <code>TimestampType</code>), así como tipos complejos como <code>ArrayType</code>, <code>MapType</code> y <code>StructType</code>. Para más información sobre estos o más tipos de datos, podéis consultar la <a href="https://spark.apache.org/docs/latest/sql-ref-datatypes.html">documentación oficial</a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Spark 4.0: Modo ANSI activado por defecto</p>
+<p>A partir de Spark 4.0, la configuración <code>spark.sql.ansi.enabled</code> está a <code>true</code> por defecto. Esto cambia el comportamiento del DataFrame API de forma significativa:</p>
+<ul>
+<li>División por cero: en vez de devolver <code>null</code>, lanza <code>SparkArithmeticException</code>.</li>
+<li>Desbordamiento numérico: lanza excepción en vez de dar un resultado incorrecto.</li>
+<li>Conversiones de tipo inválidas: se rechazan en vez de coercionarse silenciosamente.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># En Spark 3.x devolvía null; en Spark 4.0 lanza excepción</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;sueldo&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">lit</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1"># SparkArithmeticException: Division by zero</span>
+<span class="linenos" data-linenos="4 "></span>
+<span class="linenos" data-linenos="5 "></span><span class="c1"># Para restaurar el comportamiento anterior:</span>
+<span class="linenos" data-linenos="6 "></span><span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;spark.sql.ansi.enabled&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Este cambio acerca <em>Spark</em> al comportamiento de bases de datos como Postg*reSQL, mejorando la integridad de los datos al no ocultar errores silenciosamente.</p>
+<p>Es recomendable adaptar el código para manejar estos casos explícitamente 
+en vez de desactivar el modo ANSI.</p>
 </div>
 <p>Volvamos al ejemplo anterior donde tenemos ciertos datos de clientes, como son su nombre y apellidos, ciudad y sueldo:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">clientes</span> <span class="o">=</span> <span class="p">[</span>
@@ -4814,7 +4928,7 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 <span class="linenos" data-linenos="8 "></span><span class="n">df</span><span class="o">.</span><span class="n">schema</span>
 <span class="linenos" data-linenos="9 "></span><span class="c1"># StructType(List(StructField(nombre,StringType,false),StructField(apellidos,StringType,false),StructField(ciudad,StringType,true),StructField(sueldo,IntegerType,false)))</span>
 </code></pre></div>
-<p>Si una vez hemos cargado un <em>DataFrame</em> queremos cambiar el tipo de una de sus columnas, podemos hacer uso del método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.withColumn.html"><code>withColumn</code></a>:</p>
+<p>Si una vez hemos cargado un <em>DataFrame</em> queremos cambiar el tipo de una de sus columnas, podemos hacer uso del método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.withColumn.html"><code>withColumn</code></a>, donde le pasaremos el nombre de la columna a modificar y el nuevo tipo al que queremos convertirla mediante <code>cast</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># Forma larga</span>
 <span class="linenos" data-linenos="2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleType</span>
 <span class="linenos" data-linenos="3 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;sueldo&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">sueldo</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">DoubleType</span><span class="p">())</span>
@@ -4823,19 +4937,48 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 <span class="linenos" data-linenos="6 "></span>
 <span class="linenos" data-linenos="7 "></span><span class="c1"># df = df.withColumn(&quot;fnac&quot;, to_date(df.Date, &quot;M/d/yyy&quot;))</span>
 </code></pre></div>
-<div class="admonition caution">
+<div class="admonition warning">
 <p class="admonition-title">Errores al leer datos</p>
-<p>Si tenemos un error al leer un dato que contiene un tipo no esperado, por defecto, Spark lanzará una excepción y se detendrá la lectura.</p>
-<p>Si queremos que asigne los tipos a los campos pero que no los valide, podemos pasarle el parámetro extra <code>verifySchema</code> a <code>False</code> al crear un DataFrame mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.SparkSession.createDataFrame.html?highlight=verifyschema">spark.createDataFrame</a> o <code>enforceSchema</code> también a <code>False</code> al cargar desde una fuente externa mediante <a href="https://spark.apache.org/docs/3.1.3/api/python/reference/api/pyspark.sql.DataFrameReader.csv.html?highlight=enforceschema"><code>spark.read</code></a>, de manera que los datos que no concuerden con el tipo se quedarán nulos, vacíos o con valor 0, dependiendo del tipo de dato que tiene asignada la columna en el esquema.</p>
+<p>Si tenemos un error al leer un dato que contiene un tipo no esperado, por defecto, <em>Spark</em> lanzará una excepción y se detendrá la lectura.</p>
+<p>Si queremos que asigne los tipos a los campos pero que no los valide, podemos pasarle el parámetro extra <code>verifySchema</code> a <code>False</code> al crear un <em>DataFrame</em> mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.SparkSession.createDataFrame.html?highlight=verifyschema">spark.createDataFrame</a> o <code>enforceSchema</code> también a <code>False</code> al cargar desde una fuente externa mediante <a href="https://spark.apache.org/docs/3.1.3/api/python/reference/api/pyspark.sql.DataFrameReader.csv.html?highlight=enforceschema"><code>spark.read</code></a>, de manera que los datos que no concuerden con el tipo se quedarán nulos, vacíos o con valor 0, dependiendo del tipo de dato que tiene asignada la columna en el esquema.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">dfClientes</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;enforceSchema&quot;</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="n">esquema</span><span class="p">)</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;clientes.csv&quot;</span><span class="p">)</span>
 </code></pre></div>
 </div>
+<h3 id="tipo-variant">Tipo VARIANT<a class="headerlink" href="#tipo-variant" title="Permanent link">&para;</a></h3>
+<p>A partir de <em>Spark 4.0</em>, se ha introducido el tipo de datos <code>VARIANT</code>, que permite almacenar datos semiestructurados como JSON, XML o Avro en una sola columna sin necesidad de definir un esquema previo con <code>StructType</code>. Esto es especialmente útil para manejar datos con esquemas flexibles o desconocidos.</p>
+<!--
+FIXME: Ampliar
+-->
+
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_json</span><span class="p">,</span> <span class="n">variant_get</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">datos_json</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos" data-linenos=" 4 "></span>    <span class="p">(</span><span class="s1">&#39;{&quot;nombre&quot;: &quot;Aitor&quot;, &quot;ciudad&quot;: &quot;Elche&quot;}&#39;</span><span class="p">,),</span>
+<span class="linenos" data-linenos=" 5 "></span>    <span class="p">(</span><span class="s1">&#39;{&quot;nombre&quot;: &quot;Laura&quot;, &quot;ciudad&quot;: &quot;Alicante&quot;}&#39;</span><span class="p">,)</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="p">]</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">datos_json</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;json_str&quot;</span><span class="p">])</span>
+<span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># Convertir a VARIANT y extraer campos con JSONPath</span>
+<span class="linenos" data-linenos="10 "></span><span class="n">df_variant</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">parse_json</span><span class="p">(</span><span class="s2">&quot;json_str&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">))</span>
+<span class="linenos" data-linenos="11 "></span><span class="n">df_variant</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+<span class="linenos" data-linenos="12 "></span>    <span class="n">variant_get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;$.nombre&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;nombre&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos="13 "></span>    <span class="n">variant_get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;$.ciudad&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;ciudad&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="14 "></span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos" data-linenos="15 "></span><span class="c1"># +------+--------+</span>
+<span class="linenos" data-linenos="16 "></span><span class="c1"># |nombre|  ciudad|</span>
+<span class="linenos" data-linenos="17 "></span><span class="c1"># +------+--------+</span>
+<span class="linenos" data-linenos="18 "></span><span class="c1"># | Aitor|   Elche|</span>
+<span class="linenos" data-linenos="19 "></span><span class="c1"># | Laura|Alicante|</span>
+<span class="linenos" data-linenos="20 "></span><span class="c1"># +------+--------+</span>
+</code></pre></div>
+<p>Esto simplifica enormemente el trabajo con JSON respecto al enfoque anterior basado en <code>StructType</code> anidados o <code>get_json_object</code>, y es similar al tipo <code>VARIANT</code> de <em>Snowflake</em>.</p>
 <h2 id="dataframe-api">DataFrame API<a class="headerlink" href="#dataframe-api" title="Permanent link">&para;</a></h2>
-<p>Una vez tenemos un <em>DataFrame</em> podemos trabajar con los datos mediante un conjunto de operaciones estructuradas, muy similares al lenguaje relacional. Estas operaciones también se clasifican en transformaciones y acciones, recordando que las transformaciones utilizan una evaluación perezosa.</p>
-<p>Es muy importante tener en cuenta que todas las operaciones que vamos a realizar a continuación son inmutables, es decir, nunca van a modificar el <em>DataFrame</em> sobre el que realizamos la transformación. Así pues, realizaremos encadenamiento de transformaciones (<em>transformation chaining</em>) o asignaremos el resultado a un nuevo <em>DataFrame</em>.</p>
+<p><em>Spark</em> permite trabajar con los datos mediante dos tipos de acercamientos, el API de objetos de <em>DataFrames</em> y el lenguaje SQL. Ambos enfoques son equivalentes, ya que el lenguaje SQL se traduce internamente a operaciones sobre <em>DataFrames</em>. En este apartado nos centraremos en el API de objetos, y en el siguiente veremos el lenguaje SQL.</p>
+<p>Así pues, una vez tenemos un <em>DataFrame</em> podemos trabajar con los datos mediante un conjunto de operaciones estructuradas, muy similares al lenguaje relacional. Estas operaciones también se clasifican en transformaciones y acciones, recordando que las transformaciones utilizan una <strong>evaluación perezosa</strong>, es decir, no se ejecutan inmediatamente cuando se definen, sino que se construye un plan de ejecución que se optimiza y se ejecuta solo cuando es necesario obtener un resultado (por ejemplo, al llamar a una acción como <code>show</code> o <code>collect</code>), permitiendo optimizar el plan de ejecución y mejorar el rendimiento al evitar cálculos innecesarios.</p>
+<p>Es muy importante tener en cuenta que todas las operaciones que vamos a realizar a continuación son <strong>inmutables</strong>, es decir, nunca van a modificar el <em>DataFrame</em> sobre el que realizamos la transformación. Así pues, realizaremos encadenamiento de transformaciones (<em>transformation chaining</em>) o asignaremos el resultado a un nuevo <em>DataFrame</em>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Preparación</p>
-<p>Para los siguientes apartados, vamos a trabajar sobre el siguiente <em>DataFrame</em> con el fichero de <a href="resources/pdi_sales_small.csv">ventas</a> que hemos utilizado a lo largo del curso:</p>
+<p>Para los siguientes apartados, vamos a trabajar sobre el siguiente <em>DataFrame</em> cargado desde el fichero de <a href="resources/pdi_sales_small.csv">ventas</a> que hemos utilizado a lo largo del curso:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;s8a-dataframes-api&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
@@ -4855,7 +4998,7 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 </div>
 <h3 id="proyectando">Proyectando<a class="headerlink" href="#proyectando" title="Permanent link">&para;</a></h3>
 <p>La operación <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.select.html">select</a> permite indicar las columnas a recuperar pasándolas como parámetros:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Consulta de columnas</label><label for="__tabbed_3_2">Resultado</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Consulta de columnas</label><label for="__tabbed_4_2">Resultado</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;ProductID&quot;</span><span class="p">,</span><span class="s2">&quot;Revenue&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -4875,7 +5018,7 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 </div>
 </div>
 <p>También podemos realizar cálculos (referenciando a los campos con <code>nombreDataframe.nombreColumna</code>) sobre las columnas y crear un alias (operación asociada a un campo):</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Cálculos y creación de alias</label><label for="__tabbed_4_2">Resultado</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Cálculos y creación de alias</label><label for="__tabbed_5_2">Resultado</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">ProductID</span><span class="p">,(</span><span class="n">df</span><span class="o">.</span><span class="n">Revenue</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;VentasMas10&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -4988,7 +5131,7 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 <span class="linenos" data-linenos="7 "></span><span class="c1"># |      788|2002-06-06|41540          |    1|  314.9|Germany|</span>
 <span class="linenos" data-linenos="8 "></span><span class="c1"># |      940|1999-01-15|22587          |    1|  687.7|Germany|</span>
 </code></pre></div>
-<p>Por similitud con SQL, podemos utilizar también <code>where</code> como un alias de <code>filter</code>:</p>
+<p>Por similitud con SQL, podemos utilizar también <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.where.html"><code>where</code></a> como un alias de <code>filter</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">df</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Units</span><span class="o">&gt;</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="c1"># +---------+----------+---------------+-----+-------+-------+</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="c1"># |ProductID|      Date|            Zip|Units|Revenue|Country|</span>
@@ -5031,14 +5174,17 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 </ul>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="n">df</span><span class="o">.</span><span class="n">dropDuplicates</span><span class="p">([</span><span class="s2">&quot;Country&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="c1"># +-------+</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="c1"># |Country|</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="c1"># +-------+</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="c1"># |Germany|</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="c1"># | France|</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="c1"># | Mexico|</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="c1"># | Canada|</span>
-<span class="linenos" data-linenos="10 "></span><span class="c1"># +-------+</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1"># Spark 4.0 acepta argumentos directos en dropDuplicates</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1"># df.dropDuplicates(&quot;Country&quot;).select(&quot;Country&quot;).show()</span>
+<span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># +-------+</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># |Country|</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1"># +-------+</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># |Germany|</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># | France|</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># | Mexico|</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1"># | Canada|</span>
+<span class="linenos" data-linenos="13 "></span><span class="c1"># +-------+</span>
 </code></pre></div>
 <h3 id="ordenando">Ordenando<a class="headerlink" href="#ordenando" title="Permanent link">&para;</a></h3>
 <p>Una vez recuperados los datos deseados, podemos ordenarlos mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.sort.html">sort</a> u <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.orderBy.html">orderBy</a> (son operaciones totalmente equivalentes):</p>
@@ -5117,7 +5263,7 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 
 <h2 id="trabajando-con-datos-sucios">Trabajando con datos sucios<a class="headerlink" href="#trabajando-con-datos-sucios" title="Permanent link">&para;</a></h2>
 <p>En cualquier proyecto real, los datos rara vez llegan limpios. Valores nulos, registros incompletos, errores tipográficos o datos fuera de rango son situaciones habituales que hay que resolver antes de analizar o persistir los datos.</p>
-<p>Spark ofrece tres estrategias básicas para gestionar este tipo de situaciones: eliminar las filas problemáticas, rellenar los valores que faltan con un valor por defecto, o sustituir valores incorrectos por otros válidos. Vamos a ver cada una de ellas.</p>
+<p><em>Spark</em> ofrece tres estrategias básicas para gestionar este tipo de situaciones: eliminar las filas problemáticas, rellenar los valores que faltan con un valor por defecto, o sustituir valores incorrectos por otros válidos. Vamos a ver cada una de ellas.</p>
 <p>Vamos a ver cada uno de estos casos a partir del siguiente <em>dataset</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">malasVentas</span> <span class="o">=</span> <span class="p">[</span>
 <span class="linenos" data-linenos=" 2 "></span>    <span class="p">(</span><span class="mi">6666</span><span class="p">,</span> <span class="s2">&quot;2022-03-22&quot;</span><span class="p">,</span> <span class="s2">&quot;03206&quot;</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mf">3333.33</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">),</span>
@@ -5237,13 +5383,10 @@ Para más información, consultar la <a href="https://spark.apache.org/docs/late
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Inspeccionando el plan de ejecución</p>
-<p>Puedes ver el plan lógico y físico que genera el <em>Catalyst Optimizer</em>
-para cualquier DataFrame llamando a <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.explain.html"><code>explain()</code></a>:</p>
+<p>Puedes ver el plan lógico y físico que genera el <em>Catalyst Optimizer</em> para cualquier <em>DataFrame</em> llamando a <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.explain.html"><code>explain()</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;Revenue&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2000</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">,</span> <span class="s2">&quot;Revenue&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;formatted&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>El plan lógico refleja las operaciones tal como las has escrito;
-el plan físico muestra lo que <em>Spark</em> ejecutará realmente tras aplicar
-las optimizaciones (reordenación de filtros, <em>predicate pushdown</em>, etc.).</p>
+<p>El plan lógico refleja las operaciones tal como las has escrito; el plan físico muestra lo que <em>Spark</em> ejecutará realmente tras aplicar las optimizaciones (reordenación de filtros, <em>predicate pushdown</em>, etc.).</p>
 <p>Puedes visualizar el mismo DAG gráficamente en la <em>Spark UI</em>.</p>
 </div>
 <h2 id="usando-sql">Usando SQL<a class="headerlink" href="#usando-sql" title="Permanent link">&para;</a></h2>
@@ -5272,6 +5415,24 @@ las optimizaciones (reordenación de filtros, <em>predicate pushdown</em>, etc.)
 <span class="linenos" data-linenos="12 "></span><span class="c1"># +---------+---------+---------------+-----+-------+-------+</span>
 <span class="linenos" data-linenos="13 "></span><span class="c1"># only showing top 3 rows</span>
 </code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title"><em>Spark 4.0</em>: Sintaxis PIPE <code>|&gt;</code> en SQL</p>
+<p><em>Spark 4.0</em> introduce la sintaxis <strong>PIPE</strong>, que permite encadenar 
+operaciones SQL de forma secuencial usando el operador <code>|&gt;</code>, 
+de manera similar a cómo se encadenan transformaciones en el <em>DataFrame API</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="2 "></span><span class="s2">    FROM clientes</span>
+<span class="linenos" data-linenos="3 "></span><span class="s2">    |&gt; WHERE ciudad = &#39;Elche&#39;</span>
+<span class="linenos" data-linenos="4 "></span><span class="s2">    |&gt; SELECT nombre, sueldo</span>
+<span class="linenos" data-linenos="5 "></span><span class="s2">    |&gt; ORDER BY sueldo DESC</span>
+<span class="linenos" data-linenos="6 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p>En vez del orden tradicional <code>SELECT ... FROM ... WHERE ...</code>, 
+la sintaxis PIPE permite expresar la lógica en el orden natural 
+de los pasos: primero la tabla, luego el filtro, luego la proyección. </p>
+<p>Cada paso <code>|&gt;</code> recibe el resultado del anterior, mejorando la 
+legibilidad en consultas complejas.</p>
+</div>
 <h3 id="vistas-globales">Vistas globales<a class="headerlink" href="#vistas-globales" title="Permanent link">&para;</a></h3>
 <p>Las vistas temporales tienen un alcance de <em>SparkSession</em>, de manera que desaparecen una vez finalice la sesión que ha creado la vista. Si necesitamos tener una vista que se comparta entre todas las sesiones y que permanezca viva hasta que la aplicación <em>Spark</em> finalice, podemos crear una vista temporal global mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.createOrReplaceGlobalTempView.html"><code>createOrReplaceGlobalTempView</code></a></p>
 <p>Estas vistas se almacenan en la base de datos <code>global_temp</code> y en las consultas es necesario poner el prefijo <code>global_temp</code> para acceder a sus vistas.</p>

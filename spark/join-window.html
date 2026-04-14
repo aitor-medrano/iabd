@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -2193,6 +2193,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4114,6 +4125,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4628,7 +4650,7 @@
 <span class="linenos" data-linenos="6 "></span>    <span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="s1">&#39;window&#39;</span><span class="p">)</span>
 </code></pre></div>
 <p>De esta manera, si llega una palabra con un retraso de más de 30 minutos, se desechará. Además, el estado de la ventana se limpiará cuando pasen esos 30 minutos, de manera que su tamaño siempre estará limitado por el <em>timestamp</em> de los datos recibidos en los última media hora.</p>
-<div class="admonition caution">
+<div class="admonition warning">
 <p class="admonition-title">Marcas de agua y modo de salida completo</p>
 <p>Si utilizamos marcas de agua para limitar el estado de la ventana, es importante tener en cuenta que si el modo de salida es completo, no se limpiará el estado, es decir, es como si no utilizásemos marcas de agua.</p>
 </div>
@@ -4767,7 +4789,7 @@
 <span class="linenos" data-linenos="18 "></span><span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="19 "></span><span class="p">)</span>
 </code></pre></div>
-<div class="admonition caution">
+<div class="admonition warning">
 <p class="admonition-title">Limpieza</p>
 <p>Conviene recordar que la limpieza de los registros del estado que quedan fuera de la marca de agua puede realizar tan pronto como cambie la marca o se puede retrasar debido a optimizaciones de Spark. Así pues, Spark no garantiza que los registros que están fuera de la marca de agua se ignoren por completo, sino que lo que estén dentro nunca se descartarán.</p>
 </div>
@@ -4954,6 +4976,51 @@
 <span class="linenos" data-linenos="17 "></span>
 <span class="linenos" data-linenos="18 "></span><span class="n">queryWriter</span><span class="o">.</span><span class="n">awaitTermination</span><span class="p">()</span>
 </code></pre></div>
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<p>A continuación se recogen preguntas habituales sobre los conceptos de esta sesión que suelen realizarse en entrevistas de trabajo para puestos de ingeniería o ciencia de datos.</p>
+<p>Despliega cada pregunta para ver una respuesta orientativa; no hay una única respuesta correcta, pero sí aspectos clave que conviene mencionar.</p>
+<details class="question">
+<summary>¿Qué tipos de ventanas temporales existen en Structured Streaming?</summary>
+<p>Hay tres tipos de ventanas:</p>
+<ul>
+<li>
+<p><strong>Tumbling windows</strong> (ventanas fijas): tamaño fijo, sin solapamiento. Cada evento pertenece exactamente a una ventana. Ejemplo: ventas por hora.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">window</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;1 hour&quot;</span><span class="p">)</span>
+</code></pre></div>
+</li>
+<li>
+<p><strong>Sliding windows</strong> (ventanas deslizantes): tienen un tamaño y un intervalo de deslizamiento. Un evento puede pertenecer a varias ventanas si el intervalo es menor que el tamaño. Ejemplo: media móvil de 10 minutos actualizada cada 5 minutos.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">window</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;10 minutes&quot;</span><span class="p">,</span> <span class="s2">&quot;5 minutes&quot;</span><span class="p">)</span>
+</code></pre></div>
+</li>
+<li>
+<p><strong>Session windows</strong> (ventanas de sesión, Spark 3.2+): agrupan eventos separados por una brecha de inactividad configurable. Ideal para analizar sesiones de usuario cuya duración es variable.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">session_window</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;5 minutes&quot;</span><span class="p">)</span>
+</code></pre></div>
+</li>
+</ul>
+</details>
+<details class="question">
+<summary>¿Qué es el <em>watermarking</em> y qué problema resuelve?</summary>
+<p>El <em>watermarking</em> indica a Spark cuánto retraso máximo se espera en los datos de un stream. Por ejemplo, <code>withWatermark("timestamp", "10 minutes")</code> significa que Spark tolerará eventos que lleguen hasta 10 minutos tarde. Una vez que el tiempo del stream supera el tiempo máximo de una ventana más el watermark, Spark descarta el estado de esa ventana de la memoria. Sin watermark, Spark mantendría el estado de todas las ventanas indefinidamente, causando problemas de memoria en streams de larga duración.</p>
+</details>
+<details class="question">
+<summary>¿Cuáles son las limitaciones de los joins en Structured Streaming?</summary>
+<ul>
+<li><strong>Stream-static join</strong>: el más sencillo; el DataFrame estático se recarga o se cachea en cada batch. No requiere watermark.</li>
+<li><strong>Stream-stream inner join</strong>: requiere watermark en <strong>ambos</strong> streams para que Spark pueda limpiar el estado de pares que ya no pueden encontrar pareja.</li>
+<li><strong>Stream-stream outer join</strong>: solo está soportado en modo <em>append</em> y requiere watermark en el lado que puede tener valores nulos. El left/right outer join tiene restricciones adicionales según qué lado tiene el watermark.</li>
+<li>Los <em>full outer joins</em> entre dos streams <strong>no están soportados</strong>.</li>
+</ul>
+</details>
+<details class="question">
+<summary>¿Qué diferencia hay entre el modo <em>append</em> y el modo <em>update</em> en ventanas con watermark?</summary>
+<p>En modo <strong>update</strong>, Spark emite el resultado parcial de una ventana en cada batch en que recibe nuevos datos para ella. Cuando el watermark la cierra definitivamente, emite el resultado final y libera el estado. En modo <strong>append</strong>, Spark <strong>no emite ningún resultado de una ventana</strong> hasta que el watermark garantiza que no llegará ningún dato más tardío para ella. Esto introduce latencia pero garantiza que cada fila en el sink es definitiva y no será modificada, lo que es necesario para sinks que no soportan actualizaciones (como ficheros Parquet sin Delta).</p>
+</details>
+<details class="question">
+<summary>¿Cómo funciona el <em>stateful processing</em> en Structured Streaming?</summary>
+<p>Las operaciones con estado (ventanas, deduplicación con <code>dropDuplicates</code>, <code>mapGroupsWithState</code>) mantienen información de eventos pasados entre micro-batches. Spark guarda ese estado en la memoria de los Executors y lo persiste en el directorio de checkpoint. El watermark es el mecanismo que le indica a Spark cuándo puede limpiar de forma segura el estado de ventanas o grupos que ya no recibirán más datos, evitando el crecimiento ilimitado de la memoria de estado.</p>
+</details>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Documentación oficial sobre <a href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html">Spark Structured Streaming</a></li>

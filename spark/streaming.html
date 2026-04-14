@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -2262,6 +2262,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4300,6 +4311,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5193,7 +5215,7 @@ FIXME: start() materializes the complete job description into a streaming comput
 <span class="linenos" data-linenos="4 "></span><span class="p">{</span><span class="nt">&quot;InvoiceNumber&quot;</span><span class="p">:</span><span class="s2">&quot;51402977&quot;</span><span class="p">,</span><span class="nt">&quot;CreatedTime&quot;</span><span class="p">:</span><span class="mi">1595688900348</span><span class="p">,</span><span class="nt">&quot;StoreID&quot;</span><span class="p">:</span><span class="s2">&quot;STR7188&quot;</span><span class="p">,</span><span class="nt">&quot;PosID&quot;</span><span class="p">:</span><span class="s2">&quot;POS956&quot;</span><span class="p">,</span><span class="nt">&quot;CustomerType&quot;</span><span class="p">:</span><span class="s2">&quot;PRIME&quot;</span><span class="p">,</span><span class="nt">&quot;PaymentMethod&quot;</span><span class="p">:</span><span class="s2">&quot;CARD&quot;</span><span class="p">,</span><span class="nt">&quot;DeliveryType&quot;</span><span class="p">:</span><span class="s2">&quot;TAKEAWAY&quot;</span><span class="p">,</span><span class="nt">&quot;ItemCode&quot;</span><span class="p">:</span><span class="s2">&quot;523&quot;</span><span class="p">,</span><span class="nt">&quot;ItemDescription&quot;</span><span class="p">:</span><span class="s2">&quot;Oil-lamp clock&quot;</span><span class="p">,</span><span class="nt">&quot;ItemPrice&quot;</span><span class="p">:</span><span class="mf">1371.0</span><span class="p">,</span><span class="nt">&quot;ItemQty&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;TotalValue&quot;</span><span class="p">:</span><span class="mf">2742.0</span><span class="p">}</span>
 </code></pre></div>
 <p>Si nos dedicamos a pegar diferentes facturas (tienes más en <a href="resources/facturasKafka.json"><code>facturasKafka.json</code></a>), cada minuto se generará un nuevo archivo.</p>
-<div class="admonition caution">
+<div class="admonition warning">
 <p class="admonition-title">Limpieza</p>
 <p>Recuerda que si quieres volver a ejecutar el código, debes eliminar la carpeta <code>chk-point-dir-caso3</code> así como la carpeta de <code>salida</code>.</p>
 </div>
@@ -5313,6 +5335,119 @@ FIXME: start() materializes the complete job description into a streaming comput
 <span class="linenos" data-linenos="4 "></span><span class="p">{</span><span class="nt">&quot;CustomerCardNo&quot;</span><span class="p">:</span><span class="s2">&quot;4629185211&quot;</span><span class="p">,</span><span class="nt">&quot;TotalAmount&quot;</span><span class="p">:</span><span class="mf">11114.0</span><span class="p">,</span><span class="nt">&quot;EarnedLoyaltyPoints&quot;</span><span class="p">:</span><span class="mf">2222.8</span><span class="p">}</span>
 </code></pre></div>
 <p>Más información en la <a href="https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html">documentación oficial</a> sobre integración de <em>Kafka</em> con <em>Spark Streaming</em>.</p>
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<p>A continuación se recogen preguntas habituales sobre los conceptos de esta sesión que suelen realizarse en entrevistas de trabajo para puestos de ingeniería o ciencia de datos.</p>
+<p>Despliega cada pregunta para ver una respuesta orientativa; no hay una única respuesta correcta, pero sí aspectos clave que conviene mencionar.</p>
+<details class="question">
+<summary>¿Cuáles son las diferencias principales entre DStream y Structured Streaming?</summary>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>DStream (legacy)</th>
+<th>Structured Streaming</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>API</strong></td>
+<td>Basada en RDDs</td>
+<td>Basada en DataFrames</td>
+</tr>
+<tr>
+<td><strong>Esquema</strong></td>
+<td>No</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><strong>Optimización</strong></td>
+<td>Manual</td>
+<td>Catalyst Optimizer</td>
+</tr>
+<tr>
+<td><strong>Event time</strong></td>
+<td>No soportado</td>
+<td>Sí (con watermarking)</td>
+</tr>
+<tr>
+<td><strong>Semántica</strong></td>
+<td>At-least-once</td>
+<td>Exactly-once (con fuentes/sinks compatibles)</td>
+</tr>
+<tr>
+<td><strong>Estado</strong></td>
+<td>Manual</td>
+<td>Gestionado por Spark</td>
+</tr>
+<tr>
+<td><strong>Recomendado</strong></td>
+<td>No (legacy)</td>
+<td>Sí</td>
+</tr>
+</tbody>
+</table>
+<p>DStream se considera <em>legacy</em> desde Spark 2.x. Structured Streaming es la API recomendada para todos los casos de uso nuevos.</p>
+</details>
+<details class="question">
+<summary>¿Qué garantías de procesamiento (<em>delivery semantics</em>) ofrece <em>Structured Streaming</em>?</summary>
+<p><em>Structured Streaming</em> ofrece tres niveles de garantía:</p>
+<ul>
+<li><strong>At-most-once</strong>: cada registro se procesa como máximo una vez. Posible pérdida de datos.</li>
+<li><strong>At-least-once</strong>: cada registro se procesa al menos una vez. Posibles duplicados.</li>
+<li><strong>Exactly-once</strong>: cada registro se procesa exactamente una vez, sin pérdidas ni duplicados. Requiere fuentes reproducibles (Kafka con offsets, ficheros en HDFS/S3) <strong>y</strong> sinks idempotentes o transaccionales (Delta Lake, bases de datos con soporte ACID).</li>
+</ul>
+</details>
+<details class="question">
+<summary>¿Qué es el <em>checkpointing</em> en <em>Structured Streaming</em> y por qué es necesario?</summary>
+<p>El <em>checkpointing</em> guarda periódicamente en almacenamiento persistente (HDFS, S3…) el estado del progreso de la consulta: los offsets consumidos, el estado de las ventanas y los metadatos de los sinks. Ante un fallo o reinicio, Structured Streaming retoma exactamente donde lo dejó sin reprocesar datos ni perder resultados. Se configura con:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">query</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">writeStream</span> \
+<span class="linenos" data-linenos="2 "></span>    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;checkpointLocation&quot;</span><span class="p">,</span> <span class="s2">&quot;/ruta/checkpoint&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="4 "></span>    <span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</code></pre></div>
+<p>Sin checkpointing, un reinicio de la aplicación puede provocar reprocesado desde el principio o pérdida de estado de ventanas.</p>
+</details>
+<details class="question">
+<summary>¿Qué tipos de triggers existen en Structured Streaming?</summary>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Comportamiento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Por defecto</td>
+<td>Procesa en micro-batches tan rápido como puede.</td>
+</tr>
+<tr>
+<td><code>processingTime="10 seconds"</code></td>
+<td>Lanza un batch cada intervalo fijo.</td>
+</tr>
+<tr>
+<td><code>once=True</code></td>
+<td>Procesa todo lo disponible y se detiene. Útil para pipelines batch-on-demand.</td>
+</tr>
+<tr>
+<td><code>availableNow=True</code></td>
+<td>Como <code>once</code> pero en paralelo por partición (Spark 3.3+).</td>
+</tr>
+<tr>
+<td><code>continuous="1 second"</code></td>
+<td>Modo continuo con latencia sub-milisegundo para operaciones sin estado (experimental).</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details class="question">
+<summary>¿Cuáles son los modos de salida (<em>output modes</em>) y cuándo se usa cada uno?</summary>
+<ul>
+<li><strong>Append</strong> (por defecto): solo escribe las filas nuevas que se añaden al resultado. Solo válido para operaciones sin estado o con watermark definido.</li>
+<li><strong>Complete</strong>: reescribe el resultado completo en cada batch. Solo válido con agregaciones.</li>
+<li><strong>Update</strong>: escribe únicamente las filas que han cambiado respecto al batch anterior. Más eficiente que Complete para agregaciones con muchas claves.</li>
+</ul>
+</details>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Documentación oficial sobre <a href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html">Spark Structured Streaming</a></li>

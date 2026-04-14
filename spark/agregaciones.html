@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -4861,7 +4861,7 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">udf</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;udfBonus&quot;</span><span class="p">,</span> <span class="n">bonus</span><span class="p">,</span> <span class="n">DoubleType</span><span class="p">())</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;select ProductID, Revenue, Units,  udfBonus(Units, Revenue) as bonus from ventas order by Units desc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </code></pre></div>
-<div class="admonition caution">
+<div class="admonition warning">
 <p class="admonition-title">UDF y Python</p>
 <p>En un principio, se desaconseja la creación de UDF mediante <em>Python</em>, ya que su uso penaliza de forma significativa el rendimiento.
 Los ejecutores son procesos en máquinas virtuales de <em>Java</em> que están escritos en <em>Java</em>, y por ello, ejecutan código <em>Java</em> o <em>Scala</em> de forma nativa. En cambio, para <em>Python</em> tiene que ejecutar un proceso separado para ejecutar la UDF, lo que implica un coste extra para serializar y volver a deserializar los datos para cada fila del <em>dataset</em>.</p>

@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -2272,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4394,6 +4405,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5212,6 +5234,94 @@ https://nwdataconsulting.com/delta-lake-up-&-running_er2.pdf
 <span class="linenos" data-linenos="3 "></span><span class="c1"># -rw-r--r-- 1 NBuser NBuser 1696 Jan 30 18:10 1-0f732990-efd2-44da-853d-c08dc8d3d345-0.parquet</span>
 <span class="linenos" data-linenos="4 "></span><span class="c1"># drwxr-xr-x 2 NBuser NBuser 4096 Jan 30 18:10 _delta_log</span>
 </code></pre></div>
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<p>A continuación se recogen preguntas habituales sobre los conceptos de esta sesión que suelen realizarse en entrevistas de trabajo para puestos de ingeniería o ciencia de datos.</p>
+<p>Despliega cada pregunta para ver una respuesta orientativa; no hay una única respuesta correcta, pero sí aspectos clave que conviene mencionar.</p>
+<details class="question">
+<summary>¿Qué propiedades ACID garantiza Delta Lake y cómo las implementa?</summary>
+<p>Delta Lake garantiza las cuatro propiedades ACID sobre un <em>data lake</em>:</p>
+<ul>
+<li><strong>Atomicidad</strong>: una transacción se aplica completa o no se aplica en absoluto.</li>
+<li><strong>Consistencia</strong>: el estado de la tabla siempre es válido tras cada commit.</li>
+<li><strong>Aislamiento</strong>: las transacciones concurrentes no se interfieren entre sí (control de concurrencia optimista).</li>
+<li><strong>Durabilidad</strong>: los commits son permanentes una vez escritos en el <em>transaction log</em>.</li>
+</ul>
+<p>Se implementan mediante un <strong>transaction log</strong> (<code>_delta_log/</code>) en formato JSON que registra cada operación atómicamente. Si una escritura falla a mitad, el log no registra el commit y los ficheros huérfanos se limpian con <code>VACUUM</code>.</p>
+</details>
+<details class="question">
+<summary>¿Cómo funciona el control de concurrencia optimista en Delta Lake?</summary>
+<p>Cuando dos escrituras concurrentes ocurren sobre la misma tabla Delta, cada una lee el estado actual del <em>transaction log</em>, realiza sus cambios en ficheros nuevos y luego intenta hacer el commit. Si entre tanto otro proceso ha hecho commit modificando los <strong>mismos datos</strong>, la operación conflictiva falla con un error de conflicto. Si los cambios afectan a <strong>datos distintos</strong> (por ejemplo, particiones diferentes), Delta resuelve el conflicto automáticamente y aplica ambos commits. Esto permite alto paralelismo sin necesidad de bloqueos pesimistas.</p>
+</details>
+<details class="question">
+<summary>¿Qué es el <em>time travel</em> en Delta Lake y cómo se usa?</summary>
+<p>Delta Lake mantiene un historial de todas las versiones de una tabla gracias al <em>transaction log</em>. Esto permite consultar el estado de la tabla en un momento pasado (<em>time travel</em>) de dos formas:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># Por número de versión</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;versionAsOf&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;ruta/tabla&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># Por marca de tiempo</span>
+<span class="linenos" data-linenos="5 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;timestampAsOf&quot;</span><span class="p">,</span> <span class="s2">&quot;2024-01-15&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;ruta/tabla&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Es útil para auditorías, reproducibilidad de experimentos y recuperación ante errores.</p>
+</details>
+<details class="question">
+<summary>¿Qué hace el comando VACUUM y qué precaución hay que tener?</summary>
+<p><code>VACUUM</code> elimina los ficheros Parquet que ya no forman parte de ninguna versión activa de la tabla, liberando espacio en disco. Por defecto respeta un período de retención de <strong>7 días</strong> (168 horas) para permitir el <em>time travel</em> a versiones recientes. Reducir ese período por debajo del valor por defecto puede imposibilitar la recuperación de versiones antiguas:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">delta.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeltaTable</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">dt</span> <span class="o">=</span> <span class="n">DeltaTable</span><span class="o">.</span><span class="n">forPath</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s2">&quot;ruta/tabla&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">dt</span><span class="o">.</span><span class="n">vacuum</span><span class="p">(</span><span class="n">retentionHours</span><span class="o">=</span><span class="mi">168</span><span class="p">)</span>  <span class="c1"># 7 días por defecto</span>
+</code></pre></div>
+</details>
+<details class="question">
+<summary>¿Cuál es la diferencia entre Delta Lake, Apache Iceberg y Apache Hudi?</summary>
+<p>Los tres son <strong>formatos de tabla abiertos</strong> que añaden capacidades transaccionales a los <em>data lakes</em>, pero tienen enfoques distintos:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Delta Lake</th>
+<th>Apache Iceberg</th>
+<th>Apache Hudi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Origen</strong></td>
+<td>Databricks</td>
+<td>Netflix / Apple</td>
+<td>Uber</td>
+</tr>
+<tr>
+<td><strong>Motor principal</strong></td>
+<td>Spark (nativo)</td>
+<td>Multi-engine</td>
+<td>Spark / Flink</td>
+</tr>
+<tr>
+<td><strong>Punto fuerte</strong></td>
+<td>Integración Spark, madurez</td>
+<td>Multi-engine, evolución de esquema avanzada</td>
+<td>Upserts / CDC con baja latencia</td>
+</tr>
+<tr>
+<td><strong>Open source</strong></td>
+<td>Sí (Linux Foundation)</td>
+<td>Sí (Apache)</td>
+<td>Sí (Apache)</td>
+</tr>
+</tbody>
+</table>
+<p>Hoy los tres son compatibles con los principales motores de consulta (Spark, Trino, Flink, Hive).</p>
+</details>
+<details class="question">
+<summary>¿Qué es la arquitectura Medallion y qué capas la componen?</summary>
+<p>La arquitectura Medallion organiza los datos de un <em>lakehouse</em> en tres capas de calidad creciente:</p>
+<ul>
+<li><strong>Bronze</strong> (bronce): datos en crudo tal como llegan de las fuentes, sin transformar. Se conservan para poder reprocesar.</li>
+<li><strong>Silver</strong> (plata): datos limpios, validados y enriquecidos, listos para análisis intermedios.</li>
+<li><strong>Gold</strong> (oro): datos agregados y modelados para casos de uso específicos de negocio (dashboards, ML…).</li>
+</ul>
+<p>Esta separación permite la trazabilidad completa del dato, la reutilización de cada capa y la recuperación ante errores reprocesando desde Bronze.</p>
+</details>
 <!--
 Spark DeltaLake:
 https://towardsdatascience.com/from-data-lakes-to-data-reservoirs-aa2efebb4f25
