@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -4977,15 +4977,15 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connect
 </details>
 <details class="question">
 <summary>¿Cuál es la diferencia entre una tabla gestionada (<em>managed</em>) y una tabla externa (<em>external</em>)?</summary>
-<p>En una tabla <strong>gestionada</strong> (<em>managed</em>), Spark controla tanto los metadatos (en el Metastore) como los ficheros físicos. Al hacer <code>DROP TABLE</code>, <strong>se eliminan también los datos</strong> del disco. En una tabla <strong>externa</strong> (<em>external</em>), Spark solo gestiona los metadatos; los datos residen en una ruta definida por el usuario. Al hacer <code>DROP TABLE</code>, solo se eliminan los metadatos, <strong>los datos permanecen intactos</strong>. Las tablas externas son más seguras en producción.</p>
+<p>En una tabla <strong>gestionada</strong> (<em>managed</em>), <em>Spark</em> controla tanto los metadatos (en el <em>Metastore</em>) como los ficheros físicos. Al hacer <code>DROP TABLE</code>, se eliminan también los datos del disco. En una tabla <strong>externa</strong> (<em>external</em>), <em>Spark</em> solo gestiona los metadatos; los datos residen en una ruta definida por el usuario. Al hacer <code>DROP TABLE</code>, solo se eliminan los metadatos, los datos permanecen intactos. Las tablas externas son más seguras en producción.</p>
 </details>
 <details class="question">
 <summary>¿Qué es el Metastore de Hive y qué papel juega en Spark?</summary>
-<p>El Metastore de Hive es un repositorio central de metadatos (esquemas, ubicaciones de tablas, definiciones de particiones) que Spark puede usar para persistir la definición de tablas entre sesiones. Sin él, las tablas creadas en Spark solo existen durante la vida de la <code>SparkSession</code> actual. Configurando Spark con soporte Hive, las tablas son permanentes y accesibles desde otras herramientas del ecosistema como Presto, Trino o Hive.</p>
+<p>El <em>Metastore</em> de <em>Hive</em> es un repositorio central de metadatos (esquemas, ubicaciones de tablas, definiciones de particiones) que Spark puede usar para persistir la definición de tablas entre sesiones. Sin él, las tablas creadas en <em>Spark</em> solo existen durante la vida de la <code>SparkSession</code> actual. Configurando S<em>p</em>ark con soporte <em>Hive</em>, las tablas son permanentes y accesibles desde otras herramientas del ecosistema como <em>Presto</em>, <em>Trino</em> o <em>Hive</em>.</p>
 </details>
 <details class="question">
 <summary>¿Cuándo es más eficiente leer desde JDBC con particionado?</summary>
-<p>Por defecto, Spark lee una tabla JDBC con un único hilo (una sola partición), lo que no aprovecha el paralelismo del clúster. Para paralelizar la lectura, se deben especificar los parámetros <code>partitionColumn</code>, <code>lowerBound</code>, <code>upperBound</code> y <code>numPartitions</code>. Esto hace que Spark divida la lectura en <code>numPartitions</code> rangos sobre la columna indicada, lanzando una consulta por rango en paralelo.</p>
+<p>Por defecto, <em>Spark</em> lee una tabla JDBC con un único hilo (una sola partición), lo que no aprovecha el paralelismo del clúster. Para paralelizar la lectura, se deben especificar los parámetros <code>partitionColumn</code>, <code>lowerBound</code>, <code>upperBound</code> y <code>numPartitions</code>. Esto hace que <em>Spark</em> divida la lectura en <code>numPartitions</code> rangos sobre la columna indicada, lanzando una consulta por rango en paralelo.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">jdbc</span><span class="p">(</span>
 <span class="linenos" data-linenos="2 "></span>    <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="s2">&quot;ventas&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="3 "></span>    <span class="n">column</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">lowerBound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">upperBound</span><span class="o">=</span><span class="mi">1000000</span><span class="p">,</span> <span class="n">numPartitions</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
