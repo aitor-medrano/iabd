@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -4438,7 +4438,7 @@
 <p>En ocasiones necesitamos agrupar en una colección todos los valores para un grupo en particular. Para ello, podemos usar <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.collect_list.html">collect_list</a> (con repetidos) o <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.collect_set.html">collect_set</a> (sin repeticiones):</p>
 <p>Por ejemplo, para cada país, vamos a recuperar un listado con los códigos postales de aquellos pedidos que hayan superado las 5 unidades:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">collect_list</span><span class="p">,</span> <span class="n">collect_set</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="n">df</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;Units &gt; 5&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">collect_list</span><span class="p">(</span><span class="s2">&quot;Zip&quot;</span><span class="p">),</span> <span class="n">collect_set</span><span class="p">(</span><span class="s2">&quot;Zip&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="n">df</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Units</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">collect_list</span><span class="p">(</span><span class="s2">&quot;Zip&quot;</span><span class="p">),</span> <span class="n">collect_set</span><span class="p">(</span><span class="s2">&quot;Zip&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="c1"># +-------+--------------------+--------------------+</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="c1"># |Country|   collect_list(Zip)|    collect_set(Zip)|</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="c1"># +-------+--------------------+--------------------+</span>
@@ -4562,8 +4562,8 @@
 <h3 id="mediante-python">Mediante Python<a class="headerlink" href="#mediante-python" title="Permanent link">&para;</a></h3>
 <p>Si no queremos utilizar SQL o ya tenemos fragmentos de código que interactúan con el <em>DataFrame API</em>, podemos utilizar el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.join.html">join</a>.</p>
 <p>Este método une dos <em>DataFrames</em>, indicando la expresión de unión y opcionalmente el tipo:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">exprJoin1</span> <span class="o">=</span> <span class="n">df_vuelos</span><span class="o">.</span><span class="n">origin</span> <span class="o">==</span> <span class="n">df_aeropuertos</span><span class="o">.</span><span class="n">IATA</span>
-<span class="linenos" data-linenos="2 "></span><span class="n">df_joinp1</span> <span class="o">=</span> <span class="n">df_vuelos</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">df_aeropuertos</span><span class="p">,</span> <span class="n">exprJoin1</span><span class="p">,</span> <span class="s2">&quot;inner&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">expr_join1</span> <span class="o">=</span> <span class="n">df_vuelos</span><span class="o">.</span><span class="n">origin</span> <span class="o">==</span> <span class="n">df_aeropuertos</span><span class="o">.</span><span class="n">IATA</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df_joinp1</span> <span class="o">=</span> <span class="n">df_vuelos</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">df_aeropuertos</span><span class="p">,</span> <span class="n">expr_join1</span><span class="p">,</span> <span class="s2">&quot;inner&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="n">df_joinp1</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>    <span class="c1"># 1377162</span>
 </code></pre></div>
 <div class="admonition tip">
