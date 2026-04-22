@@ -5817,45 +5817,36 @@ Además, <em>Spark SQL</em> ofrece la sintaxis <code>:campo</code> como atajo de
 </figure>
 
 <h3 id="datos-visuales">Datos visuales<a class="headerlink" href="#datos-visuales" title="Permanent link">&para;</a></h3>
-<p>Sobre las celdas SQL, si pulsamos sobre el icono de la esquina superior derecha, podemos visualizar los datos en modo gráfico, pudiendo elegir entre diferentes tipos de gráficos y configurando sus ejes, leyendas, etc.</p>
-<p>TODO: Crear gif</p>
+<p>Si en cualquier celda, pulsamos sobre el el botón de <em>Python</em>, podremos cambiar el tipo de celda a SQL, y viceversa, lo cual nos permitirá trabajar con ambos lenguajes en el mismo cuaderno. Sobre las celdas SQL, donde la primera línea comienza con <code>%sql</code>, podemos introducir directamente código SQL:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>%sql
+<span class="linenos" data-linenos="2 "></span>SELECT trim(Country), count(*) FROM ventas GROUP BY trim(Country);
+</code></pre></div>
+<p>Que tras ejecutarlo, nos mostrará el resultado en formato de tabla:</p>
 <figure style="align: center;">
-    <img src="images/02spark-databricks-visualization.png" alt="Trabajando con DataFrames en Databricks">
-    <figcaption>Trabajando con DataFrames en Databricks</figcaption>
+    <img src="images/02spark-databricks-visualization.png" alt="Trabajando con SQL en Databricks">
+    <figcaption>Trabajando con SQL en Databricks</figcaption>
 </figure>
 
-<p>Si volvemos a ejecutar el cuaderno, ahora sí que cargará correctamente los datos. Si nos vamos a la celda que realiza una consulta sobre todos los datos, podemos ver en la parte superior derecha como el lenguaje empleado en la celda es SQL, por ello la primera línea comienza con <code>%sql</code>, y a continuación ya podemos introducir directamente código SQL, teniendo la opción de visualizar los datos tanto en modo texto como mediante gráficos:</p>
+<p>Además, si pulsamos sobre el icono del <code>+</code> al lado de la tabla de resultados generada y posteriormente sobre <em>Visualization</em>, podemos crear otra representación de los datos, pudiendo visualizar los datos en modo gráfico, pudiendo elegir entre diferentes tipos de gráficos y configurando sus ejes, leyendas, etc.</p>
 <figure style="align: center;">
-    <img src="images/02spark-databricks-sql.gif">
+    <img src="images/02spark-databricks-visualization.gif">
     <figcaption>Datos y gráficos mediante SQL</figcaption>
 </figure>
 
 <h3 id="cuadro-de-mandos">Cuadro de mandos<a class="headerlink" href="#cuadro-de-mandos" title="Permanent link">&para;</a></h3>
 <p>Además, con las tablas y/o gráficos que generamos dentro de <em>Databricks</em>, podemos generar un sencillo cuadro de mandos.</p>
-<p>Vamos a crear un par de consultas, una para obtener las ventas medias por país:</p>
+<p>Vamos a crear un par de consultas, una para obtener los ingresos por país (como puedes observar, en este consulta no hacemos ninguna agregación, ya que nos vamos a basar en la visualización para mostrar los ingresos por país, y no en la tabla resultante):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">%</span><span class="k">sql</span>
-<span class="linenos" data-linenos="2 "></span><span class="k">select</span><span class="w"> </span><span class="n">Country</span><span class="p">,</span><span class="w"> </span><span class="k">avg</span><span class="p">(</span><span class="n">Revenue</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">ventas</span>
-<span class="linenos" data-linenos="3 "></span><span class="k">from</span><span class="w"> </span><span class="n">pdi_sales_small_csv</span>
-<span class="linenos" data-linenos="4 "></span><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Country</span>
-<span class="linenos" data-linenos="5 "></span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">ventas</span><span class="w"> </span><span class="k">desc</span>
+<span class="linenos" data-linenos="2 "></span><span class="k">select</span><span class="w"> </span><span class="k">trim</span><span class="p">(</span><span class="n">Country</span><span class="p">),</span><span class="w"> </span><span class="nb">Date</span><span class="p">,</span><span class="w"> </span><span class="n">Zip</span><span class="p">,</span><span class="w"> </span><span class="n">Units</span><span class="p">,</span><span class="w"> </span><span class="n">Revenue</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">ventas</span>
 </code></pre></div>
-<p>Y otra para las unidas pedidas por cada país:</p>
+<p>Y otra para los ingresos totales, donde sí que realizamos el cálculo mediante una agregación:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="o">%</span><span class="k">sql</span>
-<span class="linenos" data-linenos="2 "></span><span class="k">select</span><span class="w"> </span><span class="n">Country</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">Units</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">pedidos</span>
-<span class="linenos" data-linenos="3 "></span><span class="k">from</span><span class="w"> </span><span class="n">pdi_sales_small_csv</span>
-<span class="linenos" data-linenos="4 "></span><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Country</span>
-<span class="linenos" data-linenos="5 "></span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">pedidos</span><span class="w"> </span><span class="k">desc</span>
+<span class="linenos" data-linenos="2 "></span><span class="k">select</span><span class="w"> </span><span class="n">floor</span><span class="p">(</span><span class="k">sum</span><span class="p">(</span><span class="n">Units</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Revenue</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">IngresosTotales</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">ventas</span>
 </code></pre></div>
-<p>Si pulsamos sobre el icono del gráfico de barras de la esquina superior derecha de una celda SQL, podemos añadir el resultado de la celda a un <em>dashboard</em>:</p>
+<p>Si pulsamos sobre el icono del gráfico de barras creado anteriormente, podemos pulsar sobre la opción de <em>Add to notebook dashboard</em> si queremos asignarlo a un cuadro de mandos local al cuaderno, o mediante <em>Add to dashboard</em> para uun cuadro de mandos global de nuestro <em>workspace</em>. En nuestro caso, vamos a utilizar <em>Add to dashboard</em> , y crearemos un nuevo cuadro de mandos que llamaremos, por ejemplo, <code>Ventas</code>. A continuación, sobre las diferentes visualizaciones que hemos creado, pulsamos sobre el mismo icono y las añadimos al mismo cuadro de mandos <code>Ventas</code>:</p>
 <figure style="align: center;">
-    <img src="images/02spark-databricks-dashboard.gif">
+    <img src="images/02spark-databricks-dashboard1.gif">
     <figcaption>Creando un cuadro de mandos</figcaption>
-</figure>
-
-<p>Una vez creado, sólo tenemos que seleccionar las celdas que queramos, e ir añadiéndolas al cuadro de mandos creado. Posteriormente, podemos abrirlo, resituar los elementos y visualizarlo:</p>
-<figure style="align: center;">
-    <img src="images/02spark-databricks-dashboard2.gif">
-    <figcaption>Añadiendo elementos a un cuadro de mandos</figcaption>
 </figure>
 
 <h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
@@ -5931,9 +5922,9 @@ Además, <em>Spark SQL</em> ofrece la sintaxis <code>:campo</code> como atajo de
 </code></pre></div>
 </details>
 <details class="question">
-<summary>¿Qué es el <em>predicate pushdown</em> y cómo se aprovecha con Parquet?</summary>
+<summary>¿Qué es el <em>predicate pushdown</em> y cómo se aprovecha con <em>Parquet</em>?</summary>
 <p>El <em>predicate pushdown</em> es una optimización del <em>Catalyst Optimizer</em> por la que los filtros (<code>filter</code>/<code>where</code>) se aplican lo más cerca posible de la fuente de datos, antes de cargar los datos en memoria.</p>
-<p>Con el formato Parquet, que almacena estadísticas por <em>row group</em> (valores mínimo y máximo de cada columna), <em>Spark</em> puede descartar enteros bloques de datos sin siquiera leerlos si no satisfacen el filtro. Esto reduce drásticamente el volumen de datos leído del almacenamiento.</p>
+<p>Con el formato <em>Parquet</em>, que almacena estadísticas por <em>row group</em> (valores mínimo y máximo de cada columna), <em>Spark</em> puede descartar enteros bloques de datos sin siquiera leerlos si no satisfacen el filtro. Esto reduce drásticamente el volumen de datos leído del almacenamiento.</p>
 </details>
 <details class="question">
 <summary>¿Cuál es la diferencia entre <code>col()</code> y <code>expr()</code> para referenciar columnas?</summary>
@@ -5942,24 +5933,17 @@ Además, <em>Spark SQL</em> ofrece la sintaxis <code>:campo</code> como atajo de
 </details>
 <details class="question">
 <summary>¿Cuál es la diferencia entre <code>filter()</code> y <code>where()</code>?</summary>
-<p>Son exactamente equivalentes: <code>where()</code> es un alias de <code>filter()</code> pensado
-para que el código resulte más legible a quienes vienen de SQL. Ambos
-aceptan tanto una expresión de columna como una cadena SQL:</p>
+<p>Son exactamente equivalentes: <code>where()</code> es un alias de <code>filter()</code> pensado para que el código resulte más legible a quienes vienen de SQL. Ambos aceptan tanto una expresión de columna como una cadena SQL:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;sueldo&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4000</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">df</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;sueldo &gt; 4000&quot;</span><span class="p">)</span>  <span class="c1"># idéntico resultado</span>
 </code></pre></div>
 </details>
 <details class="question">
 <summary>¿Cuál es la diferencia entre <code>select()</code> y <code>withColumn()</code>?</summary>
-<p><code>select()</code> proyecta el <em>DataFrame</em> devolviendo <ins>solo las columnas indicadas</ins>;
-si no incluyes las columnas existentes, las pierdes. <code>withColumn()</code> añade o
-reemplaza  ^^una única columna ^^ manteniendo el resto intactas. Como regla
-práctica: usa <code>withColumn()</code> para transformar o añadir una columna puntual,
-y <code>select()</code> cuando quieras reestructurar el esquema completo o calcular
-varias columnas a la vez.</p>
+<p><code>select()</code> proyecta el <em>DataFrame</em> devolviendo <ins>solo las columnas indicadas</ins>; si no incluyes las columnas existentes, las pierdes. <code>withColumn()</code> añade o reemplaza  ^^una única columna ^^ manteniendo el resto intactas. Como regla práctica: usa <code>withColumn()</code> para transformar o añadir una columna puntual, y <code>select()</code> cuando quieras reestructurar el esquema completo o calcular varias columnas a la vez.</p>
 </details>
 <details class="question">
-<summary>¿Cómo se gestionan los valores nulos en Spark?</summary>
+<summary>¿Cómo se gestionan los valores nulos en <em>Spark</em>?</summary>
 <p><em>Spark</em> representa los nulos con <code>null</code> y ofrece tres mecanismos principales:</p>
 <ul>
 <li><code>dropna(thresh=N)</code> — elimina las filas que tengan menos de N valores no nulos.</li>
@@ -5971,14 +5955,10 @@ Para detectarlos se usa <code>col("campo").isNull()</code> o <code>col("campo").
 </details>
 <details class="question">
 <summary>¿Cómo se inspecciona el plan de ejecución de un <em>DataFrame</em>?</summary>
-<p>Mediante <code>explain(mode="formatted")</code>, que muestra el plan lógico (lo que el
-código describe) y el plan físico (lo que <em>Catalyst</em> ejecutará realmente tras
-aplicar sus optimizaciones):</p>
+<p>Mediante <code>explain(mode="formatted")</code>, que muestra el plan lógico (lo que el código describe) y el plan físico (lo que <em>Catalyst</em> ejecutará realmente tras aplicar sus optimizaciones):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;sueldo&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4000</span><span class="p">)</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;ciudad&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;formatted&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>El plan lógico y el físico pueden diferir si <em>Catalyst</em> reordena filtros,
-aplica <em>predicate pushdown</em> o elimina operaciones redundantes. El mismo DAG
-se puede visualizar gráficamente en la <em>Spark UI</em>.</p>
+<p>El plan lógico y el físico pueden diferir si <em>Catalyst</em> reordena filtros, aplica <em>predicate pushdown</em> o elimina operaciones redundantes. El mismo DAG se puede visualizar gráficamente en la <em>Spark UI</em>.</p>
 </details>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
