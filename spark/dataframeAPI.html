@@ -5904,10 +5904,13 @@ Además, <em>Spark SQL</em> ofrece la sintaxis <code>:campo</code> como atajo de
 <p>En <em>PySpark</em>, <em>DataFrame</em> y <em>Dataset</em> son equivalentes (<code>Dataset[Row]</code>). Se recomienda siempre usar <em>DataFrames</em> salvo que se necesite acceso de bajo nivel.</p>
 </details>
 <details class="question">
-<summary>¿Qué diferencia hay entre una vista temporal y una vista global?</summary>
-<p>Una vista temporal (<code>createOrReplaceTempView</code>) solo es accesible desde la <code>SparkSession</code> actual y desaparece cuando esta termina. Una vista global (<code>createOrReplaceGlobalTempView</code>) se almacena en la base de datos virtual <code>global_temp</code> y es accesible desde cualquier <code>SparkSession</code> dentro de la misma aplicación <em>Spark</em>. Se consulta prefijando el nombre con <code>global_temp.</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM global_temp.mi_vista&quot;</span><span class="p">)</span>
-</code></pre></div>
+<summary>¿Qué significa que los <em>DataFrames</em> sean inmutables y qué implicaciones tiene?</summary>
+<p>Ninguna transformación modifica el <em>DataFrame</em> original: siempre se devuelve uno nuevo. Esto tiene dos consecuencias prácticas:</p>
+<ol>
+<li>Encadenamiento obligatorio: hay que asignar el resultado o encadenar transformaciones (<code>df = df.withColumn(...).filter(...)</code>), porque llamar al método sin más no altera <code>df</code>.</li>
+<li>Seguridad en paralelismo: al no haber estado mutable compartido, <em>Spark</em> puede replanificar, reordenar o reejecutar transformaciones sin efectos laterales, lo que es clave para tolerancia a fallos y optimización.</li>
+</ol>
+<p>Es el mismo principio que siguen los RDD y encaja con el modelo funcional sobre el que se construye <em>Spark</em>.</p>
 </details>
 <details class="question">
 <summary>¿Por qué es mejor definir el esquema explícitamente en lugar de inferirlo?</summary>
@@ -5919,6 +5922,12 @@ Además, <em>Spark SQL</em> ofrece la sintaxis <code>:campo</code> como atajo de
 <span class="linenos" data-linenos="5 "></span><span class="p">])</span>
 <span class="linenos" data-linenos="6 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;datos.csv&quot;</span><span class="p">)</span>
 </code></pre></div>
+</details>
+<details class="question">
+<summary>¿Cuándo usarías el tipo <code>VARIANT</code> frente a un <code>StructType</code> tradicional?</summary>
+<p><code>VARIANT</code> está pensado para datos semiestructurados con esquema <strong>variable, evolutivo o desconocido</strong>: payloads de APIs externas, eventos heterogéneos, exploración de un <em>data lake raw</em>, etc. Ofrece acceso binario optimizado a 
+campos concretos sin parsear todo el documento, con un rendimiento hasta ~8× superior al JSON almacenado como <code>string</code>.</p>
+<p>Si el esquema es <strong>estable y conocido</strong>, un <code>StructType</code> bien definido sigue  siendo más eficiente y más seguro (validación de tipos en tiempo de lectura). La regla práctica: <code>VARIANT</code> para flexibilidad, <code>StructType</code> para rendimiento y contratos estables.</p>
 </details>
 <details class="question">
 <summary>¿Qué es el <em>predicate pushdown</em> y cómo se aprovecha con <em>Parquet</em>?</summary>
@@ -5949,8 +5958,7 @@ Además, <em>Spark SQL</em> ofrece la sintaxis <code>:campo</code> como atajo de
 <li><code>fillna(valor)</code> — sustituye los nulos por un valor fijo (puede ser un diccionario <code>{columna: valor}</code>).</li>
 <li><code>replace(valor_original, valor_nuevo)</code> — reemplaza valores concretos en todo el <em>DataFrame</em>.</li>
 </ul>
-<p>En operaciones de agregación, <em>Spark</em> ignora los nulos por defecto (igual que SQL).
-Para detectarlos se usa <code>col("campo").isNull()</code> o <code>col("campo").isNotNull()</code>.</p>
+<p>En operaciones de agregación, <em>Spark</em> ignora los nulos por defecto (igual que SQL). Para detectarlos se usa <code>col("campo").isNull()</code> o <code>col("campo").isNotNull()</code>.</p>
 </details>
 <details class="question">
 <summary>¿Cómo se inspecciona el plan de ejecución de un <em>DataFrame</em>?</summary>
@@ -5958,6 +5966,12 @@ Para detectarlos se usa <code>col("campo").isNull()</code> o <code>col("campo").
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;sueldo&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4000</span><span class="p">)</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;ciudad&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;formatted&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>El plan lógico y el físico pueden diferir si <em>Catalyst</em> reordena filtros, aplica <em>predicate pushdown</em> o elimina operaciones redundantes. El mismo DAG se puede visualizar gráficamente en la <em>Spark UI</em>.</p>
+</details>
+<details class="question">
+<summary>¿Qué diferencia hay entre una vista temporal y una vista global?</summary>
+<p>Una vista temporal (<code>createOrReplaceTempView</code>) solo es accesible desde la <code>SparkSession</code> actual y desaparece cuando esta termina. Una vista global (<code>createOrReplaceGlobalTempView</code>) se almacena en la base de datos virtual <code>global_temp</code> y es accesible desde cualquier <code>SparkSession</code> dentro de la misma aplicación <em>Spark</em>. Se consulta prefijando el nombre con <code>global_temp.</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM global_temp.mi_vista&quot;</span><span class="p">)</span>
+</code></pre></div>
 </details>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
