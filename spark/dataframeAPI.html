@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -1979,17 +1979,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#explotando-arrays-y-objetos" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Explotando arrays y objetos
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2284,6 +2273,14 @@
     
   </span>
   
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -4245,17 +4242,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#explotando-arrays-y-objetos" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Explotando arrays y objetos
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -4604,6 +4590,14 @@
 
 
 
+<div class="changelog">
+<p><em>Changelog:</em></p>
+<ul>
+<li>Tipo VARIANT en la definición de esquemas — Abril 2026</li>
+<li>Uso de <em>Databricks Free Edition</em> en vez de <em>Community Edition</em> — Abril 2026</li>
+<li>Añadimos FAQ — Abril 2026</li>
+</ul>
+</div>
 <h1 id="spark-dataframes-sql">Spark DataFrames / SQL<a class="headerlink" href="#spark-dataframes-sql" title="Permanent link">&para;</a></h1>
 <p>En la sesiones anteriores hemos introducido <em>Spark</em> y el uso de RDD para interactuar con los datos. Tal como comentamos, los RDD permiten trabajar a bajo nivel, siendo más cómodo y eficiente hacer uso de <em>DataFrames</em> y el lenguaje SQL.</p>
 <h2 id="dataframes">DataFrames<a class="headerlink" href="#dataframes" title="Permanent link">&para;</a></h2>
@@ -4776,7 +4770,7 @@ Si queremos mostrar sus datos, haremos uso del método <code>show</code>:</p>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">dfTXT</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;datos.txt&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span><span class="c1"># cada fichero se lee entero como un registro</span>
-<span class="linenos" data-linenos="3 "></span><span class="n">dfTXT</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;wholetext&quot;</span><span class="p">,</span> <span class="n">true</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;datos/&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">dfTXT</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;wholetext&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;datos/&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="4 "></span>
 <span class="linenos" data-linenos="5 "></span><span class="n">dfTXT</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;datos.txt&quot;</span><span class="p">)</span>
 </code></pre></div>
@@ -4932,24 +4926,6 @@ Así pues, cada columna de un <em>DataFrame</em> de <em>Spark</em> se modela med
 <span class="linenos" data-linenos="2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructType</span><span class="p">,</span> <span class="n">StructField</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">IntegerType</span>
 </code></pre></div>
 <p>Además de cadenas y enteros, flotantes (<code>FloatType</code>) o dobles (<code>DoubleType</code>), tenemos tipos booleanos (<code>BooleanType</code>), de fecha (<code>DateType</code> y <code>TimestampType</code>), así como tipos complejos como <code>ArrayType</code>, <code>MapType</code> y <code>StructType</code>. Para más información sobre estos o más tipos de datos, podéis consultar la <a href="https://spark.apache.org/docs/latest/sql-ref-datatypes.html">documentación oficial</a>.</p>
-<div class="admonition warning">
-<p class="admonition-title">Spark 4.0: Modo ANSI activado por defecto</p>
-<p>A partir de Spark 4.0, la configuración <code>spark.sql.ansi.enabled</code> está a <code>true</code> por defecto. Esto cambia el comportamiento del DataFrame API de forma significativa:</p>
-<ul>
-<li>División por cero: en vez de devolver <code>null</code>, lanza <code>SparkArithmeticException</code>.</li>
-<li>Desbordamiento numérico: lanza excepción en vez de dar un resultado incorrecto.</li>
-<li>Conversiones de tipo inválidas: se rechazan en vez de coercionarse silenciosamente.</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># En Spark 3.x devolvía null; en Spark 4.0 lanza excepción</span>
-<span class="linenos" data-linenos="2 "></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;sueldo&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">lit</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="linenos" data-linenos="3 "></span><span class="c1"># SparkArithmeticException: Division by zero</span>
-<span class="linenos" data-linenos="4 "></span>
-<span class="linenos" data-linenos="5 "></span><span class="c1"># Para restaurar el comportamiento anterior:</span>
-<span class="linenos" data-linenos="6 "></span><span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;spark.sql.ansi.enabled&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>Este cambio acerca <em>Spark</em> al comportamiento de bases de datos como <em>PostgreSQL</em>, mejorando la integridad de los datos al no ocultar errores silenciosamente.</p>
-<p>Es recomendable adaptar el código para manejar estos casos explícitamente en vez de desactivar el modo ANSI.</p>
-</div>
 <p>Volvamos al ejemplo anterior donde tenemos ciertos datos de clientes, como son su nombre y apellidos, ciudad y sueldo:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">clientes</span> <span class="o">=</span> <span class="p">[</span>
 <span class="linenos" data-linenos="2 "></span>    <span class="p">(</span><span class="s2">&quot;Aitor&quot;</span><span class="p">,</span> <span class="s2">&quot;Medrano&quot;</span><span class="p">,</span> <span class="s2">&quot;Elche&quot;</span><span class="p">,</span> <span class="mi">3000</span><span class="p">),</span>
@@ -4986,6 +4962,33 @@ Así pues, cada columna de un <em>DataFrame</em> de <em>Spark</em> se modela med
 <span class="linenos" data-linenos="16 "></span><span class="c1"># |Isabel|Guillén  |Alicante  |7000  |</span>
 <span class="linenos" data-linenos="17 "></span><span class="c1"># +------+---------+----------+------+</span>
 </code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Esquemas y PyArrow</p>
+<p>A partir de <em>Spark 4.0</em>, el método <code>createDataFrame()</code> es compatible con objetos <code>pyarrow.Schema</code> y <code>pyarrow.Table</code>, lo que facilita la creación de <em>DataFrames</em> a partir de datos en formato <em>Arrow</em> sin necesidad de convertirlos a listas o <em>DataFrames</em> de <em>Pandas</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1"># Definir un esquema Arrow</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">esquema_arrow</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">schema</span><span class="p">([</span>
+<span class="linenos" data-linenos=" 5 "></span>    <span class="p">(</span><span class="s2">&quot;nombre&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+<span class="linenos" data-linenos=" 6 "></span>    <span class="p">(</span><span class="s2">&quot;apellidos&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+<span class="linenos" data-linenos=" 7 "></span>    <span class="p">(</span><span class="s2">&quot;ciudad&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="p">(</span><span class="s2">&quot;sueldo&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int32</span><span class="p">())</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="p">])</span>
+<span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># Creamos la tabla de Arrow con los datos en formato columnar</span>
+<span class="linenos" data-linenos="12 "></span><span class="n">tabla_arrow</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">({</span>
+<span class="linenos" data-linenos="13 "></span>    <span class="s2">&quot;nombre&quot;</span><span class="p">:</span>    <span class="p">[</span><span class="s2">&quot;Aitor&quot;</span><span class="p">,</span> <span class="s2">&quot;Pedro&quot;</span><span class="p">,</span> <span class="s2">&quot;Casas&quot;</span><span class="p">,</span> <span class="s2">&quot;Miguel&quot;</span><span class="p">,</span> <span class="s2">&quot;Isabel&quot;</span><span class="p">],</span>
+<span class="linenos" data-linenos="14 "></span>    <span class="s2">&quot;apellidos&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Medrano&quot;</span><span class="p">,</span> <span class="s2">&quot;Casas&quot;</span><span class="p">,</span> <span class="s2">&quot;García&quot;</span><span class="p">,</span> <span class="s2">&quot;Ruiz&quot;</span><span class="p">,</span> <span class="s2">&quot;Guillén&quot;</span><span class="p">],</span>
+<span class="linenos" data-linenos="15 "></span>    <span class="s2">&quot;ciudad&quot;</span><span class="p">:</span>    <span class="p">[</span><span class="s2">&quot;Elche&quot;</span><span class="p">,</span> <span class="s2">&quot;Elche&quot;</span><span class="p">,</span> <span class="s2">&quot;Elche&quot;</span><span class="p">,</span> <span class="s2">&quot;Torrellano&quot;</span><span class="p">,</span> <span class="s2">&quot;Alicante&quot;</span><span class="p">],</span>
+<span class="linenos" data-linenos="16 "></span>    <span class="s2">&quot;sueldo&quot;</span><span class="p">:</span>    <span class="p">[</span><span class="mi">3000</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">6000</span><span class="p">,</span> <span class="mi">7000</span><span class="p">]</span>
+<span class="linenos" data-linenos="17 "></span><span class="p">},</span> <span class="n">schema</span><span class="o">=</span><span class="n">esquema_arrow</span><span class="p">)</span>
+<span class="linenos" data-linenos="18 "></span>
+<span class="linenos" data-linenos="19 "></span><span class="c1"># Crear un DataFrame de Spark directamente desde la tabla Arrow</span>
+<span class="linenos" data-linenos="20 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">tabla_arrow</span><span class="p">)</span>
+<span class="linenos" data-linenos="21 "></span><span class="n">df</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+</code></pre></div>
+<p>Esto elimina la sobrecarga de conversión intermedia, permitiendo una creación de <em>DataFrames</em> más eficiente cuando los datos ya están en formato <em>Arrow</em>.</p>
+</div>
 <p>Si lo que queremos es asignarle un esquema a un <em>DataFrame</em> que vamos a leer desde una fuente de datos externa, hemos de emplear el método <code>schema</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">dfClientes</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="n">esquema</span><span class="p">)</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;clientes.csv&quot;</span><span class="p">)</span>
 </code></pre></div>
@@ -5041,57 +5044,63 @@ Así pues, cada columna de un <em>DataFrame</em> de <em>Spark</em> se modela med
 </ul>
 <p>No es la mejor opción cuando el esquema es estable y conocido: en ese caso, un <code>StructType</code> bien definido seguirá siendo más eficiente.</p>
 <h4 id="trabajando-con-datos-variant">Trabajando con datos VARIANT<a class="headerlink" href="#trabajando-con-datos-variant" title="Permanent link">&para;</a></h4>
-<p>El tipo <code>VARIANT</code> se puede usar directamente en un esquema con <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.types.VariantType.html"><code>VariantType</code></a>, o bien generarse a partir de cadenas JSON con <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.parse_json.html"><code>parse_json</code></a> o a partir de tipos complejos con <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.to_variant_object.html"><code>to_variant_object</code></a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_json</span><span class="p">,</span> <span class="n">col</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructType</span><span class="p">,</span> <span class="n">StructField</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">,</span> <span class="n">VariantType</span>
-<span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="c1"># Opción A: definir el tipo en el esquema</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="n">esquema</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">([</span>
-<span class="linenos" data-linenos=" 6 "></span>    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">(),</span> <span class="kc">False</span><span class="p">),</span>
-<span class="hll"><span class="linenos" data-linenos=" 7 "></span>    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;datos&quot;</span><span class="p">,</span> <span class="n">VariantType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span>
-</span><span class="linenos" data-linenos=" 8 "></span><span class="p">])</span>
-<span class="linenos" data-linenos=" 9 "></span>
-<span class="linenos" data-linenos="10 "></span><span class="c1"># Opción B: convertir strings JSON a VARIANT con parse_json</span>
-<span class="linenos" data-linenos="11 "></span><span class="n">eventos</span> <span class="o">=</span> <span class="p">[</span>
-<span class="linenos" data-linenos="12 "></span>    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;{&quot;nombre&quot;: &quot;Aitor&quot;, &quot;ciudad&quot;: &quot;Elche&quot;}&#39;</span><span class="p">),</span>
-<span class="linenos" data-linenos="13 "></span>    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;{&quot;nombre&quot;: &quot;Laura&quot;, &quot;ciudad&quot;: &quot;Alicante&quot;, &quot;edad&quot;: 31}&#39;</span><span class="p">),</span>
-<span class="linenos" data-linenos="14 "></span>    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;{&quot;nombre&quot;: &quot;Pedro&quot;, &quot;tags&quot;: [&quot;spark&quot;, &quot;python&quot;]}&#39;</span><span class="p">),</span>
-<span class="linenos" data-linenos="15 "></span><span class="p">]</span>
-<span class="linenos" data-linenos="16 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">eventos</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;json_str&quot;</span><span class="p">])</span>
-<span class="hll"><span class="linenos" data-linenos="17 "></span><span class="n">df_variant</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;datos&quot;</span><span class="p">,</span> <span class="n">parse_json</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;json_str&quot;</span><span class="p">)))</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;json_str&quot;</span><span class="p">)</span>
-</span><span class="linenos" data-linenos="18 "></span><span class="n">df_variant</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
-<span class="linenos" data-linenos="19 "></span><span class="c1"># root</span>
-<span class="linenos" data-linenos="20 "></span><span class="c1">#  |-- id: long (nullable = true)</span>
-<span class="linenos" data-linenos="21 "></span><span class="c1">#  |-- datos: variant (nullable = true)</span>
-<span class="linenos" data-linenos="22 "></span>
-<span class="linenos" data-linenos="23 "></span><span class="c1"># Opción C: convertir un StructType, ArrayType o MapType existente directamente a VARIANT con to_variant_object</span>
-<span class="linenos" data-linenos="24 "></span><span class="n">esquema_anidado</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">([</span>
-<span class="linenos" data-linenos="25 "></span>    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;usuario&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
-<span class="linenos" data-linenos="26 "></span>    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;historial&quot;</span><span class="p">,</span> <span class="n">ArrayType</span><span class="p">(</span><span class="n">StructType</span><span class="p">([</span>
-<span class="linenos" data-linenos="27 "></span>        <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;preferencias&quot;</span><span class="p">,</span> <span class="n">MapType</span><span class="p">(</span><span class="n">StringType</span><span class="p">(),</span> <span class="n">StringType</span><span class="p">()),</span> <span class="kc">True</span><span class="p">)</span>
-<span class="linenos" data-linenos="28 "></span>    <span class="p">]),</span> <span class="kc">True</span><span class="p">))</span>
-<span class="linenos" data-linenos="29 "></span><span class="p">])</span>
-<span class="linenos" data-linenos="30 "></span><span class="n">data</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Aitor&quot;</span><span class="p">,</span> <span class="p">[{</span><span class="s2">&quot;preferencias&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;deporte&quot;</span><span class="p">:</span> <span class="s2">&quot;baloncesto&quot;</span><span class="p">,</span> <span class="s2">&quot;música&quot;</span><span class="p">:</span> <span class="s2">&quot;indie&quot;</span><span class="p">}}])]</span>
-<span class="linenos" data-linenos="31 "></span><span class="n">df2</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">esquema_anidado</span><span class="p">)</span>
-<span class="hll"><span class="linenos" data-linenos="32 "></span><span class="n">df2</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">to_variant_object</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">historial</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">truncate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span class="linenos" data-linenos="33 "></span><span class="c1"># +------------------------------------------------+</span>
-<span class="linenos" data-linenos="34 "></span><span class="c1"># |to_variant_object(historial)                    |</span>
-<span class="linenos" data-linenos="35 "></span><span class="c1"># +------------------------------------------------+</span>
-<span class="linenos" data-linenos="36 "></span><span class="c1"># |[{&quot;preferencias&quot;:{&quot;deporte&quot;:&quot;baloncesto&quot;,...}}] |</span>
-<span class="linenos" data-linenos="37 "></span><span class="c1"># +------------------------------------------------+</span>
+<p>El tipo <em>VARIANT</em> se puede usar directamente mediante uno de los siguientes enfoques:</p>
+<ol>
+<li>
+<p>Definir el tipo <em>VARIANT</em> directamente en el esquema con <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.types.VariantType.html"><code>VariantType</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_json</span><span class="p">,</span> <span class="n">col</span>
+<span class="linenos" data-linenos="2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructType</span><span class="p">,</span> <span class="n">StructField</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">,</span> <span class="n">VariantType</span>
+<span class="linenos" data-linenos="3 "></span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># Opción A: definir el tipo en el esquema</span>
+<span class="linenos" data-linenos="5 "></span><span class="n">esquema</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">([</span>
+<span class="linenos" data-linenos="6 "></span>    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">(),</span> <span class="kc">False</span><span class="p">),</span>
+<span class="hll"><span class="linenos" data-linenos="7 "></span>    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;datos&quot;</span><span class="p">,</span> <span class="n">VariantType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="8 "></span><span class="p">])</span>
+</code></pre></div>
+</li>
+<li>
+<p>Convertir <em>strings</em> <em>JSON</em> a <em>VARIANT</em> con <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.parse_json.html"><code>parse_json</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">eventos</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos" data-linenos=" 2 "></span>    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;{&quot;nombre&quot;: &quot;Aitor&quot;, &quot;ciudad&quot;: &quot;Elche&quot;}&#39;</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 3 "></span>    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;{&quot;nombre&quot;: &quot;Laura&quot;, &quot;ciudad&quot;: &quot;Alicante&quot;, &quot;edad&quot;: 31}&#39;</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 4 "></span>    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;{&quot;nombre&quot;: &quot;Pedro&quot;, &quot;tags&quot;: [&quot;spark&quot;, &quot;python&quot;]}&#39;</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="p">]</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">eventos</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;json_str&quot;</span><span class="p">])</span>
+<span class="hll"><span class="linenos" data-linenos=" 7 "></span><span class="n">df_variant</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;datos&quot;</span><span class="p">,</span> <span class="n">parse_json</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;json_str&quot;</span><span class="p">)))</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;json_str&quot;</span><span class="p">)</span>
+</span><span class="linenos" data-linenos=" 8 "></span><span class="n">df_variant</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># root</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1">#  |-- id: long (nullable = true)</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1">#  |-- datos: variant (nullable = true)</span>
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">try_parse_json</p>
-<p>Si los datos de entrada pueden contener JSON malformado, es mejor utilizar <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.try_parse_json.html"><code>try_parse_json</code></a> en lugar de <code>parse_json</code>, ya que en vez de lanzar una excepción, devuelve <code>null</code> para las cadenas no válidas:</p>
+<p>Si los datos de entrada pueden contener <em>JSON</em> malformado, es mejor utilizar <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.try_parse_json.html"><code>try_parse_json</code></a> en lugar de <code>parse_json</code>, ya que en vez de lanzar una excepción, devuelve <code>null</code> para las cadenas no válidas:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">try_parse_json</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">df_safe</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;datos&quot;</span><span class="p">,</span> <span class="n">try_parse_json</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;json_str&quot;</span><span class="p">)))</span>
 </code></pre></div>
 </div>
-<div class="admonition tip">
-<p class="admonition-title">to_variant_object vs parse_json(to_json(...))</p>
-<p>Cuando el origen ya es un tipo complejo (<code>StructType</code>, <code>ArrayType</code>, <code>MapType</code>, o cualquier combinación anidada de ellos), <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.to_variant_object.html"><code>to_variant_object</code></a> convierte directamente la estructura en memoria al formato binario <code>VARIANT</code>, sin serializar a texto JSON y volver a parsearlo.
-Es la opción más eficiente en ese caso, y también la más adecuada cuando se lee un JSONL con inferencia de esquema y <em>Spark</em> ya ha construido el <code>StructType</code> por nosotros.</p>
-</div>
+</li>
+<li>
+<p>Convertir tipos complejos como un <code>StructType</code>, <code>ArrayType</code> o <code>MapType</code> existente directamente a <em>VARIANT</em> con <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.to_variant_object.html"><code>to_variant_object</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">esquema_anidado</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">([</span>
+<span class="linenos" data-linenos=" 2 "></span>    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;usuario&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 3 "></span>    <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;historial&quot;</span><span class="p">,</span> <span class="n">ArrayType</span><span class="p">(</span><span class="n">StructType</span><span class="p">([</span>
+<span class="linenos" data-linenos=" 4 "></span>        <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;preferencias&quot;</span><span class="p">,</span> <span class="n">MapType</span><span class="p">(</span><span class="n">StringType</span><span class="p">(),</span> <span class="n">StringType</span><span class="p">()),</span> <span class="kc">True</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span>    <span class="p">]),</span> <span class="kc">True</span><span class="p">))</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="p">])</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">data</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Aitor&quot;</span><span class="p">,</span> <span class="p">[{</span><span class="s2">&quot;preferencias&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;deporte&quot;</span><span class="p">:</span> <span class="s2">&quot;baloncesto&quot;</span><span class="p">,</span> <span class="s2">&quot;música&quot;</span><span class="p">:</span> <span class="s2">&quot;indie&quot;</span><span class="p">}}])]</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">df2</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">esquema_anidado</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos=" 9 "></span><span class="n">df2</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">to_variant_object</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">historial</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">truncate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="10 "></span><span class="c1"># +------------------------------------------------+</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># |to_variant_object(historial)                    |</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1"># +------------------------------------------------+</span>
+<span class="linenos" data-linenos="13 "></span><span class="c1"># |[{&quot;preferencias&quot;:{&quot;deporte&quot;:&quot;baloncesto&quot;,...}}] |</span>
+<span class="linenos" data-linenos="14 "></span><span class="c1"># +------------------------------------------------+</span>
+</code></pre></div>
+<p>Cuando el origen ya es un tipo complejo (<code>StructType</code>, <code>ArrayType</code>, <code>MapType</code>, o cualquier combinación anidada de ellos), <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.to_variant_object.html"><code>to_variant_object</code></a> convierte directamente la estructura en memoria al formato binario <code>VARIANT</code>, sin serializar a texto JSON y volver a parsearlo.</p>
+<p>Esta opción es la más eficiente en ese caso, y también la más adecuada cuando se lee un JSONL con inferencia de esquema y <em>Spark</em> ya ha construido el <code>StructType</code> por nosotros.</p>
+</li>
+</ol>
 <p>Para acceder a un campo dentro de una columna <code>VARIANT</code> usaremos <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.variant_get.html"><code>variant_get</code></a> (o <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.try_variant_get.html"><code>try_variant_get</code></a>), indicando la columna, la ruta <em>JSONPath</em> y el tipo de destino. La diferencia entre ambas variantes es su comportamiento ante errores, de manera que si no encuentran una ruta, lancen una excepción o devuelven <code>null</code>::</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_json</span><span class="p">,</span> <span class="n">variant_get</span><span class="p">,</span> <span class="n">try_variant_get</span>
 <span class="linenos" data-linenos=" 2 "></span>
@@ -5200,7 +5209,8 @@ Es la opción más eficiente en ese caso, y también la más adecuada cuando se 
 <span class="linenos" data-linenos="21 "></span><span class="c1"># +----------------+---------------+</span>
 </code></pre></div>
 </div>
-<h4 id="explotando-arrays-y-objetos">Explotando arrays y objetos<a class="headerlink" href="#explotando-arrays-y-objetos" title="Permanent link">&para;</a></h4>
+<div class="admonition info">
+<p class="admonition-title">Explotando arrays y objetos</p>
 <p>Cuando una columna <code>VARIANT</code> contiene un array u objeto y queremos expandirla en múltiples filas, usamos <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.tvf.TableValuedFunction.variant_explode.html"><code>variant_explode</code></a> (o <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.tvf.TableValuedFunction.variant_explode_outer.html"><code>variant_explode_outer</code></a> para conservar las filas con valores no explosionables):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_json</span><span class="p">,</span> <span class="n">lit</span>
 <span class="linenos" data-linenos=" 2 "></span>
@@ -5251,6 +5261,7 @@ Es la opción más eficiente en ese caso, y también la más adecuada cuando se 
 <span class="linenos" data-linenos="21 "></span><span class="c1"># |  2| &quot;kafka&quot;|</span>
 <span class="linenos" data-linenos="22 "></span><span class="c1"># +---+--------+</span>
 </code></pre></div>
+</div>
 <h2 id="dataframe-api">DataFrame API<a class="headerlink" href="#dataframe-api" title="Permanent link">&para;</a></h2>
 <p><em>Spark</em> permite trabajar con los datos mediante dos tipos de acercamientos, el API de objetos de <em>DataFrames</em> y el lenguaje SQL. Ambos enfoques son equivalentes, ya que el lenguaje SQL se traduce internamente a operaciones sobre <em>DataFrames</em>. En este apartado nos centraremos en el API de objetos, y en el siguiente veremos el lenguaje SQL.</p>
 <p>Así pues, una vez tenemos un <em>DataFrame</em> podemos trabajar con los datos mediante un conjunto de operaciones estructuradas, muy similares al lenguaje relacional. Estas operaciones también se clasifican en transformaciones y acciones, recordando que las transformaciones utilizan una <strong>evaluación perezosa</strong>, es decir, no se ejecutan inmediatamente cuando se definen, sino que se construye un plan de ejecución que se optimiza y se ejecuta solo cuando es necesario obtener un resultado (por ejemplo, al llamar a una acción como <code>show</code> o <code>collect</code>), permitiendo optimizar el plan de ejecución y mejorar el rendimiento al evitar cálculos innecesarios.</p>
@@ -5678,6 +5689,23 @@ Es la opción más eficiente en ese caso, y también la más adecuada cuando se 
 <li>De forma programativa mediante aplicaciones <em>Spark</em>.</li>
 </ul>
 <p>Las dos primeras opciones se integran con <em>Apache Hive</em> para utilizar su <em>metastore</em>. Ahora nos vamos a centrar en la última.</p>
+<div class="admonition warning">
+<p class="admonition-title">Spark 4.0: Modo ANSI activado por defecto</p>
+<p>A partir de Spark 4.0, la configuración <code>spark.sql.ansi.enabled</code> está a <code>true</code> por defecto. Esto cambia el comportamiento del <em>DataFrame API</em> de forma significativa:</p>
+<ul>
+<li>División por cero: en vez de devolver <code>null</code>, lanza <code>SparkArithmeticException</code>.</li>
+<li>Desbordamiento numérico: lanza excepción en vez de dar un resultado incorrecto.</li>
+<li>Conversiones de tipo inválidas: se rechazan en vez de coercionarse silenciosamente.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># En Spark 3.x devolvía null; en Spark 4.0 lanza excepción</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;sueldo&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">lit</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1"># SparkArithmeticException: Division by zero</span>
+<span class="linenos" data-linenos="4 "></span>
+<span class="linenos" data-linenos="5 "></span><span class="c1"># Para restaurar el comportamiento anterior:</span>
+<span class="linenos" data-linenos="6 "></span><span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;spark.sql.ansi.enabled&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Este cambio acerca <em>Spark</em> al comportamiento de bases de datos como <em>PostgreSQL</em>, mejorando la integridad de los datos al no ocultar errores silenciosamente. Es recomendable adaptar el código para manejar estos casos explícitamente en vez de desactivar el modo ANSI.</p>
+</div>
 <h3 id="vistas-temporales">Vistas temporales<a class="headerlink" href="#vistas-temporales" title="Permanent link">&para;</a></h3>
 <p>Ya hemos visto que los <em>DataFrames</em> tienen una estructura similar a una tabla de una base de datos relacional. Para poder realizar consultas, necesitaremos crear vistas temporales mediante el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.createTempView.html"><code>createTempView</code></a> o <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.createOrReplaceTempView.html"><code>createOrReplaceTempView</code></a> para posteriormente realizar una consulta sobre la vista creada a través de <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.SparkSession.sql.html"><code>spark.sql</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># 1. definimos la vista</span>
@@ -5695,10 +5723,10 @@ Es la opción más eficiente en ese caso, y también la más adecuada cuando se 
 <span class="linenos" data-linenos="13 "></span><span class="c1"># only showing top 3 rows</span>
 </code></pre></div>
 <div class="admonition tip">
-<p class="admonition-title"><em>Spark 4.0</em>: Sintaxis PIPE <code>|&gt;</code> en SQL</p>
-<p><em>Spark 4.0</em> introduce la sintaxis <strong>PIPE</strong>, que permite encadenar 
+<p class="admonition-title"><em>Spark 4.0</em>: Sintaxis <em>PIPE</em> <code>|&gt;</code> en SQL</p>
+<p><em>Spark 4.0</em> introduce la sintaxis <strong><em>PIPE</em></strong>, que permite encadenar 
 operaciones SQL de forma secuencial usando el operador <code>|&gt;</code>, 
-de manera similar a cómo se encadenan transformaciones en el <em>DataFrame API</em>:</p>
+de manera similar a como se encadenan transformaciones en el <em>DataFrame API</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos="2 "></span><span class="s2">    FROM clientes</span>
 <span class="linenos" data-linenos="3 "></span><span class="s2">    |&gt; WHERE ciudad = &#39;Elche&#39;</span>
@@ -5706,9 +5734,7 @@ de manera similar a cómo se encadenan transformaciones en el <em>DataFrame API<
 <span class="linenos" data-linenos="5 "></span><span class="s2">    |&gt; ORDER BY sueldo DESC</span>
 <span class="linenos" data-linenos="6 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
-<p>En vez del orden tradicional <code>SELECT ... FROM ... WHERE ...</code>, 
-la sintaxis PIPE permite expresar la lógica en el orden natural 
-de los pasos: primero la tabla, luego el filtro, luego la proyección. </p>
+<p>En vez del orden tradicional <code>SELECT ... FROM ... WHERE ...</code>, la sintaxis <em>PIPE</em> permite expresar la lógica en el orden natural de los pasos: primero la tabla, luego el filtro, luego la proyección. </p>
 <p>Cada paso <code>|&gt;</code> recibe el resultado del anterior, mejorando la 
 legibilidad en consultas complejas.</p>
 </div>
@@ -5924,10 +5950,10 @@ Además, <em>Spark SQL</em> ofrece la sintaxis <code>:campo</code> como atajo de
 </code></pre></div>
 </details>
 <details class="question">
-<summary>¿Cuándo usarías el tipo <code>VARIANT</code> frente a un <code>StructType</code> tradicional?</summary>
-<p><code>VARIANT</code> está pensado para datos semiestructurados con esquema <strong>variable, evolutivo o desconocido</strong>: payloads de APIs externas, eventos heterogéneos, exploración de un <em>data lake raw</em>, etc. Ofrece acceso binario optimizado a 
-campos concretos sin parsear todo el documento, con un rendimiento hasta ~8× superior al JSON almacenado como <code>string</code>.</p>
-<p>Si el esquema es <strong>estable y conocido</strong>, un <code>StructType</code> bien definido sigue  siendo más eficiente y más seguro (validación de tipos en tiempo de lectura). La regla práctica: <code>VARIANT</code> para flexibilidad, <code>StructType</code> para rendimiento y contratos estables.</p>
+<summary>¿Cuándo usarías el tipo <em>VARIANT</em> frente a un <code>StructType</code> tradicional?</summary>
+<p><em>VARIANT</em> está pensado para datos semiestructurados con esquema variable, evolutivo o desconocido: <em>payloads</em> de APIs externas, eventos heterogéneos, exploración de un <em>data lake raw</em>, etc. Ofrece acceso binario optimizado a 
+campos concretos sin parsear todo el documento, con un rendimiento hasta 8 veces superior al JSON almacenado como <code>string</code>.</p>
+<p>Si el esquema es estable y conocido, un <code>StructType</code> bien definido sigue siendo más eficiente y más seguro (validación de tipos en tiempo de lectura). La regla práctica: <em>VARIANT</em> para flexibilidad, <code>StructType</code> para rendimiento y contratos estables.</p>
 </details>
 <details class="question">
 <summary>¿Qué es el <em>predicate pushdown</em> y cómo se aprovecha con <em>Parquet</em>?</summary>
@@ -5978,7 +6004,6 @@ campos concretos sin parsear todo el documento, con un rendimiento hasta ~8× su
 <li>Documentación oficial sobre <a href="https://spark.apache.org/docs/latest/sql-programming-guide.html">Spark SQL, DataFrames and Datasets Guide</a></li>
 <li><a href="https://link.springer.com/book/10.1007/978-1-4842-7383-8">Beginning Apache Spark 3: With DataFrame, Spark SQL, Structured Streaming, and Spark Machine Learning Library</a></li>
 <li><a href="https://sparkbyexamples.com/pyspark/">Spark by Examples</a></li>
-<li><a href="https://towardsdatascience.com/the-most-complete-guide-to-pyspark-dataframes-2702c343b2e8">The Most Complete Guide to PySpark DataFrames</a></li>
 <li><a href="https://media.datacamp.com/legacy/image/upload/v1676302905/Marketing/Blog/PySpark_SQL_Cheat_Sheet.pdf">Spark SQL Cheatsheet en PDF</a> y en <a href="https://www.datacamp.com/cheat-sheet/pyspark-cheat-sheet-spark-dataframes-in-python">formato web</a></li>
 </ul>
 <!--
