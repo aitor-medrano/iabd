@@ -5320,37 +5320,6 @@ https://github.com/vivek-bombatkar/MyLearningNotes/tree/master/spark#from-pandas
 <p>Despliega cada pregunta para ver una respuesta orientativa; no hay una única respuesta correcta, pero sí aspectos clave que conviene mencionar.</p>
 <details class="question">
 <summary>¿Qué estrategias de <em>join</em> existen en <em>Spark</em> y cuándo se usa cada una?</summary>
-<p>Spark elige automáticamente la estrategia según el tamaño de los DataFrames, pero se puede forzar mediante hints:</p>
-<table>
-<thead>
-<tr>
-<th>Estrategia</th>
-<th>Cuándo</th>
-<th>Cómo forzarla</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Broadcast Hash Join</strong></td>
-<td>Un lado pequeño (&lt; <code>spark.sql.autoBroadcastJoinThreshold</code>, por defecto 10 MB)</td>
-<td><code>df.join(broadcast(df_pequeño), ...)</code></td>
-</tr>
-<tr>
-<td><strong>Sort Merge Join</strong></td>
-<td>Ambos lados grandes; estrategia por defecto</td>
-<td>Automático o <code>/*+ MERGE */</code></td>
-</tr>
-<tr>
-<td><strong>Shuffle Hash Join</strong></td>
-<td>Un lado moderado que cabe en memoria de un executor</td>
-<td><code>/*+ SHUFFLE_HASH */</code></td>
-</tr>
-</tbody>
-</table>
-<p>El <strong>Broadcast Join</strong> es la optimización más importante: evita el <em>shuffle</em> del lado grande enviando el lado pequeño a todos los nodos.</p>
-</details>
-<details class="question">
-<summary>¿Qué estrategias de <em>join</em> existen en <em>Spark</em> y cuándo se usa cada una?</summary>
 <p>Un <em>join</em> distribuido es una operación costosa porque en general requiere un <em>shuffle</em>: mover los datos entre nodos para que las filas con la misma clave acaben en la misma partición. <em>Spark</em> dispone de
 varias estrategias y elige automáticamente la más adecuada en función del tamaño de los <em>DataFrames</em>:</p>
 <table>

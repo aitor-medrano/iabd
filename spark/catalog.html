@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Apuntes y ejercicios sobre el acceso a bases de datos relacionales mediante JDBC en Spark. Uso del catálogo de Spark SQL, creación de tablas y consultas al Hive Metastore.">
+        <meta name="description" content="Apuntes y ejercicios sobre el acceso a bases de datos mediante Spark. Uso del catálogo de Spark SQL, creación de tablas y consultas al Hive Metastore.">
       
       
       
@@ -27,7 +27,7 @@
     
     
       
-        <title>Spark JDBC y Spark Catalog. - Inteligencia Artificial y Big Data</title>
+        <title>Conectividad y catálogo en Spark - Inteligencia Artificial y Big Data</title>
       
     
     
@@ -73,16 +73,16 @@
     
   
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Spark JDBC y Spark Catalog. - Inteligencia Artificial y Big Data" />
-<meta property="og:description" content="Apuntes y ejercicios sobre el acceso a bases de datos relacionales mediante JDBC en Spark. Uso del catálogo de Spark SQL, creación de tablas y consultas al Hive Metastore." />
+<meta property="og:title" content="Conectividad y catálogo en Spark - Inteligencia Artificial y Big Data" />
+<meta property="og:description" content="Apuntes y ejercicios sobre el acceso a bases de datos mediante Spark. Uso del catálogo de Spark SQL, creación de tablas y consultas al Hive Metastore." />
 <meta property="og:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/spark/catalog.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:url" content="https://aitor-medrano.github.io/iabd/spark/catalog.html" />
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:title" content="Spark JDBC y Spark Catalog. - Inteligencia Artificial y Big Data" />
-<meta property="twitter:description" content="Apuntes y ejercicios sobre el acceso a bases de datos relacionales mediante JDBC en Spark. Uso del catálogo de Spark SQL, creación de tablas y consultas al Hive Metastore." />
+<meta property="twitter:title" content="Conectividad y catálogo en Spark - Inteligencia Artificial y Big Data" />
+<meta property="twitter:description" content="Apuntes y ejercicios sobre el acceso a bases de datos mediante Spark. Uso del catálogo de Spark SQL, creación de tablas y consultas al Hive Metastore." />
 <meta property="twitter:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/spark/catalog.png" />
 </head>
   
@@ -138,7 +138,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Spark JDBC y Spark Catalog.
+              Conectividad y catálogo en Spark
             
           </span>
         </div>
@@ -4356,66 +4356,70 @@
 
   <h1>Spark JDBC</h1>
 
+<p>En esta sesión vamos a estudiar dos aspectos relacionados con el acceso a datos mediante <em>Spark</em>, por un lado, la conectividad con sistemas externos como bases de datos relacionales (MySQL/MariaDB) o no relacionales (MongoDB), y por otro lado, el catálogo de <em>Spark SQL</em> y su integración con el <em>Hive Metastore</em> para la gestión de metadatos, creación de bases de datos y tablas, y consultas a las mismas.</p>
 <h2 id="spark-jdbc">Spark JDBC<a class="headerlink" href="#spark-jdbc" title="Permanent link">&para;</a></h2>
 <p>Para conectar desde <a href="https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html">Spark con una base de datos relacional</a> (<em>RDBMS</em>) necesitamos:</p>
 <ul>
 <li>un driver JDBC compatible</li>
 <li>las <a href="https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html#data-source-option">propiedades de conexión</a> a la base de datos.</li>
 </ul>
-<p>En <em>PySpark</em>, el <em>driver</em> lo podemos añadir directamente a la carpeta <code>jars</code> disponible en <code>$SPARK_HOME</code>, o a la hora de lanzar <em>Spark</em> utilizando la opción <code>--jars &lt;fichero1.jar&gt;,&lt;fichero2.jar&gt;</code> o <code>--packages &lt;groupId:artifactId:version&gt;</code>.</p>
-<p>Así pues, para conectar con nuestra base de datos <code>retail_db</code> que tenemos configurada en la máquina virtual, primero copiaremos el <a href="resources/mysql-connector-j-8.0.31.jar">driver de MySQL</a> en la carpeta <code>$SPARK_HOME/jars</code>.</p>
-<p>Si tuviéramos problemas a la hora de crear la conexión con la base de datos, indicaremos en la configuración qué archivos añadimos al <em>classpath</em>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;s8a-dataframes-jdbc&quot;</span><span class="p">)</span> \
-<span class="linenos" data-linenos="2 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;spark.driver.extraClassPath&#39;</span><span class="p">,</span> <span class="s1">&#39;mysql-connector-j-8.0.31.jar&#39;</span><span class="p">)</span> \
-<span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<p>En <em>PySpark</em>, el <em>driver</em> lo podemos añadir directamente a la carpeta <code>jars</code> disponible en <code>$SPARK_HOME</code> o en nuestro <a href="spark.html#uso-de-docker">Docker</a> (el cual ya está incluido), o a la hora de lanzar <em>Spark</em> utilizando la opción <code>--jars &lt;fichero1.jar&gt;,&lt;fichero2.jar&gt;</code> o <code>--packages &lt;groupId:artifactId:version&gt;</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">retail_db</p>
+<p>Para esta sesión, vamos a utilizar la base de datos <code>retail_db</code> que tenemos configurada en la máquina virtual, y que contiene un conjunto de tablas con datos de clientes, productos, ventas, etc... Esta base de datos la hemos creado previamente en la sesión de <a href="../hadoop/sqoop.html#actividades">Sqoop</a> y se encuentra almacenada en <em>MySQL</em>.</p>
+<p>En el caso de utilizar el entorno de <em>Docker</em>, no viene cargada previamente. Vamos a realizar los siguientes pasos:</p>
+<ol>
+<li>
+<p>Copiamos el <a href="resources/create_db.sql">script de creación de la base de datos</a> en la carpeta <code>tmp</code> del contenedor de <em>MySQL</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>cp<span class="w"> </span>create_db.sql<span class="w"> </span>iabd-mysql:/tmp/create_db.sql
+</code></pre></div>
+</li>
+<li>
+<p>Nos conectamos al contenedor de <em>Docker</em> que contiene <em>MySQL</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>iabd-mysql<span class="w"> </span>bash
+</code></pre></div>
+<p>Y entramos a MySQL con el usuario <code>root</code> (la contaseña la definimos en el <code>docker-compose</code> como <code>rootpass</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-prootpass
+</code></pre></div>
+</li>
+<li>
+<p>Una vez dentro de MySQL, creamos un usuario <code>iabd</code> con contraseña <code>iabd</code>, sobre el cual crearemos la base de datos <code>retail_db</code> y le daremos permisos sobre ella.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;iabd&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;iabd&#39;</span><span class="p">;</span>
+<span class="linenos" data-linenos="2 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">retail_db</span><span class="p">;</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">retail_db</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;iabd&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span>
+</code></pre></div>
+<p>Cerramos la sesión de MySQL con CTRL+D.</p>
+</li>
+<li>
+<p>Nos conectamos con el nuevo usuario, y cargamos los datos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>mysql<span class="w"> </span>-u<span class="w"> </span>iabd<span class="w"> </span>-piabd<span class="w"> </span>retail_db<span class="w"> </span>&lt;<span class="w"> </span>/tmp/create_db.sql
+</code></pre></div>
+</li>
+</ol>
+</div>
+<p>El primer paso, al crear la SparkSession, es indicarle que queremos cargar los drivers:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos" data-linenos=" 4 "></span>    <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span>
+<span class="linenos" data-linenos=" 5 "></span>    <span class="o">.</span><span class="n">master</span><span class="p">(</span><span class="s2">&quot;spark://iabd-spark-master:7077&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 6 "></span>    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;spark-jdbc&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span>    <span class="c1"># --- Classpath ---</span>
+<span class="linenos" data-linenos=" 9 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.driver.extraClassPath&quot;</span><span class="p">,</span> <span class="s2">&quot;/opt/spark/extra-jars/*&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="10 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.executor.extraClassPath&quot;</span><span class="p">,</span> <span class="s2">&quot;/opt/spark/extra-jars/*&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span>    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="linenos" data-linenos="13 "></span><span class="p">)</span>
 </code></pre></div>
 <p>El siguiente paso es configurar la conexión a la base de datos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">url_iabd</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://localhost/retail_db&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">url_iabd</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://iabd-mysql:3306/retail_db?useSSL=false&amp;allowPublicKeyRetrieval=true&quot;</span>
 <span class="linenos" data-linenos="2 "></span><span class="n">propiedades</span> <span class="o">=</span> <span class="p">{</span>
 <span class="linenos" data-linenos="3 "></span>    <span class="s2">&quot;driver&quot;</span><span class="p">:</span> <span class="s2">&quot;com.mysql.cj.jdbc.Driver&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="4 "></span>    <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;iabd&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="5 "></span>    <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;iabd&quot;</span>
 <span class="linenos" data-linenos="6 "></span><span class="p">}</span>
 </code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">Spark y MySQL con Docker</p>
-<p>Para poder acceder a <em>MySQL</em> desde la imagen de <em>Spark</em>, necesitamos que formen parte de la misma red. Para ello, lo más cómodo es utilizar <em>Docker Compose</em> y definir las dependencias:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nt">services</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">spark</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jupyter/pyspark-notebook</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="w">        </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd-spark</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8888:8888&quot;</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;4040:4040&quot;</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;4041:4041&quot;</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="w">        </span><span class="nt">links</span><span class="p">:</span>
-<span class="linenos" data-linenos="10 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql</span>
-<span class="linenos" data-linenos="11 "></span><span class="w">        </span><span class="nt">volumes</span><span class="p">:</span>
-<span class="linenos" data-linenos="12 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./:/home/jovyan/work</span>
-<span class="linenos" data-linenos="13 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./mysql-connector-j-8.0.31.jar:/usr/local/spark/jars/mysql-connector-j-8.0.31.jar</span>
-<span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="nt">mysql</span><span class="p">:</span>
-<span class="linenos" data-linenos="15 "></span><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql:latest</span>
-<span class="linenos" data-linenos="16 "></span><span class="w">        </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd-mysql</span>
-<span class="linenos" data-linenos="17 "></span><span class="w">        </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--default-authentication-plugin=mysql_native_password</span>
-<span class="linenos" data-linenos="18 "></span><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="linenos" data-linenos="19 "></span><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;3306:3306&quot;</span>
-<span class="linenos" data-linenos="20 "></span><span class="w">        </span><span class="nt">environment</span><span class="p">:</span>
-<span class="linenos" data-linenos="21 "></span><span class="w">          </span><span class="nt">TZ</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Europe/Madrid</span>
-<span class="linenos" data-linenos="22 "></span><span class="w">          </span><span class="nt">MYSQL_ROOT_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd</span>
-<span class="linenos" data-linenos="23 "></span><span class="w">          </span><span class="nt">MYSQL_DATABASE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">retail_db</span>
-<span class="linenos" data-linenos="24 "></span><span class="w">          </span><span class="nt">MYSQL_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd</span>
-<span class="linenos" data-linenos="25 "></span><span class="w">          </span><span class="nt">MYSQL_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd</span>
-</code></pre></div>
-<p>Una vez colocado el <a href="resources/mysql-connector-j-8.0.31.jar">driver de MySQL</a> en la misma carpeta, lanzamos <em>docker-compose</em>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker-compose<span class="w"> </span>-p<span class="w"> </span>iabd-spark-mysql<span class="w"> </span>up<span class="w"> </span>-d
-</code></pre></div>
-<p>Tras arrancar los contenedores, la primera vez, deberemos cargar la <a href="resources/create_db.sql">base de datos</a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>iabd-mysql<span class="w"> </span>mysql<span class="w"> </span>-h<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>-P<span class="w"> </span><span class="m">3306</span><span class="w"> </span>-uiabd<span class="w"> </span>-piabd<span class="w"> </span>retail_db<span class="w"> </span>&lt;<span class="w"> </span>create_db.sql
-</code></pre></div>
-<p>A partir de aquí, es importante destacar que la <em>url</em> de conexión a la base de datos, en vez de acceder a <code>localhost</code>, lo hace al nombre del contenedor <code>iabd-mysql</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">url_iabd</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://iabd-mysql/retail_db&quot;</span>
-</code></pre></div>
-</div>
 <h3 id="leyendo-datos">Leyendo datos<a class="headerlink" href="#leyendo-datos" title="Permanent link">&para;</a></h3>
 <p>Para finalmente cargar los datos mediante el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameReader.jdbc.html"><code>read.jdbc</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">jdbc</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url_iabd</span><span class="p">,</span>\
@@ -5021,6 +5025,17 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connect
 <p>(opcional) Conéctate a <em>MySQL</em> y recupera la información de las tablas creadas en estos ejercicios y sus parámetros.</p>
 </li>
 </ol>
+<!--
+
+Conectividad externa con JDBC — leer customers y orders desde MySQL retail_db (la BD de aplicación, no la del Metastore — son dos esquemas distintos en el mismo MySQL, importante distinguirlo). Aquí entra particionado JDBC y ANSI mode.
+Spark + MongoDB — breve, pero útil dado que ya tienes el conector compatible.
+El catálogo de Spark — directamente con Hive Metastore activo. Conceptos: bases de datos, tablas gestionadas/externas, persistencia entre sesiones.
+El lakehouse en acción — aquí es donde vives la magia: tabla gestionada → MinIO + MySQL; tabla externa → MinIO en una ruta tuya + MySQL solo guarda el puntero. Demos visuales con la consola web de MinIO y mysql -uiabd ... en paralelo.
+Mirando dentro del Metastore — consultar DBS, TBLS, TABLE_PARAMS (lo que ya tienes, pero ahora apunta a s3a:// en vez de file://).
+Data discovery — comentarios y descripciones (ya lo tienes muy bien).
+Más allá del Hive Metastore — Catalog Plugin API (DSv2), multi-catálogo, mención breve a Iceberg/Delta como evolución natural.
+
+-->
 
 
 
