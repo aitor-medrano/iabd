@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -1872,7 +1872,7 @@
   <span class="md-ellipsis">
     
   
-    Spark JDBC
+    Conectividad y catálogo
   
 
     
@@ -1890,7 +1890,7 @@
   <span class="md-ellipsis">
     
   
-    Spark JDBC
+    Conectividad y catálogo
   
 
     
@@ -4340,6 +4340,13 @@
       
       
       
+        <a href="../tags.html#tag:mongodb" class="md-tag">MongoDB</a>
+      
+    
+      
+      
+      
+      
         <a href="../tags.html#tag:sbd-ra1" class="md-tag">SBD RA1</a>
       
     
@@ -4354,9 +4361,9 @@
 
 
 
-  <h1>Spark JDBC</h1>
+  <h1>Conectividad y catálogo</h1>
 
-<p>En esta sesión vamos a estudiar dos aspectos relacionados con el acceso a datos mediante <em>Spark</em>, por un lado, la conectividad con sistemas externos como bases de datos relacionales (MySQL/MariaDB) o no relacionales (MongoDB), y por otro lado, el catálogo de <em>Spark SQL</em> y su integración con el <em>Hive Metastore</em> para la gestión de metadatos, creación de bases de datos y tablas, y consultas a las mismas.</p>
+<p>En esta sesión vamos a estudiar dos aspectos relacionados con el acceso a datos mediante <em>Spark</em>, por un lado, la conectividad con sistemas externos como bases de datos relacionales (<em>MySQL</em>/<em>MariaDB</em>) o no relacionales (<em>MongoDB</em>), y por otro lado, el catálogo de <em>Spark SQL</em> y su integración con el <em>Hive Metastore</em> para la gestión de metadatos, creación de bases de datos y tablas, y consultas a las mismas.</p>
 <h2 id="spark-jdbc">Spark JDBC<a class="headerlink" href="#spark-jdbc" title="Permanent link">&para;</a></h2>
 <p>Para conectar desde <a href="https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html">Spark con una base de datos relacional</a> (<em>RDBMS</em>) necesitamos:</p>
 <ul>
@@ -4488,8 +4495,8 @@
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">jdbc</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> \
-<span class="linenos" data-linenos="2 "></span>        <span class="n">table</span><span class="o">=</span><span class="s2">&quot;&lt;nueva_tabla&gt;&quot;</span><span class="p">,</span> \
-<span class="linenos" data-linenos="3 "></span>        <span class="n">properties</span><span class="o">=</span><span class="n">propiedades</span><span class="p">)</span> 
+<span class="linenos" data-linenos="2 "></span>    <span class="n">table</span><span class="o">=</span><span class="s2">&quot;&lt;nueva_tabla&gt;&quot;</span><span class="p">,</span> \
+<span class="linenos" data-linenos="3 "></span>    <span class="n">properties</span><span class="o">=</span><span class="n">propiedades</span><span class="p">)</span> 
 </code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -4544,26 +4551,70 @@ Si queremos que se vuelvan a cargar los datos pero no se cree de nuevo la tabla 
 <h3 id="utilizando-databricks">Utilizando Databricks<a class="headerlink" href="#utilizando-databricks" title="Permanent link">&para;</a></h3>
 <p>Si trabajamos con <em>Databricks</em> y queremos <a href="https://docs.databricks.com/external-data/jdbc.html">recuperar o almacenar datos via JDBC</a>, ya tenemos parte del trabajo hecho porque tiene los <em>drivers</em> instalados (pero utiliza los <em>drivers</em> de <em>MariaDB</em> en vez de <em>MySQL</em>).</p>
 <p>Así pues, por ejemplo, para recuperar los datos de una base de datos remota (por ejemplo, la base de datos que creamos en la sesión de <a href="../cloud/rds.html">cloud con RDS</a>) haríamos:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Ejemplo RDS</label><label for="__tabbed_2_2">Ejemplo base de datos pública</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">driver</span> <span class="o">=</span> <span class="s2">&quot;org.mariadb.jdbc.Driver&quot;</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">database_host</span> <span class="o">=</span> <span class="s2">&quot;rds-retaildb.cwlnhhfuyb7j.us-east-1.rds.amazonaws.com&quot;</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">database_port</span> <span class="o">=</span> <span class="s2">&quot;3306&quot;</span>
+<span class="linenos" data-linenos="5 "></span><span class="n">database_name</span> <span class="o">=</span> <span class="s2">&quot;retail_db&quot;</span>
+<span class="linenos" data-linenos="6 "></span><span class="n">table</span> <span class="o">=</span> <span class="s2">&quot;customers&quot;</span>
+<span class="linenos" data-linenos="7 "></span><span class="n">user</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+<span class="linenos" data-linenos="8 "></span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;adminadmin&quot;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">driver</span> <span class="o">=</span> <span class="s2">&quot;org.mariadb.jdbc.Driver&quot;</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">database_host</span> <span class="o">=</span> <span class="s2">&quot;ensembldb.ensembl.org&quot;</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">database_port</span> <span class="o">=</span> <span class="s2">&quot;3306&quot;</span>
+<span class="linenos" data-linenos="5 "></span><span class="n">database_name</span> <span class="o">=</span> <span class="s2">&quot;homo_sapiens_core_110_38&quot;</span>
+<span class="linenos" data-linenos="6 "></span><span class="n">table</span> <span class="o">=</span> <span class="s2">&quot;gene&quot;</span>
+<span class="linenos" data-linenos="7 "></span><span class="n">user</span> <span class="o">=</span> <span class="s2">&quot;anonymous&quot;</span>
+<span class="linenos" data-linenos="8 "></span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<!--
+TODO: Explicar secrets en Databricks
+
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">databricks.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">WorkspaceClient</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">w</span> <span class="o">=</span> <span class="n">WorkspaceClient</span><span class="p">()</span>
+<span class="linenos" data-linenos="4 "></span>
+<span class="linenos" data-linenos="5 "></span><span class="n">w</span><span class="o">.</span><span class="n">secrets</span><span class="o">.</span><span class="n">create_scope</span><span class="p">(</span><span class="s2">&quot;db-credentials&quot;</span><span class="p">,</span> <span class="p">)</span>
+<span class="linenos" data-linenos="6 "></span><span class="n">w</span><span class="o">.</span><span class="n">secrets</span><span class="o">.</span><span class="n">put_secret</span><span class="p">(</span><span class="s2">&quot;db-credentials&quot;</span><span class="p">,</span><span class="s2">&quot;db-user&quot;</span><span class="p">,</span><span class="n">string_value</span> <span class="o">=</span> <span class="s2">&quot;anonymous&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="7 "></span><span class="n">w</span><span class="o">.</span><span class="n">secrets</span><span class="o">.</span><span class="n">put_secret</span><span class="p">(</span><span class="s2">&quot;db-credentials&quot;</span><span class="p">,</span><span class="s2">&quot;db-password&quot;</span><span class="p">,</span><span class="n">string_value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">driver</span> <span class="o">=</span> <span class="s2">&quot;org.mariadb.jdbc.Driver&quot;</span>
 <span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="n">database_host</span> <span class="o">=</span> <span class="s2">&quot;rds-retaildb.cwlnhhfuyb7j.us-east-1.rds.amazonaws.com&quot;</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">database_host</span> <span class="o">=</span> <span class="s2">&quot;ensembldb.ensembl.org&quot;</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">database_port</span> <span class="o">=</span> <span class="s2">&quot;3306&quot;</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="n">database_name</span> <span class="o">=</span> <span class="s2">&quot;retail_db&quot;</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="n">table</span> <span class="o">=</span> <span class="s2">&quot;customers&quot;</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="n">user</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;adminadmin&quot;</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">database_name</span> <span class="o">=</span> <span class="s2">&quot;homo_sapiens_core_110_38&quot;</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">table</span> <span class="o">=</span> <span class="s2">&quot;gene&quot;</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">user</span> <span class="o">=</span> <span class="n">dbutils</span><span class="o">.</span><span class="n">secrets</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;db-credentials&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;db-user&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">password</span> <span class="o">=</span> <span class="n">dbutils</span><span class="o">.</span><span class="n">secrets</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;db-credentials&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;db-password&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 9 "></span>
 <span class="linenos" data-linenos="10 "></span><span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;jdbc:mysql://</span><span class="si">{</span><span class="n">database_host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">database_port</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">database_name</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="linenos" data-linenos="11 "></span>
-<span class="linenos" data-linenos="12 "></span><span class="n">df_remoto</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">read</span>
-<span class="linenos" data-linenos="13 "></span>  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jdbc&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="14 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;driver&quot;</span><span class="p">,</span> <span class="n">driver</span><span class="p">)</span>
-<span class="linenos" data-linenos="15 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
-<span class="linenos" data-linenos="16 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
-<span class="linenos" data-linenos="17 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
-<span class="linenos" data-linenos="18 "></span>  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
-<span class="linenos" data-linenos="19 "></span>  <span class="o">.</span><span class="n">load</span><span class="p">()</span>
-<span class="linenos" data-linenos="20 "></span><span class="p">)</span>
+</code></pre></div>
+-->
+
+<p>Independientemente del origen de la base de datos, el proceso es el mismo, sólo tenemos que configurar correctamente los parámetros de conexión:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;jdbc:mysql://</span><span class="si">{</span><span class="n">database_host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">database_port</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">database_name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">df_remoto</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">read</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jdbc&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;driver&quot;</span><span class="p">,</span> <span class="n">driver</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+<span class="linenos" data-linenos="10 "></span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="linenos" data-linenos="11 "></span><span class="p">)</span>
 </code></pre></div>
 <p>Desde la versión 12 de <em>Databricks</em>, podemos utilizar directamente el formato <code>mysql</code> (o <code>postgresql</code> si fuera el caso):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df_remoto_mysql</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;mysql&quot;</span><span class="p">)</span>
