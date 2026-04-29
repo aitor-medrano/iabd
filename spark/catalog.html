@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -4634,41 +4634,48 @@ TODO: Explicar secrets en Databricks
 </code></pre></div>
 <h3 id="mongo-spark-connector">Mongo Spark Connector<a class="headerlink" href="#mongo-spark-connector" title="Permanent link">&para;</a></h3>
 <p>Si nos centramos en nuestra instalación de la máquina virtual, cuando lanzamos <code>pyspark</code> tenemos que indicarle que vamos a conectarnos a <em>MongoDB</em> mediante la opción <code>packages</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pyspark<span class="w"> </span>--packages<span class="w"> </span>org.mongodb.spark:mongo-spark-connector_2.12:10.1.1
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pyspark<span class="w"> </span>--packages<span class="w"> </span>org.mongodb.spark:org.mongodb.spark:mongo-spark-connector_2.13:11.0.1
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Instalación driver Java</p>
-<p>Para que funcione correctamente, si partes desde una instalación propia de <em>Spark</em>, debes descargar el <a href="resources/mongo-java-driver-3.12.12.jar">driver <em>Java</em> de <em>MongoDB</em></a> y colocarlo en la carpeta <code>/opt/spark-3.3.1/jars</code></p>
+<p>Para que funcione correctamente, si partes desde una instalación propia de <em>Spark</em>, debes descargar el <a href="resources/mongo-java-driver-3.12.12.jar">driver <em>Java</em> de <em>MongoDB</em></a> y colocarlo en la carpeta <code>/$SPARK_HOME/jars</code></p>
 </div>
+<p>En cambio, si utilizamos nuestra instalación mediante <em>Docker</em>, únicamente al instanciar la sesión de <em>Spark</em> debemos indicarle que queremos cargar el conector de <em>MongoDB</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span>
+<span class="linenos" data-linenos="5 "></span>    <span class="o">.</span><span class="n">master</span><span class="p">(</span><span class="s2">&quot;spark://iabd-spark-master:7077&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="6 "></span>    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;spark-mongodb&quot;</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos="7 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.jars.packages&quot;</span><span class="p">,</span> <span class="s2">&quot;org.mongodb.spark:mongo-spark-connector_2.13:11.0.1&quot;</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="8 "></span>    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="linenos" data-linenos="9 "></span><span class="p">)</span>
+</code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">MongoDB y Databricks</p>
-<p>Para conectar con <em>MongoDB</em> desde <em>Databricks</em> se recomienda leer el siguiente artículo: <a href="https://docs.databricks.com/external-data/mongodb.html">Interact with MongoDB on Databricks</a> e instalar la librería adecuada.</p>
-<p>A marzo de 2025, la versión 15.4 LTS de Databricks, funciona con la versión 2.12 del conector de Spark y MongoDB. Para ello, una vez creado el cluster, accede a la pestaña de librerías, y via Maven, instala <code>org.mongodb.spark:mongo-spark-connector_2.12:10.4.1</code>.</p>
+<p>Antiguamente, en <em>Databricks Community Edition</em>, sí que podíamos añadir librerías via <em>Maven</em>. Como ahora se trabaja en modo serverless, dicha posibilidad ha desaparecido, y para añadir librerías externas, hay que hacerlo a través de la pestaña de librerías del cluster, añadiendo la librería vía <em>Maven</em> o subiendo el <em>jar</em> directamente. Si utilizas una cuenta de pago, puedes crear un cluster y configurarlo con el conector de <em>MongoDB</em> (<code>org.mongodb.spark:mongo-spark-connector_2.13:10.4.1</code>). Para ello, se recomienda leer el siguiente artículo: <a href="https://docs.databricks.com/external-data/mongodb.html">Interact with <em>MongoDB</em> on <em>Databricks</em></a> e instalar la librería adecuada.</p>
 </div>
 <p>Una vez recuperada la sesión de <em>Spark</em>, a la hora de leer datos le debemos indicar que el formato es <code>mongodb</code> y a continuación configurar tanto la <code>connection.uri</code> (si queremos acceder a la base de datos local usaremos como cadena de conexión <code>mongodb://127.0.0.1:27017</code>), como los parámetros <code>database</code>y <code>collection</code> con la base de datos y colección a la que queremos acceder:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="n">mongo_spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
-<span class="linenos" data-linenos=" 3 "></span>
-<span class="hll"><span class="linenos" data-linenos=" 4 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">mongo_spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;mongodb&quot;</span><span class="p">)</span> \
-</span><span class="linenos" data-linenos=" 5 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;connection.uri&quot;</span><span class="p">,</span><span class="s2">&quot;mongodb+srv://&lt;usuario&gt;:&lt;contraseña&gt;@cluster0.dfaz5er.mongodb.net&quot;</span><span class="p">)</span> \
-<span class="linenos" data-linenos=" 6 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;database&quot;</span><span class="p">,</span><span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
-<span class="linenos" data-linenos=" 7 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;collection&quot;</span><span class="p">,</span><span class="s2">&quot;espias&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-<span class="linenos" data-linenos=" 8 "></span>
-<span class="linenos" data-linenos=" 9 "></span><span class="n">df</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
-<span class="linenos" data-linenos="10 "></span><span class="c1"># root</span>
-<span class="linenos" data-linenos="11 "></span><span class="c1">#  |-- _id: string (nullable = true)</span>
-<span class="linenos" data-linenos="12 "></span><span class="c1">#  |-- edad: integer (nullable = true)</span>
-<span class="linenos" data-linenos="13 "></span><span class="c1">#  |-- nombre: string (nullable = true)</span>
-<span class="linenos" data-linenos="14 "></span>
-<span class="linenos" data-linenos="15 "></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="linenos" data-linenos="16 "></span><span class="c1"># +--------------------+----+---------------+</span>
-<span class="linenos" data-linenos="17 "></span><span class="c1"># |                 _id|edad|         nombre|</span>
-<span class="linenos" data-linenos="18 "></span><span class="c1"># +--------------------+----+---------------+</span>
-<span class="linenos" data-linenos="19 "></span><span class="c1"># |63629b950e8c3f48d...|   0| James Bond 000|</span>
-<span class="linenos" data-linenos="20 "></span><span class="c1"># |63629b950e8c3f48d...|   1| James Bond 001|</span>
-<span class="linenos" data-linenos="21 "></span><span class="c1"># |63629b950e8c3f48d...|   2| James Bond 002|</span>
-<span class="linenos" data-linenos="22 "></span><span class="c1"># |63629b950e8c3f48d...|   3| James Bond 003|</span>
-<span class="linenos" data-linenos="23 "></span><span class="c1"># ...</span>
+<div class="highlight"><pre><span></span><code><span class="hll"><span class="linenos" data-linenos=" 1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;mongodb&quot;</span><span class="p">)</span> \
+</span><span class="hll"><span class="linenos" data-linenos=" 2 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;connection.uri&quot;</span><span class="p">,</span><span class="s2">&quot;mongodb+srv://&lt;usuario&gt;:&lt;contraseña&gt;@cluster0.dfaz5er.mongodb.net&quot;</span><span class="p">)</span> \
+</span><span class="hll"><span class="linenos" data-linenos=" 3 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;database&quot;</span><span class="p">,</span><span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
+</span><span class="hll"><span class="linenos" data-linenos=" 4 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;collection&quot;</span><span class="p">,</span><span class="s2">&quot;espias&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</span><span class="linenos" data-linenos=" 5 "></span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">df</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># root</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1">#  |-- _id: string (nullable = true)</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1">#  |-- edad: integer (nullable = true)</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1">#  |-- nombre: string (nullable = true)</span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos" data-linenos="13 "></span><span class="c1"># +--------------------+----+---------------+</span>
+<span class="linenos" data-linenos="14 "></span><span class="c1"># |                 _id|edad|         nombre|</span>
+<span class="linenos" data-linenos="15 "></span><span class="c1"># +--------------------+----+---------------+</span>
+<span class="linenos" data-linenos="16 "></span><span class="c1"># |63629b950e8c3f48d...|   0| James Bond 000|</span>
+<span class="linenos" data-linenos="17 "></span><span class="c1"># |63629b950e8c3f48d...|   1| James Bond 001|</span>
+<span class="linenos" data-linenos="18 "></span><span class="c1"># |63629b950e8c3f48d...|   2| James Bond 002|</span>
+<span class="linenos" data-linenos="19 "></span><span class="c1"># |63629b950e8c3f48d...|   3| James Bond 003|</span>
+<span class="linenos" data-linenos="20 "></span><span class="c1"># ...</span>
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">MongoDB en local</p>
@@ -4690,31 +4697,38 @@ TODO: Explicar secrets en Databricks
 <p>Los catálogos de datos son un elemento esencial dentro de una organización, al ofrecer una vista de los datos disponibles, los cuales se pueden extender para describir su creación (persona, equipo u organización). Este catálogo lo gestionan los <strong><em>data stewards</em></strong>, un rol muy específico de los equipos <em>big data</em> que no solo se encargan de administrar el uso y los enfoques de los datos en la empresa, sino que tratan de asegurar la calidad de la información, el cumplimiento de las políticas de privacidad, la correcta comunicación entre los diferentes departamentos y la educación informática y tecnológica de los empleados relacionada con el mundo del dato.</p>
 <p>Volviendo al catálogo de datos, el cual al final es un conjunto de metadatos, actúa como un contrato público que se establece durante la vida del dato, definiendo el cómo, cuándo y el porqué se consume un determinado dato, por ejemplo, indicando la disponibilidad de cada campo (por ejemplo, si tendrá un valor por defecto o nulo), así como reglas sobre la gobernanza y acceso de cada campo, etc...</p>
 <p>El catálogo de datos por excelencia es el que forma parte de <em>Apache Hive</em>, y se conoce como el <strong><em>Hive Metastore</em></strong>, el cual ofrece una fuente veraz para describir la localización, codificación de los datos (texto, Parquet, ORC, ...), el esquema de las columnas, y estadísticas de las tablas almacenadas para facilitar su uso a todos los roles que interactúan con los datos (ingenieros de datos, analistas, ingenieros de ML, ...)</p>
+<div class="admonition info">
+<p class="admonition-title">Almacenamiento del data warehouse</p>
+<p>El catálogo guarda dos cosas distintas: los metadatos (en una base de datos relacional, normalmente <em>MySQL</em>) y los ficheros de datos (en un sistema de almacenamiento distribuido). En la máquina virtual los metadatos viven en <em>MySQL</em> y los ficheros en <em>HDFS</em>. En el entorno <em>Docker</em> los metadatos siguen viviendo en MySQL (contenedor <code>iabd-mysql</code>, base de datos <code>hive_metastore</code>), pero los ficheros viven en <em>MinIO</em>, un almacén compatible con S3 que sustituye a HDFS. Puedes consultar los ficheros desde la consola web de MinIO en http://localhost:9001.</p>
+</div>
 <h3 id="bases-de-datos">Bases de datos<a class="headerlink" href="#bases-de-datos" title="Permanent link">&para;</a></h3>
 <p>El catálogo se organiza, en su primer nivel, en <strong>bases de datos</strong>, la cuales agrupan y categorizan las tablas que utiliza nuestro equipo de trabajo, permitiendo identificar su propietario y restringir el acceso. Dentro del <em>Hive Metastore</em>, una base de datos funciona como un prefijo dentro de una ruta física de nuestro <em>data warehouse</em>, evitando colisiones entre nombres de tablas.</p>
 <div class="admonition tip">
 <p class="admonition-title">Una base de datos por equipo</p>
-<p>Es conveniente que cada equipo de trabajo o unidad de negocio utilice sus propias bases de datos en Spark.</p>
+<p>Es conveniente que cada equipo de trabajo o unidad de negocio utilice sus propias bases de datos en <em>Spark</em>.</p>
 </div>
 <h4 id="configurando-spark-con-hive">Configurando Spark con Hive<a class="headerlink" href="#configurando-spark-con-hive" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Máquina virtual</label><label for="__tabbed_3_2">Docker</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <p>En nuestra máquina virtual ya tenemos configurado el uso del <em>Hive Metastore</em> como catálogo de <em>Spark</em>. Para ello, hemos colocado dentro de <code>$SPARK_HOME/conf</code> una copia del archivo <code>hive-site.xml</code> con la información de acceso:</p>
 <div class="highlight"><span class="filename">hive-site.xml</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nt">&lt;configuration&gt;</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w">   </span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="nt">&lt;property&gt;</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>javax.jdo.option.ConnectionURL<span class="nt">&lt;/name&gt;</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="nt">&lt;value&gt;</span>jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true<span class="nt">&lt;/value&gt;</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="nt">&lt;/property&gt;</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="nt">&lt;/property&gt;</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="nt">&lt;property&gt;</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>javax.jdo.option.ConnectionDriverName<span class="nt">&lt;/name&gt;</span>
 <span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="nt">&lt;value&gt;</span>com.mysql.cj.jdbc.Driver<span class="nt">&lt;/value&gt;</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="w">  </span><span class="nt">&lt;/property&gt;</span>
-<span class="linenos" data-linenos="10 "></span><span class="w">  </span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="nt">&lt;/property&gt;</span>
+<span class="linenos" data-linenos="10 "></span><span class="nt">&lt;property&gt;</span>
 <span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>javax.jdo.option.ConnectionUserName<span class="nt">&lt;/name&gt;</span>
 <span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="nt">&lt;value&gt;</span>iabd<span class="nt">&lt;/value&gt;</span>
-<span class="linenos" data-linenos="13 "></span><span class="w">  </span><span class="nt">&lt;/property&gt;</span>
-<span class="linenos" data-linenos="14 "></span><span class="w">  </span><span class="nt">&lt;property&gt;</span>
+<span class="linenos" data-linenos="13 "></span><span class="nt">&lt;/property&gt;</span>
+<span class="linenos" data-linenos="14 "></span><span class="nt">&lt;property&gt;</span>
 <span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="nt">&lt;name&gt;</span>javax.jdo.option.ConnectionPassword<span class="nt">&lt;/name&gt;</span>
 <span class="linenos" data-linenos="16 "></span><span class="w">    </span><span class="nt">&lt;value&gt;</span>iabd<span class="nt">&lt;/value&gt;</span>
-<span class="linenos" data-linenos="17 "></span><span class="w">  </span><span class="nt">&lt;/property&gt;</span>
+<span class="linenos" data-linenos="17 "></span><span class="nt">&lt;/property&gt;</span>
 <span class="linenos" data-linenos="18 "></span><span class="nt">&lt;/configuration&gt;</span>
 </code></pre></div>
 <p>Y en el archivo de configuración de <em>Spark</em>, en <code>$SPARK_HOME/conf/spark-defaults.conf</code> hemos añadido dos propiedades para indicarle que vamos a utilizar la implementación del catálogo de <em>Hive</em> y que queremos que almacene las bases de datos que creemos en <code>/opt/spark-3.3.1/warehouse/</code>:</p>
@@ -4728,9 +4742,43 @@ TODO: Explicar secrets en Databricks
 <p>Si hubiésemos querido que las bases de datos que creemos desde <em>Spark</em> también lo hicieran dentro de HDFS (que sería lo recomendable, pero en nuestro caso implicaría tener que arrancar también los servicios de <em>Hadoop</em> al utilizar <em>Spark</em>, y por cuestiones de RAM hemos decidido desacoplarlo), deberíamos indicar la ruta:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">spark.sql.warehouse.dir</span><span class="w"> </span><span class="s">hdfs://iabd-virtualbox:9000/user/hive/warehouse/</span>
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>En el entorno <em>Docker</em> el catálogo está integrado de serie. Cuando levantamos los contenedores con <code>docker compose up</code>, ocurren dos cosas relevantes para el catálogo:</p>
+<ol>
+<li>El contenedor <code>iabd-mysql</code> arranca con la base de datos <code>hive_metastore</code> ya creada y un usuario <code>hive/hivepass</code> con permisos sobre ella.</li>
+<li>El contenedor <code>iabd-hive-init</code> ejecuta <code>schematool -initSchema</code> sobre esa base de datos, dejando el esquema del <em>Hive Metastore</em> listo (todas las tablas tipo <code>DBS</code>, <code>TBLS</code>, <code>COLUMNS_V2</code>, etc.). Una vez termina, el contenedor finaliza (es un <em>job</em> de inicialización, no un servicio permanente).</li>
+</ol>
+<p>A partir de ese momento, <em>Spark</em> se conecta directamente a <em>MySQL</em> mediante <em>DataNucleus</em> (sin necesidad de un servicio <em>Hive Metastore</em> en modo <em>thrift</em>), y todas las tablas gestionadas se almacenan en el bucket <code>warehouse</code> de <em>MinIO</em>.</p>
+<p>Esta configuración la cargamos automáticamente al arrancar <em>Spark</em> mediante el archivo <code>spark-defaults.conf</code> que se monta como volumen en los contenedores <code>iabd-spark-master</code>, <code>iabd-spark-worker-*</code> y <code>iabd-jupyter</code>:</p>
+<div class="highlight"><span class="filename">spark-defaults.conf</span><pre><span></span><code><span class="hll"><span class="linenos" data-linenos="1 "></span>spark.sql.catalogImplementation             hive
+</span><span class="hll"><span class="linenos" data-linenos="2 "></span>spark.sql.warehouse.dir                     s3a://warehouse/hive
+</span><span class="linenos" data-linenos="3 "></span>spark.hadoop.javax.jdo.option.ConnectionURL jdbc:mysql://iabd-mysql:3306/hive_metastore?useSSL=false&amp;allowPublicKeyRetrieval=true
+<span class="linenos" data-linenos="4 "></span>...
+</code></pre></div>
+<p>Las propiedades del bloque <em>Hive Metastore</em> indican a <em>Spark</em> dónde está <em>MySQL</em> y con qué credenciales conectarse. Las del bloque <em>MinIO / S3A</em> permiten que <em>Spark</em> lea y escriba en <em>MinIO</em> utilizando el cliente <em>S3A</em> de <em>Hadoop</em>, tratándolo como si fuera un <em>S3</em> de <em>AWS</em> pero contra el endpoint local.</p>
+<div class="admonition warning">
+<p class="admonition-title">JARs necesarios en <code>./jars</code></p>
+<p>Para que esta configuración funcione, en la carpeta <code>./jars</code> (montada como <code>/opt/spark/extra-jars</code> dentro de los contenedores) deben estar presentes:</p>
+<ul>
+<li><code>mysql-connector-j-*.jar</code> — para que <em>DataNucleus</em> pueda conectarse al <em>MySQL</em> del metastore.</li>
+<li><code>hadoop-aws-*.jar</code> y <code>aws-java-sdk-bundle-*.jar</code> — para el cliente <em>S3A</em> que habla con <em>MinIO</em>.</li>
+</ul>
+<p>Las versiones deben ser compatibles con la versión de <em>Hadoop</em> embebida en <em>Spark 4.1.1</em>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">¿Por qué no usamos <em>HDFS</em> en <em>Docker</em>?</p>
+<p>Mantener un clúster de <em>Hadoop</em> (<em>NameNode</em> + <em>DataNodes</em>) consume bastante RAM. <em>MinIO</em> ofrece exactamente la misma API que <em>S3</em>, que hoy en día es el estándar de facto para almacenamiento en la nube, y se integra de forma nativa con <em>Spark</em> mediante el conector <em>S3A</em>. Es además la arquitectura habitual en entornos <em>cloud</em> modernos (lo que se conoce como <em>separation of storage and compute</em>).</p>
+</div>
+</div>
+</div>
+</div>
 <h4 id="accediendo-al-catalogo">Accediendo al catálogo<a class="headerlink" href="#accediendo-al-catalogo" title="Permanent link">&para;</a></h4>
-<p>A partir de la sesión de <em>Spark</em>, podemos acceder al objeto <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/catalog.html"><code>catalog</code></a> que contiene un conjunto de métodos para interactuar con los metadatos.</p>
+<p>A partir de la <em>SparkSession</em>, podemos acceder al objeto <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/catalog.html"><code>catalog</code></a> que contiene un conjunto de métodos para interactuar con los metadatos.</p>
 <p>Podemos comprobar su uso mediante una consulta a <code>show databases</code> o accediendo al método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.listDatabases.html"><code>listDatabases()</code></a> del <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/catalog.html"><code>catalog</code></a>:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Máquina virtual</label><label for="__tabbed_4_2">Docker</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;show databases&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="c1"># +---------+</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="c1"># |namespace|</span>
@@ -4743,6 +4791,22 @@ TODO: Explicar secrets en Databricks
 <span class="linenos" data-linenos="10 "></span><span class="c1">#  Database(name=&#39;iabd&#39;, description=&#39;&#39;, locationUri=&#39;hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db&#39;)]</span>
 </code></pre></div>
 <p>De manera que obtenemos las bases de datos que está utilizando actualmente (como puedes observar, son las bases de datos que hemos creado previamente en la sesión de <a href="../hadoop/hive1.html">Hive</a>).</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;show databases&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="c1"># +---------+</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1"># |namespace|</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1"># +---------+</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1"># |  default|</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># |     demo|</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># +---------+</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listDatabases</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># [Database(name=&#39;default&#39;, catalog=&#39;spark_catalog&#39;, description=&#39;Default Hive database&#39;, locationUri=&#39;s3a://warehouse/hive&#39;),</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1">#  Database(name=&#39;demo&#39;, catalog=&#39;spark_catalog&#39;, description=&#39;&#39;, locationUri=&#39;s3a://warehouse/hive/demo.db&#39;)]</span>
+</code></pre></div>
+</div>
+</div>
+</div>
 <p>Si queremos ver cual es nuestra base de datos activa, utilizaremos el método <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Catalog.currentDatabase.html"><code>currentDatabase</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">currentDatabase</span><span class="p">()</span>
 <span class="linenos" data-linenos="2 "></span><span class="c1"># &#39;default&#39;</span>
@@ -4754,12 +4818,25 @@ TODO: Explicar secrets en Databricks
 <p>Una vez creada, la activamos mediante <code>use</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;use s8a&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Si comprobamos la ruta, podemos ver cómo la ha creado en el almacén de Spark que hemos indicado previamente en la configuración:</p>
+<p>Si comprobamos la ruta, podemos ver cómo la ha creado en el almacén de <em>Spark</em> que hemos indicado previamente en la configuración:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Máquina virtual</label><label for="__tabbed_5_2">Docker</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listDatabases</span><span class="p">()</span>
 <span class="linenos" data-linenos="2 "></span><span class="c1"># [Database(name=&#39;default&#39;, description=&#39;Default Hive database&#39;, locationUri=&#39;hdfs://iabd-virtualbox:9000/user/hive/warehouse&#39;),</span>
 <span class="linenos" data-linenos="3 "></span><span class="c1">#  Database(name=&#39;iabd&#39;, description=&#39;&#39;, locationUri=&#39;hdfs://iabd-virtualbox:9000/user/hive/warehouse/iabd.db&#39;),</span>
 <span class="hll"><span class="linenos" data-linenos="4 "></span><span class="c1">#  Database(name=&#39;s8a&#39;, description=&#39;&#39;, locationUri=&#39;file:/opt/spark-3.3.1/warehouse/s8a.db&#39;)]</span>
 </span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listDatabases</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># [Database(name=&#39;default&#39;, catalog=&#39;spark_catalog&#39;, description=&#39;Default Hive database&#39;, locationUri=&#39;s3a://warehouse/hive&#39;),</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1">#  Database(name=&#39;demo&#39;, catalog=&#39;spark_catalog&#39;, description=&#39;&#39;, locationUri=&#39;s3a://warehouse/hive/demo.db&#39;),</span>
+<span class="hll"><span class="linenos" data-linenos="4 "></span><span class="c1">#  Database(name=&#39;s8a&#39;, catalog=&#39;spark_catalog&#39;, description=&#39;&#39;, locationUri=&#39;s3a://warehouse/hive/s8a.db&#39;)]</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
 <!--
 FIXME: continuar https://learning.oreilly.com/library/view/modern-data-engineering/9781484274521/html/505711_1_En_6_Chapter.xhtml#PC17
 
@@ -4774,7 +4851,7 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connect
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">jdbcDF</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span> \
 <span class="linenos" data-linenos=" 2 "></span>    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;jdbc&quot;</span><span class="p">)</span> \
 <span class="linenos" data-linenos=" 3 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;driver&quot;</span><span class="p">,</span> <span class="s2">&quot;com.mysql.cj.jdbc.Driver&quot;</span><span class="p">)</span> \
-<span class="linenos" data-linenos=" 4 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;jdbc:mysql://localhost&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos=" 4 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;jdbc:mysql://localhost&quot;</span><span class="p">)</span> \ <span class="c1">## si usas Docker, cambia localhost por iabd-mysql</span>
 <span class="linenos" data-linenos=" 5 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;dbtable&quot;</span><span class="p">,</span> <span class="s2">&quot;retail_db.customers&quot;</span><span class="p">)</span> \
 <span class="linenos" data-linenos=" 6 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;port&quot;</span><span class="p">,</span> <span class="s2">&quot;3306&quot;</span><span class="p">)</span> \
 <span class="linenos" data-linenos=" 7 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;iabd&quot;</span><span class="p">)</span> \
@@ -5065,7 +5142,7 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/demo/demo-connect
 <li><a href="https://learning.oreilly.com/library/view/modern-data-engineering/9781484274521/">Modern Data Engineering with Apache Spark - Scott Haines - Apress</a></li>
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
-<p>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RASBD.1</abbr> / <abbr title="Se ha extraído de forma automática información y conocimiento a partir de grandes volúmenes de datos.">CESBD.1b</abbr> y <abbr title="Se ha construido un conjunto de datos complejos y se han relacionado entre sí.">CESBD.1d</abbr>) En las siguientes actividades vamos a familiarizarnos con el uso del API de <em>Spark JDBC</em>, el acceso al catálogo y <em>DeltaLake</em>.</p>
+<p>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RASBD.1</abbr> / <abbr title="Se ha extraído de forma automática información y conocimiento a partir de grandes volúmenes de datos.">CESBD.1b</abbr> y <abbr title="Se ha construido un conjunto de datos complejos y se han relacionado entre sí.">CESBD.1d</abbr>) En las siguientes actividades vamos a familiarizarnos con el uso del API de <em>Spark JDBC</em> y el acceso al catálogo.</p>
 <ol>
 <li>(1p) Vamos a repetir una actividad que realizamos durante la sesión de <em>Hive</em>. Para ello, se pide recuperar desde la base de datos <code>retail_db</code> las tablas <code>customers</code> y <code>orders</code> en dos dataframes tal como hemos hecho en <a href="#leyendo-datos">el apartado Leyendo Datos</a>, y a continuación, realizar un <em>join</em> de manera que contenga la información de cada pedido y la ciudad del cliente.</li>
 <li>(1p) Conecta con <em>MongoDB</em> y persiste el resultado del join en una colección llamada <code>pedidos_ciudad</code>. Conéctate a <em>MongoDB</em> desde <code>mongosh</code> y comprueba que se han almacenado los datos.</li>
