@@ -5092,7 +5092,7 @@ Hacer un ejemplo de sql-delta-import sobre la tabla customers
 <p>¿Y qué ventaja tiene eliminar estos archivos? Por un lado, reducir la cantidad de datos almacenados, y en consecuencia, pagar menos por ello. Además, nos asegura que aquellos datos que han sido eliminados, realmente desaparezcan de nuestro sistema.</p>
 <p>Más información en <a href="https://docs.databricks.com/en/delta/vacuum.html">https://docs.databricks.com/en/delta/vacuum.html</a>.</p>
 <h2 id="caso-de-uso-covid">Caso de Uso - COVID<a class="headerlink" href="#caso-de-uso-covid" title="Permanent link">&para;</a></h2>
-<p>Vamos a cargar en una tabla Delta los datos de COVID disponibles en el repositorio de <a href="https://pandemicdatalake.blob.core.windows.net/public/curated/covid-19/bing_covid-19_data/latest/bing_covid-19_data.parquet">Bing COVID 19</a>.</p>
+<p>Nos han enviado un <a href="resources/bing_covid-19_data.parquet">dataset con datos de COVID</a> (el cual está descrito com <a href="https://learn.microsoft.com/es-es/azure/open-datasets/dataset-bing-covid-19">Bing COVID-19</a>), y nos han pedido que lo carguemos en una tabla <em>Delta</em> para posteriormente realizar algunas consultas sobre él. Para ello, vamos a seguir los siguientes pasos:</p>
 <h3 id="creando-una-tabla">Creando una tabla<a class="headerlink" href="#creando-una-tabla" title="Permanent link">&para;</a></h3>
 <p>El primer paso es descargar el archivo y a continuación, vamos a crear una tabla para almacenar los casos, en un principio, únicamente con una columna para la fecha:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;CREATE DATABASE IF NOT EXISTS iabd&quot;</span><span class="p">)</span>
@@ -5415,21 +5415,33 @@ https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.
 <p>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RASBD.1</abbr> / <abbr title="Se ha extraído de forma automática información y conocimiento a partir de grandes volúmenes de datos.">CESBD.1b</abbr> y <abbr title="Se ha construido un conjunto de datos complejos y se han relacionado entre sí.">CESBD.1d</abbr>) En las siguientes actividades vamos a practicar con el uso de <em>Delta Lake</em> y el concepto de <em>Data Lakehouse</em>. Para ello, vamos a utilizar los datos de ventas (<a href="resources/salesdata.zip">salesdata.zip</a>) de la actividad opcional de la sesión anterior, donde renombrábamos columnas y posteriormente una serie de agregaciones para visualizar en gráficos el resultado. </p>
 <ol>
 <li>
-<p>(2p) Haciendo uso de <em>Databricks</em> y siguiendo la arquitectura <em>Medallion</em>, se pide:</p>
+<p>(2p) Haciendo uso del cluster de <em>Docker</em> o de <em>Databricks</em> y siguiendo la arquitectura <em>Medallion</em>, se pide:</p>
 <ol>
+<li>
+<p>Crea y utiliza una base de datos llamada <code>iabd</code>.</p>
+</li>
 <li>
 <p>Capa <em>Bronze</em>:</p>
 <ol>
 <li>
-<p>Carga en un <em>DataFrame</em> todos los datos de ventas. Para ello, descomprime el zip en tu ordenador, y sube los archivos a una carpeta <code>ventas</code> de DBFS. Posteriormente, puedes leer todos los datos mediante:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df_ventas</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;dbfs:/FileStore/ventas/*.csv&quot;</span><span class="p">)</span>
+<p>Carga en un <em>DataFrame</em> todos los datos de ventas. Para ello, descomprime el zip en tu ordenador, y sube los archivos, bien a un bucket de Minio en la ruta <code>s3a://sales/raw</code> o bien a un volumen <code>sales</code> dentro del catalogo de <em>Databricks</em>. Posteriormente, puedes leer todos los datos mediante:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># Si usas Docker con MinIO</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df_ventas</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;s3a://sales/raw&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1"># Si usas Databricks</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">df_ventas</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;/Volumes/workspace/default/sales/*.csv&quot;</span><span class="p">)</span>
 </code></pre></div>
 </li>
 <li>
 <p>El primer paso será renombrar las columnas para eliminar los espacios en blanco.</p>
 </li>
 <li>Añade una columna <code>ingestion_time</code> con la fecha actual, y otra columna <code>source_system</code> donde le asignes el valor literal <code>carga inicial CSV</code>.</li>
-<li>Almacena el <em>DataFrame</em> en <code>/delta/bronze/sales/</code> con formato Delta.</li>
+<li>
+<p>Almacena el <em>DataFrame</em> en:</p>
+<ul>
+<li>Si usas <em>Docker</em> con <em>MinIO</em> en la ruta <code>s3a://sales/bronze/</code> con formato Delta.</li>
+<li>Si usas <em>Databricks</em> en la tabla <code>sales_bronze</code>  con formato Delta.</li>
+</ul>
+</li>
 </ol>
 </li>
 <li>
@@ -5446,7 +5458,7 @@ https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.
 </ol>
 </li>
 <li>
-<p>Almacena el resultado en formato Delta en <code>/delta/silver/sales/</code> particionando los datos por año.</p>
+<p>Almacena el resultado en formato Delta particionando los datos por año, ya sea en <code>s3a://sales/silver/</code> si usas <em>MinIO</em> o en la tabla <code>sales_silver</code> si usas <em>Databricks</em>. </p>
 </li>
 </ol>
 </li>
@@ -5461,10 +5473,12 @@ https://learning.oreilly.com/library/view/learning-spark-2nd/9781492050032/ch09.
 </ol>
 </li>
 <li>
-<p>Almacena sus resultados en formato Delta en <code>/delta/gold/sales/ventas2019</code> y <code>/delta/gold/sales/top10ciudades</code>.</p>
+<p>Almacena sus resultados en formato Delta en la srutas que consideres oportunas, utilizando los nombres <code>ventas2019_delta</code> y <code>top10ciudades_delta</code> para las tablas o rutas donde almacenes los resultados.</p>
 </li>
-<li>Almacena ambos <em>DataFrames</em> como tablas con los nombres <code>ventas2019_delta</code> y <code>top10ciudades_delta</code>.</li>
 </ol>
+</li>
+<li>
+<p>Adjunta capturas de pantalla de los resultados obtenidos en cada una de las capas, así como del esquema de las tablas creadas, donde se reflejen los archivos creados (por ejemplo, el particionado de la capa <em>Silver</em>, o el número de archivos creados en cada capa).</p>
 </li>
 </ol>
 </li>
