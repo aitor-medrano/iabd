@@ -2598,6 +2598,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4592,6 +4603,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4891,6 +4913,10 @@ https://kafka.apache.org/quickstart
 <span class="linenos" data-linenos="3 "></span>Topic:<span class="w"> </span>iabd-topic<span class="w">       </span>Partition:<span class="w"> </span><span class="m">1</span><span class="w">    </span>Leader:<span class="w"> </span><span class="m">1</span><span class="w">       </span>Replicas:<span class="w"> </span><span class="m">1</span><span class="w">     </span>Isr:<span class="w"> </span><span class="m">1</span><span class="w">  </span>Elr:<span class="w">    </span>LastKnownElr:
 <span class="linenos" data-linenos="4 "></span>Topic:<span class="w"> </span>iabd-topic<span class="w">       </span>Partition:<span class="w"> </span><span class="m">2</span><span class="w">    </span>Leader:<span class="w"> </span><span class="m">1</span><span class="w">       </span>Replicas:<span class="w"> </span><span class="m">1</span><span class="w">     </span>Isr:<span class="w"> </span><span class="m">1</span><span class="w">  </span>Elr:<span class="w">    </span>LastKnownElr:
 </code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">¿Por qué 3 particiones?</p>
+<p>En el <code>docker-compose.yml</code> hemos configurado <code>KAFKA_NUM_PARTITIONS: 3</code>, así cada <em>topic</em> nuevo arranca con 3 particiones sin tener que indicarlo en el <code>--create</code>. En la máquina virtual, en cambio, la propiedad equivalente del <code>server.properties</code> es <code>num.partitions=1</code>, por lo que allí los <em>topics</em> arrancan con una sola partición.</p>
+</div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--describe<span class="w"> </span><span class="se">\</span>
@@ -4975,8 +5001,18 @@ https://kafka.apache.org/quickstart
 <p>Podemos crear tantos <em>topics</em> como queramos y cada uno de ellos tendrá un nombre unívoco.</p>
 <p>Un <em>topic</em> se divide en <strong>particiones</strong>, las cuales se numeran, siendo la primera la 0. Al crear un <em>topic</em> podemos indicar la cantidad de particiones inicial, la cual podemos modificar <em>a posteriori</em> (en nuestra máquina virtual, en el archivo <code>server.properties</code> tenemos configurado que, por defecto, cada <em>topic</em> tenga una sola partición mediante la propiedad <code>num.partitions=1</code>).</p>
 <p>Al crear un topic, si queremos indicar la cantidad de particiones, hemos de pasarle el parámetro <code>--partitions</code> y el número de particiones deseadas:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-p3<span class="w"> </span>--partitions<span class="w"> </span><span class="m">3</span><span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Docker</label><label for="__tabbed_8_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-p3<span class="w"> </span>--partitions<span class="w"> </span><span class="m">3</span><span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka:9092
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-p3<span class="w"> </span>--partitions<span class="w"> </span><span class="m">3</span><span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+</div>
+</div>
+</div>
 <p>Cada partición está ordenada, de manera que cada mensaje dentro de una partición tendrá un identificador incremental, llamado <strong><em>offset</em></strong> (desplazamiento). Cada partición funciona como un <em>commit log</em> almacenando los mensajes que recibe.</p>
 <figure style="align: center;">
     <img src="images/02kafka-topic-partitions.png" alt="Offset dentro de las particiones de un topic">
@@ -4985,13 +5021,23 @@ https://kafka.apache.org/quickstart
 
 <p>Como podemos observar en la imagen, cada partición tiene sus propios <em>offset</em> (el <em>offset</em> 3 de la partición 0 no representa el mismo dato que el <em>offset</em> 3 de la partición 1).</p>
 <p>Habíamos comentado que las particiones están ordenadas, pero el orden sólo se garantiza dentro de una partición (no entre particiones), es decir, el mensaje 7 de la partición 0 puede haber llegado antes, a la vez, o después que el mensaje 5 de la partición 1.</p>
-<p>Los datos de una partición tiene un tiempo de vida limitado (<em>retention period</em>) que indica el tiempo que se mantendrán los mensajes antes de eliminarlos. Por defecto es de una semana. Además, una vez que los datos se escriben en una partición, no se pueden modificar (los mensajes son inmutables).</p>
+<p>Los datos de una partición tienen un tiempo de vida limitado (<em>retention period</em>) que indica el tiempo que se mantendrán los mensajes antes de eliminarlos. Por defecto es de una semana. Además, una vez que los datos se escriben en una partición, no se pueden modificar (los mensajes son inmutables).</p>
 <p>Finalmente, por defecto, los datos se asignan de manera aleatoria a una partición. Sin embargo, existe la posibilidad de indicar una clave de particionado.</p>
 <div class="admonition info">
 <p class="admonition-title">Borrando un topic</p>
 <p>Para eliminar un <em>topic</em>, le pasaremos el parámetro <code>--delete</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-topics.sh<span class="w"> </span>--delete<span class="w"> </span>--topic<span class="w"> </span>iabd-topic<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Docker</label><label for="__tabbed_9_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-topics.sh<span class="w"> </span>--delete<span class="w"> </span>--topic<span class="w"> </span>iabd-topic<span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka:9092
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--delete<span class="w"> </span>--topic<span class="w"> </span>iabd-topic<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+</div>
+</div>
+</div>
 <p>Al borrar un <em>topic</em>, sus índices con el histórico no se eliminan, de manera que volver a crear un <em>topic</em> con el mismo nombre es una mala idea ya que podemos obtener datos incongruentes.</p>
 </div>
 <h3 id="brokers">Brokers<a class="headerlink" href="#brokers" title="Permanent link">&para;</a></h3>
@@ -5014,8 +5060,18 @@ https://kafka.apache.org/quickstart
 </figure>
 
 <p>Para crear la configuración del gráfico, debemos indicar el factor de replicación mediante <code>--replication-factor</code>:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Docker</label><label for="__tabbed_10_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>TopicA<span class="w"> </span>--partitions<span class="w"> </span><span class="m">2</span><span class="w"> </span>--replication-factor<span class="w"> </span><span class="m">2</span><span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka:9092
+</code></pre></div>
+</div>
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>TopicA<span class="w"> </span>--partitions<span class="w"> </span><span class="m">2</span><span class="w"> </span>--replication-factor<span class="w"> </span><span class="m">2</span><span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
 </code></pre></div>
+</div>
+</div>
+</div>
 <p>Si se cayera el <em>broker 102</em>, <em>Kafka</em> podría devolver los datos al estar disponibles en los nodos 101 y 103.</p>
 <h4 id="replica-lider">Réplica líder<a class="headerlink" href="#replica-lider" title="Permanent link">&para;</a></h4>
 <p>Acabamos de ver que cada broker tiene múltiples particiones, y cada partición tiene múltiples réplicas, de manera que, si se cae un nodo/broker, <em>Kafka</em> puede utilizar otro <em>broker</em> para servir los datos.</p>
@@ -5029,7 +5085,7 @@ https://kafka.apache.org/quickstart
 <h3 id="productores">Productores<a class="headerlink" href="#productores" title="Permanent link">&para;</a></h3>
 <p>Los productores escriben datos en los <em>topics</em>, sabiendo automáticamente el <em>broker</em> y la partición en la cual deben escribir.
 En el caso de un fallo de un <em>broker</em>, los productores automáticamente se recuperan y se comunican con el <em>broker</em> adecuado.</p>
-<p>Si el productor envía los datos sin una clave determinada, <em>Kafka</em> utiliza un algoritmo de <em>Round Robin</em>, de manera que cada mensaje se va alternando entre los diferentes <em>brokers</em>.</p>
+<p>Si el productor envía los datos sin una clave determinada, Kafka aplica una estrategia de <em>sticky partitioning</em>: agrupa mensajes consecutivos en la misma partición para formar <em>batches</em> eficientes, y va rotando entre particiones a lo largo del tiempo. El resultado es un reparto equilibrado, pero no estrictamente mensaje a mensaje como sería un <em>round robin</em> clásico:</p>
 <figure style="align: center;">
     <img src="images/02kafka-producers.png">
     <figcaption>La carga se balancea entre los brokers</figcaption>
@@ -5050,8 +5106,22 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 <li><code>key.separator</code>: carácter para separar la clave del valor, por ejemplo, <code>:</code>, <code>;</code>, ....</li>
 </ul>
 <p>Así pues, podemos enviar mensajes con clave mediante:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-console-producer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic<span class="w"> </span>--property<span class="w"> </span><span class="s2">&quot;parse.key=true&quot;</span><span class="w"> </span>--property<span class="w"> </span><span class="s2">&quot;key.separator=:&quot;</span><span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">Docker</label><label for="__tabbed_11_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-console-producer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--property<span class="w"> </span><span class="s2">&quot;parse.key=true&quot;</span><span class="w"> </span>--property<span class="w"> </span><span class="s2">&quot;key.separator=:&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--bootstrap-server<span class="w"> </span>kafka:9092
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-console-producer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--property<span class="w"> </span><span class="s2">&quot;parse.key=true&quot;</span><span class="w"> </span>--property<span class="w"> </span><span class="s2">&quot;key.separator=:&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+</div>
+</div>
+</div>
 <p>Y luego enviar mensajes del estilo:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>clave1:valor1
 <span class="linenos" data-linenos="2 "></span>clave2:valor2
@@ -5082,11 +5152,31 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 <p>En el caso de tener más consumidores que particiones, algunos consumidores no realizarán nada. Este caso de uso es atípico, ya que lo recomendable es tener tantos consumidores como el mayor número de particiones existentes.</p>
 <h4 id="probando-los-grupos-de-consumidores">Probando los grupos de consumidores<a class="headerlink" href="#probando-los-grupos-de-consumidores" title="Permanent link">&para;</a></h4>
 <p>Vamos a simular el gráfico anterior mediante un ejemplo con el terminal. Primero crearemos un <em>topic</em> que contenga tres particiones:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092<span class="w"> </span>--partitions<span class="w"> </span><span class="m">3</span>
+<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked="checked" id="__tabbed_12_1" name="__tabbed_12" type="radio" /><input id="__tabbed_12_2" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="__tabbed_12_1">Docker</label><label for="__tabbed_12_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span>--partitions<span class="w"> </span><span class="m">3</span><span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka:9092
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--create<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span>--partitions<span class="w"> </span><span class="m">3</span><span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+</div>
+</div>
+</div>
 <p>Si comprobamos el estado del <em>topic</em> mediante:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-topics.sh<span class="w"> </span>--describe<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked="checked" id="__tabbed_13_1" name="__tabbed_13" type="radio" /><input id="__tabbed_13_2" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="__tabbed_13_1">Docker</label><label for="__tabbed_13_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-topics.sh<span class="w"> </span>--describe<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka:9092
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--describe<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+</div>
+</div>
+</div>
 <p>Obtendremos la siguiente información:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Topic: iabd-topic-group TopicId: p1i3m4fMRximngLjAV5rsA PartitionCount: 3       ReplicationFactor: 1    Configs: segment.bytes=1073741824
 <span class="linenos" data-linenos="2 "></span>        Topic: iabd-topic-group Partition: 0    Leader: 0       Replicas: 0     Isr: 0
@@ -5094,11 +5184,31 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 <span class="linenos" data-linenos="4 "></span>        Topic: iabd-topic-group Partition: 2    Leader: 0       Replicas: 0     Isr: 0
 </code></pre></div>
 <p>A continuación, en dos pestañas diferentes, vamos a crear dos consumidores que pertenezcan al mismo grupo de consumidores:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-console-consumer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span>--group<span class="w"> </span>iabd-app1<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Docker</label><label for="__tabbed_14_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-console-consumer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span>--group<span class="w"> </span>iabd-app1<span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka:9092
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-console-consumer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span>--group<span class="w"> </span>iabd-app1<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+</div>
+</div>
+</div>
 <p>Y finalmente, creamos un nuevo productor sobre el <em>topic</em>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-console-producer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+<div class="tabbed-set tabbed-alternate" data-tabs="15:2"><input checked="checked" id="__tabbed_15_1" name="__tabbed_15" type="radio" /><input id="__tabbed_15_2" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="__tabbed_15_1">Docker</label><label for="__tabbed_15_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-console-producer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka:9092
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-console-producer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-group<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+</div>
+</div>
+</div>
 <p>Y si creamos varios mensajes en el productor, veremos cómo van llegando de manera alterna a los diferentes consumidores:</p>
 <figure style="align: center;">
     <img src="images/02kafka-consumergroups-ejemplo.png">
@@ -5120,11 +5230,31 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 </div>
 <p>Mediante el comando <code>kafka-consumer-groups.sh</code> podemos obtener información sobre los diferentes grupos de consumidores que tenemos creados, así como eliminarlos o resetear sus <em>offsets</em>.</p>
 <p>Por ejemplo, si queremos listar los grupos de consumidores existentes ejecutaremos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-consumer-groups.sh<span class="w"> </span>--list<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+<div class="tabbed-set tabbed-alternate" data-tabs="16:2"><input checked="checked" id="__tabbed_16_1" name="__tabbed_16" type="radio" /><input id="__tabbed_16_2" name="__tabbed_16" type="radio" /><div class="tabbed-labels"><label for="__tabbed_16_1">Docker</label><label for="__tabbed_16_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-consumer-groups.sh<span class="w"> </span>--list<span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka:9092
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-consumer-groups.sh<span class="w"> </span>--list<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+</div>
+</div>
+</div>
 <p>En cambio, si queremos obtener la información de un determinado grupo ejecutaremos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-consumer-groups.sh<span class="w"> </span>--describe<span class="w"> </span>--group<span class="w"> </span>iabd-app1<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+<div class="tabbed-set tabbed-alternate" data-tabs="17:2"><input checked="checked" id="__tabbed_17_1" name="__tabbed_17" type="radio" /><input id="__tabbed_17_2" name="__tabbed_17" type="radio" /><div class="tabbed-labels"><label for="__tabbed_17_1">Docker</label><label for="__tabbed_17_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>./kafka-consumer-groups.sh<span class="w"> </span>--describe<span class="w"> </span>--group<span class="w"> </span>iabd-app1<span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka:9092
 </code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-consumer-groups.sh<span class="w"> </span>--describe<span class="w"> </span>--group<span class="w"> </span>iabd-app1<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+</div>
+</div>
+</div>
 <p>Obteniendo información a destacar como:</p>
 <ul>
 <li><code>CURRENT-OFFSET</code>: valor actual del <em>offset</em></li>
@@ -5136,7 +5266,7 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 <span class="linenos" data-linenos="3 "></span>iabd-app1       iabd-topic-group 1          2               2               0               consumer-iabd-app1-1-405b2b39-2252-4e12-ba55-00a579441df2 /127.0.0.1      consumer-iabd-app1-1
 <span class="linenos" data-linenos="4 "></span>iabd-app1       iabd-topic-group 2          4               4               0               consumer-iabd-app1-1-8f09bc45-8e8c-46d2-9c9c-cf6bd3a5fdc7 /127.0.0.1      consumer-iabd-app1-1
 </code></pre></div>
-<p>Si por ejemplo, con todos los consumidores detenidos, mediante un productor lanzamos 5 mensajes nuevos, estos se quedarán en el topic a la espera de ser consumidos, y se habrán repartidos entre las diferentes particiones. Si volvemos a lanzar el comando anterior obtendríamos:</p>
+<p>Si por ejemplo, con todos los consumidores detenidos, mediante un productor lanzamos 5 mensajes nuevos, estos se quedarán en el topic a la espera de ser consumidos, y se habrán repartido entre las diferentes particiones. Si volvemos a lanzar el comando anterior obtendríamos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Consumer group &#39;iabd-app1&#39; has no active members.
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span>GROUP           TOPIC            PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID     HOST            CLIENT-ID
@@ -5155,9 +5285,9 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 
 <p>El <em>commit</em> de los mensajes está muy relacionado con la semántica de la entrega. Los consumidores eligen cuando realizar el <em>commit</em> de los <em>offsets</em>:</p>
 <ul>
-<li><em>As most once</em>: se realiza el commit del mensaje tan pronto como se recibe el mensaje. Si falla su procesamiento, el mensaje se perderá (y no se volverá a leer).</li>
-<li><em>At least once</em> (opción más equilibrada): El <em>commit</em> se realiza una vez procesado el mensaje. Este enfoque puede resultar en un procesado duplicado de los mensajes, por lo que hemos de asegurarnos que son idempotentes (el volver a procesar un mensaje no tendrá un impacto en el sistema)</li>
-<li><em>Exactly once</em>: sólo se puede conseguir utilizando flujos de trabajo de <em>Kafka</em> con <em>Kafka</em> mediante el API de <em>Kafka Streams</em>. Si necesitamos la interacción de <em>Kafka</em> con un sistema externo, como una base de datos, se recomienda utilizar un consumidor idempotente que nos asegura que no habrá duplicados en la base de datos.</li>
+<li><em>At most once</em> (como mucho una vez): se realiza el <em>commit</em> del mensaje tan pronto como se recibe el mensaje. Si falla su procesamiento, el mensaje se perderá (y no se volverá a leer).</li>
+<li><em>At least once</em> (como poco una vez) (opción más equilibrada): El <em>commit</em> se realiza una vez procesado el mensaje. Este enfoque puede resultar en un procesado duplicado de los mensajes, por lo que hemos de asegurarnos que son idempotentes (el volver a procesar un mensaje no tendrá un impacto en el sistema)</li>
+<li><em>Exactly once</em>: en flujos <em>Kafka</em> → <em>Kafka</em>, se consigue activando productores idempotentes y transaccionales (o usando el API de <em>Kafka Streams</em>, que lo gestiona internamente). Cuando <em>Kafka</em> interactúa con sistemas externos (una base de datos, por ejemplo), se recomienda diseñar consumidores idempotentes, ya que la garantía de <em>exactly-once</em> depende también del sistema de destino.</li>
 </ul>
 <h3 id="descubrimiento-de-brokers">Descubrimiento de brokers<a class="headerlink" href="#descubrimiento-de-brokers" title="Permanent link">&para;</a></h3>
 <p>Cada <em>broker</em> de <em>Kafka</em> es un <em>bootstrap server</em>, lo que significa que dicho servidor contiene un listado con todos los nodos del clúster, de manera que al conectarnos a un <em>broker</em>, automáticamente nos conectaremos al clúster entero.</p>
@@ -5321,7 +5451,7 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 </code></pre></div>
 <p>Veremos los <code>delivery_report</code> confirmando el envío de cada mensaje, y simultáneamente el consumidor (en el otro terminal) los irá imprimiendo conforme los reciba.</p>
 <h3 id="mensajes-con-clave">Mensajes con clave<a class="headerlink" href="#mensajes-con-clave" title="Permanent link">&para;</a></h3>
-<p>Como vimos en el apartado <a href="#mensajes-con-clave">mensajes con clave</a>, la clave de un mensaje determina la partición a la que se envía: todos los mensajes con la misma clave caen en la misma partición, lo que garantiza el orden entre ellos.</p>
+<p>Como vimos en el subapartado de <a href="#clave-de-mensaje">Productores</a>, la clave de un mensaje determina la partición a la que se envía: todos los mensajes con la misma clave caen en la misma partición, lo que garantiza el orden entre ellos.</p>
 <p>Para enviar mensajes con clave, basta con añadir el parámetro <code>key</code> a <code>produce()</code>:</p>
 <div class="highlight"><span class="filename">productor_clave.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">confluent_kafka</span><span class="w"> </span><span class="kn">import</span> <span class="n">Producer</span>
 <span class="linenos" data-linenos=" 2 "></span>
@@ -5361,7 +5491,6 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 </div>
 <h2 id="tipos-de-conexion">Tipos de conexión<a class="headerlink" href="#tipos-de-conexion" title="Permanent link">&para;</a></h2>
 <p>En el caso 1 hemos visto que, dependiendo de dónde se ejecute nuestro código, debemos apuntar a una dirección distinta: <code>kafka:9092</code> desde dentro de la red <em>Docker</em>, <code>localhost:9094</code> desde nuestra máquina anfitriona. En este apartado vamos a entender <strong>por qué</strong>, ya que es uno de los errores más comunes a la hora de conectar clientes a <em>Kafka</em>.</p>
-<p>Por eso, para inspeccionar el contenedor usas <code>docker exec -it iabd-kafka bash</code>, pero para conectarte al broker desde otro contenedor usas <code>kafka:9092</code>. Son dos nombres que se refieren al mismo proceso, pero desde dos planos distintos.</p>
 <div class="admonition info">
 <p class="admonition-title">hostname vs container_name</p>
 <p>En el <code>docker-compose.yml</code> definimos dos cosas distintas:</p>
@@ -5369,6 +5498,7 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 <li><strong><code>container_name: iabd-kafka</code></strong> — el nombre que verás en <code>docker ps</code>, <code>docker exec</code> o <code>docker logs</code>. Es el nombre administrativo del contenedor.</li>
 <li><strong><code>hostname: kafka</code></strong> — el nombre por el que el contenedor es accesible dentro de la red <em>Docker</em>. Es lo que resuelve el <em>DNS</em> interno de la red <code>spark-net</code>.</li>
 </ul>
+<p>Por eso, para inspeccionar el contenedor usas <code>docker exec -it iabd-kafka bash</code>, pero para conectarte al broker desde otro contenedor usas <code>kafka:9092</code>. Son dos nombres que se refieren al mismo proceso, pero desde dos planos distintos.</p>
 </div>
 <p>Cuando un cliente (productor o consumidor) se conecta a un clúster de <em>Kafka</em>, la conexión sucede en dos fases:</p>
 <ol>
@@ -5477,6 +5607,143 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 <p>En la instalación nativa de la máquina virtual no hay capas de red intermedias: el <em>broker</em> escucha en <code>localhost:9092</code> (o en <code>iabd-virtualbox:9092</code> si nos conectamos desde otra máquina del mismo <em>host-only network</em>), y el cliente se conecta directamente. Como no hay redireccionamientos ni puertos publicados, <code>listeners</code> y <code>advertised.listeners</code> suelen coincidir y normalmente ni siquiera tocamos <code>advertised.listeners</code> explícitamente.</p>
 <p>Por eso esta confusión solo aparece en entornos contenedorizados o en <em>cloud</em>: ahí donde la dirección que ve el cliente no es la misma que la que tiene el proceso del <em>broker</em>.</p>
 </div>
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<p>A continuación se recogen algunas de las preguntas habituales que suelen realizarse en entrevistas de trabajo sobre los conceptos vistos en esta sesión.</p>
+<details class="question">
+<summary>¿Qué problema resuelve <em>Kafka</em> y por qué no usar simplemente una base de datos o una cola tradicional como <em>RabbitMQ</em>?</summary>
+<p><em>Kafka</em> resuelve el problema de <strong>desacoplar productores y consumidores de datos</strong> en sistemas distribuidos de alto volumen. A diferencia de:</p>
+<ul>
+<li>Una <strong>base de datos relacional</strong>, <em>Kafka</em> está diseñado para escrituras <em>append-only</em> a muy alto <em>throughput</em> (millones de mensajes/segundo) y para consumo asíncrono por múltiples sistemas.</li>
+<li>Una <strong>cola tradicional</strong> (<em>RabbitMQ</em>, <em>ActiveMQ</em>), <em>Kafka</em> es un <em>log distribuido</em>: los mensajes no se borran al consumirse, sino que permanecen un tiempo de retención configurable, lo que permite <strong>reprocesar datos</strong>, conectar nuevos consumidores que lean desde el principio, o que distintos sistemas (analítica, ML, auditoría) consuman los mismos datos de forma independiente.</li>
+</ul>
+<p>Por eso <em>Kafka</em> se usa como columna vertebral de arquitecturas <em>event-driven</em>, <em>streaming</em> y <em>Big Data</em>, mientras que una cola tradicional es más adecuada para mensajería transaccional punto a punto.</p>
+</details>
+<details class="question">
+<summary>¿Qué es una partición y por qué son tan importantes en <em>Kafka</em>?</summary>
+<p>Una <strong>partición</strong> es una secuencia ordenada e inmutable de mensajes, almacenada físicamente como un <em>commit log</em> en un <em>broker</em>. Un <em>topic</em> se divide en una o varias particiones, y cada partición se replica entre varios <em>brokers</em>.</p>
+<p>Las particiones son la unidad fundamental de:</p>
+<ul>
+<li><strong>Paralelismo</strong>: cada partición puede leerse por un consumidor distinto del mismo grupo, así el <em>throughput</em> de lectura escala con el número de particiones.</li>
+<li><strong>Distribución</strong>: distintas particiones del mismo <em>topic</em> viven en distintos <em>brokers</em>, repartiendo carga y almacenamiento.</li>
+<li><strong>Orden</strong>: el orden de los mensajes solo se garantiza <strong>dentro de una partición</strong>, no entre particiones del mismo <em>topic</em>. Para preservar el orden por entidad (por ejemplo, todos los eventos de un usuario), se usa la <strong>clave del mensaje</strong>.</li>
+</ul>
+</details>
+<details class="question">
+<summary>¿Qué es un <em>offset</em> y quién lo gestiona?</summary>
+<p>Un <strong><em>offset</em></strong> es un identificador numérico, incremental y único dentro de una partición, que marca la posición de cada mensaje. El <em>offset</em> 5 de la partición 0 <strong>no</strong> es el mismo mensaje que el <em>offset</em> 5 de la partición 1.</p>
+<p>El <em>broker</em> no recuerda qué consumidor ha leído qué — esa responsabilidad recae en el propio <strong>grupo de consumidores</strong>, que va haciendo <em>commit</em> del último <em>offset</em> procesado en un <em>topic</em> interno especial llamado <code>__consumer_offsets</code>. Así, si un consumidor se cae, al volver puede retomar la lectura desde el último <em>offset</em> confirmado.</p>
+</details>
+<details class="question">
+<summary>¿Qué garantías de orden ofrece <em>Kafka</em>?</summary>
+<p><em>Kafka</em> garantiza el orden <strong>únicamente dentro de una partición</strong>. Es decir:</p>
+<ul>
+<li>Si dos mensajes se escriben en la misma partición, se leerán en el mismo orden en que se escribieron.</li>
+<li>Si dos mensajes se escriben en particiones distintas (aunque sea del mismo <em>topic</em>), <strong>no hay garantía de orden</strong> entre ellos.</li>
+</ul>
+<p>Para garantizar el orden por entidad (por ejemplo, todos los eventos de un cliente), se debe enviar la clave correspondiente (<code>customer_id</code>), de forma que todos sus mensajes acaben siempre en la misma partición.</p>
+</details>
+<details class="question">
+<summary>¿Cuál es la diferencia entre <code>acks=0</code>, <code>acks=1</code> y <code>acks=all</code> en un productor?</summary>
+<p>El parámetro <code>acks</code> controla <strong>cuánto espera el productor para confirmar que un mensaje se ha escrito correctamente</strong>:</p>
+<table>
+<thead>
+<tr>
+<th><code>acks</code></th>
+<th>Espera confirmación de...</th>
+<th>Riesgo</th>
+<th>Rendimiento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>Nada (<em>fire and forget</em>)</td>
+<td>Pérdida total si el <em>broker</em> cae</td>
+<td>Máximo</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>Solo el <em>líder</em> de la partición</td>
+<td>Pérdida si el líder cae antes de replicar</td>
+<td>Equilibrado</td>
+</tr>
+<tr>
+<td><code>all</code> (o <code>-1</code>)</td>
+<td>Líder y todas las réplicas en sincronía (ISR)</td>
+<td>Sin pérdida (con <code>min.insync.replicas</code> adecuado)</td>
+<td>Menor</td>
+</tr>
+</tbody>
+</table>
+<p>En sistemas críticos se usa <code>acks=all</code> junto con <code>min.insync.replicas=2</code> y productores idempotentes para conseguir <strong>durabilidad sin duplicados</strong>.</p>
+</details>
+<details class="question">
+<summary>¿Qué es un grupo de consumidores y qué pasa cuando se cae uno de sus miembros?</summary>
+<p>Un <strong>grupo de consumidores</strong> es un conjunto de procesos consumidores identificados por el mismo <code>group.id</code>, que se reparten las particiones de un <em>topic</em> para procesarlas en paralelo. <em>Kafka</em> garantiza que <strong>cada partición es leída por un único consumidor del grupo en cada instante</strong>.</p>
+<p>Cuando uno de los consumidores se cae (o se añade uno nuevo), se produce un <strong><em>rebalance</em></strong>: <em>Kafka</em> redistribuye las particiones entre los consumidores activos. Durante el <em>rebalance</em> el consumo se pausa brevemente. Desde <em>Kafka</em> 2.4, gracias al <strong><em>Cooperative Sticky Assignor</em></strong>, los <em>rebalances</em> son incrementales y solo afectan a las particiones que cambian de dueño, sin parar todo el grupo.</p>
+</details>
+<details class="question">
+<summary>¿Qué es el <em>consumer lag</em> y por qué es la métrica más importante de monitorizar?</summary>
+<p>El <strong><em>lag</em></strong> es la diferencia entre el último <em>offset</em> escrito en una partición (<code>LOG-END-OFFSET</code>) y el último <em>offset</em> que el grupo ha confirmado (<code>CURRENT-OFFSET</code>). Indica cuántos mensajes están <strong>pendientes de consumir</strong>.</p>
+<p>Es la métrica clave en producción porque:</p>
+<ul>
+<li>Un <em>lag</em> creciente significa que los consumidores <strong>no llevan el ritmo</strong> del productor, lo que puede saturar el clúster o retrasar la analítica en tiempo real.</li>
+<li>Un <em>lag</em> alto en una partición concreta indica un consumidor lento o un sesgo (<em>skew</em>) en las claves.</li>
+</ul>
+<p>Se puede consultar mediante <code>kafka-consumer-groups.sh --describe</code> o desde <em>Kafka UI</em>, y en producción se monitoriza con <em>Prometheus</em>, <em>Datadog</em> u otras herramientas.</p>
+</details>
+<details class="question">
+<summary>Explica las tres semánticas de entrega: <em>at-most-once</em>, <em>at-least-once</em> y <em>exactly-once</em>.</summary>
+<p>Las tres semánticas determinan <strong>qué garantía de procesamiento</strong> ofrece el consumidor:</p>
+<ul>
+<li><strong><em>At-most-once</em></strong>: el <em>commit</em> del <em>offset</em> se hace antes de procesar el mensaje. Si el consumidor cae después del <em>commit</em> pero antes de procesar, <strong>se pierde el mensaje</strong>. Se usa cuando es preferible perder algún dato a procesarlo dos veces (por ejemplo, métricas no críticas).</li>
+<li><strong><em>At-least-once</em></strong>: el <em>commit</em> se hace después de procesar. Si el consumidor cae tras procesar pero antes de hacer <em>commit</em>, al reiniciarse <strong>volverá a procesar ese mensaje</strong>. Es la opción más habitual; exige que el procesamiento sea <strong>idempotente</strong> (procesar dos veces el mismo mensaje no altera el resultado).</li>
+<li><strong><em>Exactly-once</em></strong>: cada mensaje se procesa exactamente una vez. En flujos <em>Kafka → Kafka</em> se consigue con productores idempotentes (<code>enable.idempotence=true</code>, por defecto desde 3.0) y transacciones (<code>transactional.id</code>). En flujos hacia sistemas externos depende también del destino — la solución habitual es diseñar el destino para que sea idempotente.</li>
+</ul>
+</details>
+<details class="question">
+<summary>¿Por qué <em>Kafka 4.0</em> ha eliminado <em>ZooKeeper</em> y qué es <em>KRaft</em>?</summary>
+<p>Durante años <em>Kafka</em> dependía de <em>ZooKeeper</em> para gestionar los metadatos del clúster (lista de <em>brokers</em>, particiones líder, configuración...). Esto suponía mantener dos sistemas distribuidos distintos, con dos puntos de fallo, dos protocolos, y un límite práctico al escalar más allá de unas decenas de miles de particiones.</p>
+<p><strong><em>KRaft</em></strong> (<strong><em>Kafka Raft</em></strong>), introducido en <em>Kafka</em> 2.8 y declarado <em>production-ready</em> en 3.3, sustituye a <em>ZooKeeper</em> por un protocolo de consenso interno basado en <em>Raft</em>: algunos <em>brokers</em> asumen el rol de <em>controllers</em> y replican los metadatos entre ellos en un <em>topic</em> especial (<code>__cluster_metadata</code>).</p>
+<p>Las ventajas son:</p>
+<ul>
+<li><strong>Una sola tecnología</strong> que mantener, monitorizar y securizar.</li>
+<li><strong>Arranque mucho más rápido</strong> del clúster (segundos en lugar de minutos).</li>
+<li><strong>Escalabilidad</strong> a millones de particiones por clúster.</li>
+</ul>
+<p>Desde <em>Kafka 4.0</em> (marzo 2025), <em>ZooKeeper</em> se ha eliminado por completo y solo se soporta el modo <em>KRaft</em>.</p>
+</details>
+<details class="question">
+<summary>¿Qué son los <em>listeners</em> y los <em>advertised listeners</em>? ¿Por qué dan tantos problemas en <em>Docker</em>?</summary>
+<p>Son dos propiedades de configuración del <em>broker</em> con un rol distinto:</p>
+<ul>
+<li><strong><code>listeners</code></strong>: las direcciones (<code>host:puerto</code>) donde el <em>broker</em> <strong>escucha físicamente</strong> sus <em>sockets</em>.</li>
+<li><strong><code>advertised.listeners</code></strong>: las direcciones que el <em>broker</em> <strong>anuncia a los clientes</strong> cuando estos piden metadatos del clúster.</li>
+</ul>
+<p>Cuando un cliente se conecta, primero abre conexión a un <em>bootstrap server</em>, pero después <strong>se reconecta a la dirección anunciada</strong> por el <em>broker</em>. Si esa dirección no es resoluble desde el cliente (típico en <em>Docker</em>: el cliente está fuera de la red y el <em>broker</em> anuncia un <em>hostname</em> interno), el cliente da errores <code>NoBrokersAvailable</code> o <em>timeouts</em> después de la conexión inicial.</p>
+<p>La solución es configurar <strong>múltiples listeners con nombres distintos</strong> (por ejemplo <code>PLAINTEXT</code> para clientes internos y <code>EXTERNAL</code> para clientes desde el <em>host</em>), cada uno con su dirección anunciada apropiada al entorno desde donde se accede.</p>
+</details>
+<details class="question">
+<summary>¿Cómo se decide el número de particiones de un <em>topic</em>?</summary>
+<p>Es una decisión de diseño importante porque, aunque se pueden <strong>añadir</strong> particiones, no se pueden <strong>reducir</strong> sin recrear el <em>topic</em>, y añadirlas rompe la garantía de "misma clave → misma partición" para los mensajes nuevos.</p>
+<p>Las reglas prácticas son:</p>
+<ul>
+<li>El número de particiones marca el <strong>paralelismo máximo</strong> del lado consumidor: tener más consumidores que particiones no aporta nada (los sobrantes quedan ociosos).</li>
+<li>Se suele dimensionar como <code>max(throughput_objetivo / throughput_por_partición)</code>, donde el <em>throughput</em> por partición depende del hardware y del tipo de procesamiento (típicamente entre 10 y 100 MB/s).</li>
+<li><strong>Demasiadas particiones</strong> también tienen coste: más ficheros abiertos, más metadatos, <em>rebalances</em> más lentos, mayor consumo de memoria en clientes.</li>
+</ul>
+<p>Como punto de partida razonable: empezar con <strong>2-3 veces el número de consumidores previstos</strong>, y monitorizar el <em>lag</em> para ajustar.</p>
+</details>
+<details class="question">
+<summary>¿En qué se diferencia <em>Kafka</em> de <em>Apache Pulsar</em>, <em>Amazon Kinesis</em> o <em>Redis Streams</em>?</summary>
+<p>Todas son plataformas de mensajería/streaming, pero con enfoques distintos:</p>
+<ul>
+<li><strong>Apache Pulsar</strong>: arquitectura similar pero separa cómputo (<em>brokers</em>) y almacenamiento (<em>BookKeeper</em>), lo que facilita escalar de forma independiente. Soporta nativamente multi-tenancy y geo-replicación.</li>
+<li><strong>Amazon Kinesis</strong>: servicio gestionado de AWS, equivalente conceptual a <em>Kafka</em> pero sin necesidad de operar infraestructura. Menos flexibilidad y <em>vendor lock-in</em>, a cambio de cero mantenimiento.</li>
+<li><strong>Redis Streams</strong>: estructura dentro de <em>Redis</em> para mensajería con persistencia opcional. Excelente latencia, pero limitado en <em>throughput</em> y durabilidad respecto a <em>Kafka</em>.</li>
+</ul>
+<p><em>Kafka</em> sigue siendo el estándar de facto cuando se necesitan <strong>alto <em>throughput</em>, retención larga, ecosistema de conectores y procesamiento de streams</strong> (<em>Kafka Streams</em>, <em>Flink</em>, <em>Spark Streaming</em>).</p>
+</details>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.packtpub.com/product/apache-kafka-series-learn-apache-kafka-for-beginners-video/9781789342604">Apache Kafka Series - Learn Apache Kafka for Beginners</a></li>
