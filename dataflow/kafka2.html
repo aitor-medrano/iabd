@@ -2130,6 +2130,14 @@
   </span>
   
   
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
 
       </a>
     </li>
@@ -4332,7 +4340,7 @@
 
 
 <h1 id="apache-kafka-avanzado">Apache Kafka Avanzado<a class="headerlink" href="#apache-kafka-avanzado" title="Permanent link">&para;</a></h1>
-<p>En esta sesión estudiaremos cómo crear un <em>cluster</em> de <em>Kafka</em>, realizamos una integración desde un servicio REST hasta su persistencia en S3 y <em>MongoDB</em> haciendo uso de <em>Kafka</em> como <em>middleware</em> de integración, y finalmente veremos como utilizar <em>Kafka Connect</em> para integrar sistemas.</p>
+<p>En esta sesión estudiaremos cómo crear un <em>cluster</em> de <em>Kafka</em>, realizaremos una integración desde un servicio REST hasta su persistencia en S3 y <em>MongoDB</em> haciendo uso de <em>Kafka</em> como <em>middleware</em> de integración, y finalmente veremos como utilizar <em>Kafka Connect</em> para integrar sistemas.</p>
 <h2 id="caso-2-cluster-de-kafka">Caso 2: Clúster de Kafka<a class="headerlink" href="#caso-2-cluster-de-kafka" title="Permanent link">&para;</a></h2>
 <p>En <em>Kafka</em> hay tres tipos de clústers:</p>
 <ul>
@@ -4343,7 +4351,7 @@
 <p>Para nuestro ejemplo, como sólo disponemos de una máquina, crearemos 3 <em>brokers</em> en un nodo.</p>
 <h3 id="creando-brokers">Creando brokers<a class="headerlink" href="#creando-brokers" title="Permanent link">&para;</a></h3>
 <p>Para ello, vamos a crear diferentes archivos de configuración a partir del fichero <code>config/server.properties</code> que utilizábamos para arrancar el servidor.</p>
-<p>Así pues, crearemos 3 copias del archivo modificando las propiedades <code>broker.id</code> (identificador del <em>broker</em>), <code>listeners</code> (URL y puerto de escucha del <em>broker</em>) y <code>log.dirs</code> (carpeta donde se guardaran los logs del <em>broker</em>):</p>
+<p>Así pues, crearemos 3 copias del archivo modificando las propiedades <code>broker.id</code> (identificador del <em>broker</em>), <code>listeners</code> (URL y puerto de escucha del <em>broker</em>) y <code>log.dirs</code> (carpeta donde se guardarán los logs del <em>broker</em>):</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Broker 101</label><label for="__tabbed_1_2">Broker 102</label><label for="__tabbed_1_3">Broker 103</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -4401,7 +4409,7 @@
 <p>Respecto al código Python, va a ser el mismo que hemos visto antes pero modificando:</p>
 <ul>
 <li>el nombre del <em>topic</em></li>
-<li>la lista de <em>boostrap_servers</em> (aunque podríamos haber dejado únicamente el nodo principal, ya que <em>Kafka</em> le comunica al cliente el resto de nodos del clúster, es una buena práctica por si el nodo al que nos conectamos de manera explícita está caído).</li>
+<li>la lista de <em>bootstrap_servers</em> (aunque podríamos haber dejado únicamente el nodo principal, ya que <em>Kafka</em> le comunica al cliente el resto de nodos del clúster, es una buena práctica por si el nodo al que nos conectamos de manera explícita está caído).</li>
 </ul>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Productor</label><label for="__tabbed_2_2">Consumidor</label></div>
 <div class="tabbed-content">
@@ -4602,7 +4610,7 @@
 <span class="linenos" data-linenos="22 "></span>
 <span class="linenos" data-linenos="23 "></span>    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
-<p>A continuación definimos las conexiones necesarios para los pasos 1 (consumir <em>Kafka</em> en el topic <em>silver</em>), 2 (enviar a <em>S3</em>), 3 (persistir en <em>MongoDB</em>) y 5 (producir <em>Kafka</em> en el topic <em>gold</em>):</p>
+<p>A continuación definimos las conexiones necesarias para los pasos 1 (consumir <em>Kafka</em> en el topic <em>silver</em>), 2 (enviar a <em>S3</em>), 3 (persistir en <em>MongoDB</em>) y 5 (producir <em>Kafka</em> en el topic <em>gold</em>):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="24 "></span><span class="c1"># Paso 1 - Consumir Silver</span>
 <span class="linenos" data-linenos="25 "></span><span class="n">consumer</span> <span class="o">=</span> <span class="n">KafkaConsumer</span><span class="p">(</span>
 <span class="linenos" data-linenos="26 "></span>    <span class="s1">&#39;iabd-aemet-silver&#39;</span><span class="p">,</span>
@@ -4667,7 +4675,7 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span><span class="nt">&quot;ciudad&quot;</span><span class="p">:</span><span class="s2">&quot;Elche\/Elx&quot;</span><span class="p">,</span><span class="nt">&quot;fecha&quot;</span><span class="p">:</span><span class="mi">1679416092670</span><span class="p">,</span><span class="nt">&quot;temp&quot;</span><span class="p">:</span><span class="mf">20.8</span><span class="p">,</span><span class="nt">&quot;humedad&quot;</span><span class="p">:</span><span class="mf">50.0</span><span class="p">}</span>
 </code></pre></div>
 <h2 id="caso-4-ahora-con-nifi">Caso 4: Ahora con Nifi<a class="headerlink" href="#caso-4-ahora-con-nifi" title="Permanent link">&para;</a></h2>
-<p>Vamos a repetir el flujo de datos que acabamos de crear en el caso anterior, pero implementandolos mediante <em>Nifi</em> de forma similar al <a href="nifi2.html#caso-7-de-aemet-a-mongodb-y-s3">caso 7 de la segunda sesión de Nifi</a>.</p>
+<p>Vamos a repetir el flujo de datos que acabamos de crear en el caso anterior, pero implementándolos mediante <em>Nifi</em> de forma similar al <a href="nifi2.html#caso-7-de-aemet-a-mongodb-y-s3">caso 7 de la segunda sesión de Nifi</a>.</p>
 <div class="admonition info">
 <p class="admonition-title">Configuración de procesadores de Nifi</p>
 <p>En este apartado hemos obviado la configuración de todos los procesadores vistos en el <a href="nifi2.html#caso-7-de-aemet-a-mongodb-y-s3">caso 7 de Nifi</a>, ya que podemos copiar y pegarlos dentro de nuevos grupos de procesadores y evitarnos tener que volver a configurarlos.</p>
@@ -4847,7 +4855,7 @@ Una vez que los datos se almacenan en <em>Kafka</em> como eventos, podemos proce
 <li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / opcional) Realiza el caso de uso 4 mediante <em>Nifi</em>, pero modificando el primer flujo para que un grupo de procesadores únicamente realice la petición REST y coloque el contenido en <em>topic</em> <code>iabd-aemet-bronze</code> y en un segundo grupo, se consuman los mensajes de ese <em>topic</em> y se realice la transformación de la petición REST y su posterior producción al <em>topic</em> <code>iabd-aemet-silver</code>.</li>
 <li>
 <p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 2p) A partir del ejemplo realizado en el apartado de <em>Kafka Connect</em>, añade otro conector para que consuma los mensajes de la cola y los inserte en <em>MongoDB</em> de forma automática. Para ello, puedes utilizar el <a href="https://www.confluent.io/hub/mongodb/kafka-connect-mongodb">MongoDB Connector (Source and Sink)</a> y consultar su <a href="https://www.mongodb.com/docs/kafka-connector/current/">documentación</a> y un ejemplo de <a href="https://github.com/mongodb/mongo-kafka/blob/master/config/MongoSinkConnector.properties">fichero de configuración</a>.</p>
-<p>Ten en cuenta que para lanzar los dos conectores a la ver deberás lanzar <em>Kafka Connect</em> y pasarle todos los conectores como parámetros:</p>
+<p>Ten en cuenta que para lanzar los dos conectores a la vez deberás lanzar <em>Kafka Connect</em> y pasarle todos los conectores como parámetros:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>connect-standalone.sh<span class="w"> </span>config/connect-standalone.properties<span class="w"> </span>config/mysql-source-connector.properties<span class="w"> </span>config/mongodb-sink-connector.properties
 </code></pre></div>
 </li>

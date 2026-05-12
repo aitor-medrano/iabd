@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 520" role="img" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <title>Cuatro rutas posibles para conectarse al broker Kafka en Docker</title>
+  <desc>Diagrama de red que muestra el host y la red Docker con un broker Kafka que expone los listeners PLAINTEXT en el puerto 9092 (interno) y EXTERNAL en el 9094 (publicado). Sobre la arquitectura se trazan cuatro rutas: dos correctas (host a localhost:9094 y Jupyter a kafka:9092) y dos erróneas (host a localhost:9092 falla en TCP y host a localhost:9094 con anuncio mal configurado falla en la reconexión).</desc>
+  <defs>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- Host (frontera externa) -->
+  <rect x="20" y="20" width="640" height="380" rx="14" fill="none" stroke="#888780" stroke-width="0.5" stroke-dasharray="4 3"/>
+  <text x="34" y="40" font-size="12" fill="#5F5E5A">Host (tu portátil)</text>
+
+  <!-- productor.py -->
+  <rect x="40" y="70" width="160" height="56" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+  <text x="120" y="92" text-anchor="middle" font-size="14" font-weight="500" fill="#2C2C2A">productor.py</text>
+  <text x="120" y="112" text-anchor="middle" font-size="12" fill="#5F5E5A">en el host</text>
+
+  <!-- Red Docker -->
+  <rect x="240" y="60" width="400" height="320" rx="14" fill="none" stroke="#185FA5" stroke-width="0.5" stroke-dasharray="4 3"/>
+  <text x="254" y="80" font-size="12" fill="#185FA5">Red Docker (spark-net)</text>
+
+  <!-- contenedor kafka -->
+  <rect x="380" y="100" width="220" height="180" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+  <text x="490" y="124" text-anchor="middle" font-size="14" font-weight="500" fill="#0C447C">kafka</text>
+  <text x="490" y="144" text-anchor="middle" font-size="12" fill="#185FA5">contenedor del broker</text>
+
+  <!-- listener PLAINTEXT -->
+  <rect x="400" y="166" width="180" height="44" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+  <text x="490" y="183" text-anchor="middle" font-size="14" font-weight="500" fill="#085041">PLAINTEXT :9092</text>
+  <text x="490" y="200" text-anchor="middle" font-size="12" fill="#0F6E56">anuncia kafka:9092</text>
+
+  <!-- listener EXTERNAL -->
+  <rect x="400" y="220" width="180" height="44" rx="6" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+  <text x="490" y="237" text-anchor="middle" font-size="14" font-weight="500" fill="#633806">EXTERNAL :9094</text>
+  <text x="490" y="254" text-anchor="middle" font-size="12" fill="#854F0B">anuncia localhost:9094</text>
+
+  <!-- Jupyter -->
+  <rect x="260" y="310" width="160" height="56" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+  <text x="340" y="332" text-anchor="middle" font-size="14" font-weight="500" fill="#2C2C2A">Jupyter</text>
+  <text x="340" y="352" text-anchor="middle" font-size="12" fill="#5F5E5A">otro contenedor</text>
+
+  <!-- Ruta 1: host -> localhost:9094 (EXTERNAL) - OK -->
+  <line x1="200" y1="98" x2="396" y2="232" stroke="#0F6E56" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <circle cx="298" cy="165" r="11" fill="#0F6E56"/>
+  <text x="298" y="170" text-anchor="middle" font-size="14" font-weight="500" fill="#ffffff">1</text>
+
+  <!-- Ruta 2: Jupyter -> kafka:9092 (PLAINTEXT) - OK -->
+  <line x1="340" y1="310" x2="396" y2="184" stroke="#0F6E56" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <circle cx="368" cy="247" r="11" fill="#0F6E56"/>
+  <text x="368" y="252" text-anchor="middle" font-size="14" font-weight="500" fill="#ffffff">2</text>
+
+  <!-- Ruta 3: host -> localhost:9092 - FALLA TCP -->
+  <line x1="200" y1="112" x2="266" y2="142" stroke="#A32D2D" stroke-width="2" stroke-dasharray="5 3"/>
+  <line x1="266" y1="142" x2="280" y2="148" stroke="#A32D2D" stroke-width="2"/>
+  <text x="285" y="158" font-size="22" font-weight="500" fill="#A32D2D">×</text>
+  <circle cx="220" cy="138" r="11" fill="#A32D2D"/>
+  <text x="220" y="143" text-anchor="middle" font-size="14" font-weight="500" fill="#ffffff">3</text>
+
+  <!-- Ruta 4: host -> reconexion a kafka:9092 - FALLA DNS -->
+  <path d="M 120 126 Q 120 410 280 410" fill="none" stroke="#A32D2D" stroke-width="2" stroke-dasharray="5 3"/>
+  <line x1="280" y1="410" x2="320" y2="410" stroke="#A32D2D" stroke-width="2"/>
+  <text x="324" y="418" font-size="22" font-weight="500" fill="#A32D2D">×</text>
+  <circle cx="200" cy="410" r="11" fill="#A32D2D"/>
+  <text x="200" y="415" text-anchor="middle" font-size="14" font-weight="500" fill="#ffffff">4</text>
+
+  <!-- Leyenda -->
+  <rect x="20" y="440" width="640" height="70" rx="8" fill="none" stroke="#D3D1C7" stroke-width="0.5"/>
+
+  <circle cx="42" cy="462" r="9" fill="#0F6E56"/>
+  <text x="42" y="467" text-anchor="middle" font-size="14" font-weight="500" fill="#ffffff">1</text>
+  <text x="60" y="467" font-size="12" fill="#2C2C2A">Host a localhost:9094 — ok</text>
+
+  <circle cx="42" cy="492" r="9" fill="#0F6E56"/>
+  <text x="42" y="497" text-anchor="middle" font-size="14" font-weight="500" fill="#ffffff">2</text>
+  <text x="60" y="497" font-size="12" fill="#2C2C2A">Jupyter a kafka:9092 — ok</text>
+
+  <circle cx="350" cy="462" r="9" fill="#A32D2D"/>
+  <text x="350" y="467" text-anchor="middle" font-size="14" font-weight="500" fill="#ffffff">3</text>
+  <text x="368" y="467" font-size="12" fill="#2C2C2A">Host a localhost:9092 — falla TCP de inmediato</text>
+
+  <circle cx="350" cy="492" r="9" fill="#A32D2D"/>
+  <text x="350" y="497" text-anchor="middle" font-size="14" font-weight="500" fill="#ffffff">4</text>
+  <text x="368" y="497" font-size="12" fill="#2C2C2A">Host a kafka:9092 (anuncio erróneo) — falla al reconectar</text>
+</svg>
