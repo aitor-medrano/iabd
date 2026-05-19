@@ -46,11 +46,23 @@ services:
     image: apache/hive:4.0.1
     container_name: iabd-hive-init
     profiles: ["spark", "spark-single"]
-    entrypoint: /opt/hive/bin/schematool
-    command: ["-initSchema", "-dbType", "mysql",
-              "-url", "jdbc:mysql://mysql-metastore:3306/hive_metastore?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true",
-              "-driver", "com.mysql.cj.jdbc.Driver",
-              "-userName", "hive", "-passWord", "hivepass"]
+    # Idempotente: si el schema ya existe (-info devuelve 0), no reinicializa.
+    # Si no existe (-info devuelve != 0), lanza -initSchema.
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        URL="jdbc:mysql://mysql-metastore:3306/hive_metastore?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true"
+        if /opt/hive/bin/schematool -info -dbType mysql \
+             -url "$$URL" -driver com.mysql.cj.jdbc.Driver \
+             -userName hive -passWord hivepass > /dev/null 2>&1; then
+          echo ">>> Hive Metastore ya inicializado, no se hace nada."
+        else
+          echo ">>> Inicializando Hive Metastore..."
+          /opt/hive/bin/schematool -initSchema -dbType mysql \
+            -url "$$URL" -driver com.mysql.cj.jdbc.Driver \
+            -userName hive -passWord hivepass
+        fi
     volumes:
       - ./jars/mysql-connector-j-8.0.33.jar:/opt/hive/lib/mysql-connector-j-8.0.33.jar
     depends_on:
@@ -137,6 +149,8 @@ services:
     image: apache/kafka:latest
     container_name: iabd-kafka
     hostname: kafka
+    extra_hosts:
+      - "kafka:127.0.0.1"
     profiles: ["kafka"]
     environment:
       KAFKA_NODE_ID: 1
@@ -165,6 +179,29 @@ services:
     networks:
       - spark-net
 
+  # ------------------------------------------------------------
+  #  UI unificada para ambas topologías Kafka.
+  #  Configura dos clusters; el alumno verá uno sano y otro
+  #  "offline" según el profile que tenga arrancado. La URL
+  #  http://localhost:8081 es siempre la misma.
+  # ------------------------------------------------------------
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: iabd-kafka-ui
+    hostname: kafka-ui
+    profiles: ["kafka", "kafka-cluster"]
+    environment:
+      # Cluster 0: broker único (visible cuando arrancas --profile kafka)
+      KAFKA_CLUSTERS_0_NAME: single
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      # Cluster 1: cluster de 3 nodos (visible con --profile kafka-cluster)
+      KAFKA_CLUSTERS_1_NAME: cluster
+      KAFKA_CLUSTERS_1_BOOTSTRAPSERVERS: kafka-1:9092,kafka-2:9092,kafka-3:9092
+    ports:
+      - '8081:8080'
+    networks:
+      - spark-net
+
   # ============================================================
   #  Kafka - Clúster de 3 brokers KRaft (profile: kafka-cluster)
   #  Para Kafka 2 - Caso 2
@@ -177,6 +214,8 @@ services:
     image: apache/kafka:latest
     container_name: iabd-kafka-1
     hostname: kafka-1
+    extra_hosts:
+      - "kafka-1:127.0.0.1"
     profiles: ["kafka-cluster"]
     environment:
       KAFKA_NODE_ID: 1
@@ -211,6 +250,8 @@ services:
     image: apache/kafka:latest
     container_name: iabd-kafka-2
     hostname: kafka-2
+    extra_hosts:
+      - "kafka-2:127.0.0.1"
     profiles: ["kafka-cluster"]
     environment:
       KAFKA_NODE_ID: 2
@@ -245,6 +286,8 @@ services:
     image: apache/kafka:latest
     container_name: iabd-kafka-3
     hostname: kafka-3
+    extra_hosts:
+      - "kafka-3:127.0.0.1"
     profiles: ["kafka-cluster"]
     environment:
       KAFKA_NODE_ID: 3
@@ -272,29 +315,6 @@ services:
       interval: 15s
       timeout: 10s
       retries: 10
-    networks:
-      - spark-net
-
-  # ------------------------------------------------------------
-  #  UI unificada para ambas topologías Kafka.
-  #  Configura dos clusters; el alumno verá uno sano y otro
-  #  "offline" según el profile que tenga arrancado. La URL
-  #  http://localhost:8081 es siempre la misma.
-  # ------------------------------------------------------------
-  kafka-ui:
-    image: provectuslabs/kafka-ui:latest
-    container_name: iabd-kafka-ui
-    hostname: kafka-ui
-    profiles: ["kafka", "kafka-cluster"]
-    environment:
-      # Cluster 1: broker único (solo accesible si arrancas --profile kafka)
-      KAFKA_CLUSTERS_0_NAME: single
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-      # Cluster 2: cluster de 3 nodos (solo accesible si arrancas --profile kafka-cluster)
-      KAFKA_CLUSTERS_1_NAME: cluster
-      KAFKA_CLUSTERS_1_BOOTSTRAPSERVERS: kafka-1:9092,kafka-2:9092,kafka-3:9092
-    ports:
-      - '8081:8080'
     networks:
       - spark-net
 

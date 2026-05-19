@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -2595,12 +2595,20 @@
   <span class="md-ellipsis">
     
   
-    Kafka Avanzado
+    Kafka Clúster
   
 
     
   </span>
   
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
   
 
       </a>
@@ -4853,7 +4861,7 @@ El procesador <em>SplitText</em> nos permite dividir cualquier flujo de texto en
 <h2 id="caso-7-de-aemet-a-mongodb-y-s3">Caso 7: de AEMET a MongoDB y S3<a class="headerlink" href="#caso-7-de-aemet-a-mongodb-y-s3" title="Permanent link">&para;</a></h2>
 <p>Para este caso de uso, vamos a recoger datos de un servicio REST, en concreto, datos climatológicos de la Agencia Estatal de METeorología (AEMET) y los vamos a persistir tanto en <em>MongoDB</em> como en un lago de datos almacenado en <em>S3</em>.</p>
 <p>Aunque <a href="https://www.aemet.es/">AEMET</a> ofrece su <a href="https://opendata.aemet.es/centrodedescargas/inicio">propia API</a> para obtener datos, vamos a utilizar el <a href="https://www.el-tiempo.net/api">API pública</a> de <a href="https://www.el-tiempo.net">https://www.el-tiempo.net</a>, la cual simplifica su uso.</p>
-<p>En concreto, nos vamos a centrar en realizar llamadas a la  URL <a href="https://www.el-tiempo.net/api/json/v2/provincias/03/municipios/03065">https://www.el-tiempo.net/api/json/v2/provincias/03/municipios/03065</a>, en la cual vamos a recuperar los datos del municipio de Elche (<code>03065</code>) que pertenece a la provincia de Alicante (<code>03</code>), obteniendo datos similares a:</p>
+<p>En concreto, nos vamos a centrar en realizar llamadas a la  URL <a href="https://api.el-tiempo.net/json/v3/provincias/03/municipios/03065">https://api.el-tiempo.net/json/v3/provincias/03/municipios/03065</a>, en la cual vamos a recuperar los datos del municipio de Elche (<code>03065</code>) que pertenece a la provincia de Alicante (<code>03</code>), obteniendo datos similares a:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">&quot;origin&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">&quot;productor&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Agencia Estatal de Meteorología - AEMET. Gobierno de España&quot;</span><span class="p">,</span>
@@ -4893,7 +4901,7 @@ El procesador <em>SplitText</em> nos permite dividir cualquier flujo de texto en
 </code></pre></div>
 <p>De todos los datos recuperados, nos vamos a centrar en recuperar la ciudad, la temperatura y la humedad.</p>
 <h3 id="bronze-peticion-rest-y-s3">Bronze: Petición REST y S3<a class="headerlink" href="#bronze-peticion-rest-y-s3" title="Permanent link">&para;</a></h3>
-<p>Para recuperar los datos a partir del servicio REST necesitamos utilizar el procesador <a href="https://nifi.apache.org/docs/nifi-docs/components/org.apache.nifi/nifi-standard-nar/latest/org.apache.nifi.processors.standard.InvokeHTTP/index.html">InvokeHTTP</a>, mediante el cual hacemos la petición GET a la URL <a href="https://www.el-tiempo.net/api/json/v2/provincias/03/municipios/03065">https://www.el-tiempo.net/api/json/v2/provincias/03/municipios/03065</a>.</p>
+<p>Para recuperar los datos a partir del servicio REST necesitamos utilizar el procesador <a href="https://nifi.apache.org/docs/nifi-docs/components/org.apache.nifi/nifi-standard-nar/latest/org.apache.nifi.processors.standard.InvokeHTTP/index.html">InvokeHTTP</a>, mediante el cual hacemos la petición GET a la URL <a href="https://api.el-tiempo.net/json/v3/provincias/03/municipios/03065">https://api.el-tiempo.net/json/v3/provincias/03/municipios/03065</a>.</p>
 <p>En este ejemplo, hemos definido que se ejecute cada 60 segundos (en la pestaña <em>Scheduling</em>, completamos la propiedad <em>Run Schedule</em> a <code>60 sec</code>).</p>
 <p>Para seguir el enfoque de <em>data lake</em>, vamos a almacenar en crudo el resultado de la petición en S3, utilizando el procesador <em>PutS3Object</em>, pero previamente necesitamos añadir el atributo <code>filename</code> para ponerle un nombre el archivo guardado.</p>
 <div class="admonition info">
