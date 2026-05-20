@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -2402,10 +2402,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#configuracion" class="md-nav__link">
+  <a href="#instalando-conectores" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuración
+        Instalando conectores
       
     </span>
   </a>
@@ -2413,10 +2413,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#extrayendo-datos-mediante-kafka-connect" class="md-nav__link">
+  <a href="#extrayendo-datos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Extrayendo datos mediante Kafka Connect
+        Extrayendo datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cargando-datos-en-s3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cargando datos en S3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comprobando-el-resultado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comprobando el resultado
       
     </span>
   </a>
@@ -4190,10 +4212,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#configuracion" class="md-nav__link">
+  <a href="#instalando-conectores" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuración
+        Instalando conectores
       
     </span>
   </a>
@@ -4201,10 +4223,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#extrayendo-datos-mediante-kafka-connect" class="md-nav__link">
+  <a href="#extrayendo-datos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Extrayendo datos mediante Kafka Connect
+        Extrayendo datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cargando-datos-en-s3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cargando datos en S3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comprobando-el-resultado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comprobando el resultado
       
     </span>
   </a>
@@ -4440,7 +4484,7 @@
 <p>server101.properties</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">broker.id</span><span class="o">=</span><span class="s">101</span>
 <span class="linenos" data-linenos="2 "></span><span class="na">listeners</span><span class="o">=</span><span class="s">PLAINTEXT://:9092</span>
-<span class="linenos" data-linenos="3 "></span><span class="na">log.dirs</span><span class="o">=</span><span class="s">/opt/kafka_2.13-3.3.1/logs/broker_101</span>
+<span class="linenos" data-linenos="3 "></span><span class="na">log.dirs</span><span class="o">=</span><span class="s">$KAFKA_HOME/logs/broker_101</span>
 <span class="linenos" data-linenos="4 "></span><span class="na">zookeeper.connect</span><span class="o">=</span><span class="s">localhost:2181</span>
 </code></pre></div>
 </div>
@@ -4448,7 +4492,7 @@
 <p>server102.properties</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">broker.id</span><span class="o">=</span><span class="s">102</span>
 <span class="linenos" data-linenos="2 "></span><span class="na">listeners</span><span class="o">=</span><span class="s">PLAINTEXT://:9093</span>
-<span class="linenos" data-linenos="3 "></span><span class="na">log.dirs</span><span class="o">=</span><span class="s">/opt/kafka_2.13-3.3.1/logs/broker_102</span>
+<span class="linenos" data-linenos="3 "></span><span class="na">log.dirs</span><span class="o">=</span><span class="s">$KAFKA_HOME/logs/broker_102</span>
 <span class="linenos" data-linenos="4 "></span><span class="na">zookeeper.connect</span><span class="o">=</span><span class="s">localhost:2181</span>
 </code></pre></div>
 </div>
@@ -4456,7 +4500,7 @@
 <p>server103.properties</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">broker.id</span><span class="o">=</span><span class="s">103</span>
 <span class="linenos" data-linenos="2 "></span><span class="na">listeners</span><span class="o">=</span><span class="s">PLAINTEXT://:9094</span>
-<span class="linenos" data-linenos="3 "></span><span class="na">log.dirs</span><span class="o">=</span><span class="s">/opt/kafka_2.13-3.3.1/logs/broker_103</span>
+<span class="linenos" data-linenos="3 "></span><span class="na">log.dirs</span><span class="o">=</span><span class="s">$KAFKA_HOME/logs/broker_103</span>
 <span class="linenos" data-linenos="4 "></span><span class="na">zookeeper.connect</span><span class="o">=</span><span class="s">localhost:2181</span>
 </code></pre></div>
 </div>
@@ -4918,7 +4962,7 @@
 <li>crearemos un consumidor con los mensajes de la cola <em>silver</em></li>
 <li>y almacenamos los mensajes en S3</li>
 <li>además, el mismo mensaje lo insertaremos en MongoDB en la colección <code>caso3</code></li>
-<li>y cuando tengamos 10 mensajes crearemos uno nuevo con el cálculo de la temperaturas y humedades medias</li>
+<li>y cuando tengamos 10 mensajes crearemos uno nuevo con el cálculo de la temperatura y la humedad medias</li>
 <li>para finalmente producir dicho mensaje al topic <code>iabd-aemet-gold</code>.</li>
 </ol>
 <p>Así pues, primero creamos el <em>topic</em> <em>gold</em>:</p>
@@ -5006,7 +5050,7 @@
 <span class="linenos" data-linenos="36 "></span>    <span class="k">else</span><span class="p">:</span>
 <span class="linenos" data-linenos="37 "></span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mensaje gold enviado [P:</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">partition</span><span class="p">()</span><span class="si">}</span><span class="s2"> O:</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">offset</span><span class="p">()</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Y para cada mensaje que consumimos, realizamos los pasos 2 (enviar a <em>S3</em>), 3 (persistir en <em>MongoDB</em>), 4 (calcular los datos agregados) y 5 (producir en <em>Kafka</em> en <em>gold</em>):</p>
+<p>Y para cada mensaje que consumimos, realizaremos los pasos 2 (enviar a <em>S3</em>), 3 (persistir en <em>MongoDB</em>), 4 (calcular los datos agregados) y 5 (producir en <em>Kafka</em> en <em>gold</em>):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 40 "></span><span class="n">mensajes</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="linenos" data-linenos=" 41 "></span>
 <span class="linenos" data-linenos=" 42 "></span><span class="k">try</span><span class="p">:</span>
@@ -5136,8 +5180,8 @@
 -->
 
 <h2 id="kafka-connect">Kafka Connect<a class="headerlink" href="#kafka-connect" title="Permanent link">&para;</a></h2>
-<p>Si hacerlo con <em>Nifi</em> ya es un avance respecto a tener que codificarlo con <em>Python</em>, ¿qué dirías si <em>Kafka</em> ofreciera una serie de conectores para las operaciones más comunes?</p>
-<p>Así pues, <em>Kafka Connect</em> permite importar/exportar datos desde/hacia <em>Kafka</em>, facilitando la integración en sistemas existentes mediante alguno del <a href="https://www.confluent.io/hub/">centenar de conectores disponibles</a>.</p>
+<p>Si hacerlo con <em>Nifi</em> ya es un avance respecto a tener que codificarlo con <em>Python</em>, ¿qué dirías si <em>Kafka</em> ofreciera una serie de conectores ya programados para las operaciones más comunes?</p>
+<p><a href="https://kafka.apache.org/42/kafka-connect/overview/"><em>Kafka Connect</em></a> permite importar y exportar datos desde/hacia <em>Kafka</em>, facilitando la integración con sistemas existentes mediante alguno del <a href="https://www.confluent.io/hub/">centenar de conectores disponibles</a>. En lugar de escribir un productor o un consumidor, declaramos un conector con un fichero de configuración y <em>Kafka Connect</em> se encarga del resto: paralelización, reintentos, control de <em>offsets</em> y tolerancia a fallos.</p>
 <figure style="align: center;">
     <img src="images/03kafka-connect.png">
     <figcaption>Arquitectura Kafka Connect</figcaption>
@@ -5145,24 +5189,137 @@
 
 <p>Los elementos que forman <em>Kafka Connect</em> son:</p>
 <ul>
-<li>Conectores fuente (<em>source</em>), para obtener datos desde las fuentes de datos (E en ETL)</li>
-<li>Conectores destino (<em>sink</em>) para publicar los datos en los almacenes de datos (L en ETL).</li>
+<li><strong>Conectores fuente</strong> (<em>source</em>), para obtener datos desde las fuentes de datos (la <strong>E</strong> de <em>ETL</em>).</li>
+<li><strong>Conectores destino</strong> (<em>sink</em>), para publicar los datos en almacenes de datos externos (la <strong>L</strong> de <em>ETL</em>).</li>
 </ul>
-<p>Estos conectores facilitan que desarrolladores no expertos puedan trabajar con sus datos en <em>Kafka</em> de forma rápida y fiable, de manera que podamos introducir <em>Kafka</em> dentro de nuestros procesos ETL.</p>
+<p>Entre ambos, <em>Kafka</em> actúa como <em>buffer</em> desacoplado: el conector <em>source</em> escribe en un <em>topic</em> y el conector <em>sink</em> lee de él, sin que ninguno conozca al otro.</p>
+<div class="admonition info">
+<p class="admonition-title">Standalone vs Distributed</p>
+<p><em>Kafka Connect</em> puede ejecutarse en dos modos:</p>
+<ul>
+<li><strong>Standalone</strong>: un único proceso (<em>worker</em>). El estado de los <em>offsets</em> se guarda en un fichero local (<code>offset.storage.file.filename</code>). Es sencillo, pero no escala ni tolera fallos. Se arranca con <code>connect-standalone.sh</code> pasándole los conectores como ficheros <code>.properties</code>.</li>
+<li><strong>Distributed</strong>: uno o varios <em>workers</em> coordinados que comparten el mismo <code>group.id</code>. El estado (configuración, <em>offsets</em> y estado de los conectores) se guarda en <em>topics</em> internos de <em>Kafka</em> (<code>connect-configs</code>, <code>connect-offsets</code>, <code>connect-status</code>), de modo que si un <em>worker</em> cae, otro retoma su trabajo. Los conectores se gestionan <strong>vía API REST con documentos JSON</strong>.</li>
+</ul>
+<p>En la máquina virtual usaremos el modo <em>standalone</em> por simplicidad; en <em>Docker</em> usaremos el modo <em>distributed</em>, que es el que se utiliza en entornos reales.</p>
+</div>
 <h3 id="hola-kafka-connect">Hola Kafka Connect<a class="headerlink" href="#hola-kafka-connect" title="Permanent link">&para;</a></h3>
-<p>Vamos a realizar un ejemplo muy sencillo leyendo datos de una base de datos para meterlos en Kafka.</p>
-<p>Para ello, utilizaremos la base de datos de <em>retail_db</em> que ya hemos empleado en <a href="../hadoop/flume.html#actividades">otras sesiones</a> y vamos a cargar en <em>Kafka</em> los datos de la tabla <code>categories</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">MariaDB</span><span class="w"> </span><span class="err">[</span><span class="n">retail_db</span><span class="err">]</span><span class="o">&gt;</span><span class="w"> </span><span class="k">describe</span><span class="w"> </span><span class="n">categories</span><span class="p">;</span>
-<span class="linenos" data-linenos="2 "></span><span class="o">+------------------------+-------------+------+-----+---------+----------------+</span>
-<span class="linenos" data-linenos="3 "></span><span class="o">|</span><span class="w"> </span><span class="n">Field</span><span class="w">                  </span><span class="o">|</span><span class="w"> </span><span class="k">Type</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="no">Null</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">Key</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">Default</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Extra</span><span class="w">          </span><span class="o">|</span>
-<span class="linenos" data-linenos="4 "></span><span class="o">+------------------------+-------------+------+-----+---------+----------------+</span>
-<span class="linenos" data-linenos="5 "></span><span class="o">|</span><span class="w"> </span><span class="n">category_id</span><span class="w">            </span><span class="o">|</span><span class="w"> </span><span class="kt">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="k">NO</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="n">PRI</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">NULL</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">auto_increment</span><span class="w"> </span><span class="o">|</span>
-<span class="linenos" data-linenos="6 "></span><span class="o">|</span><span class="w"> </span><span class="n">category_department_id</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kt">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="k">NO</span><span class="w">   </span><span class="o">|</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="no">NULL</span><span class="w">    </span><span class="o">|</span><span class="w">                </span><span class="o">|</span>
-<span class="linenos" data-linenos="7 "></span><span class="o">|</span><span class="w"> </span><span class="n">category_name</span><span class="w">          </span><span class="o">|</span><span class="w"> </span><span class="kt">varchar</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">NO</span><span class="w">   </span><span class="o">|</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="no">NULL</span><span class="w">    </span><span class="o">|</span><span class="w">                </span><span class="o">|</span>
-<span class="linenos" data-linenos="8 "></span><span class="o">+------------------------+-------------+------+-----+---------+----------------</span>
+<p>Vamos a realizar un ejemplo sencillo: leer los datos de una tabla de una base de datos relacional e introducirlos automáticamente en un <em>topic</em> de <em>Kafka</em>.</p>
+<p>Utilizaremos la base de datos <code>retail_db</code> que ya hemos empleado en <a href="../hadoop/sqoop.html#actividades">otras sesiones</a> y cargaremos en <em>Kafka</em> los datos de la tabla <code>categories</code>:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked="checked" id="__tabbed_13_1" name="__tabbed_13" type="radio" /><input id="__tabbed_13_2" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="__tabbed_13_1">Docker</label><label for="__tabbed_13_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>En el stack del curso, <code>retail_db</code> se encuentra en el contenedor <code>iabd-mysql-datos</code> (perfil <code>datos</code>). Podemos consultar la estructura de la tabla con:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>iabd-mysql-datos<span class="w"> </span>mysql<span class="w"> </span>-uiabd<span class="w"> </span>-piabd<span class="w"> </span>retail_db<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;describe categories;&quot;</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># +------------------------+-------------+------+-----+---------+----------------+</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1"># | Field                  | Type        | Null | Key | Default | Extra          |</span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># +------------------------+-------------+------+-----+---------+----------------+</span>
+<span class="linenos" data-linenos="5 "></span><span class="c1"># | category_id            | int         | NO   | PRI | NULL    | auto_increment |</span>
+<span class="linenos" data-linenos="6 "></span><span class="c1"># | category_department_id | int         | NO   |     | NULL    |                |</span>
+<span class="linenos" data-linenos="7 "></span><span class="c1"># | category_name          | varchar(45) | NO   |     | NULL    |                |</span>
+<span class="linenos" data-linenos="8 "></span><span class="c1"># +------------------------+-------------+------+-----+---------+----------------+</span>
 </code></pre></div>
-<h4 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">&para;</a></h4>
-<p>Cuando ejecutemos <em>Kafka Connect</em>, le debemos pasar un archivo de configuración. Para empezar, tenemos <code>config/connect-standalone.properties</code> el cual ya viene rellenado e indica los formatos que utilizarán los conversores (en nuestro caso ya están configurados para utiliza JSON) y otros aspectos:</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>mysql&gt;<span class="w"> </span>describe<span class="w"> </span>categories<span class="p">;</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># +------------------------+-------------+------+-----+---------+----------------+</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1"># | Field                  | Type        | Null | Key | Default | Extra          |</span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># +------------------------+-------------+------+-----+---------+----------------+</span>
+<span class="linenos" data-linenos="5 "></span><span class="c1"># | category_id            | int(11)     | NO   | PRI | NULL    | auto_increment |</span>
+<span class="linenos" data-linenos="6 "></span><span class="c1"># | category_department_id | int(11)     | NO   |     | NULL    |                |</span>
+<span class="linenos" data-linenos="7 "></span><span class="c1"># | category_name          | varchar(45) | NO   |     | NULL    |                |</span>
+<span class="linenos" data-linenos="8 "></span><span class="c1"># +------------------------+-------------+------+-----+---------+----------------+</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h4 id="instalando-conectores">Instalando conectores<a class="headerlink" href="#instalando-conectores" title="Permanent link">&para;</a></h4>
+<p>Los conectores no forman parte del núcleo de <em>Kafka</em>. La distribución de <em>Kafka</em> solo incluye unos pocos conectores de ejemplo (<code>FileStreamSource</code>, <code>FileStreamSink</code> y <code>MirrorSourceConnector</code>); el resto se añaden como <em>plugins</em> los cuales hemos de instalar manualmente. Esto es así porque cada conector tiene sus propias dependencias, y no es posible incluirlas todas en la distribución oficial.</p>
+<p>Para nuestro primer ejemplo necesitamos un <strong>conector JDBC</strong>, que sabe leer de cualquier base de datos relacional. Existen dos opciones habituales:</p>
+<ul>
+<li><a href="https://github.com/confluentinc/kafka-connect-jdbc"><code>confluentinc/kafka-connect-jdbc</code></a>: el más conocido, pero se distribuye bajo la <em>Confluent Community License</em>, no es Apache 2.0. Permite uso gratuito, pero con restricciones (por ejemplo, no se puede ofrecer como servicio gestionado a terceros).</li>
+<li><a href="https://github.com/Aiven-Open/jdbc-connector-for-apache-kafka/releases"><code>Aiven jdbc-connector-for-apache-kafka</code></a>: funcionalmente equivalente para <em>source</em> y <em>sink</em>, con <strong>licencia Apache 2.0 pura</strong>. Es el que usaremos, por coherencia con el resto del <em>stack</em> del curso.</li>
+</ul>
+<p>La única diferencia práctica para nosotros es el nombre de la clase del conector: <code>io.aiven.connect.jdbc.JdbcSourceConnector</code> en lugar de <code>io.confluent.connect.jdbc.JdbcSourceConnector</code>.</p>
+<p>Además, el conector JDBC necesita el driver JDBC de la base de datos, que tampoco viene incluido. Como vamos a conectar con <em>MySQL</em>, necesitaremos también el <code>mysql-connector-j</code>. En nuestro caso, tanto en el <em>stack</em> de <em>Docker</em> como en la máquina virtual, ya tenemos los plugins descargados y configurados.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Docker</label><label for="__tabbed_14_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>En el <em>stack</em> del curso, <em>Kafka Connect</em> se ejecuta en el contenedor <code>iabd-kafka-connect</code> y los <em>plugins</em> se cargan desde una carpeta del <em>host</em> montada como volumen:</p>
+<div class="highlight"><span class="filename">docker-compose.yml (servicio kafka-connect)</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nt">kafka-connect</span><span class="p">:</span>
+<span class="hll"><span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/kafka:latest</span>
+</span><span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd-kafka-connect</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafka-connect</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="nt">profiles</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;kafka&quot;</span><span class="p p-Indicator">]</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="nt">kafka</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">      </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_healthy</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;8083:8083&#39;</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">  </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;/opt/kafka/bin/connect-distributed.sh&quot;</span><span class="p p-Indicator">,</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">            </span><span class="s">&quot;/opt/kafka/config/connect-distributed.properties&quot;</span><span class="p p-Indicator">]</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">  </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="hll"><span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./kafka/connect-distributed.properties:/opt/kafka/config/connect-distributed.properties:ro</span>
+</span><span class="hll"><span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./kafka/connect-plugins:/opt/kafka/plugins</span>
+</span><span class="linenos" data-linenos="16 "></span><span class="w">  </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">    </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;curl</span><span class="nv"> </span><span class="s">-f</span><span class="nv"> </span><span class="s">http://localhost:8083/</span><span class="nv"> </span><span class="s">||</span><span class="nv"> </span><span class="s">exit</span><span class="nv"> </span><span class="s">1&quot;</span><span class="p p-Indicator">]</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">    </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="linenos" data-linenos="21 "></span><span class="w">  </span><span class="nt">networks</span><span class="p">:</span>
+<span class="linenos" data-linenos="22 "></span><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spark-net</span>
+</code></pre></div>
+<p>El fichero <code>connect-distributed.properties</code> (en <code>./kafka/</code>) configura el <em>worker</em>:</p>
+<div class="highlight"><span class="filename">kafka/connect-distributed.properties</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="na">bootstrap.servers</span><span class="o">=</span><span class="s">kafka:9092</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="na">group.id</span><span class="o">=</span><span class="s">connect-cluster</span>
+<span class="linenos" data-linenos=" 4 "></span>
+<span class="linenos" data-linenos=" 5 "></span><span class="na">key.converter</span><span class="o">=</span><span class="s">org.apache.kafka.connect.json.JsonConverter</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="na">value.converter</span><span class="o">=</span><span class="s">org.apache.kafka.connect.json.JsonConverter</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># Con schemas.enable=false los mensajes solo llevan el payload (mas legibles).</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1"># Ponlo a true si un conector sink necesita conocer el schema.</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="na">key.converter.schemas.enable</span><span class="o">=</span><span class="s">false</span>
+<span class="linenos" data-linenos="10 "></span><span class="na">value.converter.schemas.enable</span><span class="o">=</span><span class="s">false</span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span><span class="na">config.storage.topic</span><span class="o">=</span><span class="s">connect-configs</span>
+<span class="linenos" data-linenos="13 "></span><span class="na">offset.storage.topic</span><span class="o">=</span><span class="s">connect-offsets</span>
+<span class="linenos" data-linenos="14 "></span><span class="na">status.storage.topic</span><span class="o">=</span><span class="s">connect-status</span>
+<span class="linenos" data-linenos="15 "></span>
+<span class="linenos" data-linenos="16 "></span><span class="c1"># Factor de replicacion 1 porque en el perfil &quot;kafka&quot; solo hay un broker.</span>
+<span class="linenos" data-linenos="17 "></span><span class="na">config.storage.replication.factor</span><span class="o">=</span><span class="s">1</span>
+<span class="linenos" data-linenos="18 "></span><span class="na">offset.storage.replication.factor</span><span class="o">=</span><span class="s">1</span>
+<span class="linenos" data-linenos="19 "></span><span class="na">status.storage.replication.factor</span><span class="o">=</span><span class="s">1</span>
+<span class="linenos" data-linenos="20 "></span>
+<span class="linenos" data-linenos="21 "></span><span class="na">listeners</span><span class="o">=</span><span class="s">http://0.0.0.0:8083</span>
+<span class="linenos" data-linenos="22 "></span><span class="na">rest.advertised.host.name</span><span class="o">=</span><span class="s">kafka-connect</span>
+<span class="linenos" data-linenos="23 "></span><span class="na">rest.port</span><span class="o">=</span><span class="s">8083</span>
+<span class="linenos" data-linenos="24 "></span>
+<span class="linenos" data-linenos="25 "></span><span class="na">plugin.path</span><span class="o">=</span><span class="s">/opt/kafka/plugins</span>
+</code></pre></div>
+<p>Como hemos comentado, los conectores se cargan como <em>plugins</em> y hay que indicarle a <em>Kafka Connect</em> dónde encontrarlos mediante la propiedad <code>plugin.path</code>. En nuestro caso, los plugins se montan desde la carpeta <code>./kafka/connect-plugins/</code> del proyecto, así que esa es la ruta que indicamos en <code>plugin.path</code>. Si comprobamos el contenido de <code>./kafka/connect-plugins/</code>, veremos que ya tenemos tanto el conector JDBC de Aiven como el conector S3 preparados:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka/connect-plugins/
+<span class="linenos" data-linenos="2 "></span>├── jdbc-connector-for-apache-kafka-6.10.0/
+<span class="linenos" data-linenos="3 "></span>│   ├── jdbc-connector-for-apache-kafka-6.10.0.jar
+<span class="linenos" data-linenos="4 "></span>│   └── mysql-connector-j-8.0.33.jar
+<span class="linenos" data-linenos="5 "></span>│   └── ... (jars del conector JDBC)
+<span class="linenos" data-linenos="6 "></span>└── s3-sink-connector-for-apache-kafka-3.4.2/
+<span class="linenos" data-linenos="7 "></span>    └── ... (jars del conector S3)
+<span class="linenos" data-linenos="8 "></span>...
+</code></pre></div>
+<p>Una vez preparados los <em>plugins</em>, levantamos <em>Kafka Connect</em> junto con el <em>broker</em> y la base de datos. Como <code>kafka-connect</code> está en el perfil <code>kafka</code> y <code>retail_db</code> en el perfil <code>datos</code>, hay que arrancar ambos perfiles a la ve:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>kafka<span class="w"> </span>--profile<span class="w"> </span>datos<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Cuando el contenedor arranca, <em>Kafka Connect</em> escanea <code>plugin.path</code> y registra los conectores encontrados. Podemos comprobar que el conector JDBC se ha cargado correctamente:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8083/connector-plugins
+<span class="hll"><span class="linenos" data-linenos="2 "></span><span class="c1"># [{&quot;class&quot;:&quot;io.aiven.connect.jdbc.JdbcSinkConnector&quot;,&quot;type&quot;:&quot;sink&quot;,&quot;version&quot;:&quot;6.10.0-SNAPSHOT&quot;},</span>
+</span><span class="linenos" data-linenos="3 "></span><span class="c1">#  {&quot;class&quot;:&quot;io.aiven.kafka.connect.s3.AivenKafkaConnectS3SinkConnector&quot;,&quot;type&quot;:&quot;sink&quot;,&quot;version&quot;:&quot;3.4.2&quot;},</span>
+<span class="hll"><span class="linenos" data-linenos="4 "></span><span class="c1">#  {&quot;class&quot;:&quot;io.aiven.connect.jdbc.JdbcSourceConnector&quot;,&quot;type&quot;:&quot;source&quot;,&quot;version&quot;:&quot;6.10.0-SNAPSHOT&quot;},</span>
+</span><span class="linenos" data-linenos="5 "></span><span class="c1">#  {&quot;class&quot;:&quot;org.apache.kafka.connect.mirror.MirrorCheckpointConnector&quot;,&quot;type&quot;:&quot;source&quot;,&quot;version&quot;:&quot;4.0.0&quot;},</span>
+<span class="linenos" data-linenos="6 "></span><span class="c1">#  {&quot;class&quot;:&quot;org.apache.kafka.connect.mirror.MirrorHeartbeatConnector&quot;,&quot;type&quot;:&quot;source&quot;,&quot;version&quot;:&quot;4.0.0&quot;},</span>
+<span class="linenos" data-linenos="7 "></span><span class="c1">#  {&quot;class&quot;:&quot;org.apache.kafka.connect.mirror.MirrorSourceConnector&quot;,&quot;type&quot;:&quot;source&quot;,&quot;version&quot;:&quot;4.0.0&quot;}]</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Cuando ejecutemos <em>Kafka Connect</em> en modo <em>standalone</em>, le pasaremos un fichero de configuración del <em>worker</em>. Partimos de <code>config/connect-standalone.properties</code>, que ya viene incluido:</p>
 <div class="highlight"><span class="filename">config/connect-standalone.properties</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">bootstrap.servers</span><span class="o">=</span><span class="s">localhost:9092</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="na">key.converter</span><span class="o">=</span><span class="s">org.apache.kafka.connect.json.JsonConverter</span>
@@ -5172,13 +5329,62 @@
 <span class="linenos" data-linenos="7 "></span>
 <span class="linenos" data-linenos="8 "></span><span class="na">offset.storage.file.filename</span><span class="o">=</span><span class="s">/tmp/connect.offsets</span>
 </code></pre></div>
-<p>Los conectores se incluyen en <em>Kafka</em> como <em>plugins</em>. Para ello, primero hemos de indicarle a <em>Kafka</em> donde se encuentran, indicando en el archivo de configuración la ruta donde los almacenaremos (este cambio debemos realizarlo sobre la instalación de nuestra máquina virtual):</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">plugin.path</span><span class="o">=</span><span class="s">/opt/kafka_2.13-3.3.1/plugins</span>
+<p>Los conectores se cargan como <em>plugins</em>. Debemos indicarle a <em>Kafka</em> dónde se encuentran añadiendo al final del fichero la ruta de la carpeta de <em>plugins</em> (ajusta la ruta a tu versión de <em>Kafka</em>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="na">plugin.path</span><span class="o">=</span><span class="s">$KAFKA_HOME/plugins</span>
 </code></pre></div>
-<h4 id="extrayendo-datos-mediante-kafka-connect">Extrayendo datos mediante Kafka Connect<a class="headerlink" href="#extrayendo-datos-mediante-kafka-connect" title="Permanent link">&para;</a></h4>
-<p>Así pues, el primer paso es crear el archivo de configuración de <em>Kafka Connect</em> con los datos (en nuestro caso lo colocamos en la carpeta <code>config</code>  de la instalación de <em>Kafka</em>) utilizando un <a href="https://docs.confluent.io/kafka-connect-jdbc/current/source-connector/source_config_options.html#jdbc-source-configs">conector fuente de JDBC</a>:</p>
+</div>
+</div>
+</div>
+<h4 id="extrayendo-datos">Extrayendo datos<a class="headerlink" href="#extrayendo-datos" title="Permanent link">&para;</a></h4>
+<p>Ya tenemos el conector instalado. Ahora vamos a definir una instancia de conector que lea de la tabla <code>categories</code>. Usamos un conector <em>source</em> JDBC en modo <code>incrementing</code>: el conector recuerda el último <code>category_id</code> procesado y solo trae las filas nuevas en cada <em>sondeo</em>.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="15:2"><input checked="checked" id="__tabbed_15_1" name="__tabbed_15" type="radio" /><input id="__tabbed_15_2" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="__tabbed_15_1">Docker</label><label for="__tabbed_15_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>En modo <em>distributed</em> los conectores se crean mediante la <strong>API REST</strong> enviando un documento JSON. Para ello, hemos de indicar toda la configuración en un fichero, el cual ya tenemos colocado dentro la carpeta <code>kafka</code>:</p>
+<div class="highlight"><span class="filename">mysql-categories-source.json</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mysql-categories-source&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="nt">&quot;config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="hll"><span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="nt">&quot;connector.class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;io.aiven.connect.jdbc.JdbcSourceConnector&quot;</span><span class="p">,</span>
+</span><span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="nt">&quot;tasks.max&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="nt">&quot;connection.url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jdbc:mysql://mysql-datos:3306/retail_db&quot;</span><span class="p">,</span>
+</span><span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="nt">&quot;connection.user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;iabd&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="nt">&quot;connection.password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;iabd&quot;</span><span class="p">,</span>
+<span class="hll"><span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="nt">&quot;table.whitelist&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;categories&quot;</span><span class="p">,</span>
+</span><span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;incrementing&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="nt">&quot;incrementing.column.name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;category_id&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="nt">&quot;topic.prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;iabd-retail_db-&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">    </span><span class="nt">&quot;poll.interval.ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5000&quot;</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">  </span><span class="p">}</span>
+<span class="linenos" data-linenos="15 "></span><span class="p">}</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Hostname interno, no localhost</p>
+<p>Como <em>Kafka Connect</em> se ejecuta dentro de la red de <em>Docker</em>, en <code>connection.url</code> usamos el <em>hostname</em> del contenedor de la base de datos (<code>mysql-datos</code>, puerto interno <code>3306</code>), <strong>no</strong> <code>localhost</code>. El <code>localhost:3307</code> solo es válido desde la máquina anfitriona.</p>
+</div>
+<p>Para registrar el conector hacemos una petición <code>POST</code> al endpoint <code>/connectors</code> (suponiendo que estamos situados sobre la carpeta <code>kafka</code> que contiene el fichero <code>mysql-categories-source.json</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>--data<span class="w"> </span>@mysql-categories-source.json<span class="w"> </span>http://localhost:8083/connectors
+<span class="linenos" data-linenos=" 2 "></span><span class="c1"># {&quot;name&quot;:&quot;mysql-categories-source&quot;,&quot;config&quot;:</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1">#  {&quot;connector.class&quot;:&quot;io.aiven.connect.jdbc.JdbcSourceConnector&quot;,</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1">#     &quot;tasks.max&quot;:&quot;1&quot;,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1">#     &quot;connection.url&quot;:&quot;jdbc:mysql://mysql-datos:3306/retail_db&quot;,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1">#     &quot;connection.user&quot;:&quot;iabd&quot;,&quot;connection.password&quot;:&quot;iabd&quot;,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1">#     &quot;table.whitelist&quot;:&quot;categories&quot;,&quot;mode&quot;:&quot;incrementing&quot;,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1">#     &quot;incrementing.column.name&quot;:&quot;category_id&quot;,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1">#     &quot;topic.prefix&quot;:&quot;iabd-retail_db-&quot;,&quot;poll.interval.ms&quot;:&quot;5000&quot;,&quot;name&quot;:&quot;mysql-categories-source&quot;},</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1">#  &quot;tasks&quot;:[],&quot;type&quot;:&quot;source&quot;}</span>
+</code></pre></div>
+<p>Y comprobamos que el conector está en marcha (su estado y el de sus <em>tasks</em> deben ser <code>RUNNING</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8083/connectors/mysql-categories-source/status
+<span class="linenos" data-linenos="2 "></span><span class="c1"># {&quot;name&quot;:&quot;mysql-categories-source&quot;,</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1">#  &quot;connector&quot;:{&quot;state&quot;:&quot;RUNNING&quot;,&quot;worker_id&quot;:&quot;kafka-connect:8083&quot;},</span>
+<span class="linenos" data-linenos="4 "></span><span class="c1">#  &quot;tasks&quot;:[{&quot;id&quot;:0,&quot;state&quot;:&quot;RUNNING&quot;,&quot;worker_id&quot;:&quot;kafka-connect:8083&quot;}],</span>
+<span class="linenos" data-linenos="5 "></span><span class="c1">#  &quot;type&quot;:&quot;source&quot;}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>En modo <em>standalone</em> el conector se define en un fichero <code>.properties</code> que pasaremos como parámetro al arrancar <em>Kafka Connect</em>. Lo colocamos en la carpeta <code>config</code>:</p>
 <div class="highlight"><span class="filename">config/mysql-source-connector.properties</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="na">name</span><span class="o">=</span><span class="s">mysql-source</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="na">connector.class</span><span class="o">=</span><span class="s">io.confluent.connect.jdbc.JdbcSourceConnector</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="na">connector.class</span><span class="o">=</span><span class="s">io.aiven.connect.jdbc.JdbcSourceConnector</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="na">tasks.max</span><span class="o">=</span><span class="s">1</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="na">connection.url</span><span class="o">=</span><span class="s">jdbc:mysql://localhost/retail_db</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="na">connection.user</span><span class="o">=</span><span class="s">iabd</span>
@@ -5188,60 +5394,219 @@
 <span class="linenos" data-linenos=" 9 "></span><span class="na">incrementing.column.name</span><span class="o">=</span><span class="s">category_id</span>
 <span class="linenos" data-linenos="10 "></span><span class="na">topic.prefix</span><span class="o">=</span><span class="s">iabd-retail_db-</span>
 </code></pre></div>
-<p>Antes de ponerlo en marcha, debemos <a href="https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc">descargar el conector</a> y colocar la carpeta descomprimida dentro de nuestra carpeta de plugins <code>/opt/kafka_2.13-3.3.1/plugins</code> y descargar el <a href="resources/mysql-connector-j-8.0.31.jar">driver de MySQL</a> y colocarlo en la carpeta <code>/opt/kafka_2.13-3.3.1/lib</code>.</p>
-<p>Y a continuación ya podemos ejecutar <em>Kafka Connect</em> mediante el comando <a href="https://kafka.apache.org/documentation/#connect_running"><code>connect-standalone.sh</code></a>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>connect-standalone.sh<span class="w"> </span>config/connect-standalone.properties<span class="w"> </span>config/mysql-source-connector.properties
+<p>Y arrancamos <em>Kafka Connect</em> con <a href="https://kafka.apache.org/documentation/#connect_running"><code>connect-standalone.sh</code></a>, pasándole el fichero del <em>worker</em> y el del conector:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>connect-standalone.sh<span class="w"> </span>config/connect-standalone.properties<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>config/mysql-source-connector.properties
 </code></pre></div>
-<p>Si tuviéramos más conectores los añadiríamos como parámetros extra:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>connect-standalone.sh<span class="w"> </span>config/connect-standalone.properties<span class="w"> </span>config/conector1.properties<span class="w"> </span><span class="o">[</span>config/conector2.properties<span class="w"> </span>config/conector3.properties<span class="w"> </span>...<span class="o">]</span>
+<p>Si tuviéramos más conectores, los añadiríamos como parámetros adicionales:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>connect-standalone.sh<span class="w"> </span>config/connect-standalone.properties<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>config/conector1.properties<span class="w"> </span><span class="o">[</span>config/conector2.properties<span class="w"> </span>...<span class="o">]</span>
 </code></pre></div>
-<div class="admonition caution">
-<p class="admonition-title">Guava</p>
-<p>Es posible que salte un error de ejecución indicando que falta la librería <a href="https://github.com/google/guava">Guava</a> la cual podéis descargar <a href="https://repo1.maven.org/maven2/com/google/guava/guava/31.0.1-jre/guava-31.0.1-jre.jar">desde aquí</a> y colocar en la carpeta <code>/opt/kafka_2.13-3.3.1/lib</code></p>
 </div>
-<p>Si ahora arrancamos un consumidor sobre el topic <code>iabd-retail_db-categories</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-console-consumer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-retail_db-categories<span class="w"> </span>--from-beginning<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</div>
+</div>
+<p>El conector mapea la tabla <code>categories</code> al <em>topic</em> <code>iabd-retail_db-categories</code> (<code>topic.prefix</code> + nombre de la tabla). Si ahora arrancamos un consumidor sobre ese <em>topic</em>:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="16:2"><input checked="checked" id="__tabbed_16_1" name="__tabbed_16" type="radio" /><input id="__tabbed_16_2" name="__tabbed_16" type="radio" /><div class="tabbed-labels"><label for="__tabbed_16_1">Docker</label><label for="__tabbed_16_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>--workdir<span class="w"> </span>/opt/kafka/bin<span class="w"> </span>iabd-kafka<span class="w"> </span>bash
+<span class="linenos" data-linenos="2 "></span>./kafka-console-consumer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-retail_db-categories<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--from-beginning<span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka:9092
 </code></pre></div>
-<p>Veremos que aparecen todos los datos que teníamos en la tabla en formato JSON (es lo que hemos indicado en el archivo de configuración de <em>Kafka Connect</em>):</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span><span class="nt">&quot;schema&quot;</span><span class="p">:{</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;struct&quot;</span><span class="p">,</span><span class="nt">&quot;fields&quot;</span><span class="p">:[</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="w">            </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;int32&quot;</span><span class="p">,</span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;category_id&quot;</span><span class="p">},</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="w">            </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;int32&quot;</span><span class="p">,</span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;category_department_id&quot;</span><span class="p">},</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">            </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;category_name&quot;</span><span class="p">}],</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="w">        </span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;categories&quot;</span><span class="p">},</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="w">        </span><span class="nt">&quot;payload&quot;</span><span class="p">:{</span><span class="nt">&quot;category_id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;category_department_id&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;category_name&quot;</span><span class="p">:</span><span class="s2">&quot;Football&quot;</span><span class="p">}}</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="p">{</span><span class="nt">&quot;schema&quot;</span><span class="p">:{</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;struct&quot;</span><span class="p">,</span><span class="nt">&quot;fields&quot;</span><span class="p">:[</span>
-<span class="linenos" data-linenos="10 "></span><span class="w">            </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;int32&quot;</span><span class="p">,</span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;category_id&quot;</span><span class="p">},</span>
-<span class="linenos" data-linenos="11 "></span><span class="w">            </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;int32&quot;</span><span class="p">,</span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;category_department_id&quot;</span><span class="p">},</span>
-<span class="linenos" data-linenos="12 "></span><span class="w">            </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;category_name&quot;</span><span class="p">}],</span>
-<span class="linenos" data-linenos="13 "></span><span class="w">        </span><span class="nt">&quot;optional&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;categories&quot;</span><span class="p">},</span>
-<span class="linenos" data-linenos="14 "></span><span class="w">        </span><span class="nt">&quot;payload&quot;</span><span class="p">:{</span><span class="nt">&quot;category_id&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;category_department_id&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;category_name&quot;</span><span class="p">:</span><span class="s2">&quot;Soccer&quot;</span><span class="p">}}</span>
-<span class="linenos" data-linenos="15 "></span><span class="err">...</span>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-console-consumer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-retail_db-categories<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--from-beginning<span class="w"> </span>--bootstrap-server<span class="w"> </span>localhost:9092
 </code></pre></div>
+</div>
+</div>
+</div>
+<p>Veremos que aparecen todos los datos que teníamos en la tabla, en formato JSON. Con <code>value.converter.schemas.enable=false</code> el mensaje contiene únicamente el <code>payload</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span><span class="nt">&quot;category_id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;category_department_id&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;category_name&quot;</span><span class="p">:</span><span class="s2">&quot;Football&quot;</span><span class="p">}</span>
+<span class="linenos" data-linenos="2 "></span><span class="p">{</span><span class="nt">&quot;category_id&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;category_department_id&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;category_name&quot;</span><span class="p">:</span><span class="s2">&quot;Soccer&quot;</span><span class="p">}</span>
+<span class="linenos" data-linenos="3 "></span><span class="err">...</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Mensajes con schema</p>
+<p>Si en el <em>worker</em> dejamos <code>value.converter.schemas.enable=true</code>, cada mensaje incluye además un bloque <code>schema</code> que describe los tipos de cada campo. Es más verboso, pero algunos conectores <em>sink</em> lo necesitan para saber cómo escribir los datos en su destino.</p>
+</div>
 <div class="admonition question">
 <p class="admonition-title">Autoevaluación</p>
-<p>Vamos a dejar el consumidor y <em>Kafka Connect</em> corriendo.
-¿Qué sucederá si inserto un nuevo registro en la base de datos en la tabla <code>categories</code>?
-Que automáticamente aparecerá en nuestro consumidor.</p>
+<p>Vamos a dejar el consumidor y <em>Kafka Connect</em> corriendo. ¿Qué sucederá si inserto un nuevo registro en la tabla <code>categories</code>?</p>
+<p>Como el conector está en modo <code>incrementing</code>, en el siguiente sondeo (cada 5 segundos) detectará la fila nueva por su <code>category_id</code> y la publicará automáticamente en el <em>topic</em>, sin que tengamos que hacer nada.</p>
 </div>
-<h3 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h3>
-<p>Como <em>Kafka Connect</em> está diseñado como un servicio que debería correr continuamente, ofrece un API REST para gestionar los conectores. Por defecto está a la escucha el puerto 8083, de manera que si accedemos a <a href="http://iabd-virtualbox:8083/">http://iabd-virtualbox:8083/</a> obtendremos información sobre la versión que se está ejecutando:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;3.3.1&quot;</span><span class="p">,</span><span class="nt">&quot;commit&quot;</span><span class="p">:</span><span class="s2">&quot;839b886f9b732b15&quot;</span><span class="p">,</span><span class="nt">&quot;kafka_cluster_id&quot;</span><span class="p">:</span><span class="s2">&quot;iHa0JUnTSfm85fvFadsylA&quot;</span><span class="p">}</span>
+<h4 id="cargando-datos-en-s3">Cargando datos en S3<a class="headerlink" href="#cargando-datos-en-s3" title="Permanent link">&para;</a></h4>
+<p>Hasta ahora hemos cubierto la <strong>E</strong> de <em>ETL</em> (extraer de <em>MySQL</em> a <em>Kafka</em>). Para cerrar el ciclo con la <strong>L</strong> (cargar en un destino), añadiremos un conector <em>sink</em> que escriba los mensajes del <em>topic</em> en <em>MinIO</em>, el almacenamiento <em>S3</em> que ya usamos en las sesiones de <em>Spark</em>.</p>
+<div class="admonition warning">
+<p class="admonition-title">El sink necesita que MinIO esté arrancado</p>
+<p>El conector <em>sink</em> escribe en <em>MinIO</em>, que pertenece al perfil <code>spark</code>. Para este ejemplo completo (JDBC source + S3 sink) hay que levantar los tres perfiles:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>kafka<span class="w"> </span>--profile<span class="w"> </span>datos<span class="w"> </span>up<span class="w"> </span>-d
+<span class="linenos" data-linenos="2 "></span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>minio
 </code></pre></div>
-<p>Por ejemplo, si queremos obtener un listado de los conectores realizaremos una petición GET a <code>/connectors</code> mediante <code>http://iabd-virtualbox:8083/connectors</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">[</span><span class="s2">&quot;mysql-source-connector&quot;</span><span class="p">]</span>
-</code></pre></div>
-<p>Más información en <a href="https://kafka.apache.org/documentation/#connect_rest">https://kafka.apache.org/documentation/#connect_rest</a></p>
-<div class="admonition info">
-<p class="admonition-title">Más Kafka Connect</p>
-<p>En este apartado sólo hemos visto una pequeña introducción a Kafka Connect, dejando de lado aspectos como la ejecución en modo distribuido (por supuesto, podemos montar un clúster de <em>Kafka Connect</em>), la realización de pequeñas transformaciones sobre los datos o practicar con otro tipo de conectores.</p>
 </div>
+<p>Del mismo modo que el conector JDBC, <em>Kafka Connect</em> no incluye ningún conector <em>sink</em> de <em>S3</em> preinstalado por defecto, pero en nuestro <em>stack</em> de <em>Docker</em> ya tenemos el <a href="https://github.com/Aiven-Open/cloud-storage-connectors-for-apache-kafka">conector de almacenamiento en la nube de Aiven</a>, que incluye un <em>sink</em> de <em>S3</em> listo para usar.</p>
 <div class="admonition tip">
+<p class="admonition-title">MinIO es compatible con S3</p>
+<p><em>MinIO</em> implementa el mismo protocolo que <em>Amazon S3</em>. El conector <em>S3</em> de <em>Aiven</em> sirve igual para <em>MinIO</em>: basta con apuntarlo al <em>endpoint</em> de nuestro contenedor mediante la propiedad <code>aws.s3.endpoint</code>, en lugar de dejar que use el de <em>AWS</em> real.</p>
+</div>
+<p>El conector <em>S3</em> de <em>Aiven</em> agrupa los mensajes y los vuelca a <em>MinIO</em> en ficheros con formato <em>JSON Lines</em> (<code>jsonl</code>): un mensaje por línea. Cada cierto intervalo (60 segundos por defecto) el conector crea un nuevo fichero con los mensajes acumulados en ese periodo. De este modo, evitamos escribir un fichero por mensaje, lo que sería poco eficiente y generaría una gran cantidad de pequeños ficheros.</p>
+<p>Así pues, para configurar el conector crearemos el fichero <code>categories-s3-sink.json</code> donde necesitamos indicarle el <em>topic</em> de origen (<code>iabd-retail_db-categories</code>), el <em>bucket</em> de destino (<code>raw-data</code>) y el <em>endpoint</em> de <em>MinIO</em> (<code>http://minio:9000</code>), junto con las credenciales de acceso. El resto de parámetros son opcionales, pero los dejaremos para que los ficheros resultantes sean legibles y estén organizados bajo un prefijo concreto:</p>
+<div class="highlight"><span class="filename">categories-s3-sink.json</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;categories-s3-sink&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">&quot;config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">        </span><span class="nt">&quot;connector.class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;io.aiven.kafka.connect.s3.AivenKafkaConnectS3SinkConnector&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">        </span><span class="nt">&quot;tasks.max&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">        </span><span class="nt">&quot;topics&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;iabd-retail_db-categories&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">        </span><span class="nt">&quot;key.converter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;org.apache.kafka.connect.storage.StringConverter&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">        </span><span class="nt">&quot;value.converter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;org.apache.kafka.connect.json.JsonConverter&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">        </span><span class="nt">&quot;value.converter.schemas.enable&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span><span class="w">        </span><span class="nt">&quot;aws.s3.bucket.name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;raw-data&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">        </span><span class="nt">&quot;aws.s3.endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://minio:9000&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">        </span><span class="nt">&quot;aws.s3.region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">        </span><span class="nt">&quot;aws.access.key.id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;minioadmin&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">        </span><span class="nt">&quot;aws.secret.access.key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;minioadmin123&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="17 "></span>
+<span class="linenos" data-linenos="18 "></span><span class="w">        </span><span class="nt">&quot;format.output.type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jsonl&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">        </span><span class="nt">&quot;file.name.prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;kafka-connect/categories/&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">        </span><span class="nt">&quot;file.compression.type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;none&quot;</span>
+<span class="linenos" data-linenos="21 "></span><span class="w">    </span><span class="p">}</span>
+<span class="linenos" data-linenos="22 "></span><span class="p">}</span>
+</code></pre></div>
+<p>Conviene destacar algunos parámetros:</p>
+<ul>
+<li><code>format.output.type": "jsonl"</code> hace que cada fichero sea legible (un JSON por línea).</li>
+<li><code>file.compression.type": "none"</code> evitamos que se comprima en <code>.gz</code>, para poder inspeccionarlo fácilmente.</li>
+</ul>
+<p>Del mismo modo que con el conector JDBC, debemos registrar el conector mediante el API REST. Así pues, si nos situamos sobre la carpeta <code>kafka</code> que contiene el fichero <code>categories-s3-sink.json</code>, hacemos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>--data<span class="w"> </span>@categories-s3-sink.json<span class="w"> </span>http://localhost:8083/connectors
+<span class="linenos" data-linenos=" 2 "></span><span class="c1"># {&quot;name&quot;:&quot;categories-s3-sink&quot;,</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1">#  &quot;config&quot;: {</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1">#     &quot;connector.class&quot;:&quot;io.aiven.kafka.connect.s3.AivenKafkaConnectS3SinkConnector&quot;,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1">#     &quot;tasks.max&quot;:&quot;1&quot;,&quot;topics&quot;:&quot;iabd-retail_db-categories&quot;,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1">#     &quot;key.converter&quot;:&quot;org.apache.kafka.connect.storage.StringConverter&quot;,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1">#     &quot;value.converter&quot;:&quot;org.apache.kafka.connect.json.JsonConverter&quot;,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1">#     &quot;value.converter.schemas.enable&quot;:&quot;false&quot;,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1">#     &quot;aws.s3.bucket.name&quot;:&quot;raw-data&quot;,&quot;aws.s3.endpoint&quot;:&quot;http://minio:9000&quot;,</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1">#     &quot;aws.s3.region&quot;:&quot;us-east-1&quot;,</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1">#     &quot;aws.access.key.id&quot;:&quot;minioadmin&quot;,&quot;aws.secret.access.key&quot;:&quot;minioadmin123&quot;,</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1">#     &quot;format.output.type&quot;:&quot;jsonl&quot;,</span>
+<span class="linenos" data-linenos="13 "></span><span class="c1">#     &quot;file.name.prefix&quot;:&quot;kafka-connect/categories/&quot;,</span>
+<span class="linenos" data-linenos="14 "></span><span class="c1">#     &quot;file.compression.type&quot;:&quot;none&quot;,</span>
+<span class="linenos" data-linenos="15 "></span><span class="c1">#     &quot;name&quot;:&quot;categories-s3-sink&quot;},</span>
+<span class="linenos" data-linenos="16 "></span><span class="c1">#  &quot;tasks&quot;:[],&quot;type&quot;:&quot;sink&quot;}</span>
+</code></pre></div>
+<h4 id="comprobando-el-resultado">Comprobando el resultado<a class="headerlink" href="#comprobando-el-resultado" title="Permanent link">&para;</a></h4>
+<p>El conector <em>no</em> escribe un fichero por mensaje. Va acumulando los mensajes y los vuelca de golpe cada cierto intervalo (<code>offset.flush.interval.ms</code>, 60 segundos por defecto). Por eso, al cabo de un minuto, veremos aparecer en el <em>bucket</em> <code>raw-data</code> uno o varios ficheros bajo el prefijo <code>kafka-connect/categories/</code>.</p>
+<p>Podemos consultarlo desde la consola web de <em>MinIO</em> (<a href="http://localhost:9001">http://localhost:9001</a>) o por línea de comandos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>iabd-minio<span class="w"> </span>mc<span class="w"> </span><span class="nb">alias</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nb">local</span><span class="w"> </span>http://localhost:9000<span class="w"> </span>minioadmin<span class="w"> </span>minioadmin123
+<span class="linenos" data-linenos="2 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>iabd-minio<span class="w"> </span>mc<span class="w"> </span>ls<span class="w"> </span>--recursive<span class="w"> </span>local/raw-data/kafka-connect/
+</code></pre></div>
+<p>Y ver el contenido de uno de los ficheros:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>iabd-minio<span class="w"> </span>mc<span class="w"> </span>cat<span class="w"> </span>local/raw-data/kafka-connect/categories/iabd-retail_db-categories-0-0.jsonl
+<span class="linenos" data-linenos="2 "></span><span class="c1"># {&quot;category_id&quot;:1,&quot;category_department_id&quot;:2,&quot;category_name&quot;:&quot;Football&quot;}</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1"># {&quot;category_id&quot;:2,&quot;category_department_id&quot;:2,&quot;category_name&quot;:&quot;Soccer&quot;}</span>
+<span class="linenos" data-linenos="4 "></span>...
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Para ver el flujo en movimiento</p>
+<p>La tabla <code>categories</code> es estática: una vez cargada, no llegan filas nuevas, así que el <em>sink</em> hará un único volcado y se quedará quieto. Si quieres ver el conector trabajando de forma continua en clase, inserta un nuevo registro en la tabla <code>categories</code>.</p>
+</div>
+<p>Con esto tenemos un flujo <em>ETL</em> completo y declarativo: el conector <em>source</em> lee de <em>MySQL</em> y publica en un <em>topic</em>, y el conector <em>sink</em> consume ese <em>topic</em> y persiste los datos en <em>MinIO</em>. <em>Kafka</em> desacopla ambos extremos, y nosotros solo hemos escrito dos ficheros JSON de configuración.</p>
+<h3 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h3>
+<p>Como <em>Kafka Connect</em> está diseñado como un servicio que debe ejecutarse de forma continua, ofrece una <strong>API REST</strong> para gestionar los conectores sin reiniciar el <em>worker</em>. Por defecto escucha en el puerto <code>8083</code>.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="17:2"><input checked="checked" id="__tabbed_17_1" name="__tabbed_17" type="radio" /><input id="__tabbed_17_2" name="__tabbed_17" type="radio" /><div class="tabbed-labels"><label for="__tabbed_17_1">Docker</label><label for="__tabbed_17_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>Operación</th>
+<th>Petición</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Información del <em>worker</em></td>
+<td><code>GET http://localhost:8083/</code></td>
+</tr>
+<tr>
+<td><em>Plugins</em> instalados</td>
+<td><code>GET http://localhost:8083/connector-plugins</code></td>
+</tr>
+<tr>
+<td>Listar conectores</td>
+<td><code>GET http://localhost:8083/connectors</code></td>
+</tr>
+<tr>
+<td>Crear un conector</td>
+<td><code>POST http://localhost:8083/connectors</code> (cuerpo JSON)</td>
+</tr>
+<tr>
+<td>Estado de un conector</td>
+<td><code>GET http://localhost:8083/connectors/{nombre}/status</code></td>
+</tr>
+<tr>
+<td>Configuración de un conector</td>
+<td><code>GET http://localhost:8083/connectors/{nombre}/config</code></td>
+</tr>
+<tr>
+<td>Reiniciar un conector</td>
+<td><code>POST http://localhost:8083/connectors/{nombre}/restart</code></td>
+</tr>
+<tr>
+<td>Pausar / reanudar</td>
+<td><code>PUT .../{nombre}/pause</code> &nbsp;·&nbsp; <code>PUT .../{nombre}/resume</code></td>
+</tr>
+<tr>
+<td>Borrar un conector</td>
+<td><code>DELETE http://localhost:8083/connectors/{nombre}</code></td>
+</tr>
+</tbody>
+</table>
+<p>Por ejemplo, para obtener la versión que se está ejecutando:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8083/<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4.1.1&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">&quot;commit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="nt">&quot;kafka_cluster_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+<span class="linenos" data-linenos="5 "></span><span class="p">}</span>
+</code></pre></div>
+<p>Y para listar los conectores activos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8083/connectors
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">[</span><span class="s2">&quot;mysql-categories-source&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;categories-s3-sink&quot;</span><span class="p">]</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>En modo <em>standalone</em> la API REST también está disponible (puerto <code>8083</code>), aunque los conectores se hayan definido por fichero. Por ejemplo, para consultar la versión accederíamos a <code>http://localhost:8083/</code> y para listar los conectores a <code>http://localhost:8083/connectors</code>.</p>
+<p>La diferencia es que, en <em>standalone</em>, si creamos un conector vía REST no sobrevive a un reinicio del <em>worker</em> (el estado no se guarda en <em>topics</em>). En modo <em>distributed</em>, sí.</p>
+</div>
+</div>
+</div>
+<p>Más información en la <a href="https://kafka.apache.org/documentation/#connect_rest">documentación oficial de la REST API</a>.</p>
+<div class="admonition question">
+<p class="admonition-title">¿Por qué un conector aparece como FAILED?</p>
+<p>Si tras crear un conector su estado es <code>FAILED</code>, la API REST nos da el motivo. Consulta el campo <code>trace</code> de la respuesta de <code>/status</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8083/connectors/mysql-categories-source/status<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<p>Los errores más habituales son:</p>
+<ul>
+<li><strong><code>Connector class ... could not be found</code></strong>: el <em>plugin</em> no está en <code>plugin.path</code>, o el nombre de la clase está mal escrito. Revisa que la carpeta del conector esté dentro de <code>connect-plugins/</code> y comprueba con <code>GET /connector-plugins</code> que se ha cargado.</li>
+<li><strong><code>No suitable driver found</code></strong>: el conector JDBC se ha cargado, pero falta el driver de la base de datos.</li>
+<li><strong><code>Communications link failure</code> / <code>Connection refused</code></strong>: el <code>connection.url</code> no es accesible. En <em>Docker</em>, comprueba que usas el <em>hostname</em> del contenedor (<code>mysql-datos</code>) y no <code>localhost</code>, y que ambos contenedores están en la misma red.</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Más Kafka Connect</p>
+<p>En este apartado solo hemos visto una introducción. Quedan fuera aspectos como el <strong>clúster de <em>Kafka Connect</em></strong> (varios <em>workers</em> con el mismo <code>group.id</code>), las <a href="https://kafka.apache.org/documentation/#connect_transforms">transformaciones de un solo mensaje</a> (<em>Single Message Transforms</em>, SMT) para modificar los datos al vuelo, o el uso de un <em>Schema Registry</em> con formatos como <em>Avro</em>.</p>
+</div>
+<div class="admonition note">
 <p class="admonition-title">Kafka Streams</p>
-<p><a href="https://kafka.apache.org/documentation/streams/">Kafka Streams</a> es la tercera pata del ecosistema de <em>Kafka</em>, y permite procesar y transformar datos dentro de Kafka.
-Una vez que los datos se almacenan en <em>Kafka</em> como eventos, podemos procesar los datos en nuestras aplicaciones cliente mediante <em>Kafka Streams</em> y sus librerías desarrolladas en Java y/o Scala, ya que requiere una JVM.</p>
-<p>En nuestro caso, realizaremos en posteriores sesiones un procesamiento similar de los datos mediante <em>Spark Streaming</em>, permitiendo operaciones con estado y agregaciones, funciones ventana, <em>joins</em>, procesamiento de eventos basados en el tiempo, etc...</p>
+<p><a href="https://kafka.apache.org/documentation/streams/">Kafka Streams</a> es la tercera pata del ecosistema de <em>Kafka</em> y permite procesar y transformar datos <em>dentro</em> de <em>Kafka</em>. Una vez que los datos están en <em>Kafka</em> como eventos, podemos procesarlos en nuestras aplicaciones cliente mediante <em>Kafka Streams</em> y sus librerías en Java/Scala (requiere una JVM).</p>
+<p>En nuestro caso, realizaremos un procesamiento similar mediante <em>Spark Streaming</em>, que permite operaciones con estado, agregaciones, funciones ventana, <em>joins</em> y procesamiento de eventos basado en el tiempo.</p>
 </div>
 <h2 id="kafka-y-el-big-data">Kafka y el Big Data<a class="headerlink" href="#kafka-y-el-big-data" title="Permanent link">&para;</a></h2>
 <p>El siguiente gráfico muestra cómo <em>Kafka</em> está enfocado principalmente para el tratamiento en <em>streaming</em>, aunque con los conectores de <em>Kafka Connect</em> da soporte para el procesamiento <em>batch</em>:</p>
@@ -5254,13 +5619,12 @@ Una vez que los datos se almacenan en <em>Kafka</em> como eventos, podemos proce
 <div class="admonition info">
 <p class="admonition-title">Elasticsearch y Twitter</p>
 <p>En la edición de 21/22, en estas sesiones, realizamos diferentes casos de uso con <em>Elasticsearch</em> y <em>Twitter</em>. </p>
-<p>Este curso no hemos visto <em>Elasticsearch</em>, y además, el API de <em>Twitter</em> ha dejado de ser gratuita. Si tienes curiosidad, puedes consultar dichos casos de uso en los <a href="https://aitor-medrano.github.io/bigdata2122/apuntes/bdaplicado05kafka.html#caso-3-de-twitter-a-elasticsearch-con-python">apuntes del curso pasado</a>.</p>
+<p>Este curso no hemos visto <em>Elasticsearch</em>, y además, el API de <em>Twitter</em> ha dejado de ser gratuita. Si tienes curiosidad, puedes consultar dichos casos de uso en los <a href="https://aitor-medrano.github.io/bigdata2122/apuntes/bdaplicado05kafka.html#caso-3-de-twitter-a-elasticsearch-con-python">apuntes de dicho curso</a>.</p>
 </div>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.packtpub.com/product/apache-kafka-series-learn-apache-kafka-for-beginners-video/9781789342604">Apache Kafka Series - Learn Apache Kafka for Beginners</a></li>
 <li>Serie de artículos de <em>Víctor Madrid</em> sobre <a href="https://enmilocalfunciona.io/tag/kafka/">Kafka</a> en <a href="https://enmilocalfunciona.io">enmilocalfunciona.io</a>.</li>
-<li><a href="https://mikeldeltio.com/2020/05/20/distributed-databases-kafka/">Distributed Databases: Kafka</a> por <em>Mikel del Tio</em>.</li>
 <li><a href="https://www.baeldung.com/kafka-connectors-guide">Introduction to Kafka Connectors</a></li>
 <li><a href="https://github.com/lensesio/kafka-cheat-sheet">Kafka Cheatsheet</a></li>
 </ul>
