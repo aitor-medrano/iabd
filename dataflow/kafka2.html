@@ -4519,7 +4519,7 @@
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>En este caso, levantaremos <strong>tres contenedores</strong> (<code>kafka-1</code>, <code>kafka-2</code>, <code>kafka-3</code>), cada uno con su propio <em>broker</em> y participando además en el quórum de <em>KRaft</em> como controller.</p>
-<p>El <a href="../spark/resources/spark-cluster/docker-compose.yml"><code>docker-compose.yml</code></a> del curso define el perfil <code>kafka-cluster</code> con los tres brokers. Para arrancarlo, usaremos:</p>
+<p>El <a href="../spark/resources/spark-cluster/docker-compose.yml"><code>docker-compose.yml</code></a> del curso define el perfil <code>kafka-cluster</code> con los tres <em>brokers</em>. Para arrancarlo, usaremos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>kafka-cluster<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
 <p>Esto levanta:</p>
@@ -4657,10 +4657,10 @@
 </div>
 </div>
 <p>Podemos observar como cada partición tiene la partición líder en un <em>broker</em> distinto y en qué <em>brokers</em> se encuentran las réplicas:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Topic: iabd-topic-3p2r  TopicId: lyrv4qXkS1-c09XAXnIj7w PartitionCount: 3       ReplicationFactor: 2
-<span class="linenos" data-linenos="2 "></span>        Topic: iabd-topic-3p2r  Partition: 0    Leader: 3     Replicas: 3,2       Isr: 3,2
-<span class="linenos" data-linenos="3 "></span>        Topic: iabd-topic-3p2r  Partition: 1    Leader: 2     Replicas: 2,1       Isr: 2,1
-<span class="linenos" data-linenos="4 "></span>        Topic: iabd-topic-3p2r  Partition: 2    Leader: 1     Replicas: 1,3       Isr: 1,3
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Topic: iabd-topic-3p2r  TopicId: yZXO89a7QzOmhg64Up9Mxw PartitionCount: 3       ReplicationFactor: 2    Configs: min.insync.replicas=2
+<span class="linenos" data-linenos="2 "></span>        Topic: iabd-topic-3p2r  Partition: 0    Leader: 3       Replicas: 2,3   Isr: 2,3        Elr:    LastKnownElr: 
+<span class="linenos" data-linenos="3 "></span>        Topic: iabd-topic-3p2r  Partition: 1    Leader: 3       Replicas: 3,1   Isr: 1,3        Elr:    LastKnownElr: 
+<span class="linenos" data-linenos="4 "></span>        Topic: iabd-topic-3p2r  Partition: 2    Leader: 1       Replicas: 1,2   Isr: 1,2        Elr:    LastKnownElr:
 </code></pre></div>
 <h3 id="produciendo-y-consumiendo">Produciendo y consumiendo<a class="headerlink" href="#produciendo-y-consumiendo" title="Permanent link">&para;</a></h3>
 <p>Respecto al código <em>Python</em>, va a ser el mismo que hemos visto en la sesión anterior pero modificando:</p>
@@ -4722,7 +4722,7 @@
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Desde otro contenedor</p>
-<p>Si ejecutásemos el productor/consumidor desde dentro de la red de <em>Docker</em> (por ejemplo desde el contenedor <code>jupyter</code> para <em>Spark Streaming</em>), usaríamos los hostnames internos: <code>kafka-1:9092,kafka-2:9092,kafka-3:9092</code>.</p>
+<p>Si ejecutásemos el productor/consumidor desde dentro de la red de <em>Docker</em> (por ejemplo desde el contenedor <code>jupyter</code> para <em>Spark Streaming</em>), usaríamos los <em>hostnames</em> internos: <code>kafka-1:9092,kafka-2:9092,kafka-3:9092</code>.</p>
 </div>
 </div>
 <div class="tabbed-block">
@@ -4809,19 +4809,24 @@
 <h3 id="tolerancia-a-fallos-en-accion">Tolerancia a fallos en acción<a class="headerlink" href="#tolerancia-a-fallos-en-accion" title="Permanent link">&para;</a></h3>
 <p>Hasta ahora hemos producido y consumido contra un clúster sano. Pero el verdadero motivo de montar varios <em>brokers</em> con un factor de replicación mayor que 1 es <strong>sobrevivir a la caída de un nodo</strong>. Vamos a comprobarlo parando uno de los <em>brokers</em> y observando cómo reacciona el clúster.</p>
 <p>Partimos del <em>topic</em> <code>iabd-topic-3p2r</code> que creamos antes, con 3 particiones y factor de replicación 2. Recordemos su estado inicial (lo vimos al describirlo): cada partición tiene su líder en un <em>broker</em> distinto y una réplica en otro.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Topic: iabd-topic-3p2r  TopicId: yZXO89a7QzOmhg64Up9Mxw PartitionCount: 3       ReplicationFactor: 2    Configs: min.insync.replicas=2
+<span class="linenos" data-linenos="2 "></span>        Topic: iabd-topic-3p2r  Partition: 0    Leader: 3       Replicas: 2,3   Isr: 2,3        Elr:    LastKnownElr:
+<span class="linenos" data-linenos="3 "></span>        Topic: iabd-topic-3p2r  Partition: 1    Leader: 3       Replicas: 3,1   Isr: 1,3        Elr:    LastKnownElr:
+<span class="linenos" data-linenos="4 "></span>        Topic: iabd-topic-3p2r  Partition: 2    Leader: 1       Replicas: 1,2   Isr: 1,2        Elr:    LastKnownElr:
+</code></pre></div>
+<p>Vamos a parar el primer <em>broker</em> del clúster, ya que es el lider de la partición 2, para ver cómo el clúster reacciona a su caída.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Docker</label><label for="__tabbed_7_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p>Vamos a parar el segundo <em>broker</em> del clúster:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>stop<span class="w"> </span>iabd-kafka-2
+<p>Para ello, ejecutamos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>stop<span class="w"> </span>iabd-kafka-1
 </code></pre></div>
 <p>Y volvemos a describir el <em>topic</em> desde cualquiera de los <em>brokers</em> que siguen vivos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>iabd-kafka-1<span class="w"> </span>/opt/kafka/bin/kafka-topics.sh<span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--describe<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-3p2r<span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka-1:9092
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>iabd-kafka-2<span class="w"> </span>/opt/kafka/bin/kafka-topics.sh<span class="w"> </span>--describe<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-3p2r<span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka-2:9092
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<p>Detenemos el segundo <em>broker</em> pulsando <span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-c">C</kbd></span> en el terminal donde lo arrancamos (el de <code>server102.properties</code>).</p>
+<p>Detenemos el primer <em>broker</em> pulsando <span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-c">C</kbd></span> en el terminal donde lo arrancamos (el de <code>server101.properties</code>).</p>
 <p>Y volvemos a describir el <em>topic</em> desde otro de los <em>brokers</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--describe<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-3p2r<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
@@ -4829,27 +4834,27 @@
 </div>
 </div>
 </div>
-<p>Ahora veremos algo parecido a esto (el <em>broker</em> <code>2</code> ha desaparecido tanto de los líderes como de los <em>ISR</em>):</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Topic: iabd-topic-3p2r  TopicId: lyrv4qXkS1-c09XAXnIj7w PartitionCount: 3       ReplicationFactor: 2
-<span class="hll"><span class="linenos" data-linenos="2 "></span>        Topic: iabd-topic-3p2r  Partition: 0    Leader: 3     Replicas: 3,2       Isr: 3
-</span><span class="hll"><span class="linenos" data-linenos="3 "></span>        Topic: iabd-topic-3p2r  Partition: 1    Leader: 1     Replicas: 2,1       Isr: 1
-</span><span class="linenos" data-linenos="4 "></span>        Topic: iabd-topic-3p2r  Partition: 2    Leader: 1     Replicas: 1,3       Isr: 1,3
+<p>Ahora veremos algo parecido a esto (el <em>broker</em> <code>1</code> ha desaparecido tanto de los líderes como de los <em>ISR</em>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Topic: iabd-topic-3p2r  TopicId: yZXO89a7QzOmhg64Up9Mxw PartitionCount: 3       ReplicationFactor: 2    Configs: min.insync.replicas=2
+<span class="hll"><span class="linenos" data-linenos="2 "></span>        Topic: iabd-topic-3p2r  Partition: 0    Leader: 2       Replicas: 2,3   Isr: 2,3        Elr:    LastKnownElr: 
+</span><span class="hll"><span class="linenos" data-linenos="3 "></span>        Topic: iabd-topic-3p2r  Partition: 1    Leader: 3       Replicas: 3,1   Isr: 3  Elr: 1  LastKnownElr: 
+</span><span class="linenos" data-linenos="4 "></span>        Topic: iabd-topic-3p2r  Partition: 2    Leader: 2       Replicas: 1,2   Isr: 2  Elr: 1  LastKnownElr:
 </code></pre></div>
 <p>Fíjate en lo que ha pasado:</p>
 <ul>
-<li>La <strong>partición 1</strong>, cuyo líder era el <em>broker</em> <code>2</code>, ha elegido un <strong>nuevo líder</strong>: ahora la sirve el <em>broker</em> <code>1</code>. El clúster no ha perdido el acceso a esos datos.</li>
-<li>En las particiones 0 y 1, el campo <code>Isr</code> (<em>in-sync replicas</em>) se ha reducido: la réplica que vivía en el <em>broker</em> <code>2</code> ya no está sincronizada, porque el <em>broker</em> está caído.</li>
-<li>La columna <code>Replicas</code> <strong>no cambia</strong>: indica dónde <em>deberían</em> estar las réplicas, mientras que <code>Isr</code> indica cuáles están realmente al día. Cuando el <em>broker</em> <code>2</code> vuelva, se pondrá al día y volverá a aparecer en <code>Isr</code>.
-Si ahora ejecutamos de nuevo el productor y el consumidor del apartado anterior, <strong>siguen funcionando</strong>: el clúster ha tolerado la caída de un nodo, justo como prometía el factor de replicación 2.</li>
+<li>La <strong>partición 2</strong>, cuyo líder era el <em>broker</em> <code>1</code>, ha elegido un <strong>nuevo líder</strong>: ahora la sirve el <em>broker</em> <code>2</code>. El clúster no ha perdido el acceso a esos datos.</li>
+<li>En las particiones 1 y 2, el campo <code>Isr</code> (<em>in-sync replicas</em>) se ha reducido: la réplica que vivía en el <em>broker</em> <code>1</code> ya no está sincronizada, porque el <em>broker</em> está caído.</li>
+<li>La columna <code>Replicas</code> <strong>no cambia</strong>: indica dónde <em>deberían</em> estar las réplicas, mientras que <code>Isr</code> indica cuáles están realmente al día. Cuando el <em>broker</em> <code>1</code> vuelva, se pondrá al día y volverá a aparecer en <code>Isr</code>.</li>
 </ul>
+<p>Si ahora ejecutamos de nuevo el productor y el consumidor del apartado anterior, <strong>siguen funcionando</strong>: el clúster ha tolerado la caída de un nodo, justo como prometía el factor de replicación 2.</p>
 <h4 id="mininsyncreplicas-y-acks">min.insync.replicas y acks<a class="headerlink" href="#mininsyncreplicas-y-acks" title="Permanent link">&para;</a></h4>
 <p>Aquí entra en juego una propiedad que aparece en el <code>docker-compose.yml</code> del clúster y que conviene entender: <code>KAFKA_MIN_INSYNC_REPLICAS: 2</code>.</p>
-<p>Recordemos los <a href="kafka1.html#productores">niveles de <code>acks</code></a> de la sesión anterior. La propiedad <code>min.insync.replicas</code> solo tiene efecto <strong>cuando el productor usa <code>acks=all</code></strong>, y define el mínimo de réplicas sincronizadas (<em>ISR</em>) que deben confirmar una escritura para que se considere correcta.</p>
+<p>Si hacemos memoria y recordamos los <a href="kafka1.html#productores">niveles de <code>acks</code></a> de la sesión anterior, tenemos que la propiedad <code>min.insync.replicas</code> solo tiene efecto <strong>cuando el productor usa <code>acks=all</code></strong>, y define el mínimo de réplicas sincronizadas (<em>ISR</em>) que deben confirmar una escritura para que se considere correcta.</p>
 <p>Con nuestra configuración (factor de replicación 2 y <code>min.insync.replicas=2</code>):</p>
 <ul>
 <li><strong>Clúster sano</strong>: cada partición tiene 2 <em>ISR</em>. Una escritura con <code>acks=all</code> necesita la confirmación de las 2 → funciona.</li>
 <li><strong>Un <em>broker</em> caído</strong> (el escenario que acabamos de provocar): las particiones afectadas se quedan con 1 sola <em>ISR</em>. Una escritura con <code>acks=all</code> ya <strong>no puede</strong> cumplir el mínimo de 2 y <em>Kafka</em> la rechaza con el error <code>NOT_ENOUGH_REPLICAS</code>.
-Es decir, <code>min.insync.replicas</code> es un compromiso explícito entre <strong>durabilidad</strong> y <strong>disponibilidad</strong>: con <code>acks=all</code> y <code>min.insync.replicas=2</code> garantizamos que ningún mensaje confirmado se pierde, pero a cambio el <em>topic</em> deja de aceptar escrituras en cuanto cae un <em>broker</em>. Con <code>acks=1</code> (o <code>acks=0</code>), en cambio, el productor seguiría escribiendo aun con un nodo caído, asumiendo el riesgo de pérdida.</li>
+Es decir, <code>min.insync.replicas</code> es un compromiso explícito entre durabilidad y disponibilidad: con <code>acks=all</code> y <code>min.insync.replicas=2</code> garantizamos que ningún mensaje confirmado se pierde, pero a cambio el <em>topic</em> deja de aceptar escrituras en cuanto cae un <em>broker</em>. Con <code>acks=1</code> (o <code>acks=0</code>), en cambio, el productor seguiría escribiendo aun con un nodo caído, asumiendo el riesgo de pérdida.</li>
 </ul>
 <div class="admonition question">
 <p class="admonition-title">¿Por qué con <code>acks=all</code> el productor de antes no ha fallado?</p>
@@ -4859,11 +4864,11 @@ Es decir, <code>min.insync.replicas</code> es un compromiso explícito entre <st
 <div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Docker</label><label for="__tabbed_8_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>start<span class="w"> </span>iabd-kafka-2
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>start<span class="w"> </span>iabd-kafka-1
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-server-start.sh<span class="w"> </span>./config/server102.properties
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-server-start.sh<span class="w"> </span>./config/server101.properties
 </code></pre></div>
 </div>
 </div>
