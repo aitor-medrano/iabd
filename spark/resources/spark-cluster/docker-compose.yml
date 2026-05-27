@@ -326,24 +326,21 @@ services:
     container_name: iabd-kafka-connect
     hostname: kafka-connect
     profiles: ["kafka"]
-
     depends_on:
       kafka:
         condition: service_healthy
-
     ports:
       - '8083:8083'
-    command:
-          - bash
-          - -c
-          - |
-            /opt/kafka/bin/connect-distributed.sh \
-            /opt/kafka/config/connect-distributed.properties
-
+    command: ["/opt/kafka/bin/connect-distributed.sh",
+              "/opt/kafka/config/connect-distributed.properties"]
     volumes:
-      - ./kafka/connect-distributed.properties:/opt/kafka/config/connect-distributed.properties
+      - ./kafka/connect-distributed.properties:/opt/kafka/config/connect-distributed.properties:ro
       - ./kafka/connect-plugins:/opt/kafka/plugins
-
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8083/ > /dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
     networks:
       - spark-net
       

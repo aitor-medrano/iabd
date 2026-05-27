@@ -1,0 +1,22 @@
+{
+  "name": "categories-s3-sink",
+  "config": {
+    "connector.class": "io.aiven.kafka.connect.s3.AivenKafkaConnectS3SinkConnector",
+    "tasks.max": "1",
+    "topics": "iabd-retail_db-categories",
+
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",
+
+    "aws.s3.bucket.name": "raw-data",
+    "aws.s3.endpoint": "http://minio:9000",
+    "aws.s3.region": "us-east-1",
+    "aws.access.key.id": "minioadmin",
+    "aws.secret.access.key": "minioadmin123",
+
+    "format.output.type": "jsonl",
+    "file.name.prefix": "kafka-connect/categories/",
+    "file.compression.type": "none"
+  }
+}

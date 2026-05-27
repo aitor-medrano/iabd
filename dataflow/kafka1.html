@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -5056,8 +5056,8 @@ https://kafka.apache.org/quickstart
 </div>
 <h3 id="brokers">Brokers<a class="headerlink" href="#brokers" title="Permanent link">&para;</a></h3>
 <p>Un clúster de <em>Kafka</em> está compuesto de múltiples nodos conocidos como <em>Brokers</em>, donde cada <em>broker</em> es un servidor de <em>Kafka</em>. Cada <em>broker</em> se identifica con un id, el cual debe ser un número entero.</p>
-<p>Cada <em>broker</em> contiene un conjunto de particiones, de manera que un <em>broker</em> contiene parte de los datos, nunca los datos completos ya que Kafka es un sistema distribuido. Al conectarse a un <em>broker</em> del clúster (<em>bootstrap broker</em>), automáticamente nos conectaremos al clúster entero.</p>
-<p>Para comenzar se recomienda una arquitectura de 3 <em>brokers</em>, aunque <a href="https://netflixtechblog.com/kafka-inside-keystone-pipeline-dd5aeabaf6bb">algunos clústers lo forman cerca de un centenar de <em>brokers</em></a>.</p>
+<p>Cada <em>broker</em> contiene un conjunto de particiones, de manera que un <em>broker</em> contiene parte de los datos, nunca los datos completos ya que <em>Kafka</em> es un sistema distribuido. Al conectarse a un <em>broker</em> del clúster (<em>bootstrap broker</em>), automáticamente nos conectaremos al clúster entero.</p>
+<p>Para comenzar se recomienda una arquitectura de 3 <em>brokers</em>, aunque se conocen arquitecturas con <a href="https://factorhouse.io/articles/cloudflare-kafka-architecture">algún centenar de <em>brokers</em> en <em>CloudFare</em></a>, llegando a los <a href="https://www.linkedin.com/blog/engineering/open-source/apache-kafka-trillion-messages">4000 <em>brokers</em> empleados en <em>LinkedIn</em></a>.</p>
 <p>Por ejemplo, el siguiente gráfico muestra un clúster con tres <em>brokers</em>, de manera que el <em>topic A</em> está dividido en tres particiones, cada una de ellas residiendo en un <em>broker</em> diferente (no hay ninguna relación entre el número de la partición y el nombre del <em>broker</em>), y el <em>topic B</em> está a su vez dividido en dos particiones:</p>
 <figure style="align: center;">
     <img src="images/02kafka-3brokers.png" alt="Ejemplo de 3 brokers">
@@ -5091,7 +5091,7 @@ https://kafka.apache.org/quickstart
 <p>Si se cayera el <em>broker 102</em>, <em>Kafka</em> podría devolver los datos al estar disponibles en los nodos 101 y 103.</p>
 <h4 id="replica-lider">Réplica líder<a class="headerlink" href="#replica-lider" title="Permanent link">&para;</a></h4>
 <p>Acabamos de ver que cada <em>broker</em> tiene múltiples particiones, y cada partición tiene múltiples réplicas, de manera que, si se cae un nodo/<em>broker</em>, <em>Kafka</em> puede utilizar otro <em>broker</em> para servir los datos.</p>
-<p>En cualquier instante, una determinada partición tendrá una única réplica que será la líder, y esta réplica líder será la única que pueda recibir y servir los datos de una partición. La réplica líder es importante porque todas las lecturas y escrituras siempre van a esta réplica. El resto de <em>brokers</em> sincronizarán sus datos. En resumen, cada partición tendrá un líder y múltiples ISR (<em>in-sync replica</em>).</p>
+<p>En cualquier instante, una determinada partición tendrá una única réplica que será la líder, y esta réplica líder será la única que pueda recibir y servir los datos de una partición. La réplica líder es importante porque todas las lecturas y escrituras siempre van a esta réplica. El resto de <em>brokers</em> sincronizarán sus datos. En resumen, cada partición tendrá un líder y múltiples <strong><em>ISR</em></strong> (<em>in-sync replica</em>).</p>
 <figure style="align: center;">
     <img src="images/02kafka-replicas.png">
     <figcaption>Réplicas de una partición</figcaption>
@@ -5161,7 +5161,7 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 
 <div class="admonition info">
 <p class="admonition-title">Coordinando los consumidores</p>
-<p>Los consumidores, por sí solos, no saben con qué partición se deben comunicar. Para ello, se utiliza un <em>GroupCoordinator</em> y un <em>Consumer Coordinator</em> para asignar los consumidores a cada partición. Esta gestión la realiza <em>Kafka</em>.</p>
+<p>Los consumidores, por sí solos, no saben con qué partición se deben comunicar. Para ello, se utiliza un <em>GroupCoordinator</em> y un <em>ConsumerCoordinator</em> para asignar los consumidores a cada partición. Esta gestión la realiza <em>Kafka</em>.</p>
 </div>
 <p>Cabe destacar que los diferentes grupos de consumidores reciben el mismo dato de cada partición, es decir, el consumidor 1 del grupo 1 y el consumidor 1 del grupo 2 reciben la información que había en la partición 0. Este caso de uso es muy útil cuando tenemos dos aplicaciones que queremos que reciban los mismos datos (por ejemplo, uno encargado de realizar <em>machine learning</em> y otro analítica de datos).</p>
 <p>En el caso de tener más consumidores que particiones, algunos consumidores no realizarán nada. Este caso de uso es atípico, ya que lo recomendable es tener tantos consumidores como el mayor número de particiones existentes.</p>
@@ -5198,7 +5198,7 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
 <span class="linenos" data-linenos="3 "></span>        Topic: iabd-topic-group Partition: 1    Leader: 0       Replicas: 0     Isr: 0
 <span class="linenos" data-linenos="4 "></span>        Topic: iabd-topic-group Partition: 2    Leader: 0       Replicas: 0     Isr: 0
 </code></pre></div>
-<p>A continuación, en dos pestañas diferentes (recuerda que cada pestaña representa un proceso independiente con el que nos conectamos a Kafka mediante <code>docker exec -it --workdir /opt/kafka/bin iabd-kafka bash</code>), vamos a crear dos consumidores que pertenezcan al mismo grupo de consumidores:</p>
+<p>A continuación, en dos pestañas diferentes (recuerda que cada pestaña representa un proceso independiente con el que nos conectamos a <em>Kafka</em> mediante <code>docker exec -it --workdir /opt/kafka/bin iabd-kafka bash</code>), vamos a crear dos consumidores que pertenezcan al mismo grupo de consumidores:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Docker</label><label for="__tabbed_14_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -5298,12 +5298,36 @@ En el caso de un fallo de un <em>broker</em>, los productores automáticamente s
     <figcaption>Offsets de consumidor</figcaption>
 </figure>
 
-<p>El <em>commit</em> de los mensajes está muy relacionado con la semántica de la entrega. Los consumidores eligen cuando realizar el <em>commit</em> de los <em>offsets</em>:</p>
+<p>El <em>commit</em> de los mensajes está muy relacionado con la semántica de la entrega. Los consumidores eligen cuándo realizar el <em>commit</em> de los <em>offsets</em>:</p>
 <ul>
-<li><em>At most once</em> (como mucho una vez): se realiza el <em>commit</em> del mensaje tan pronto como se recibe el mensaje. Si falla su procesamiento, el mensaje se perderá (y no se volverá a leer).</li>
-<li><em>At least once</em> (como poco una vez) (opción más equilibrada): El <em>commit</em> se realiza una vez procesado el mensaje. Este enfoque puede resultar en un procesado duplicado de los mensajes, por lo que hemos de asegurarnos que son idempotentes (el volver a procesar un mensaje no tendrá un impacto en el sistema)</li>
+<li><em>At most once</em> (como mucho una vez): se realiza el <em>commit</em> del <em>offset</em> antes de procesar el mensaje. Si falla su procesamiento, el mensaje se perderá (y no se volverá a leer).</li>
+<li><em>At least once</em> (como poco una vez) (opción más equilibrada): El <em>commit</em> se realiza una vez procesado el mensaje. Este enfoque puede resultar en un procesado duplicado de los mensajes, por lo que hemos de asegurarnos que sean idempotentes (el volver a procesar un mensaje no tendrá un impacto en el sistema)</li>
 <li><em>Exactly once</em>: en flujos <em>Kafka</em> → <em>Kafka</em>, se consigue activando productores idempotentes y transaccionales (o usando el API de <em>Kafka Streams</em>, que lo gestiona internamente). Cuando <em>Kafka</em> interactúa con sistemas externos (una base de datos, por ejemplo), se recomienda diseñar consumidores idempotentes, ya que la garantía de <em>exactly-once</em> depende también del sistema de destino.</li>
 </ul>
+<div class="admonition info">
+<p class="admonition-title">Operaciones idempotentes</p>
+<p>Una operación es idempotente cuando ejecutarla varias veces produce el mismo
+resultado que ejecutarla una sola vez.</p>
+<p>Imagina un consumidor que procesa eventos de actualización de <em>stock</em> y escribe
+en una base de datos:</p>
+<ul>
+<li>
+<p><strong>No idempotente</strong>: <code>UPDATE productos SET stock = stock - 1 WHERE id = 42</code>.
+  Si el mensaje se procesa dos veces, el stock se reduce dos veces y el
+  resultado es incorrecto.</p>
+</li>
+<li>
+<p><strong>Idempotente</strong>: <code>UPDATE productos SET stock = 15 WHERE id = 42</code>. Reprocesar
+  el mensaje deja el stock en el mismo valor, por lo que un duplicado no causa
+  ningún daño.</p>
+</li>
+</ul>
+<p>Otra técnica habitual es incluir un identificador único en cada mensaje y
+registrar los ya procesados (por ejemplo, en una tabla de control o usando una
+clave primaria que rechace inserciones duplicadas). Antes de procesar un
+mensaje, el consumidor comprueba si ese identificador ya existe y, si es así,
+lo descarta.</p>
+</div>
 <h3 id="descubrimiento-de-brokers">Descubrimiento de brokers<a class="headerlink" href="#descubrimiento-de-brokers" title="Permanent link">&para;</a></h3>
 <p>Cada <em>broker</em> de <em>Kafka</em> es un <em>bootstrap server</em>, lo que significa que dicho servidor contiene un listado con todos los nodos del clúster, de manera que al conectarnos a un <em>broker</em>, automáticamente nos conectaremos al clúster entero.</p>
 <p>Mediante esta configuración, cada <em>broker</em> conoce todos los <em>brokers</em>, <em>topics</em> y particiones (metadatos del clúster).</p>
