@@ -4680,12 +4680,12 @@
 <span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">({</span>
-<span class="linenos" data-linenos=" 6 "></span>    <span class="s1">&#39;bootstrap.servers&#39;</span><span class="p">:</span> <span class="s1">&#39;localhost:9094,localhost:9095,localhost:9096&#39;</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="p">})</span>
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span>    <span class="s1">&#39;bootstrap.servers&#39;</span><span class="p">:</span> <span class="s1">&#39;localhost:9094,localhost:9095,localhost:9096&#39;</span>
+</span><span class="linenos" data-linenos=" 7 "></span><span class="p">})</span>
 <span class="linenos" data-linenos=" 8 "></span>
 <span class="linenos" data-linenos=" 9 "></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-<span class="linenos" data-linenos="10 "></span>    <span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="s2">&quot;iabd-topic-3p2r&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="s2">&quot;producer &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)})</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
-<span class="linenos" data-linenos="11 "></span>
+<span class="hll"><span class="linenos" data-linenos="10 "></span>    <span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="s2">&quot;iabd-topic-3p2r&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="s2">&quot;producer &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)})</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+</span><span class="linenos" data-linenos="11 "></span>
 <span class="linenos" data-linenos="12 "></span><span class="c1"># Esperamos a que se entreguen todos los mensajes pendientes.</span>
 <span class="linenos" data-linenos="13 "></span><span class="n">producer</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 <span class="linenos" data-linenos="14 "></span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -4696,13 +4696,13 @@
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">json</span><span class="w"> </span><span class="kn">import</span> <span class="n">loads</span>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">({</span>
-<span class="linenos" data-linenos=" 5 "></span>    <span class="s1">&#39;bootstrap.servers&#39;</span><span class="p">:</span> <span class="s1">&#39;localhost:9094,localhost:9095,localhost:9096&#39;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 6 "></span>    <span class="s1">&#39;group.id&#39;</span><span class="p">:</span> <span class="s1">&#39;iabd-grupo-1&#39;</span><span class="p">,</span>
+<span class="hll"><span class="linenos" data-linenos=" 5 "></span>    <span class="s1">&#39;bootstrap.servers&#39;</span><span class="p">:</span> <span class="s1">&#39;localhost:9094,localhost:9095,localhost:9096&#39;</span><span class="p">,</span>
+</span><span class="linenos" data-linenos=" 6 "></span>    <span class="s1">&#39;group.id&#39;</span><span class="p">:</span> <span class="s1">&#39;iabd-grupo-1&#39;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 7 "></span>    <span class="s1">&#39;auto.offset.reset&#39;</span><span class="p">:</span> <span class="s1">&#39;earliest&#39;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 8 "></span>    <span class="s1">&#39;enable.auto.commit&#39;</span><span class="p">:</span> <span class="kc">True</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="p">})</span>
-<span class="linenos" data-linenos="10 "></span><span class="n">consumer</span><span class="o">.</span><span class="n">subscribe</span><span class="p">([</span><span class="s1">&#39;iabd-topic-3p2r&#39;</span><span class="p">])</span>
-<span class="linenos" data-linenos="11 "></span>
+<span class="hll"><span class="linenos" data-linenos="10 "></span><span class="n">consumer</span><span class="o">.</span><span class="n">subscribe</span><span class="p">([</span><span class="s1">&#39;iabd-topic-3p2r&#39;</span><span class="p">])</span>
+</span><span class="linenos" data-linenos="11 "></span>
 <span class="linenos" data-linenos="12 "></span><span class="k">try</span><span class="p">:</span>
 <span class="linenos" data-linenos="13 "></span>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
 <span class="linenos" data-linenos="14 "></span>        <span class="n">m</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
@@ -5227,108 +5227,108 @@ Cada partición puede manejar un rendimiento de unos pocos MB/s. Al añadir más
 <span class="linenos" data-linenos="28 "></span>    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <p>A continuación definimos las conexiones necesarias para los pasos 1 (consumir <em>Kafka</em> en el <em>topic silver</em>), 2 (enviar a <em>S3/MinIO</em>), 3 (persistir en <em>MongoDB</em>) y 5 (producir <em>Kafka</em> en el <em>topic gold</em>):</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Paso 1 - Consumir Silver</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">({</span>
-<span class="linenos" data-linenos=" 3 "></span>    <span class="s2">&quot;bootstrap.servers&quot;</span><span class="p">:</span> <span class="n">BOOTSTRAP_SERVERS</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 4 "></span>    <span class="s2">&quot;group.id&quot;</span><span class="p">:</span> <span class="s2">&quot;iabd-caso3-silver&quot;</span><span class="p">,</span>     <span class="c1"># grupo propio, distinto del bronze</span>
-<span class="linenos" data-linenos=" 5 "></span>    <span class="s2">&quot;auto.offset.reset&quot;</span><span class="p">:</span> <span class="s2">&quot;earliest&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 6 "></span>    <span class="s2">&quot;enable.auto.commit&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="p">})</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="n">consumer</span><span class="o">.</span><span class="n">subscribe</span><span class="p">([</span><span class="s2">&quot;iabd-aemet-silver&quot;</span><span class="p">])</span>
-<span class="linenos" data-linenos=" 9 "></span>
-<span class="linenos" data-linenos="10 "></span><span class="c1"># Paso 2 - Conexión con S3 / MinIO</span>
-<span class="linenos" data-linenos="11 "></span><span class="c1"># (Versión Docker; en la VM basta con boto3.resource(&quot;s3&quot;, region_name=&quot;us-east-1&quot;))</span>
-<span class="linenos" data-linenos="12 "></span><span class="n">s3r</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span>
-<span class="linenos" data-linenos="13 "></span>    <span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="14 "></span>    <span class="n">endpoint_url</span><span class="o">=</span><span class="n">S3_ENDPOINT</span><span class="p">,</span>
-<span class="linenos" data-linenos="15 "></span>    <span class="n">aws_access_key_id</span><span class="o">=</span><span class="n">S3_KEY</span><span class="p">,</span>
-<span class="linenos" data-linenos="16 "></span>    <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="n">S3_SECRET</span><span class="p">,</span>
-<span class="linenos" data-linenos="17 "></span>    <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="18 "></span><span class="p">)</span>
-<span class="linenos" data-linenos="19 "></span><span class="n">bucket</span> <span class="o">=</span> <span class="n">s3r</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="n">S3_BUCKET</span><span class="p">)</span>
-<span class="linenos" data-linenos="20 "></span>
-<span class="linenos" data-linenos="21 "></span><span class="c1"># Paso 3 - Conexión con MongoDB</span>
-<span class="linenos" data-linenos="22 "></span><span class="n">clienteMongo</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">MONGO_URI</span><span class="p">)</span>
-<span class="linenos" data-linenos="23 "></span><span class="n">colcaso3</span> <span class="o">=</span> <span class="n">clienteMongo</span><span class="o">.</span><span class="n">iabd</span><span class="o">.</span><span class="n">caso3</span>
-<span class="linenos" data-linenos="24 "></span>
-<span class="linenos" data-linenos="25 "></span><span class="c1"># Paso 5 - Producir Gold</span>
-<span class="linenos" data-linenos="26 "></span><span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">({</span>
-<span class="linenos" data-linenos="27 "></span>    <span class="s2">&quot;bootstrap.servers&quot;</span><span class="p">:</span> <span class="n">BOOTSTRAP_SERVERS</span><span class="p">,</span>
-<span class="linenos" data-linenos="28 "></span>    <span class="s2">&quot;client.id&quot;</span><span class="p">:</span> <span class="s2">&quot;productor-gold&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="29 "></span>    <span class="s2">&quot;acks&quot;</span><span class="p">:</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="30 "></span>    <span class="s2">&quot;enable.idempotence&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<span class="linenos" data-linenos="31 "></span><span class="p">})</span>
-<span class="linenos" data-linenos="32 "></span>
-<span class="linenos" data-linenos="33 "></span><span class="k">def</span><span class="w"> </span><span class="nf">delivery_report</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-<span class="linenos" data-linenos="34 "></span>    <span class="k">if</span> <span class="n">err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="linenos" data-linenos="35 "></span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error entregando a </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">topic</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="36 "></span>    <span class="k">else</span><span class="p">:</span>
-<span class="linenos" data-linenos="37 "></span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mensaje gold enviado [P:</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">partition</span><span class="p">()</span><span class="si">}</span><span class="s2"> O:</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">offset</span><span class="p">()</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="29 "></span><span class="c1"># Paso 1 - Consumir Silver</span>
+<span class="linenos" data-linenos="30 "></span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">({</span>
+<span class="linenos" data-linenos="31 "></span>    <span class="s2">&quot;bootstrap.servers&quot;</span><span class="p">:</span> <span class="n">BOOTSTRAP_SERVERS</span><span class="p">,</span>
+<span class="linenos" data-linenos="32 "></span>    <span class="s2">&quot;group.id&quot;</span><span class="p">:</span> <span class="s2">&quot;iabd-caso3-silver&quot;</span><span class="p">,</span>     <span class="c1"># grupo propio, distinto del bronze</span>
+<span class="linenos" data-linenos="33 "></span>    <span class="s2">&quot;auto.offset.reset&quot;</span><span class="p">:</span> <span class="s2">&quot;earliest&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="34 "></span>    <span class="s2">&quot;enable.auto.commit&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="linenos" data-linenos="35 "></span><span class="p">})</span>
+<span class="linenos" data-linenos="36 "></span><span class="n">consumer</span><span class="o">.</span><span class="n">subscribe</span><span class="p">([</span><span class="s2">&quot;iabd-aemet-silver&quot;</span><span class="p">])</span>
+<span class="linenos" data-linenos="37 "></span>
+<span class="linenos" data-linenos="38 "></span><span class="c1"># Paso 2 - Conexión con S3 / MinIO</span>
+<span class="linenos" data-linenos="39 "></span><span class="c1"># (Versión Docker; en la VM basta con boto3.resource(&quot;s3&quot;, region_name=&quot;us-east-1&quot;))</span>
+<span class="linenos" data-linenos="40 "></span><span class="n">s3r</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span>
+<span class="linenos" data-linenos="41 "></span>    <span class="s2">&quot;s3&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="42 "></span>    <span class="n">endpoint_url</span><span class="o">=</span><span class="n">S3_ENDPOINT</span><span class="p">,</span>
+<span class="linenos" data-linenos="43 "></span>    <span class="n">aws_access_key_id</span><span class="o">=</span><span class="n">S3_KEY</span><span class="p">,</span>
+<span class="linenos" data-linenos="44 "></span>    <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="n">S3_SECRET</span><span class="p">,</span>
+<span class="linenos" data-linenos="45 "></span>    <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="46 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="47 "></span><span class="n">bucket</span> <span class="o">=</span> <span class="n">s3r</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="n">S3_BUCKET</span><span class="p">)</span>
+<span class="linenos" data-linenos="48 "></span>
+<span class="linenos" data-linenos="49 "></span><span class="c1"># Paso 3 - Conexión con MongoDB</span>
+<span class="linenos" data-linenos="50 "></span><span class="n">clienteMongo</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">MONGO_URI</span><span class="p">)</span>
+<span class="linenos" data-linenos="51 "></span><span class="n">colcaso3</span> <span class="o">=</span> <span class="n">clienteMongo</span><span class="o">.</span><span class="n">iabd</span><span class="o">.</span><span class="n">caso3</span>
+<span class="linenos" data-linenos="52 "></span>
+<span class="linenos" data-linenos="53 "></span><span class="c1"># Paso 5 - Producir Gold</span>
+<span class="linenos" data-linenos="54 "></span><span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">({</span>
+<span class="linenos" data-linenos="55 "></span>    <span class="s2">&quot;bootstrap.servers&quot;</span><span class="p">:</span> <span class="n">BOOTSTRAP_SERVERS</span><span class="p">,</span>
+<span class="linenos" data-linenos="56 "></span>    <span class="s2">&quot;client.id&quot;</span><span class="p">:</span> <span class="s2">&quot;productor-gold&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="57 "></span>    <span class="s2">&quot;acks&quot;</span><span class="p">:</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="58 "></span>    <span class="s2">&quot;enable.idempotence&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="linenos" data-linenos="59 "></span><span class="p">})</span>
+<span class="linenos" data-linenos="60 "></span>
+<span class="linenos" data-linenos="61 "></span><span class="k">def</span><span class="w"> </span><span class="nf">delivery_report</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+<span class="linenos" data-linenos="62 "></span>    <span class="k">if</span> <span class="n">err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos" data-linenos="63 "></span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error entregando a </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">topic</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="64 "></span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos" data-linenos="65 "></span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mensaje gold enviado [P:</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">partition</span><span class="p">()</span><span class="si">}</span><span class="s2"> O:</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">offset</span><span class="p">()</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Y para cada mensaje que consumimos, realizaremos los pasos 2 (enviar a <em>S3</em>), 3 (persistir en <em>MongoDB</em>), 4 (calcular los datos agregados) y 5 (producir en <em>Kafka</em> en <em>gold</em>):</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 40 "></span><span class="n">mensajes</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos" data-linenos=" 41 "></span>
-<span class="linenos" data-linenos=" 42 "></span><span class="k">try</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 43 "></span>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 44 "></span>        <span class="n">m</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 45 "></span>        <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 46 "></span>            <span class="k">continue</span>
-<span class="linenos" data-linenos=" 47 "></span>        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">error</span><span class="p">():</span>
-<span class="linenos" data-linenos=" 48 "></span>            <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">error</span><span class="p">()</span><span class="o">.</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="n">KafkaError</span><span class="o">.</span><span class="n">_PARTITION_EOF</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 49 "></span>                <span class="k">continue</span>
-<span class="linenos" data-linenos=" 50 "></span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">error</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 51 "></span>            <span class="k">continue</span>
-<span class="linenos" data-linenos=" 52 "></span>
-<span class="linenos" data-linenos=" 53 "></span>        <span class="n">valor_bytes</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
-<span class="linenos" data-linenos=" 54 "></span>        <span class="n">doc_json</span> <span class="o">=</span> <span class="n">loads</span><span class="p">(</span><span class="n">valor_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">object_hook</span><span class="o">=</span><span class="n">esquema_json</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 55 "></span>        <span class="n">mensajes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_json</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 56 "></span>
-<span class="linenos" data-linenos=" 57 "></span>        <span class="c1"># Paso 2 - Guardamos el mensaje en S3/MinIO</span>
-<span class="linenos" data-linenos=" 58 "></span>        <span class="n">nom_fichero</span> <span class="o">=</span> <span class="s2">&quot;silver/&quot;</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
-<span class="linenos" data-linenos=" 59 "></span>        <span class="n">bucket</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">Key</span><span class="o">=</span><span class="n">nom_fichero</span><span class="p">,</span> <span class="n">Body</span><span class="o">=</span><span class="n">valor_bytes</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 60 "></span>
-<span class="linenos" data-linenos=" 61 "></span>        <span class="c1"># Paso 3 - Lo insertamos en MongoDB</span>
-<span class="linenos" data-linenos=" 62 "></span>        <span class="c1"># Importante: insert_one() añade el campo _id al dict; para no</span>
-<span class="linenos" data-linenos=" 63 "></span>        <span class="c1"># contaminar la lista que usaremos en el agregado, pasamos una copia.</span>
-<span class="linenos" data-linenos=" 64 "></span>        <span class="n">colcaso3</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">doc_json</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
-<span class="linenos" data-linenos=" 65 "></span>
-<span class="linenos" data-linenos=" 66 "></span>        <span class="c1"># Paso 4 - Cada 10 mensajes calculamos el agregado</span>
-<span class="linenos" data-linenos=" 67 "></span>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mensajes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 68 "></span>            <span class="n">pd_mensajes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">mensajes</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 69 "></span>            <span class="n">pd_agg</span> <span class="o">=</span> <span class="p">(</span>
-<span class="linenos" data-linenos=" 70 "></span>                <span class="n">pd_mensajes</span>
-<span class="linenos" data-linenos=" 71 "></span>                <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ciudad&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 72 "></span>                <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">fecha</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;fecha&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos=" 73 "></span>                     <span class="n">temp</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;temp&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">),</span>
-<span class="linenos" data-linenos=" 74 "></span>                     <span class="n">humedad</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;humedad&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">))</span>
-<span class="linenos" data-linenos=" 75 "></span>                <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="linenos" data-linenos=" 76 "></span>            <span class="p">)</span>
-<span class="linenos" data-linenos=" 77 "></span>
-<span class="linenos" data-linenos=" 78 "></span>            <span class="c1"># Convertimos a list[dict] y dejamos las fechas como ISO para</span>
-<span class="linenos" data-linenos=" 79 "></span>            <span class="c1"># serializar una sola vez.</span>
-<span class="linenos" data-linenos=" 80 "></span>            <span class="n">registros</span> <span class="o">=</span> <span class="n">pd_agg</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 81 "></span>            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">registros</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 82 "></span>                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;fecha&quot;</span><span class="p">],</span> <span class="s2">&quot;isoformat&quot;</span><span class="p">):</span>
-<span class="linenos" data-linenos=" 83 "></span>                    <span class="n">r</span><span class="p">[</span><span class="s2">&quot;fecha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;fecha&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-<span class="linenos" data-linenos=" 84 "></span>
-<span class="linenos" data-linenos=" 85 "></span>            <span class="n">mensaje_gold</span> <span class="o">=</span> <span class="n">dumps</span><span class="p">(</span><span class="n">registros</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 86 "></span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mensaje gold: </span><span class="si">{</span><span class="n">mensaje_gold</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 87 "></span>
-<span class="linenos" data-linenos=" 88 "></span>            <span class="c1"># Paso 5 - Lo producimos al topic gold</span>
-<span class="linenos" data-linenos=" 89 "></span>            <span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span>
-<span class="linenos" data-linenos=" 90 "></span>                <span class="s2">&quot;iabd-aemet-gold&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 91 "></span>                <span class="n">value</span><span class="o">=</span><span class="n">mensaje_gold</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 92 "></span>                <span class="n">callback</span><span class="o">=</span><span class="n">delivery_report</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 93 "></span>            <span class="p">)</span>
-<span class="linenos" data-linenos=" 94 "></span>            <span class="n">producer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 95 "></span>
-<span class="linenos" data-linenos=" 96 "></span>            <span class="c1"># Vaciamos el buffer para el siguiente bloque de 10</span>
-<span class="linenos" data-linenos=" 97 "></span>            <span class="n">mensajes</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos" data-linenos=" 98 "></span><span class="k">finally</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 99 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cerrando consumidor y productor...&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="100 "></span>    <span class="n">producer</span><span class="o">.</span><span class="n">flush</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="linenos" data-linenos="101 "></span>    <span class="n">consumer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-<span class="linenos" data-linenos="102 "></span>    <span class="n">clienteMongo</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 66 "></span><span class="n">mensajes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos" data-linenos=" 67 "></span>
+<span class="linenos" data-linenos=" 68 "></span><span class="k">try</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 69 "></span>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 70 "></span>        <span class="n">m</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 71 "></span>        <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 72 "></span>            <span class="k">continue</span>
+<span class="linenos" data-linenos=" 73 "></span>        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">error</span><span class="p">():</span>
+<span class="linenos" data-linenos=" 74 "></span>            <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">error</span><span class="p">()</span><span class="o">.</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="n">KafkaError</span><span class="o">.</span><span class="n">_PARTITION_EOF</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 75 "></span>                <span class="k">continue</span>
+<span class="linenos" data-linenos=" 76 "></span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">error</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 77 "></span>            <span class="k">continue</span>
+<span class="linenos" data-linenos=" 78 "></span>
+<span class="linenos" data-linenos=" 79 "></span>        <span class="n">valor_bytes</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 80 "></span>        <span class="n">doc_json</span> <span class="o">=</span> <span class="n">loads</span><span class="p">(</span><span class="n">valor_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">object_hook</span><span class="o">=</span><span class="n">esquema_json</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 81 "></span>        <span class="n">mensajes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_json</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 82 "></span>
+<span class="linenos" data-linenos=" 83 "></span>        <span class="c1"># Paso 2 - Guardamos el mensaje en S3/MinIO</span>
+<span class="linenos" data-linenos=" 84 "></span>        <span class="n">nom_fichero</span> <span class="o">=</span> <span class="s2">&quot;silver/&quot;</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
+<span class="linenos" data-linenos=" 85 "></span>        <span class="n">bucket</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">Key</span><span class="o">=</span><span class="n">nom_fichero</span><span class="p">,</span> <span class="n">Body</span><span class="o">=</span><span class="n">valor_bytes</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 86 "></span>
+<span class="linenos" data-linenos=" 87 "></span>        <span class="c1"># Paso 3 - Lo insertamos en MongoDB</span>
+<span class="linenos" data-linenos=" 88 "></span>        <span class="c1"># Importante: insert_one() añade el campo _id al dict; para no</span>
+<span class="linenos" data-linenos=" 89 "></span>        <span class="c1"># contaminar la lista que usaremos en el agregado, pasamos una copia.</span>
+<span class="linenos" data-linenos=" 90 "></span>        <span class="n">colcaso3</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">doc_json</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+<span class="linenos" data-linenos=" 91 "></span>
+<span class="linenos" data-linenos=" 92 "></span>        <span class="c1"># Paso 4 - Cada 10 mensajes calculamos el agregado</span>
+<span class="linenos" data-linenos=" 93 "></span>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mensajes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 94 "></span>            <span class="n">pd_mensajes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">mensajes</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 95 "></span>            <span class="n">pd_agg</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos" data-linenos=" 96 "></span>                <span class="n">pd_mensajes</span>
+<span class="linenos" data-linenos=" 97 "></span>                <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ciudad&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 98 "></span>                <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">fecha</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;fecha&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 99 "></span>                     <span class="n">temp</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;temp&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos="100 "></span>                     <span class="n">humedad</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;humedad&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">))</span>
+<span class="linenos" data-linenos="101 "></span>                <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="linenos" data-linenos="102 "></span>            <span class="p">)</span>
+<span class="linenos" data-linenos="103 "></span>
+<span class="linenos" data-linenos="104 "></span>            <span class="c1"># Convertimos a list[dict] y dejamos las fechas como ISO para</span>
+<span class="linenos" data-linenos="105 "></span>            <span class="c1"># serializar una sola vez.</span>
+<span class="linenos" data-linenos="106 "></span>            <span class="n">registros</span> <span class="o">=</span> <span class="n">pd_agg</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="107 "></span>            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">registros</span><span class="p">:</span>
+<span class="linenos" data-linenos="108 "></span>                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;fecha&quot;</span><span class="p">],</span> <span class="s2">&quot;isoformat&quot;</span><span class="p">):</span>
+<span class="linenos" data-linenos="109 "></span>                    <span class="n">r</span><span class="p">[</span><span class="s2">&quot;fecha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;fecha&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+<span class="linenos" data-linenos="110 "></span>
+<span class="linenos" data-linenos="111 "></span>            <span class="n">mensaje_gold</span> <span class="o">=</span> <span class="n">dumps</span><span class="p">(</span><span class="n">registros</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="112 "></span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mensaje gold: </span><span class="si">{</span><span class="n">mensaje_gold</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="113 "></span>
+<span class="linenos" data-linenos="114 "></span>            <span class="c1"># Paso 5 - Lo producimos al topic gold</span>
+<span class="linenos" data-linenos="115 "></span>            <span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span>
+<span class="linenos" data-linenos="116 "></span>                <span class="s2">&quot;iabd-aemet-gold&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="117 "></span>                <span class="n">value</span><span class="o">=</span><span class="n">mensaje_gold</span><span class="p">,</span>
+<span class="linenos" data-linenos="118 "></span>                <span class="n">callback</span><span class="o">=</span><span class="n">delivery_report</span><span class="p">,</span>
+<span class="linenos" data-linenos="119 "></span>            <span class="p">)</span>
+<span class="linenos" data-linenos="120 "></span>            <span class="n">producer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos" data-linenos="121 "></span>
+<span class="linenos" data-linenos="122 "></span>            <span class="c1"># Vaciamos el buffer para el siguiente bloque de 10</span>
+<span class="linenos" data-linenos="123 "></span>            <span class="n">mensajes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos" data-linenos="124 "></span><span class="k">finally</span><span class="p">:</span>
+<span class="linenos" data-linenos="125 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cerrando consumidor y productor...&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="126 "></span>    <span class="n">producer</span><span class="o">.</span><span class="n">flush</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="linenos" data-linenos="127 "></span>    <span class="n">consumer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos" data-linenos="128 "></span>    <span class="n">clienteMongo</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div>
 <p>Si en un terminal creamos un consumidor del topic <code>iabd-aemet-gold</code>:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="16:2"><input checked="checked" id="__tabbed_16_1" name="__tabbed_16" type="radio" /><input id="__tabbed_16_2" name="__tabbed_16" type="radio" /><div class="tabbed-labels"><label for="__tabbed_16_1">Docker</label><label for="__tabbed_16_2">Máquina virtual</label></div>
@@ -5890,11 +5890,12 @@ Cada partición puede manejar un rendimiento de unos pocos MB/s. Al añadir más
 </ul>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol start="4">
-<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> y <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 2p) A partir del caso 2, crea un clúster de <em>Kafka</em> con 3 nodos y un <em>topic</em> con 4 particiones y factor de replicación 2. A continuación, mediante <em>Python</em>, en el productor utiliza <em>Faker</em> para crear 10 personas (almacénalas como un diccionario). En el consumidor, muestra los datos de las personas (no es necesario recibirlos ordenados, sólo necesitamos que se aproveche al máximo la infraestructura de <em>Kafka</em>). Finalmente, crea un flujo en Nifi que también consuma los mensajes del <em>topic</em>, y comprueba si se reciben los mismos mensajes.</li>
-<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> y <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / opcional) Realiza el caso de uso 3 mediante <em>Python</em>, pero separando el <code>consumerSilverProductorGold</code> en tres consumidores diferentes, uno que consuma y guarde en S3 (<code>consumerSilverS3.py</code>), otro que consuma y guarde en <em>MongoDB</em> (<code>consumerSilverMongoDB.py</code>) y el tercero que consuma, agrupe mensajes y produzca el mensaje al topic <em>gold</em> (<code>consumerSilverGroupProducerGold.py</code>).</li>
+<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> y <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 2p) A partir del caso 2, crea un clúster de <em>Kafka</em> con 3 nodos y un <em>topic</em> con 4 particiones y factor de replicación 2. A continuación, mediante <em>Python</em>, en el productor utiliza <em>Faker</em> para crear 10 personas (almacénalas como un diccionario). En el consumidor, muestra los datos de las personas (no es necesario recibirlos ordenados, sólo necesitamos que se aproveche al máximo la infraestructura de <em>Kafka</em>).<br />
+Finalmente, deten un nodo del cluster y comprueba que el flujo de mensajes sigue funcionando sin perder ningún mensaje, y que al volver a arrancar el nodo, se reincorpora al <code>Isr</code> y vuelve a ser parte del clúster.</li>
+<li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> y <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 2p) Realiza el caso de uso 3 mediante <em>Python</em>, pero separando el <code>consumerSilverProductorGold</code> en tres consumidores diferentes, uno que consuma y guarde en S3 (<code>consumerSilverS3.py</code>), otro que consuma y guarde en <em>MongoDB</em> (<code>consumerSilverMongoDB.py</code>) y el tercero que consuma, agrupe mensajes y produzca el mensaje al topic <em>gold</em> (<code>consumerSilverGroupProducerGold.py</code>).</li>
 <li>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / opcional) Realiza el caso de uso 4 mediante <em>Nifi</em>, pero modificando el primer flujo para que un grupo de procesadores únicamente realice la petición REST y coloque el contenido en <em>topic</em> <code>iabd-aemet-bronze</code> y en un segundo grupo, se consuman los mensajes de ese <em>topic</em> y se realice la transformación de la petición REST y su posterior producción al <em>topic</em> <code>iabd-aemet-silver</code>.</li>
 <li>
-<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 2p) A partir del ejemplo realizado en el apartado de <em>Kafka Connect</em>, añade otro conector para que consuma los mensajes de la cola y los inserte en <em>MongoDB</em> de forma automática. Para ello, puedes utilizar el <a href="https://www.confluent.io/hub/mongodb/kafka-connect-mongodb">MongoDB Connector (Source and Sink)</a> y consultar su <a href="https://www.mongodb.com/docs/kafka-connector/current/">documentación</a> y un ejemplo de <a href="https://github.com/mongodb/mongo-kafka/blob/master/config/MongoSinkConnector.properties">fichero de configuración</a>.</p>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / opcional) A partir del ejemplo realizado en el apartado de <em>Kafka Connect</em>, añade otro conector para que consuma los mensajes de la cola y los inserte en <em>MongoDB</em> de forma automática. Para ello, puedes utilizar el <a href="https://www.confluent.io/hub/mongodb/kafka-connect-mongodb">MongoDB Connector (Source and Sink)</a> y consultar su <a href="https://www.mongodb.com/docs/kafka-connector/current/">documentación</a> y un ejemplo de <a href="https://github.com/mongodb/mongo-kafka/blob/master/config/MongoSinkConnector.properties">fichero de configuración</a>.</p>
 <p>Ten en cuenta que para lanzar los dos conectores a la vez deberás lanzar <em>Kafka Connect</em> y pasarle todos los conectores como parámetros:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>connect-standalone.sh<span class="w"> </span>config/connect-standalone.properties<span class="w"> </span>config/mysql-source-connector.properties<span class="w"> </span>config/mongodb-sink-connector.properties
 </code></pre></div>
