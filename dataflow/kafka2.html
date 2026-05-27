@@ -2273,6 +2273,45 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#tolerancia-a-fallos-en-accion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tolerancia a fallos en acción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tolerancia a fallos en acción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mininsyncreplicas-y-acks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        min.insync.replicas y acks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rebalance-de-consumidores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rebalance de consumidores
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#decisiones-de-rendimiento" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2471,6 +2510,17 @@
     <span class="md-ellipsis">
       
         Kafka y el Big Data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
       
     </span>
   </a>
@@ -4083,6 +4133,45 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#tolerancia-a-fallos-en-accion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tolerancia a fallos en acción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tolerancia a fallos en acción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mininsyncreplicas-y-acks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        min.insync.replicas y acks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rebalance-de-consumidores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rebalance de consumidores
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#decisiones-de-rendimiento" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4288,6 +4377,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4400,9 +4500,10 @@
 
 
 <h1 id="kafka-cluster-e-integracion">Kafka: clúster e integración<a class="headerlink" href="#kafka-cluster-e-integracion" title="Permanent link">&para;</a></h1>
-<p>En esta sesión estudiaremos cómo crear un <em>cluster</em> de <em>Kafka</em>, realizaremos una integración desde un servicio REST hasta su persistencia en S3 y <em>MongoDB</em> haciendo uso de <em>Kafka</em> como <em>middleware</em> de integración, y finalmente veremos como utilizar <em>Kafka Connect</em> para integrar sistemas.</p>
+<p>En esta sesión estudiaremos cómo crear un clúster de <em>Kafka</em>, realizaremos una integración desde un servicio REST hasta su persistencia en S3 y <em>MongoDB</em> haciendo uso de <em>Kafka</em> como <em>middleware</em> de integración, y finalmente veremos como utilizar <em>Kafka Connect</em> para integrar sistemas.</p>
 <h2 id="caso-2-cluster-de-kafka">Caso 2: Clúster de Kafka<a class="headerlink" href="#caso-2-cluster-de-kafka" title="Permanent link">&para;</a></h2>
-<p>En <em>Kafka</em> hay tres tipos de clústers:</p>
+<p>En la <a href="kafka1.html#elementos">sesión anterior</a> estudiamos los conceptos que forman un clúster de <em>Kafka</em>: los <a href="kafka1.html#brokers"><em>brokers</em></a>, el <a href="kafka1.html#factor-de-replicacion">factor de replicación</a>, la <a href="kafka1.html#replica-lider">réplica líder y el ISR</a> y la <a href="kafka1.html#kraft">coordinación mediante KRaft</a>. Hasta ahora, sin embargo, solo habíamos trabajado con un único <em>broker</em>. En este caso vamos a llevar esa teoría a la práctica montando un clúster real de 3 nodos, para después verlo tolerar la caída de uno de ellos.</p>
+<p>Como ya sabemos, en <em>Kafka</em> hay tres tipos de clústers:</p>
 <ul>
 <li>Un nodo con un <em>broker</em></li>
 <li>Un nodo con muchos <em>brokers</em></li>
@@ -4476,6 +4577,10 @@
 </div>
 </div>
 <div class="tabbed-block">
+<div class="admonition warning">
+<p class="admonition-title">Entorno legacy con Zookeeper</p>
+<p>La máquina virtual conserva <em>Kafka 3.3.1</em> con <em>Zookeeper</em> por motivos didácticos, igual que vimos en la <a href="kafka1.html#aplicandolo-a-nuestros-entornos">sesión anterior</a>. Cualquier despliegue moderno (incluido el clúster <em>Docker</em> de este caso) funciona en modo <em>KRaft</em>, sin <em>Zookeeper</em>. Mantenemos esta pestaña como referencia del modelo clásico, pero el entorno recomendado es el de <em>Docker</em>.</p>
+</div>
 <p>Para ello, vamos a crear diferentes archivos de configuración a partir del fichero <code>config/server.properties</code> que utilizábamos para arrancar el servidor.</p>
 <p>Así pues, crearemos 3 copias del archivo modificando las propiedades <code>broker.id</code> (identificador del <em>broker</em>), <code>listeners</code> (URL y puerto de escucha del <em>broker</em>) y <code>log.dirs</code> (carpeta donde se guardarán los logs del <em>broker</em>):</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Broker 101</label><label for="__tabbed_2_2">Broker 102</label><label for="__tabbed_2_3">Broker 103</label></div>
@@ -4685,7 +4790,7 @@
 <span class="linenos" data-linenos=" 9 "></span>P:0 O:1 K:None V:{&#39;nombre&#39;: &#39;producer 4&#39;}
 <span class="linenos" data-linenos="10 "></span>P:0 O:2 K:None V:{&#39;nombre&#39;: &#39;producer 9&#39;}
 </code></pre></div>
-<p>Para asegurarnos el orden, debemos enviar los mensajes con una clave de partición con el atributo <code>key</code> del método <code>send</code>:</p>
+<p>Para asegurarnos el orden, debemos enviar los mensajes con una clave de partición con el atributo <code>key</code> del método <code>produce</code>:</p>
 <div class="highlight"><span class="filename">producer-cluster.py</span><pre><span></span><code><span class="linenos" data-linenos="10 "></span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="s2">&quot;iabd-topic-3p2r&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="s2">&quot;producer &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)})</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
 <span class="hll"><span class="linenos" data-linenos="11 "></span>    <span class="n">key</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;iabd&quot;</span><span class="p">)</span>
 </span></code></pre></div>
@@ -4701,13 +4806,118 @@
 <span class="linenos" data-linenos=" 9 "></span>P:0 O:11 K:b&#39;iabd&#39; V:{&#39;nombre&#39;: &#39;producer 8&#39;}
 <span class="linenos" data-linenos="10 "></span>P:0 O:12 K:b&#39;iabd&#39; V:{&#39;nombre&#39;: &#39;producer 9&#39;}
 </code></pre></div>
+<h3 id="tolerancia-a-fallos-en-accion">Tolerancia a fallos en acción<a class="headerlink" href="#tolerancia-a-fallos-en-accion" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora hemos producido y consumido contra un clúster sano. Pero el verdadero motivo de montar varios <em>brokers</em> con un factor de replicación mayor que 1 es <strong>sobrevivir a la caída de un nodo</strong>. Vamos a comprobarlo parando uno de los <em>brokers</em> y observando cómo reacciona el clúster.</p>
+<p>Partimos del <em>topic</em> <code>iabd-topic-3p2r</code> que creamos antes, con 3 particiones y factor de replicación 2. Recordemos su estado inicial (lo vimos al describirlo): cada partición tiene su líder en un <em>broker</em> distinto y una réplica en otro.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Docker</label><label for="__tabbed_7_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Vamos a parar el segundo <em>broker</em> del clúster:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>stop<span class="w"> </span>iabd-kafka-2
+</code></pre></div>
+<p>Y volvemos a describir el <em>topic</em> desde cualquiera de los <em>brokers</em> que siguen vivos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>iabd-kafka-1<span class="w"> </span>/opt/kafka/bin/kafka-topics.sh<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--describe<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-3p2r<span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka-1:9092
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Detenemos el segundo <em>broker</em> pulsando <span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-c">C</kbd></span> en el terminal donde lo arrancamos (el de <code>server102.properties</code>).</p>
+<p>Y volvemos a describir el <em>topic</em> desde otro de los <em>brokers</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-topics.sh<span class="w"> </span>--describe<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-3p2r<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Ahora veremos algo parecido a esto (el <em>broker</em> <code>2</code> ha desaparecido tanto de los líderes como de los <em>ISR</em>):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Topic: iabd-topic-3p2r  TopicId: lyrv4qXkS1-c09XAXnIj7w PartitionCount: 3       ReplicationFactor: 2
+<span class="hll"><span class="linenos" data-linenos="2 "></span>        Topic: iabd-topic-3p2r  Partition: 0    Leader: 3     Replicas: 3,2       Isr: 3
+</span><span class="hll"><span class="linenos" data-linenos="3 "></span>        Topic: iabd-topic-3p2r  Partition: 1    Leader: 1     Replicas: 2,1       Isr: 1
+</span><span class="linenos" data-linenos="4 "></span>        Topic: iabd-topic-3p2r  Partition: 2    Leader: 1     Replicas: 1,3       Isr: 1,3
+</code></pre></div>
+<p>Fíjate en lo que ha pasado:</p>
+<ul>
+<li>La <strong>partición 1</strong>, cuyo líder era el <em>broker</em> <code>2</code>, ha elegido un <strong>nuevo líder</strong>: ahora la sirve el <em>broker</em> <code>1</code>. El clúster no ha perdido el acceso a esos datos.</li>
+<li>En las particiones 0 y 1, el campo <code>Isr</code> (<em>in-sync replicas</em>) se ha reducido: la réplica que vivía en el <em>broker</em> <code>2</code> ya no está sincronizada, porque el <em>broker</em> está caído.</li>
+<li>La columna <code>Replicas</code> <strong>no cambia</strong>: indica dónde <em>deberían</em> estar las réplicas, mientras que <code>Isr</code> indica cuáles están realmente al día. Cuando el <em>broker</em> <code>2</code> vuelva, se pondrá al día y volverá a aparecer en <code>Isr</code>.
+Si ahora ejecutamos de nuevo el productor y el consumidor del apartado anterior, <strong>siguen funcionando</strong>: el clúster ha tolerado la caída de un nodo, justo como prometía el factor de replicación 2.</li>
+</ul>
+<h4 id="mininsyncreplicas-y-acks">min.insync.replicas y acks<a class="headerlink" href="#mininsyncreplicas-y-acks" title="Permanent link">&para;</a></h4>
+<p>Aquí entra en juego una propiedad que aparece en el <code>docker-compose.yml</code> del clúster y que conviene entender: <code>KAFKA_MIN_INSYNC_REPLICAS: 2</code>.</p>
+<p>Recordemos los <a href="kafka1.html#productores">niveles de <code>acks</code></a> de la sesión anterior. La propiedad <code>min.insync.replicas</code> solo tiene efecto <strong>cuando el productor usa <code>acks=all</code></strong>, y define el mínimo de réplicas sincronizadas (<em>ISR</em>) que deben confirmar una escritura para que se considere correcta.</p>
+<p>Con nuestra configuración (factor de replicación 2 y <code>min.insync.replicas=2</code>):</p>
+<ul>
+<li><strong>Clúster sano</strong>: cada partición tiene 2 <em>ISR</em>. Una escritura con <code>acks=all</code> necesita la confirmación de las 2 → funciona.</li>
+<li><strong>Un <em>broker</em> caído</strong> (el escenario que acabamos de provocar): las particiones afectadas se quedan con 1 sola <em>ISR</em>. Una escritura con <code>acks=all</code> ya <strong>no puede</strong> cumplir el mínimo de 2 y <em>Kafka</em> la rechaza con el error <code>NOT_ENOUGH_REPLICAS</code>.
+Es decir, <code>min.insync.replicas</code> es un compromiso explícito entre <strong>durabilidad</strong> y <strong>disponibilidad</strong>: con <code>acks=all</code> y <code>min.insync.replicas=2</code> garantizamos que ningún mensaje confirmado se pierde, pero a cambio el <em>topic</em> deja de aceptar escrituras en cuanto cae un <em>broker</em>. Con <code>acks=1</code> (o <code>acks=0</code>), en cambio, el productor seguiría escribiendo aun con un nodo caído, asumiendo el riesgo de pérdida.</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">¿Por qué con <code>acks=all</code> el productor de antes no ha fallado?</p>
+<p>Porque los ejemplos de "Produciendo y consumiendo" no fijan <code>acks</code> y, en <em>confluent-kafka</em>, el valor por defecto del productor es <code>acks=all</code> solo cuando la idempotencia está activada; en una configuración mínima como la nuestra, el productor usa un <code>acks</code> que <strong>no</strong> exige el quórum completo de <em>ISR</em>. Si quieres reproducir el rechazo <code>NOT_ENOUGH_REPLICAS</code>, añade explícitamente <code>'acks': 'all'</code> a la configuración del productor, deja un solo <em>broker</em> caído y vuelve a producir.</p>
+</div>
+<p>Finalmente, <strong>rearrancamos el <em>broker</em></strong> que habíamos parado:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Docker</label><label for="__tabbed_8_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>start<span class="w"> </span>iabd-kafka-2
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-server-start.sh<span class="w"> </span>./config/server102.properties
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Si esperamos unos segundos y volvemos a describir el <em>topic</em>, veremos que el <em>broker</em> recuperado se ha <strong>reincorporado a los <em>ISR</em></strong> de todas sus particiones: ha copiado los mensajes que se perdió mientras estaba caído y vuelve a estar sincronizado. El clúster ha vuelto a su estado sano sin intervención manual.</p>
+<div class="admonition tip">
+<p class="admonition-title">Visualízalo en Kafka UI</p>
+<p>Todo este proceso se ve muy bien en <a href="http://localhost:8081"><em>Kafka UI</em></a>: en la vista del <em>topic</em>, la columna de réplicas y el indicador de <em>under-replicated partitions</em> cambian en tiempo real conforme paras y arrancas el <em>broker</em>.</p>
+</div>
+<h4 id="rebalance-de-consumidores">Rebalance de consumidores<a class="headerlink" href="#rebalance-de-consumidores" title="Permanent link">&para;</a></h4>
+<p>La caída de un <em>broker</em> no es el único evento al que un clúster debe adaptarse. También lo es la entrada o salida de <strong>consumidores</strong> de un grupo. Cuando esto ocurre, <em>Kafka</em> lanza un <strong>rebalance</strong>: redistribuye las particiones del <em>topic</em> entre los consumidores activos del grupo.</p>
+<p>Podemos verlo con el clúster en marcha. Lanzamos <strong>dos consumidores</strong> del mismo grupo, cada uno en un terminal distinto, sobre el <em>topic</em> <code>iabd-topic-3p2r</code> (3 particiones):</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Docker</label><label for="__tabbed_9_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>iabd-kafka-1<span class="w"> </span>/opt/kafka/bin/kafka-console-consumer.sh<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--topic<span class="w"> </span>iabd-topic-3p2r<span class="w"> </span>--group<span class="w"> </span>iabd-rebalance<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--bootstrap-server<span class="w"> </span>kafka-1:9092
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-console-consumer.sh<span class="w"> </span>--topic<span class="w"> </span>iabd-topic-3p2r<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--group<span class="w"> </span>iabd-rebalance<span class="w"> </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Con dos consumidores y tres particiones, <em>Kafka</em> asigna 2 particiones a uno y 1 al otro. Podemos comprobar el reparto con:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Docker</label><label for="__tabbed_10_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>iabd-kafka-1<span class="w"> </span>/opt/kafka/bin/kafka-consumer-groups.sh<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--describe<span class="w"> </span>--group<span class="w"> </span>iabd-rebalance<span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka-1:9092
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>kafka-consumer-groups.sh<span class="w"> </span>--describe<span class="w"> </span>--group<span class="w"> </span>iabd-rebalance<span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--bootstrap-server<span class="w"> </span>iabd-virtualbox:9092
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>En la salida, la columna <code>CONSUMER-ID</code> nos dice qué consumidor atiende cada partición. Si ahora <strong>paramos uno</strong> de los dos consumidores (<span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-c">C</kbd></span>), se produce un <em>rebalance</em>: el consumidor que queda asume las 3 particiones. Y si <strong>arrancamos un tercero</strong>, el reparto vuelve a equilibrarse. Como vimos en la <a href="kafka1.html#faq">FAQ de la sesión anterior</a>, desde <em>Kafka 2.4</em> el <em>Cooperative Sticky Assignor</em> hace que estos <em>rebalances</em> sean incrementales: solo se reasignan las particiones que cambian de dueño, sin detener todo el grupo.</p>
+<div class="admonition note">
+<p class="admonition-title">Más consumidores que particiones</p>
+<p>Si lanzas un cuarto consumidor en este grupo (4 consumidores, 3 particiones), uno de ellos quedará <strong>ocioso</strong>: no recibirá ninguna partición. El paralelismo máximo de un grupo lo marca el número de particiones del <em>topic</em>, no el de consumidores.</p>
+</div>
 <h3 id="decisiones-de-rendimiento">Decisiones de rendimiento<a class="headerlink" href="#decisiones-de-rendimiento" title="Permanent link">&para;</a></h3>
 <p>Aunque podemos modificar la cantidad de particiones y el factor de replicación una vez creado el clúster, es mejor hacerlo de la manera correcta durante la creación ya que tienen un impacto directo en el rendimiento y durabilidad del sistema:</p>
 <ul>
 <li>si el número de particiones crece con el clúster ya creado, el orden de las claves no está garantizado.</li>
-<li>si se incrementa el factor de replicación durante el ciclo de vida de un <em>topic</em>, estaremos metiendo presión al clúster, que provocará un decremento inesperado del rendimiento.</li>
+<li>si se incrementa el factor de replicación durante el ciclo de vida de un <em>topic</em>, estaremos metiendo presión al clúster, que provocará un decremento inesperado del rendimiento.
+Cada partición puede manejar un rendimiento de unos pocos MB/s. Al añadir más particiones, obtendremos mejor paralelización y por tanto, mejor rendimiento. Además, podremos ejecutar más consumidores en un grupo. Pero el hecho de añadir más particiones tiene un coste: cada una supone más ficheros abiertos en los <em>brokers</em>, más metadatos que el <em>controller</em> de <em>KRaft</em> debe gestionar y <em>rebalances</em> más lentos.</li>
 </ul>
-<p>Cada partición puede manejar un rendimiento de unos pocos MB/s. Al añadir más particiones, obtendremos mejor paralelización y por tanto, mejor rendimiento. Además, podremos ejecutar más consumidores en un grupo. Pero el hecho de añadir más <em>brokers</em> al clúster para que las particiones los aprovechen, provocará que <em>Zookeeper</em> tenga que realizar más elecciones y que <em>Kafka</em> tenga más ficheros abiertos.</p>
 <div class="admonition tip">
 <p class="admonition-title">Guía de rendimiento</p>
 <p>Una propuesta es:</p>
@@ -4724,7 +4934,7 @@
 <li>Pero tendremos mayor replicación (lo que implicará una mayor latencia si <code>acks=all</code>)</li>
 <li>Y también ocupará más espacio en disco (50% más si RF es 3 en vez de 2).</li>
 </ul>
-<p>Respecto al clúster, se recomienda que un <em>broker</em> no contenga más de 2000-4000 particiones (entre todos los <em>topics</em> de ese <em>broker</em>). Además, un clúster de <em>Kafka</em> debería tener un máximo de 20.000 particiones entre todos los <em>brokers</em>, ya que si se cayese algún nodo, <em>Zookeeper</em> necesitaría realizar muchas elecciones de líder.</p>
+<p>Respecto al clúster, se recomienda que un <em>broker</em> no contenga más de 2000-4000 particiones (entre todos los <em>topics</em> de ese <em>broker</em>). Con el modelo clásico de <em>Zookeeper</em> existía además un límite práctico de unas decenas de miles de particiones por clúster, porque la caída de un nodo obligaba a <em>Zookeeper</em> a reelegir el líder de cada partición afectada de forma secuencial. Con <em>KRaft</em> este cuello de botella desaparece: el <em>controller</em> mantiene los metadatos en memoria y propaga los cambios mediante el <em>log</em> replicado, lo que permite clústeres con millones de particiones y <em>failovers</em> mucho más rápidos. Aun así, un número desmesurado de particiones sigue teniendo coste (memoria, ficheros abiertos, tiempo de recuperación), por lo que conviene dimensionarlo con criterio.</p>
 <h2 id="caso-3-de-aemet-a-s3-y-mongodb">Caso 3: De AEMET a S3 y MongoDB<a class="headerlink" href="#caso-3-de-aemet-a-s3-y-mongodb" title="Permanent link">&para;</a></h2>
 <p>En este caso de uso vamos a repetir el que hicimos en la <a href="nifi2.html#caso-7-de-aemet-a-mongodb-y-s3">sesión de Nifi</a> pero utilizando <em>Kafka</em> como elemento de integración, desacoplando los productores de los consumidores.</p>
 <p>La arquitectura del sistema sería la siguiente:</p>
@@ -4754,7 +4964,7 @@
     CSilver --&gt; S3S
     CSilver --&gt; Mongo
     CSilver --&gt;|cada 10 mensajes| Gold</code></pre>
-<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Docker</label><label for="__tabbed_7_2">Máquina virtual</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">Docker</label><label for="__tabbed_11_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Para este caso, usaremos  el <strong>broker único</strong> (perfil <code>kafka</code>), porque no necesitamos el clúster del Caso 2, así como los contenedores de <em>MinIO</em> (S3). En cuanto a <em>MongoDB</em>, como no está en el <code>docker-compose.yml</code>, usaremos el clúster de <em>MongoAtlas</em> que hemos empleado durante el curso.</p>
@@ -4778,7 +4988,7 @@
 <li>generar un nuevo mensaje JSON más pequeño con la información que nos interesa, y enviar este nuevo mensaje a un topic que llamaremos <code>iabd-aemet-silver</code>.</li>
 </ul>
 <p>Así pues, primero creamos los <em>topics</em>:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Docker</label><label for="__tabbed_8_2">Máquina virtual</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked="checked" id="__tabbed_12_1" name="__tabbed_12" type="radio" /><input id="__tabbed_12_2" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="__tabbed_12_1">Docker</label><label for="__tabbed_12_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Los comandos <code>kafka-topics.sh</code> están dentro del contenedor, por lo que usaremos <code>docker exec</code>:</p>
@@ -4805,7 +5015,7 @@
 </div>
 <hr />
 <p>A continuación desarrollamos el productor, que hará uso de la librería <a href="https://requests.readthedocs.io/en/latest/">requests</a> para llamar a la API REST. Como la conexión al <em>broker</em> cambia según dónde estemos ejecutando el código, extraemos la lista de <em>bootstrap servers</em> a una variable:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Docker</label><label for="__tabbed_9_2">Máquina virtual</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked="checked" id="__tabbed_13_1" name="__tabbed_13" type="radio" /><input id="__tabbed_13_2" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="__tabbed_13_1">Docker</label><label for="__tabbed_13_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Si ejecutamos el código desde el <em>host</em> (por ejemplo, VSCode local), usamos el puerto externo:</p>
@@ -4887,7 +5097,7 @@
 <h3 id="consumidor-bronze">Consumidor Bronze<a class="headerlink" href="#consumidor-bronze" title="Permanent link">&para;</a></h3>
 <p>En el consumidor del <em>topic</em> <code>iabd-aemet-bronze</code> vamos a recuperar las peticiones REST almacenadas en JSON y las persistiremos en <em>S3</em> (en la máquina virtual) o en <em>MinIO</em> (en Docker), que es un almacén compatible con el protocolo S3.</p>
 <p>En este caso, como el mensaje ya está en formato JSON y no queremos tratarlo, no hace falta deserializarlo ni volverlo a serializar.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Docker</label><label for="__tabbed_10_2">Máquina virtual</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Docker</label><label for="__tabbed_14_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>En la pila <em>Docker</em> usamos <em>MinIO</em> sobre el bucket <code>raw-data</code> (creado por <code>minio-init</code> al arrancar el perfil <code>spark</code>). Las credenciales son <code>minioadmin</code> / <code>minioadmin123</code> según el <code>docker-compose.yml</code>:</p>
@@ -4966,7 +5176,7 @@
 <li>para finalmente producir dicho mensaje al topic <code>iabd-aemet-gold</code>.</li>
 </ol>
 <p>Así pues, primero creamos el <em>topic</em> <em>gold</em>:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">Docker</label><label for="__tabbed_11_2">Máquina virtual</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="15:2"><input checked="checked" id="__tabbed_15_1" name="__tabbed_15" type="radio" /><input id="__tabbed_15_2" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="__tabbed_15_1">Docker</label><label for="__tabbed_15_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>--workdir<span class="w"> </span>/opt/kafka/bin<span class="w"> </span>iabd-kafka<span class="w"> </span><span class="se">\</span>
@@ -5116,7 +5326,7 @@
 <span class="linenos" data-linenos="102 "></span>    <span class="n">clienteMongo</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div>
 <p>Si en un terminal creamos un consumidor del topic <code>iabd-aemet-gold</code>:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked="checked" id="__tabbed_12_1" name="__tabbed_12" type="radio" /><input id="__tabbed_12_2" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="__tabbed_12_1">Docker</label><label for="__tabbed_12_2">Máquina virtual</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="16:2"><input checked="checked" id="__tabbed_16_1" name="__tabbed_16" type="radio" /><input id="__tabbed_16_2" name="__tabbed_16" type="radio" /><div class="tabbed-labels"><label for="__tabbed_16_1">Docker</label><label for="__tabbed_16_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>--workdir<span class="w"> </span>/opt/kafka/bin<span class="w"> </span>iabd-kafka
@@ -5205,7 +5415,7 @@
 <h3 id="hola-kafka-connect">Hola Kafka Connect<a class="headerlink" href="#hola-kafka-connect" title="Permanent link">&para;</a></h3>
 <p>Vamos a realizar un ejemplo sencillo: leer los datos de una tabla de una base de datos relacional e introducirlos automáticamente en un <em>topic</em> de <em>Kafka</em>.</p>
 <p>Utilizaremos la base de datos <code>retail_db</code> que ya hemos empleado en <a href="../hadoop/sqoop.html#actividades">otras sesiones</a> y cargaremos en <em>Kafka</em> los datos de la tabla <code>categories</code>:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked="checked" id="__tabbed_13_1" name="__tabbed_13" type="radio" /><input id="__tabbed_13_2" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="__tabbed_13_1">Docker</label><label for="__tabbed_13_2">Máquina virtual</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="17:2"><input checked="checked" id="__tabbed_17_1" name="__tabbed_17" type="radio" /><input id="__tabbed_17_2" name="__tabbed_17" type="radio" /><div class="tabbed-labels"><label for="__tabbed_17_1">Docker</label><label for="__tabbed_17_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>En el stack del curso, <code>retail_db</code> se encuentra en el contenedor <code>iabd-mysql-datos</code> (perfil <code>datos</code>). Podemos consultar la estructura de la tabla con:</p>
@@ -5241,7 +5451,7 @@
 </ul>
 <p>La única diferencia práctica para nosotros es el nombre de la clase del conector: <code>io.aiven.connect.jdbc.JdbcSourceConnector</code> en lugar de <code>io.confluent.connect.jdbc.JdbcSourceConnector</code>.</p>
 <p>Además, el conector JDBC necesita el driver JDBC de la base de datos, que tampoco viene incluido. Como vamos a conectar con <em>MySQL</em>, necesitaremos también el <code>mysql-connector-j</code>. En nuestro caso, tanto en el <em>stack</em> de <em>Docker</em> como en la máquina virtual, ya tenemos los plugins descargados y configurados.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">Docker</label><label for="__tabbed_14_2">Máquina virtual</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="18:2"><input checked="checked" id="__tabbed_18_1" name="__tabbed_18" type="radio" /><input id="__tabbed_18_2" name="__tabbed_18" type="radio" /><div class="tabbed-labels"><label for="__tabbed_18_1">Docker</label><label for="__tabbed_18_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>En el <em>stack</em> del curso, <em>Kafka Connect</em> se ejecuta en el contenedor <code>iabd-kafka-connect</code> y los <em>plugins</em> se cargan desde una carpeta del <em>host</em> montada como volumen:</p>
@@ -5337,7 +5547,7 @@
 </div>
 <h4 id="extrayendo-datos">Extrayendo datos<a class="headerlink" href="#extrayendo-datos" title="Permanent link">&para;</a></h4>
 <p>Ya tenemos el conector instalado. Ahora vamos a definir una instancia de conector que lea de la tabla <code>categories</code>. Usamos un conector <em>source</em> JDBC en modo <code>incrementing</code>: el conector recuerda el último <code>category_id</code> procesado y solo trae las filas nuevas en cada <em>sondeo</em>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="15:2"><input checked="checked" id="__tabbed_15_1" name="__tabbed_15" type="radio" /><input id="__tabbed_15_2" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="__tabbed_15_1">Docker</label><label for="__tabbed_15_2">Máquina virtual</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="19:2"><input checked="checked" id="__tabbed_19_1" name="__tabbed_19" type="radio" /><input id="__tabbed_19_2" name="__tabbed_19" type="radio" /><div class="tabbed-labels"><label for="__tabbed_19_1">Docker</label><label for="__tabbed_19_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>En modo <em>distributed</em> los conectores se crean mediante la <strong>API REST</strong> enviando un documento JSON. Para ello, hemos de indicar toda la configuración en un fichero, el cual ya tenemos colocado dentro la carpeta <code>kafka</code>:</p>
@@ -5406,7 +5616,7 @@
 </div>
 </div>
 <p>El conector mapea la tabla <code>categories</code> al <em>topic</em> <code>iabd-retail_db-categories</code> (<code>topic.prefix</code> + nombre de la tabla). Si ahora arrancamos un consumidor sobre ese <em>topic</em>:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="16:2"><input checked="checked" id="__tabbed_16_1" name="__tabbed_16" type="radio" /><input id="__tabbed_16_2" name="__tabbed_16" type="radio" /><div class="tabbed-labels"><label for="__tabbed_16_1">Docker</label><label for="__tabbed_16_2">Máquina virtual</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="20:2"><input checked="checked" id="__tabbed_20_1" name="__tabbed_20" type="radio" /><input id="__tabbed_20_2" name="__tabbed_20" type="radio" /><div class="tabbed-labels"><label for="__tabbed_20_1">Docker</label><label for="__tabbed_20_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>--workdir<span class="w"> </span>/opt/kafka/bin<span class="w"> </span>iabd-kafka<span class="w"> </span>bash
@@ -5516,7 +5726,7 @@
 <p>Con esto tenemos un flujo <em>ETL</em> completo y declarativo: el conector <em>source</em> lee de <em>MySQL</em> y publica en un <em>topic</em>, y el conector <em>sink</em> consume ese <em>topic</em> y persiste los datos en <em>MinIO</em>. <em>Kafka</em> desacopla ambos extremos, y nosotros solo hemos escrito dos ficheros JSON de configuración.</p>
 <h3 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h3>
 <p>Como <em>Kafka Connect</em> está diseñado como un servicio que debe ejecutarse de forma continua, ofrece una <strong>API REST</strong> para gestionar los conectores sin reiniciar el <em>worker</em>. Por defecto escucha en el puerto <code>8083</code>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="17:2"><input checked="checked" id="__tabbed_17_1" name="__tabbed_17" type="radio" /><input id="__tabbed_17_2" name="__tabbed_17" type="radio" /><div class="tabbed-labels"><label for="__tabbed_17_1">Docker</label><label for="__tabbed_17_2">Máquina virtual</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="21:2"><input checked="checked" id="__tabbed_21_1" name="__tabbed_21" type="radio" /><input id="__tabbed_21_2" name="__tabbed_21" type="radio" /><div class="tabbed-labels"><label for="__tabbed_21_1">Docker</label><label for="__tabbed_21_2">Máquina virtual</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <table>
@@ -5621,6 +5831,51 @@
 <p>En la edición de 21/22, en estas sesiones, realizamos diferentes casos de uso con <em>Elasticsearch</em> y <em>Twitter</em>. </p>
 <p>Este curso no hemos visto <em>Elasticsearch</em>, y además, el API de <em>Twitter</em> ha dejado de ser gratuita. Si tienes curiosidad, puedes consultar dichos casos de uso en los <a href="https://aitor-medrano.github.io/bigdata2122/apuntes/bdaplicado05kafka.html#caso-3-de-twitter-a-elasticsearch-con-python">apuntes de dicho curso</a>.</p>
 </div>
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<p>Igual que en la <a href="kafka1.html#faq">sesión anterior</a>, recogemos algunas de las preguntas habituales en entrevistas de trabajo, esta vez centradas en los conceptos de clúster e integración vistos en esta sesión.</p>
+<details class="question">
+<summary>¿Cuál es la diferencia entre <code>Replicas</code> e <code>Isr</code> al describir un <em>topic</em>?</summary>
+<p><code>Replicas</code> es la lista de <em>brokers</em> donde <em>debería</em> existir una réplica de la partición: se fija al crear el <em>topic</em> (según el factor de replicación) y no cambia salvo que se reasignen particiones manualmente. <code>Isr</code> (<em>in-sync replicas</em>) es el subconjunto de esas réplicas que están realmente <strong>al día</strong> con el líder.</p>
+<p>Cuando un <em>broker</em> se cae o se queda rezagado, su réplica sale del <code>Isr</code> pero sigue figurando en <code>Replicas</code>. Si el <em>broker</em> vuelve y copia los mensajes pendientes, se reincorpora al <code>Isr</code>. Por eso, una partición <em>under-replicated</em> (con menos <code>Isr</code> que <code>Replicas</code>) es una señal de alerta: el <em>topic</em> sigue funcionando, pero ha perdido parte de su tolerancia a fallos.</p>
+</details>
+<details class="question">
+<summary>¿Qué es <code>min.insync.replicas</code> y cómo interactúa con <code>acks=all</code>?</summary>
+<p><code>min.insync.replicas</code> define el número mínimo de réplicas sincronizadas (<em>ISR</em>) que deben confirmar una escritura para considerarla correcta. Solo tiene efecto cuando el productor usa <code>acks=all</code>.</p>
+<p>La combinación habitual en producción es factor de replicación 3 con <code>min.insync.replicas=2</code> y <code>acks=all</code>: así una escritura confirmada vive al menos en 2 <em>brokers</em>, y el clúster tolera la caída de 1 nodo sin dejar de aceptar escrituras. Si <code>min.insync.replicas</code> igualara al factor de replicación, la caída de un solo <em>broker</em> bloquearía las escrituras con el error <code>NOT_ENOUGH_REPLICAS</code>. Es, en el fondo, el ajuste explícito del compromiso entre durabilidad y disponibilidad.</p>
+</details>
+<details class="question">
+<summary>¿Cómo se elige el nuevo líder de una partición cuando cae su <em>broker</em>?</summary>
+<p>Cuando el <em>broker</em> que aloja la réplica líder se cae, el <em>controller</em> del clúster (el <em>controller</em> de <em>KRaft</em> en <em>Kafka 4.x</em>, o <em>Zookeeper</em> en versiones antiguas) promueve a líder a una de las réplicas que siguen en el <code>Isr</code>. Como esa réplica estaba sincronizada, no se pierde ningún mensaje confirmado. Cuando el <em>broker</em> caído vuelve, copia los mensajes que se perdió y se reincorpora al <code>Isr</code>, tal y como comprobamos en el <a href="#tolerancia-a-fallos-en-accion">Caso 2</a>.</p>
+</details>
+<details class="question">
+<summary>¿Por qué un clúster de <em>Kafka</em> recomienda un número impar de nodos?</summary>
+<p>Porque la coordinación del clúster se basa en un <strong>quórum por mayoría</strong>. Tanto el quórum de <em>controllers</em> de <em>KRaft</em> como, en su día, el ensamblado de <em>Zookeeper</em>, necesitan que más de la mitad de los miembros estén vivos para tomar decisiones. Con 3 nodos se tolera la caída de 1; con 5, la de 2.</p>
+<p>Un número par no aporta tolerancia extra y sí más riesgo: 4 nodos toleran la caída de 1 (igual que 3) pero tienen más superficie de fallo. Por eso se eligen siempre cantidades impares (3, 5, 7).</p>
+</details>
+<details class="question">
+<summary>¿Qué es <em>Kafka Connect</em> y qué ventaja aporta frente a escribir un productor/consumidor a mano?</summary>
+<p><em>Kafka Connect</em> es un <em>framework</em> —y un servicio— para integrar <em>Kafka</em> con sistemas externos mediante <strong>conectores declarativos</strong>, sin escribir código. Un conector <em>source</em> lleva datos de un sistema externo a <em>Kafka</em> (la E de un <em>ETL</em>); un conector <em>sink</em> lleva datos de <em>Kafka</em> a un sistema externo (la L).</p>
+<p>La ventaja no es solo ahorrarse el código: <em>Kafka Connect</em> resuelve de serie la gestión de <em>offsets</em>, los reintentos, el paralelismo mediante <em>tasks</em>, la tolerancia a fallos y el escalado horizontal. Reescribir todo eso de forma robusta en un <em>script</em> propio es costoso y propenso a errores. Se reserva el código a medida para la lógica de negocio que ningún conector existente cubre.</p>
+</details>
+<details class="question">
+<summary>¿Qué diferencia hay entre el modo <em>standalone</em> y el modo <em>distributed</em> de <em>Kafka Connect</em>?</summary>
+<p>En modo <em>standalone</em> el <em>worker</em> se ejecuta en un único proceso y la configuración de los conectores y sus <em>offsets</em> se guardan en ficheros locales. Es sencillo, pero no tiene tolerancia a fallos ni escalado: si el proceso muere, la ingesta se detiene.</p>
+<p>En modo <em>distributed</em> se ejecutan varios <em>workers</em> con el mismo <code>group.id</code>, formando un clúster. La configuración, los <em>offsets</em> y el estado de los conectores se guardan en <em>topics</em> internos de <em>Kafka</em> (<code>connect-configs</code>, <code>connect-offsets</code>, <code>connect-status</code>), de modo que cualquier <em>worker</em> puede retomar el trabajo de otro que falle. Los conectores se gestionan por la API REST, no por fichero. Es el modo recomendado para producción y el que usamos en el <em>stack Docker</em> del curso.</p>
+</details>
+<details class="question">
+<summary>¿Por qué los conectores no vienen incluidos en <em>Kafka</em> y hay que instalarlos como <em>plugins</em>?</summary>
+<p>Porque cada conector tiene sus propias dependencias (drivers JDBC, SDKs de servicios cloud, librerías de cada base de datos...) y empaquetarlas todas en la distribución oficial la haría enorme y llena de conflictos de versiones. <em>Kafka</em> solo incluye unos conectores de ejemplo (<code>FileStream*</code>, <em>MirrorMaker</em>); el resto se añaden colocando sus JARs en una carpeta declarada en <code>plugin.path</code>. Al arrancar, el <em>worker</em> escanea esa ruta y registra lo que encuentra. Esto mantiene el núcleo ligero y permite elegir exactamente los conectores —y las versiones— que cada despliegue necesita.</p>
+</details>
+<details class="question">
+<summary>¿Qué es el patrón CDC (<em>Change Data Capture</em>) y qué relación tiene con <em>Kafka</em>?</summary>
+<p>CDC es la técnica de capturar los cambios (inserciones, actualizaciones, borrados) que ocurren en una base de datos y emitirlos como un flujo de eventos. La forma robusta de hacerlo es leer el <em>log</em> de transacciones de la base de datos (el <em>binlog</em> de <em>MySQL</em>, el WAL de <em>PostgreSQL</em>), de modo que se capturan todos los cambios sin sondear ni añadir carga de consultas.</p>
+<p>En el ecosistema <em>Kafka</em>, herramientas como <a href="https://debezium.io/">Debezium</a> son conectores <em>source</em> de <em>Kafka Connect</em> que hacen exactamente esto: publican cada cambio de la base de datos como un evento en un <em>topic</em>. La ventaja frente al modo <code>incrementing</code> que usamos en esta sesión es que el modo <code>incrementing</code> solo detecta filas nuevas mediante una columna creciente, mientras que CDC captura también actualizaciones y borrados, y lo hace casi en tiempo real.</p>
+</details>
+<details class="question">
+<summary>¿Qué papel juega <em>Kafka</em> en una arquitectura de Big Data como la <em>Kappa</em>?</summary>
+<p>En la <a href="../de/arq.html#arquitectura-kappa">arquitectura <em>Kappa</em></a>, <em>Kafka</em> actúa como la <strong>columna vertebral</strong> del sistema: todas las fuentes de datos escriben en <em>topics</em>, y todos los consumidores (procesamiento en tiempo real, carga del histórico, analítica) leen de ellos. Como los mensajes se retienen un tiempo configurable y no se borran al consumirse, un mismo flujo puede alimentar a la vez un procesamiento <em>streaming</em> y un proceso <em>batch</em> que reprocesa el histórico.</p>
+<p>Esto elimina la duplicidad de la arquitectura <em>Lambda</em> (que mantenía una capa <em>batch</em> y una <em>streaming</em> separadas): con <em>Kafka</em> como única fuente de verdad, añadir una nueva fuente o un nuevo destino es conectar un productor o un consumidor más, sin tocar el resto del sistema.</p>
+</details>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.packtpub.com/product/apache-kafka-series-learn-apache-kafka-for-beginners-video/9781789342604">Apache Kafka Series - Learn Apache Kafka for Beginners</a></li>
