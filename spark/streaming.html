@@ -4505,6 +4505,10 @@
 <li><a href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html"><em>Spark Structured Streaming</em></a> basada en el uso de <em>DataFrames</em> y diseñada para construir aplicaciones que puedan reaccionar a los datos en tiempo real.</li>
 </ul>
 <p>Vamos a presentar ambas soluciones, pero en este sesión nos centraremos principalmente en <em>Spark Structured Streaming</em>.</p>
+<div class="admonition info">
+<p class="admonition-title">Entorno de trabajo</p>
+<p>A lo largo de la sesión encontrarás bloques con pestañas <strong>Docker</strong> y <strong>Máquina virtual</strong>. La pestaña <em>Docker</em> asume el <em>stack</em> de contenedores del módulo (Spark 4.1.1 sobre Scala 2.13, <em>Hive Metastore</em>, <em>MinIO</em> y <em>Kafka</em> en modo <em>KRaft</em>), mientras que la pestaña <em>Máquina virtual</em> mantiene la versión clásica con las instalaciones locales sobre <code>iabd-virtualbox</code>.</p>
+</div>
 <h3 id="dstream">DStream<a class="headerlink" href="#dstream" title="Permanent link">&para;</a></h3>
 <p><a href="https://spark.apache.org/docs/latest/streaming-programming-guide.html"><em>Spark DStream</em></a> (<em>Discretized Stream</em>), como ya hemos comentado, es la primera versión y actualmente no se recomienda su uso.</p>
 <p>Funciona mediante un modelo de <em>micro-batching</em> para dividir los flujos de entrada de datos en fragmentos que son procesados por el núcleo de Spark. Este planteamiento tenía mucho sentido cuando el principal modelo de programación de Spark eran los RDD, ya que cada fragmento recibido se representaba mediante un RDD.</p>
@@ -4515,7 +4519,7 @@
 </figure>
 
 <h3 id="structured-streaming">Structured Streaming<a class="headerlink" href="#structured-streaming" title="Permanent link">&para;</a></h3>
-<p><a href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html"><em>Spark Structured Streaming</em></a> es la segunda generación de motor para el tratamiento de datos en <em>streaming</em>, y fue diseñado para ser más rápido, escalable y con mayor tolerancia a los errores que <em>DStream</em>, ya que utiliza el motor de <em>Spark SQL</em>.</p>
+<p><a href="https://spark.apache.org/docs/latest/streaming/index.html"><em>Spark Structured Streaming</em></a> es la segunda generación de motor para el tratamiento de datos en <em>streaming</em>, y fue diseñado para ser más rápido, escalable y con mayor tolerancia a los errores que <em>DStream</em>, ya que utiliza el motor de <em>Spark SQL</em>.</p>
 <p>Además, podemos expresar los procesos en streaming de la misma manera que realizaríamos un proceso <em>batch</em> con datos estáticos. El motor de <em>Spark SQL</em> se encarga de ejecutar los datos de forma continua e incremental, y actualizar el resultado final como datos streaming. Para ello, podemos utilizar el API de Java, Scala, Python o R para expresar las agregaciones, ventanas de eventos, joins de <em>stream</em> a <em>batch</em>, etc.... Finalmente, el sistema asegura la tolerancia de fallos mediante la entrega de cada mensaje una sola vez (<strong><em>exactly-once</em></strong>) a través de <em>checkpoints</em> y logs.</p>
 <p>Los pasos esenciales a realizar al codificar una aplicación en <em>streaming</em> son:</p>
 <ol>
@@ -4530,50 +4534,90 @@
     <figcaption>Elementos para procesar datos en Streaming</figcaption>
 </figure>
 
-<p>Debido a que tanto el modo de salida como el <em>trigger</em> tienen valores por defecto, es posible que no tengamos que indicarlos ni configurarlos, lo que reduce el desarrollo de procesos a un bucle infinito de leer, transformar y enviar al destino (<em>read + transform + sink</em>). Cada una de las iteraciones de ese bucle infinito se conoce como un <strong><em>micro-batch</em></strong>, las cuales tienen unas latencias situadas alrededor de los 100 ms. Desde <em>Spark</em> 2.3 existe un nuevo modo de procesamiento de baja latencia conocido como <a href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#continuous-processing">Procesamiento Continuo</a>, que puede obtener latencias de 1ms. Al tratarse todavía de un tecnología en fase de experimentación, queda fuera de la presente sesión.</p>
+<p>Debido a que tanto el modo de salida como el <em>trigger</em> tienen valores por defecto, es posible que no tengamos que indicarlos ni configurarlos, lo que reduce el desarrollo de procesos a un bucle infinito de leer, transformar y enviar al destino (<em>read + transform + sink</em>). Cada una de las iteraciones de ese bucle infinito se conoce como un <strong><em>micro-batch</em></strong>, las cuales tienen unas latencias situadas alrededor de los 100 ms. Desde <em>Spark</em> 2.3 existe un nuevo modo de procesamiento de baja latencia conocido como <a href="https://spark.apache.org/docs/latest/streaming/performance-tips.html#continuous-processing">Procesamiento Continuo</a>, que puede obtener latencias del orden de milisegundos. Durante mucho tiempo se mantuvo como una opción experimental, pero a partir de <em>Spark</em> 4.1 dispone de soporte oficial mediante el <em>Real-Time Mode</em>. En esta sesión trabajaremos siempre con el modo <em>micro-batch</em>, que es el habitual.</p>
+<div class="admonition info">
+<p class="admonition-title">Novedades de <em>Structured Streaming</em> en <em>Spark</em> 4.x</p>
+<p>El <em>stack</em> del módulo utiliza <em>Spark</em> 4.1.1. La rama 4.x mantiene intactos los conceptos de esta sesión (fuentes, <em>sinks</em>, <em>triggers</em>, modos de salida y <em>checkpoints</em>), pero incorpora varias mejoras que conviene conocer, aunque su uso detallado quede para temario más avanzado:</p>
+<ul>
+<li><strong><code>transformWithState</code></strong> (<em>Spark</em> 4.0): nueva API de procesamiento con estado arbitrario, disponible en <em>Scala</em>, <em>Java</em> y también en <strong>Python</strong>. Permite definir lógica de estado personalizada (temporizadores, <em>TTL</em>, estado inicial) de forma tolerante a fallos, y sustituye a las antiguas APIs de estado de bajo nivel.</li>
+<li><strong>State Data Source</strong> (<em>Spark</em> 4.0): permite leer el contenido de un <em>checkpoint</em> como si fuera una tabla, lo que facilita depurar y validar aplicaciones con estado sin tener que inspeccionar los ficheros internos.</li>
+<li><strong>Python Data Source API</strong> (<em>Spark</em> 4.0): permite crear fuentes y <em>sinks</em> de datos personalizados directamente en Python, tanto para procesos <em>batch</em> como <em>streaming</em>, sin necesidad de escribir código <em>Scala</em> o <em>Java</em>.</li>
+<li><strong>Real-Time Mode</strong> (<em>Spark</em> 4.1): primer soporte oficial para consultas en tiempo real con latencias de sub-segundo (de milisegundos en operaciones sin estado), superando la fase experimental del procesamiento continuo.</li>
+</ul>
+</div>
 <h2 id="caso-1-hola-spark-streaming">Caso 1: Hola Spark Streaming<a class="headerlink" href="#caso-1-hola-spark-streaming" title="Permanent link">&para;</a></h2>
 <p>Para ver nuestro primer caso de uso, vamos a realizar un proceso de contar palabras sobre un flujo continuo de datos que proviene de un <em>socket</em>.</p>
+<div class="admonition warning">
+<p class="admonition-title">El <em>socket</em> y el modo clúster</p>
+<p>La fuente <em>socket</em> solo está pensada para pruebas. Cuando <em>Spark</em> se ejecuta en modo clúster, los <em>executors</em> corren en contenedores distintos al <em>driver</em>, por lo que un <em>socket</em> abierto en <code>localhost</code> <strong>no es accesible</strong> desde los <em>workers</em>. Por ese motivo, en este primer caso forzamos el modo <code>local[2]</code> y abrimos el <em>listener</em> de <em>Netcat</em> en la misma máquina (o contenedor) donde se ejecuta <em>Spark</em>. A partir del <em>Caso 2</em> trabajaremos ya con el clúster completo.</p>
+</div>
 <p>Para ello, en un terminal, abrimos un <em>listener</em> de <em>Netcat</em> en el puerto 9999:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Docker</label><label for="__tabbed_1_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Como necesitamos que <em>Netcat</em> y <em>Spark</em> compartan la red <code>localhost</code>, primero nos conectamos alcontenedor <code>jupyter</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>iabd-jupyter<span class="w"> </span>bash
+</code></pre></div>
+<p>Y abrimos el listener de <em>Netcat</em> en el puerto 9999:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>nc<span class="w"> </span>-lk<span class="w"> </span><span class="m">9999</span>
 </code></pre></div>
-<p>Tras arrancar <em>Netcat</em> y PySpark (en otro terminal, ejecutamos <code>pyspark</code>), ya podemos crear nuestra aplicación <em>Spark</em> (vamos a indicar que cree 2 hilos, lo cual es el mínimo necesario para realizar <em>streaming</em>, uno para recibir y otro para procesar), en la cual tenemos diferenciadas:</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>nc<span class="w"> </span>-lk<span class="w"> </span><span class="m">9999</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Tras arrancar <em>Netcat</em>, creamos nuestra aplicación <em>Spark</em>. Vamos a indicar que cree 2 hilos (<code>local[2]</code>), lo cual es el mínimo necesario para realizar <em>streaming</em>: uno para recibir y otro para procesar. En ella tenemos diferenciadas:</p>
 <ul>
 <li>la fuente de datos: creación del flujo de lectura mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.SparkSession.readStream.html"><code>readStream</code></a> que devuelve un <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamReader.html">DataStreamReader</a> que utilizaremos para cargar un <em>DataFrame</em>.</li>
 <li>la lógica de procesamiento, ya sea mediante <em>DataFrames API</em> o <em>Spark SQL</em>.</li>
 <li>la persistencia de los datos mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.SparkSession.writeStream.html">writeStream</a> que devuelve un <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamWriter.html">DataStreamWriter</a> donde indicamos el modo de salida, el cual, al iniciarlo con <code>start</code> nos devuelve un <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.StreamingQuery.html">StreamingQuery</a></li>
 <li>y finalmente el cierre del flujo de datos a partir de la consulta en <em>streaming</em> mediante <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.StreamingQuery.awaitTermination.html?highlight=awaittermination"><code>awaitTermination</code></a>.</li>
 </ul>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Docker</label><label for="__tabbed_2_2">Máquina virtual</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>En el contenedor <code>iabd-jupyter</code> creamos un cuaderno nuevo. Como este primer caso usa un <em>socket</em> local, sobreescribimos el <code>master</code> que viene heredado de <code>spark-defaults.conf</code> (<code>spark://spark-master:7077</code>) y forzamos <code>local[2]</code>:</p>
+</div>
+<div class="tabbed-block">
+<p>Tras arrancar <em>PySpark</em> (en otro terminal, ejecutamos <code>pyspark</code>), ya podemos crear nuestra aplicación:</p>
+</div>
+</div>
+</div>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span> \
-<span class="linenos" data-linenos=" 3 "></span>        <span class="o">.</span><span class="n">builder</span> \
-<span class="linenos" data-linenos=" 4 "></span>        <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;Streaming IABD WordCount&quot;</span><span class="p">)</span> \
-<span class="hll"><span class="linenos" data-linenos=" 5 "></span>        <span class="o">.</span><span class="n">master</span><span class="p">(</span><span class="s2">&quot;local[2]&quot;</span><span class="p">)</span> \
-</span><span class="linenos" data-linenos=" 6 "></span>        <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
-<span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span><span class="c1"># Creamos un flujo de escucha sobre netcat en localhost:9999</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="c1"># En Spark Streaming, la lectura se realiza mediante readStream</span>
-<span class="hll"><span class="linenos" data-linenos="10 "></span><span class="n">lineasDF</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">readStream</span> \
-</span><span class="linenos" data-linenos="11 "></span>        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;socket&quot;</span><span class="p">)</span> \
-<span class="linenos" data-linenos="12 "></span>        <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">)</span> \
-<span class="linenos" data-linenos="13 "></span>        <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;port&quot;</span><span class="p">,</span> <span class="s2">&quot;9999&quot;</span><span class="p">)</span> \
-<span class="linenos" data-linenos="14 "></span>        <span class="o">.</span><span class="n">load</span><span class="p">()</span>
-<span class="linenos" data-linenos="15 "></span>
-<span class="linenos" data-linenos="16 "></span><span class="c1"># Leemos las líneas y las pasamos a palabras.</span>
-<span class="linenos" data-linenos="17 "></span><span class="c1"># Sobre ellas, realizamos la agrupación count (transformación)</span>
-<span class="linenos" data-linenos="18 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">explode</span><span class="p">,</span> <span class="n">split</span>
-<span class="linenos" data-linenos="19 "></span><span class="n">palabrasDF</span> <span class="o">=</span> <span class="n">lineasDF</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">explode</span><span class="p">(</span><span class="n">split</span><span class="p">(</span><span class="n">lineasDF</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;palabra&#39;</span><span class="p">))</span>
-<span class="linenos" data-linenos="20 "></span><span class="n">cantidadDF</span> <span class="o">=</span> <span class="n">palabrasDF</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;palabra&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="linenos" data-linenos="21 "></span>
-<span class="linenos" data-linenos="22 "></span><span class="c1"># Mostramos las palabras por consola (sink)</span>
-<span class="linenos" data-linenos="23 "></span><span class="c1"># En Spark Streaming, la persistencia se realiza mediante writeStream</span>
-<span class="linenos" data-linenos="24 "></span><span class="c1">#  y en vez de realizar un save, ahora utilizamos start</span>
-<span class="hll"><span class="linenos" data-linenos="25 "></span><span class="n">wordCountQuery</span> <span class="o">=</span> <span class="n">cantidadDF</span><span class="o">.</span><span class="n">writeStream</span> \
-</span><span class="linenos" data-linenos="26 "></span>        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;console&quot;</span><span class="p">)</span> \
-<span class="linenos" data-linenos="27 "></span>        <span class="o">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s2">&quot;complete&quot;</span><span class="p">)</span> \
-<span class="hll"><span class="linenos" data-linenos="28 "></span>        <span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span class="linenos" data-linenos="29 "></span>
-<span class="linenos" data-linenos="30 "></span><span class="c1"># dejamos Spark a la escucha</span>
-<span class="hll"><span class="linenos" data-linenos="31 "></span><span class="n">wordCountQuery</span><span class="o">.</span><span class="n">awaitTermination</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span> \
+<span class="linenos" data-linenos=" 4 "></span>    <span class="o">.</span><span class="n">builder</span> \
+<span class="linenos" data-linenos=" 5 "></span>    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;Streaming IABD WordCount&quot;</span><span class="p">)</span> \
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span>    <span class="o">.</span><span class="n">master</span><span class="p">(</span><span class="s2">&quot;local[2]&quot;</span><span class="p">)</span> \
+</span><span class="linenos" data-linenos=" 7 "></span>    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># Creamos un flujo de escucha sobre netcat en localhost:9999</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># En Spark Streaming, la lectura se realiza mediante readStream</span>
+<span class="hll"><span class="linenos" data-linenos="11 "></span><span class="n">lineasDF</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">readStream</span> \
+</span><span class="linenos" data-linenos="12 "></span>    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;socket&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="13 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="14 "></span>    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;port&quot;</span><span class="p">,</span> <span class="s2">&quot;9999&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="15 "></span>    <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="linenos" data-linenos="16 "></span>
+<span class="linenos" data-linenos="17 "></span><span class="c1"># Leemos las líneas y las pasamos a palabras.</span>
+<span class="linenos" data-linenos="18 "></span><span class="c1"># Sobre ellas, realizamos la agrupación count (transformación).</span>
+<span class="linenos" data-linenos="19 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">explode</span><span class="p">,</span> <span class="n">split</span>
+<span class="linenos" data-linenos="20 "></span>
+<span class="linenos" data-linenos="21 "></span><span class="n">palabrasDF</span> <span class="o">=</span> <span class="n">lineasDF</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">explode</span><span class="p">(</span><span class="n">split</span><span class="p">(</span><span class="n">lineasDF</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;palabra&#39;</span><span class="p">))</span>
+<span class="linenos" data-linenos="22 "></span><span class="n">cantidadDF</span> <span class="o">=</span> <span class="n">palabrasDF</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;palabra&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="linenos" data-linenos="23 "></span>
+<span class="linenos" data-linenos="24 "></span><span class="c1"># Mostramos las palabras por consola (sink).</span>
+<span class="linenos" data-linenos="25 "></span><span class="c1"># En Spark Streaming, la persistencia se realiza mediante writeStream</span>
+<span class="linenos" data-linenos="26 "></span><span class="c1"># y, en vez de realizar un save, ahora utilizamos start.</span>
+<span class="hll"><span class="linenos" data-linenos="27 "></span><span class="n">wordCountQuery</span> <span class="o">=</span> <span class="n">cantidadDF</span><span class="o">.</span><span class="n">writeStream</span> \
+</span><span class="linenos" data-linenos="28 "></span>    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;console&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="29 "></span>    <span class="o">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s2">&quot;complete&quot;</span><span class="p">)</span> \
+<span class="hll"><span class="linenos" data-linenos="30 "></span>    <span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span class="linenos" data-linenos="31 "></span>
+<span class="linenos" data-linenos="32 "></span><span class="c1"># Dejamos Spark a la escucha.</span>
+<span class="hll"><span class="linenos" data-linenos="33 "></span><span class="n">wordCountQuery</span><span class="o">.</span><span class="n">awaitTermination</span><span class="p">()</span>
 </span></code></pre></div>
 <p>Conforme escribamos en el terminal de <em>Netcat</em> irán apareciendo en la consola de <em>Spark</em> los resultados:</p>
 <figure style="align: center;">
@@ -4585,18 +4629,18 @@
 <p>Si queremos detenerlo, podemos hacerlo de forma explícita:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">wordCountQuery</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </code></pre></div>
-<p>Una buena práctica  es configurar la <em>SparkSession</em> mediante la propiedad <code>spark.streaming.stopGracefullyOnShutdown</code> para que detenga el <em>streaming</em> al finalizar el proceso:</p>
+<p>Una buena práctica es configurar la <em>SparkSession</em> mediante la propiedad <code>spark.streaming.stopGracefullyOnShutdown</code> para que detenga el <em>streaming</em> al finalizar el proceso:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span> \
-<span class="linenos" data-linenos="2 "></span>        <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;Streaming WordCount&quot;</span><span class="p">)</span> \
-<span class="hll"><span class="linenos" data-linenos="3 "></span>        <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.streaming.stopGracefullyOnShutdown&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
-</span><span class="linenos" data-linenos="4 "></span>        <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span>    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;Streaming WordCount&quot;</span><span class="p">)</span> \
+<span class="hll"><span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.streaming.stopGracefullyOnShutdown&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
+</span><span class="linenos" data-linenos="4 "></span>    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 </code></pre></div>
 <p>Por defecto, <em>Spark</em> utiliza 200 particiones para barajar los datos. Como no tenemos muchos datos, para obtener un mejor rendimiento, podemos reducir su cantidad mediante la propiedad <code>spark.sql.shuffle.partitions</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span> \
-<span class="linenos" data-linenos="2 "></span>        <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;Streaming WordCount&quot;</span><span class="p">)</span> \
-<span class="linenos" data-linenos="3 "></span>        <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.streaming.stopGracefullyOnShutdown&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
-<span class="hll"><span class="linenos" data-linenos="4 "></span>        <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.shuffle.partitions&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> \
-</span><span class="linenos" data-linenos="5 "></span>        <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span>    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;Streaming WordCount&quot;</span><span class="p">)</span> \
+<span class="linenos" data-linenos="3 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.streaming.stopGracefullyOnShutdown&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
+<span class="hll"><span class="linenos" data-linenos="4 "></span>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.shuffle.partitions&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> \
+</span><span class="linenos" data-linenos="5 "></span>    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Nombre de la consulta</p>
@@ -4622,14 +4666,14 @@
     <img src="images/03streaming-event-vs-processing.jpg" width="300">
     <figcaption>Eventos vs Procesamiento</figcaption>
 </figure></p>
-<p>Existen dos tipos de tiempo, el tiempo del evento (<strong><em>event time</em></strong>) que representa cuando se crea el dato y el de procesado (<strong><em>processing time</em></strong>), que representa el momento en el que el motor de procesamiento/analítica de datos procesa el dato.
+<p>Existen dos tipos de tiempo, el tiempo del evento (<strong><em>event time</em></strong>) que representa cuándo se crea el dato y el de procesado (<strong><em>processing time</em></strong>), que representa el momento en el que el motor de procesamiento/analítica de datos procesa el dato.
 Por ejemplo, si nos centramos en un escenario IoT, el tiempo del evento es cuando se toma el dato del sensor, y el de procesamiento cuando nuestro motor de <em>streaming</em> realiza la transformación/agregación sobre los datos del sensor.</p>
 <p>A la hora de trabajar con los datos, hemos de realizarlo siempre con el tiempo de los eventos, ya que representan el instante en el que se crean los datos. En un estado ideal, los datos llegan y se procesan casi de forma instantánea, pero la realidad es otra, y la latencia existente provoca la necesidad de descartar el tiempo de procesamiento.</p>
 <p>Para manejar los flujos de entrada ajenos a un flujo constante, una práctica muy común es dividir los datos en trozos utilizando el tiempo inicial y final como límites de una ventana temporal.</p>
 </div>
 <h3 id="fuentes-de-datos">Fuentes de Datos<a class="headerlink" href="#fuentes-de-datos" title="Permanent link">&para;</a></h3>
 <p>Mientras que en el procesamiento <em>batch</em> las fuentes de datos son <em>datasets</em> estáticos que residen en un almacenamiento como pueda ser un sistema local, HDFS o S3, al hablar de procesamiento en <em>streaming</em> las fuentes de datos generan los datos de forma continuada, por lo que necesitamos otro tipo de fuentes.</p>
-<p><em>Structured Streaming</em> ofrece un conjunto predefinido de <a href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#input-sources">fuentes de datos</a> que se leen a partir de un <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamReader.html">DataStreamReader</a>. Los tipos existentes son:</p>
+<p><em>Structured Streaming</em> ofrece un conjunto predefinido de <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#input-sources">fuentes de datos</a> que se leen a partir de un <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamReader.html">DataStreamReader</a>. Los tipos existentes son:</p>
 <ul>
 <li>
 <p><ins>Fichero</ins>: permite leer ficheros desde un directorio como un flujo de datos, con soporte para ficheros de texto, CSV, JSON, Parquet, ORC, etc...</p>
@@ -4670,14 +4714,14 @@ Por ejemplo, si nos centramos en un escenario IoT, el tiempo del evento es cuand
 </code></pre></div>
 </li>
 <li>
-<p><ins>Tabla</ins> (desde <em>Spark 3.1</em>): Carga los datos desde una tabla temporal de <em>SparkSQL</em>, la cual podemos utilizar tanto para cargar como para persistir los cálculos realizados. Más información en la <a href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-table-apis">documentación oficial</a>.</p>
+<p><ins>Tabla</ins> (desde <em>Spark 3.1</em>): Carga los datos desde una tabla temporal de <em>SparkSQL</em>, la cual podemos utilizar tanto para cargar como para persistir los cálculos realizados. Más información en la <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#streaming-table-apis">documentación oficial</a>.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">tablaDF</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">readStream</span> \
 <span class="linenos" data-linenos="2 "></span>    <span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;clientes&quot;</span><span class="p">)</span>
 </code></pre></div>
 </li>
 </ul>
 <h3 id="sinks"><em>Sinks</em><a class="headerlink" href="#sinks" title="Permanent link">&para;</a></h3>
-<p>De la misma manera, también tenemos un conjunto de <a href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#output-sinks"><em>Sinks</em></a> predefinidos como destino de los datos, que se escriben a partir de un <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamWriter.html">DataStreamWriter</a> mediante el interfaz <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.writeStream.html"><code>writeStream</code></a>:</p>
+<p>De la misma manera, también tenemos un conjunto de <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#output-sinks"><em>Sinks</em></a> predefinidos como destino de los datos, que se escriben a partir de un <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamWriter.html">DataStreamWriter</a> mediante el interfaz <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.writeStream.html"><code>writeStream</code></a>:</p>
 <ul>
 <li>
 <p><ins>Fichero</ins>: Podemos almacenar los resultados en un sistema de archivos, HDFS o S3, con soporte para los formatos CSV, JSON, ORC y Parquet.</p>
@@ -4719,7 +4763,7 @@ Por ejemplo, si nos centramos en un escenario IoT, el tiempo del evento es cuand
 </li>
 </ul>
 <h3 id="modos-de-salida">Modos de salida<a class="headerlink" href="#modos-de-salida" title="Permanent link">&para;</a></h3>
-<p>El <a href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#output-modes">modo de salida</a> determina cómo salen los datos a un sumidero de datos. Existen tres opciones:</p>
+<p>El <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#output-modes">modo de salida</a> determina cómo salen los datos a un sumidero de datos. Existen tres opciones:</p>
 <ul>
 <li>Añadir (<em><code>append</code></em>): para insertar los datos, cuando sabemos que no vamos a modificar ninguna salida anterior, y que cada <em>batch</em> únicamente escribirá nuevos registros. Es el modo por defecto.</li>
 <li>Modificar (<em><code>update</code></em>): similar a un <em>upsert</em>, donde veremos solo registros que, bien son nuevos, bien son valores antiguos que debemos modificar.</li>
@@ -4731,7 +4775,7 @@ Por ejemplo, si nos centramos en un escenario IoT, el tiempo del evento es cuand
 <span class="linenos" data-linenos="2 "></span>El Severo Ochoa está en Elche
 </code></pre></div>
 <p>Dependiendo del modo de salida, al introducir la segunda frase con la siguiente consulta:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Complete</label><label for="__tabbed_1_2">Update</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Complete</label><label for="__tabbed_3_2">Update</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">wordCountQuery</span> <span class="o">=</span> <span class="n">cantidadDF</span><span class="o">.</span><span class="n">writeStream</span> \
