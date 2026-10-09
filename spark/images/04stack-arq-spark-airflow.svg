@@ -1,0 +1,112 @@
+<svg viewBox="0 0 870 520" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="aD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#495057"/></marker>
+    <marker id="aB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1971c2"/></marker>
+    <marker id="aP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7048e8"/></marker>
+    <marker id="aG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#868e96"/></marker>
+    <style>
+      .svc{fill:#fff;stroke:#ced4da;stroke-width:1.4}
+      .svct{font-weight:600;font-size:13px;fill:#212529;text-anchor:middle}
+      .sub{font-size:10.5px;fill:#868e96;text-anchor:middle}
+      .cyl{fill:#f1f3f5;stroke:#868e96;stroke-width:1.3}
+      .cyltop{fill:#e9ecef;stroke:#868e96;stroke-width:1.3}
+      .one{fill:#f8f9fa;stroke:#adb5bd;stroke-width:1.3;stroke-dasharray:5 3}
+      .onet{font-weight:600;font-size:12px;fill:#868e96;text-anchor:middle}
+      .ctrl{fill:none;stroke:#495057;stroke-width:1.6}
+      .data{fill:none;stroke:#1971c2;stroke-width:1.6;stroke-dasharray:5 4}
+      .ss{fill:none;stroke:#7048e8;stroke-width:1.6;stroke-dasharray:5 4}
+      .init{fill:none;stroke:#868e96;stroke-width:1.4;stroke-dasharray:4 3}
+      .e{font-weight:600;font-size:11px;fill:#495057}
+      .eb{font-weight:600;font-size:11px;fill:#1971c2}
+      .ep{font-weight:600;font-size:11px;fill:#7048e8}
+      .eg{font-weight:600;font-size:10.5px;fill:#868e96}
+    </style>
+  </defs>
+
+  <!-- Grupo datos -->
+  <rect x="300" y="36" width="250" height="84" rx="10" fill="#E7F5FF" stroke="#1971C2" stroke-width="1.5"/>
+  <text x="316" y="56" font-weight="600" font-size="13" fill="#1971C2">perfil: datos</text>
+
+  <!-- Grupo spark -->
+  <rect x="30" y="140" width="470" height="360" rx="10" fill="#FFF4E6" stroke="#E8590C" stroke-width="1.5"/>
+  <text x="46" y="162" font-weight="600" font-size="13" fill="#E8590C">perfil: spark / spark-single</text>
+
+  <!-- Grupo airflow -->
+  <rect x="540" y="140" width="300" height="360" rx="10" fill="#E6FCF5" stroke="#0CA678" stroke-width="1.5"/>
+  <text x="556" y="162" font-weight="600" font-size="13" fill="#0CA678">perfil: airflow</text>
+
+  <!-- aristas -->
+  <polyline points="564,296 520,296 520,223 462,223" class="ss" marker-end="url(#aP)"/>
+  <text x="514" y="262" class="ep" transform="rotate(-90 514 262)" text-anchor="middle">SparkSubmit</text>
+
+  <polyline points="400,196 400,114" class="data" marker-end="url(#aB)"/>
+  <text x="408" y="150" class="eb">JDBC</text>
+
+  <polyline points="310,230 250,230 250,353 135,353 135,365" class="data" marker-end="url(#aB)"/>
+  <text x="196" y="347" class="eb">s3a://</text>
+  <polyline points="460,230 486,230 486,390 462,390" class="data" marker-end="url(#aB)"/>
+  <text x="480" y="320" class="eb" transform="rotate(-90 480 320)" text-anchor="middle">metastore</text>
+
+  <line x1="210" y1="223" x2="308" y2="223" class="ctrl" marker-end="url(#aD)"/>
+  <text x="259" y="217" class="e" text-anchor="middle">driver</text>
+  <line x1="340" y1="250" x2="184" y2="286" class="ctrl" marker-end="url(#aD)"/>
+  <line x1="385" y1="250" x2="385" y2="286" class="ctrl" marker-end="url(#aD)"/>
+
+  <!-- airflow metadata + init -->
+  <line x1="704" y1="220" x2="724" y2="280" class="ctrl" marker-end="url(#aD)"/>
+  <line x1="704" y1="296" x2="724" y2="292" class="ctrl" marker-end="url(#aD)"/>
+  <line x1="704" y1="368" x2="724" y2="312" class="init" marker-end="url(#aG)"/>
+  <text x="712" y="350" class="eg">db migrate</text>
+
+  <!-- one-shots spark -->
+  <line x1="135" y1="450" x2="135" y2="418" class="init" marker-end="url(#aG)"/>
+  <text x="143" y="440" class="eg">crea buckets</text>
+  <line x1="385" y1="450" x2="385" y2="418" class="init" marker-end="url(#aG)"/>
+  <text x="393" y="440" class="eg">init esquema</text>
+
+  <!-- nodo datos -->
+  <path class="cyl" d="M340,72 A85,7 0 0 1 510,72 V104 A85,7 0 0 1 340,104 Z"/>
+  <ellipse class="cyltop" cx="425" cy="72" rx="85" ry="7"/>
+  <text class="svct" x="425" y="90">mysql-datos</text><text class="sub" x="425" y="103">retail_db</text>
+
+  <!-- nodos spark -->
+  <rect class="svc" x="60" y="196" width="150" height="54" rx="8"/>
+  <text class="svct" x="135" y="220">jupyter</text><text class="sub" x="135" y="236">driver</text>
+  <rect class="svc" x="310" y="196" width="150" height="54" rx="8"/>
+  <text class="svct" x="385" y="227">spark-master</text>
+  <rect class="svc" x="60" y="286" width="150" height="54" rx="8"/>
+  <text class="svct" x="135" y="317">spark-worker-1</text>
+  <rect class="svc" x="310" y="286" width="150" height="54" rx="8"/>
+  <text class="svct" x="385" y="309">spark-worker-2</text><text class="sub" x="385" y="325">(solo perfil spark)</text>
+
+  <path class="cyl" d="M60,366 A75,7 0 0 1 210,366 V408 A75,7 0 0 1 60,408 Z"/>
+  <ellipse class="cyltop" cx="135" cy="366" rx="75" ry="7"/>
+  <text class="svct" x="135" y="390">minio</text><text class="sub" x="135" y="404">S3</text>
+  <path class="cyl" d="M310,366 A75,7 0 0 1 460,366 V408 A75,7 0 0 1 310,408 Z"/>
+  <ellipse class="cyltop" cx="385" cy="366" rx="75" ry="7"/>
+  <text class="svct" x="385" y="392" font-size="12">mysql-metastore</text>
+
+  <rect class="one" x="60" y="450" width="150" height="42" rx="8"/>
+  <text class="onet" x="135" y="468">minio-init</text><text class="sub" x="135" y="483">one-shot</text>
+  <rect class="one" x="310" y="450" width="150" height="42" rx="8"/>
+  <text class="onet" x="385" y="468">hive-init</text><text class="sub" x="385" y="483">one-shot</text>
+
+  <!-- nodos airflow -->
+  <rect class="svc" x="564" y="196" width="140" height="48" rx="8"/>
+  <text class="svct" x="634" y="224" font-size="12">airflow-webserver</text>
+  <rect class="svc" x="564" y="272" width="140" height="48" rx="8"/>
+  <text class="svct" x="634" y="300" font-size="12">airflow-scheduler</text>
+  <rect class="one" x="564" y="346" width="140" height="44" rx="8"/>
+  <text class="onet" x="634" y="364">airflow-init</text><text class="sub" x="634" y="379">one-shot</text>
+
+  <path class="cyl" d="M726,254 A50,7 0 0 1 826,254 V300 A50,7 0 0 1 726,300 Z"/>
+  <ellipse class="cyltop" cx="776" cy="254" rx="50" ry="7"/>
+  <text class="svct" x="776" y="280" font-size="11">postgres-airflow</text>
+
+  <!-- leyenda -->
+  <rect x="40" y="40" width="244" height="98" rx="8" fill="#f8f9fa" stroke="#ced4da" stroke-width="1.2"/>
+  <line x1="54" y1="58" x2="86" y2="58" class="ctrl" marker-end="url(#aD)"/><text x="94" y="62" font-size="10" fill="#495057">control / driver</text>
+  <line x1="54" y1="78" x2="86" y2="78" class="data" marker-end="url(#aB)"/><text x="94" y="82" font-size="10" fill="#495057">acceso a datos (JDBC · s3a · metastore)</text>
+  <line x1="54" y1="98" x2="86" y2="98" class="ss" marker-end="url(#aP)"/><text x="94" y="102" font-size="10" fill="#495057">SparkSubmit (Airflow → Spark)</text>
+  <line x1="54" y1="118" x2="86" y2="118" class="init" marker-end="url(#aG)"/><text x="94" y="122" font-size="10" fill="#495057">init (one-shot)</text>
+</svg>

@@ -1,0 +1,18 @@
+name: 'retail'
+version: '1.0.0'
+profile: 'retail'
+
+model-paths: ["models"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  retail:
+    staging:
+      # Las vistas no materializan datos: limpieza barata sobre lo crudo
+      +materialized: view
+      +schema: staging
+    marts:
+      # Los marts sí se materializan como tabla
+      +materialized: table
+      +schema: marts

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 340" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="flechaAzul" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2b6cb0"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="820" height="340" fill="#ffffff"/>
+  <text x="30" y="34" font-size="15" font-weight="600" fill="#2b2b3a">Carga incremental con cursor de fecha (write_disposition = merge)</text>
+
+  <!-- Lane A: 1a ejecucion -->
+  <text x="30" y="86" font-size="13" font-weight="600" fill="#2b2b3a">1ª ejecución</text>
+  <text x="30" y="104" font-size="11" fill="#5f6368">carga inicial</text>
+  <g>
+    <rect x="150" y="66" width="72" height="46" rx="5" fill="#2b6cb0"/><text x="186" y="94" text-anchor="middle" font-size="12" fill="#ffffff">01-01</text>
+    <rect x="230" y="66" width="72" height="46" rx="5" fill="#2b6cb0"/><text x="266" y="94" text-anchor="middle" font-size="12" fill="#ffffff">01-02</text>
+    <rect x="310" y="66" width="72" height="46" rx="5" fill="#2b6cb0"/><text x="346" y="94" text-anchor="middle" font-size="12" fill="#ffffff">01-03</text>
+  </g>
+  <line x1="392" y1="56" x2="392" y2="122" stroke="#c0562b" stroke-width="2" stroke-dasharray="5,4"/>
+  <text x="398" y="62" font-size="10" fill="#c0562b">cursor = 2024-01-03</text>
+  <line x1="392" y1="89" x2="548" y2="120" stroke="#2b6cb0" stroke-width="2.5" marker-end="url(#flechaAzul)"/>
+
+  <!-- Lane B: 2a ejecucion -->
+  <text x="30" y="212" font-size="13" font-weight="600" fill="#2b2b3a">2ª ejecución</text>
+  <text x="30" y="230" font-size="11" fill="#5f6368">reejecución</text>
+  <g>
+    <rect x="150" y="192" width="72" height="46" rx="5" fill="#d0d3d7"/><text x="186" y="220" text-anchor="middle" font-size="12" fill="#5f6368">01-01</text>
+    <rect x="230" y="192" width="72" height="46" rx="5" fill="#d0d3d7"/><text x="266" y="220" text-anchor="middle" font-size="12" fill="#5f6368">01-02</text>
+    <rect x="310" y="192" width="72" height="46" rx="5" fill="#d0d3d7"/><text x="346" y="220" text-anchor="middle" font-size="12" fill="#5f6368">01-03</text>
+    <rect x="390" y="192" width="72" height="46" rx="5" fill="#2b6cb0"/><text x="426" y="220" text-anchor="middle" font-size="12" fill="#ffffff">01-04</text>
+    <rect x="470" y="192" width="72" height="46" rx="5" fill="#2b6cb0"/><text x="506" y="220" text-anchor="middle" font-size="12" fill="#ffffff">01-05</text>
+  </g>
+  <text x="266" y="264" text-anchor="middle" font-size="10" fill="#5f6368">omitidos (idempotencia)</text>
+  <line x1="552" y1="248" x2="552" y2="284" stroke="#c0562b" stroke-width="2" stroke-dasharray="5,4"/>
+  <text x="552" y="298" text-anchor="middle" font-size="10" fill="#c0562b">cursor = 2024-01-05</text>
+  <line x1="546" y1="215" x2="556" y2="190" stroke="#2b6cb0" stroke-width="2.5" marker-end="url(#flechaAzul)"/>
+
+  <!-- Destino DuckDB -->
+  <rect x="580" y="120" width="200" height="90" rx="8" fill="#6a4c93"/>
+  <text x="680" y="150" text-anchor="middle" font-size="15" font-weight="600" fill="#ffffff">DuckDB</text>
+  <text x="680" y="172" text-anchor="middle" font-size="11" fill="#e6ddf2">merge · primary_key = id</text>
+  <text x="680" y="192" text-anchor="middle" font-size="11" fill="#e6ddf2">5 filas (sin duplicados)</text>
+
+  <!-- leyenda -->
+  <rect x="150" y="306" width="16" height="16" rx="3" fill="#2b6cb0"/><text x="172" y="319" font-size="11" fill="#5f6368">cargado en este run</text>
+  <rect x="330" y="306" width="16" height="16" rx="3" fill="#d0d3d7"/><text x="352" y="319" font-size="11" fill="#5f6368">no vuelve a cargarse</text>
+</svg>

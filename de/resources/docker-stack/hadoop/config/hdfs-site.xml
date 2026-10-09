@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <!-- Un solo DataNode en este stack docente -->
+  <property>
+    <name>dfs.replication</name>
+    <value>1</value>
+  </property>
+  <!-- Permisos HDFS desactivados: evita fricciones de propietario/usuario en un entorno de aula -->
+  <property>
+    <name>dfs.permissions.enabled</name>
+    <value>false</value>
+  </property>
+  <!-- Directorios de metadatos y bloques (persistidos en volúmenes docker) -->
+  <property>
+    <name>dfs.namenode.name.dir</name>
+    <value>/opt/hadoop/dfs/name</value>
+  </property>
+  <property>
+    <name>dfs.datanode.data.dir</name>
+    <value>/opt/hadoop/dfs/data</value>
+  </property>
+  <!-- Direcciones explícitas del NameNode dentro de la red docker -->
+  <property>
+    <name>dfs.namenode.rpc-address</name>
+    <value>namenode:8020</value>
+  </property>
+  <property>
+    <name>dfs.namenode.http-address</name>
+    <value>namenode:9870</value>
+  </property>
+  <!-- Las direcciones de arriba son las que el NameNode *anuncia* a los clientes.
+       Sin estos bind-host, los servidores escucharían sólo en la IP del contenedor
+       (la que resuelve "namenode"), y el healthcheck contra 127.0.0.1 fallaría. -->
+  <property>
+    <name>dfs.namenode.rpc-bind-host</name>
+    <value>0.0.0.0</value>
+  </property>
+  <property>
+    <name>dfs.namenode.http-bind-host</name>
+    <value>0.0.0.0</value>
+  </property>
+  <!-- Clave en docker: el NameNode devuelve el hostname del DataNode (no su IP interna),
+       de modo que clientes como Trino o Hive lo alcanzan por nombre en la red del compose -->
+  <property>
+    <name>dfs.datanode.use.datanode.hostname</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>dfs.client.use.datanode.hostname</name>
+    <value>true</value>
+  </property>
+</configuration>

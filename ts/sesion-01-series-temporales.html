@@ -1,0 +1,5119 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Fundamentos de las series temporales, opciones de almacenamiento para datos IoT y puesta en marcha del stack OTITIA">
+      
+      
+      
+        <link rel="canonical" href="https://aitor-medrano.github.io/iabd/ts/sesion-01-series-temporales.html">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Sesión 1 - Series temporales y arranque del laboratorio - Inteligencia Artificial y Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CJetbrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Jetbrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-VKM8BDY6KT"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-VKM8BDY6KT",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-VKM8BDY6KT",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Sesión 1 - Series temporales y arranque del laboratorio - Inteligencia Artificial y Big Data" />
+<meta property="og:description" content="Fundamentos de las series temporales, opciones de almacenamiento para datos IoT y puesta en marcha del stack OTITIA" />
+<meta property="og:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/ts/sesion-01-series-temporales.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://aitor-medrano.github.io/iabd/ts/sesion-01-series-temporales.html" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Sesión 1 - Series temporales y arranque del laboratorio - Inteligencia Artificial y Big Data" />
+<meta property="twitter:description" content="Fundamentos de las series temporales, opciones de almacenamiento para datos IoT y puesta en marcha del stack OTITIA" />
+<meta property="twitter:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/ts/sesion-01-series-temporales.png" />
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#el-proyecto-que-vamos-a-construir" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-header__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Inteligencia Artificial y Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sesión 1 - Series temporales y arranque del laboratorio
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo noche"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo noche" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo día"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo día" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-nav__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    Inteligencia Artificial y Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IABD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2627.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planning 26/27
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NoSQL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    NoSQL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/nosql.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento de datos. NoSQL
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/mongo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/modelado.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelado documental
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/agregaciones.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agregaciones en MongoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/rendimiento.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendimiento
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/replicacion.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y particionado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/pymongo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB y Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/series-temporales.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series temporales en MongoDB
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cloud
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/cloud.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/aws.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/s3.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/ec2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EC2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/lambda.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lambda
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/rds.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/dynamodb.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/waf.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WAF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/escalado.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización y Escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/emr.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EMR
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/athena.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Athena
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/glue.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glue
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingeniería de Datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ingeniería de Datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/bigdata.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Big Data
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/de.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingeniería de datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/arq.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitecturas Big Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/ciclo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida del dato
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/formatos.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Formatos de datos
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/sql-analitico.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQL analítico
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/modelado-dimensional.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelado dimensional
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/object-storage.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento distribuido
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/motores-consulta.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motores de consulta
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/etl.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingesta de datos
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/dlt.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extracción y carga con dlt
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/dbt.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transformación con dbt
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/airflow.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orquestación con Airflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/pentaho.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pentaho
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/faker.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Faker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../de/stack-docker-de.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stack Docker
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosistema Hadoop
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ecosistema Hadoop
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hadoop.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hadoop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hdfs.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HDFS
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/sqoop.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sqoop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/flume.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hive1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hive I
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hive2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hive II
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spark
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Spark
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/spark.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosistema Spark
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/rdd.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/dataframeAPI.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DataFrames API
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/agregaciones.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agregaciones
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/catalog.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conectividad y catálogo
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/deltalake.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Delta Lake
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/streaming.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/join-window.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windowing y Joins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/stack-docker-spark.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stack Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flujo de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flujo de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/nifi1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nifi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/nifi2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nifi Avanzado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/kafka1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kafka
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/kafka2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kafka Clúster
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transferencia de conocimiento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Transferencia de conocimiento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hf/transferencia.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reaprendiendo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hf/hf.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hugging Face
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hf/gradio.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gradio
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hf/datasets.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../audio/audio.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tratamiento de audio
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../audio/audio-hf.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio en Hugging Face
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IoT
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="nodered.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="timeseries.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series temporales
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/series-temporales.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series temporales en MongoDB
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="influxdb.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../pia/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PIA
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PIA
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_2" id="__nav_11_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lara 22/23
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lara 22/23
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/01presentacion.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/02requisitos.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prototipado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/03visitaVK.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visita IES Victoria Kent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/04almacenamiento.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/05audio.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/11dataset.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creando el dataset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_3" id="__nav_11_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lara 23/24
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lara 23/24
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/21conociendo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conociendo Lara
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/22captura.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capturando audios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/29dataset.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creando el dataset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/30entrenamiento.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entrenando
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/31refinando.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refinando
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/32evaluando.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluando
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_4" id="__nav_11_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autoponic 22/23
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Autoponic 22/23
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/06autoponic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/07navarrosantafe.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visita IES Navarro Santafé
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/08timeseries.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/09powerbi.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visualización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/10actuadores.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Actuadores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_5" id="__nav_11_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autoponic 23/24
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Autoponic 23/24
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/23autoponic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conociendo Autoponic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/24nodered.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/25villena.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visita IES Navarro Santafé
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/26modelo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelo de datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/27dashboard.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cuadro de mandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tags.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#el-proyecto-que-vamos-a-construir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          El proyecto que vamos a construir
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#series-temporales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Series temporales
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Series temporales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tipos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Tipos
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caracteristicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Características
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#descomposicion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Descomposición
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#almacenamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Almacenamiento
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Almacenamiento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#donde-encaja-cada-nivel-en-nuestro-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Dónde encaja cada nivel en nuestro proyecto
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#el-laboratorio-otitia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          El laboratorio OTITIA
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="El laboratorio OTITIA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arquitectura-itot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Arquitectura <abbr title="Information Technology">IT</abbr>/<abbr title="Operational Technology">OT</abbr>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#los-servicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Los servicios
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#puesta-en-marcha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Puesta en marcha
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Puesta en marcha">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-previos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Requisitos previos
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arranque" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Arranque
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verificacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Verificación
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#puntos-de-acceso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Puntos de acceso
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comandos-que-usaras-a-diario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Comandos que usarás a diario
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nombres-de-host-el-error-mas-frecuente-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Nombres de host: el error más frecuente del proyecto
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convenciones-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Convenciones del proyecto
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes-en-el-primer-arranque" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Problemas frecuentes en el primer arranque
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Referencias
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Actividades
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <nav class="md-tags" >
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:bda-ra1" class="md-tag">BDA RA1</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:iot" class="md-tag">IoT</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:mia-ra4" class="md-tag">MIA RA4</a>
+      
+    
+  </nav>
+
+
+
+  <h1>Sesión 1 - Series temporales y arranque del laboratorio</h1>
+
+<div class="admonition abstract">
+<p class="admonition-title">Objetivos de la sesión</p>
+<p>Al finalizar esta sesión deberías ser capaz de:</p>
+<ul>
+<li>Distinguir una serie temporal de otros tipos de datos y describir sus componentes.</li>
+<li>Justificar por qué una base de datos de series temporales es la opción adecuada para datos de sensórica.</li>
+<li>Poner en marcha el laboratorio OTITIA y verificar que todos sus servicios responden.</li>
+<li>Explicar el papel de cada servicio dentro del flujo de datos del proyecto.</li>
+</ul>
+</div>
+<h2 id="el-proyecto-que-vamos-a-construir">El proyecto que vamos a construir<a class="headerlink" href="#el-proyecto-que-vamos-a-construir" title="Permanent link">&para;</a></h2>
+<p>Durante las próximas ocho sesiones vamos a montar un sistema completo de telemetría industrial. No un ejercicio aislado por sesión, sino <strong>un único sistema</strong> que iremos ampliando hasta que funcione de extremo a extremo.</p>
+<p>El recorrido del dato será este: unos sensores generan lecturas, esas lecturas viajan por un bus de mensajería, se almacenan en una base de datos de series temporales, se consultan y agregan, se visualizan en cuadros de mando y, finalmente, se interpretan mediante un modelo de lenguaje que redacta informes en castellano.</p>
+<p>Nuestro laboratorio se llama <strong>OTITIA</strong> y se despliega íntegramente con Docker. En esta primera sesión no vamos a ingerir todavía ningún dato: vamos a entender <strong>qué</strong> tipo de dato vamos a manejar y a dejar el laboratorio funcionando.</p>
+<div class="admonition info">
+<p class="admonition-title">¿Y los sensores físicos?</p>
+<p>En este proyecto la sensórica es <strong>simulada</strong>. Programaremos flujos que generan lecturas realistas y consumiremos alguna API meteorológica real. Todo lo demás (el bus, el almacenamiento, las consultas, la visualización) es exactamente igual que en una instalación real.</p>
+<p>La razón es práctica: con sensores físicos, el 80 % del tiempo de clase se iría en cableado y drivers. Simulando la sensórica podemos centrarnos en la arquitectura de datos, que es lo que estamos aprendiendo.</p>
+</div>
+<h2 id="series-temporales">Series temporales<a class="headerlink" href="#series-temporales" title="Permanent link">&para;</a></h2>
+<p>Una serie temporal es un conjunto de valores que se miden y, por lo tanto, se almacenan de forma secuencial en el tiempo, de manera que el orden cronológico es fundamental.</p>
+<p>Estos valores normalmente se miden en intervalos regulares de tiempo, de manera que están espaciados en el tiempo con la misma separación temporal, ya sean horas, minutos, días, meses, trimestres, etc... La forma más sencilla de comenzar el análisis de una serie temporal es mediante su representación gráfica. En el eje X (horizontal) se representa el tiempo, y en el eje Y (vertical), los valores a analizar:</p>
+<figure style="align: center;">
+    <img alt="Ejemplo de serie temporal - ingresos por acción" src="images/01-timeseries-example.png" width="650px">
+    <figcaption>Ejemplo de serie temporal - ingresos por acción</figcaption>
+</figure>
+
+<p>En IoT, cada sensor genera datos etiquetados con un <em>timestamp</em> (marca temporal).</p>
+<p>Al capturar datos de series temporales a lo largo de un periodo determinado, podemos observar cómo ha evolucionado o cambiado el sistema, lo que ayuda a identificar tendencias, tomar medidas proactivas o hacer predicciones futuras. Por ejemplo, trabajamos con datos de series temporales cuando revisamos el uso de CPU y memoria de un servidor durante la última semana, exploramos las fluctuaciones del tipo de cambio de divisas durante los últimos tres meses o analizamos las constantes vitales de un paciente recogidas durante el último año.</p>
+<h3 id="tipos">Tipos<a class="headerlink" href="#tipos" title="Permanent link">&para;</a></h3>
+<p>Las series temporales se caracterizan por una generación regular (<strong>métrica</strong>) o irregular (<strong>evento</strong>) de periodos temporales. Además, implican grandes volúmenes de datos, como pueden ser ficheros de logs o sensórica de elementos IoT, los cuales tienen una alta frecuencia de creación.</p>
+<figure style="align: center;">
+    <img alt="Tipos de series temporales" src="images/01-regular-vs-irregular-time-series-data.png" width="650px">
+    <figcaption>Tipos de series temporales - influxdata.com</figcaption>
+</figure>
+
+<p>Dadas estas características, las series temporales se emplean principalmente para la predicción y análisis de tendencias en muchos servicios financieros y aplicaciones IoT.</p>
+<div class="admonition tip">
+<p class="admonition-title">Los dos tipos aparecerán en nuestro proyecto</p>
+<p>Cuando simulemos los sensores generaremos <strong>métricas</strong>: una lectura de temperatura cada 30 segundos, llueva o truene. Pero cuando una lectura supere un umbral y dispare una alarma, eso será un <strong>evento</strong>: ocurre cuando ocurre, sin periodicidad.</p>
+<p>Es una distinción que conviene tener presente, porque condiciona cómo se consultan los datos. La media de una métrica tiene sentido; la media de unos eventos, normalmente no.</p>
+</div>
+<h3 id="caracteristicas">Características<a class="headerlink" href="#caracteristicas" title="Permanent link">&para;</a></h3>
+<p>Toda serie temporal tiene dos características clave:</p>
+<ul>
+<li>Cada punto de datos incluye la hora asociada a la medición o evento.</li>
+<li>Los datos de series temporales son, por naturaleza, de tipo <em>"append-only"</em>, lo que significa que una vez registrada y almacenada una medición o evento, nunca se actualiza.</li>
+</ul>
+<p>Si nos centramos en las características de los datos provenientes de sensórica IoT, podemos destacar:</p>
+<ul>
+<li>Dependencia temporal: los datos cercanos en el tiempo suelen estar correlacionados.</li>
+<li>Tamaño creciente: en IoT, los datos llegan en flujo continuo (<em>data stream</em>).</li>
+<li>Importancia del tiempo: el análisis depende tanto del valor como del momento.</li>
+<li>Alta frecuencia de muestreo: Los sensores pueden generar datos a intervalos muy cortos (por ejemplo, cada milisegundo).</li>
+<li>Variabilidad en la calidad de los datos: Los datos pueden verse afectados por interferencias, ruido o fallos en el sensor.</li>
+</ul>
+<p>Sus valores pueden ser:</p>
+<ul>
+<li>discretos: entre un conjunto finito de valores, por ejemplo, la cantidad de hermanos en una familia. Se suelen expresar mediante un número entero.</li>
+<li>continuos: tienen un cantidad infinita de valores y se expresan mediante número reales, por ejemplo, la temperatura que recoge un sensor.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title"><em>Append-only</em> no es un detalle menor</p>
+<p>De todas las características anteriores, la que más consecuencias tiene sobre el diseño del sistema es que los datos <strong>nunca se actualizan</strong>. Un sensor no corrige la lectura que hizo hace diez minutos: registra una nueva.</p>
+<p>Esto significa que toda la maquinaria que una base de datos relacional dedica a soportar <code>UPDATE</code> y <code>DELETE</code> eficientes (bloqueos, versiones de fila, índices actualizables) es peso muerto en este escenario. Las bases de datos de series temporales renuncian a parte de esa maquinaria a cambio de escribir mucho más rápido. Volveremos sobre esto en la sesión 4.</p>
+</div>
+<h2 id="descomposicion">Descomposición<a class="headerlink" href="#descomposicion" title="Permanent link">&para;</a></h2>
+<p>La descomposición de una serie temporal consiste en separar la serie original en sus distintos componentes para poder analizarlos de manera individual y entender mejor su comportamiento.</p>
+<p>Al descomponer una serie temporal, se obtienen tres gráficos o partes principales:</p>
+<ul>
+<li><strong>Tendencia</strong> (<em>Trend</em>), cuando el crecimiento o su decrecimiento es constante conforme avanza el tiempo, y representa el cambio a largo plazo de la serie.</li>
+<li><strong>Estacionalidad</strong> (<em>Seasonal</em>), cuando la serie se repite en patrones periódicos a modo de temporadas, representando fluctuaciones que se repiten en periodos fijos.</li>
+<li><strong>Residual / Remanente</strong> (<em>Residuals</em>), son aquellas irregularidades o ruido que no son explicables por la tendencia ni la estacionalidad.</li>
+</ul>
+<p>Visualizar estos componentes por separado facilita el análisis de la serie temporal, ya que permite identificar patrones, detectar anomalías y comprender mejor qué factores influyen en su comportamiento:</p>
+<figure style="align: center;">
+    <img alt="Descomposición de serie temporal - ingresos por acción" src="images/01-timeseries-decomposition.png" width="650px">
+    <figcaption>Descomposición de serie temporal - ingresos por acción</figcaption>
+</figure>
+
+<p>Si analizamos cada gráfica tenemos que:</p>
+<ul>
+<li>La serie original (<em>observed</em>) muestra los datos recogidos.</li>
+<li>La tendencia muestra los cambios suavizados, como si dibujásemos una línea a través de la mayoría de puntos para mostrar la dirección de la serie.</li>
+<li>La estacionalidad captura los ciclos que se repiten mediante un patrón. En esta caso, el eje Y cambia, partiendo de 0 si se mantiene, un valor positivo, si supone un incremento del valor original o negativo si baja su valor. En el gráfico, se puede observar como en un mismo año, las acciones comienzan arriba, para luego bajar y volver a subir.</li>
+<li>Si juntásemos la tendencia y la estacionalidad, idealmente, deberíamos obtener la serie original. Pero esto no suele ser la realidad. Los valores residuales a 0 indican que la unión de tendencia y la estacionalidad dan el valor de la serie original. En el resto de casos, corresponde al ruido blanco que no podemos modelar y predecir y que necesitamos para obtener la serie original.</li>
+</ul>
+<p>Además de estos tres elementos, en algunas series temporales aparece una cuarta componente llamada <strong>ciclo</strong> (<em>cycle</em>), que son fluctuaciones que se producen a lo largo del tiempo con cierta regularidad, pero sin un periodo fijo ni predecible. A diferencia de la estacionalidad, los ciclos no se repiten siempre cada el mismo intervalo de tiempo y suelen estar asociados a procesos físicos, económicos o de uso.</p>
+<p>Por ejemplo, ciclos económicos de expansión y recesión, o ciclos de carga y descarga de una batería en uso, cuya duración y frecuencia dependen del patrón de utilización y no de un calendario fijo.</p>
+<p>En resumen, una serie temporal puede descomponerse en:</p>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Descripción</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tendencia</strong> (<em>Trend</em>)</td>
+<td>Cambio a largo plazo</td>
+<td>Aumento progresivo de temperatura media en 5 años</td>
+</tr>
+<tr>
+<td><strong>Estacionalidad</strong> (<em>Seasonality</em>)</td>
+<td>Patrón que se repite de forma periódica</td>
+<td>Pico de tráfico en una red cada día a las 20:00</td>
+</tr>
+<tr>
+<td><strong>Ciclo</strong> (<em>Cycle</em>)</td>
+<td>Fluctuaciones no regulares pero de cierta periodicidad</td>
+<td>Ciclos de carga de una batería en uso</td>
+</tr>
+<tr>
+<td><strong>Ruido</strong> (<em>Noise</em>)</td>
+<td>Variación aleatoria sin patrón</td>
+<td>Lecturas erráticas por interferencia electromagnética</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition question">
+<p class="admonition-title">¿Por qué nos importa esto hoy?</p>
+<p>Porque en la sesión 2 tendremos que <strong>programar</strong> un simulador de sensores, y un simulador que devuelva números aleatorios no sirve para nada: los datos no tendrán forma de serie temporal y todo lo que hagamos después será irreal.</p>
+<p>Un buen simulador de temperatura de aula necesita: una <strong>tendencia</strong> (calentamiento a lo largo de la mañana), una <strong>estacionalidad</strong> (ciclo día/noche), un <strong>ciclo</strong> irregular (el aire acondicionado arrancando y parando según la carga) y algo de <strong>ruido</strong> (la precisión del sensor). Los cuatro componentes de la tabla anterior son, literalmente, la receta del código que escribiremos.</p>
+</div>
+<h2 id="almacenamiento">Almacenamiento<a class="headerlink" href="#almacenamiento" title="Permanent link">&para;</a></h2>
+<p>Las principales opciones tecnológicas para almacenar datos IoT pueden agruparse en varios niveles y tipos de sistemas:</p>
+<ol>
+<li>
+<p>Almacenamiento en el propio dispositivo (<em>Edge</em> / <em>On-device</em>)</p>
+<p>En algunos escenarios, los datos se almacenan localmente en el propio dispositivo IoT o en nodos cercanos, los cuales tienen memorias SD que permiten su funcionamiento incluso sin conexión a la red.</p>
+</li>
+<li>
+<p><em>Edge Computing</em> y <em>Gateways IoT</em></p>
+<p>Entre los dispositivos y la nube suele existir una capa intermedia llamada <em>gateway</em>, el cual se encarga de agregar los datos de múltiples sensores, realizando un preprocesamiento y reducción de los datos para realizar un envío selectivo a sistemas remotos.</p>
+</li>
+<li>
+<p>Bases de datos de series temporales (<strong><em><abbr title="Time Series DataBase">TSDB</abbr></em></strong>)</p>
+<p>Productos como <a href="https://www.influxdata.com/products/influxdb/"><em>InfluxDB</em></a> o <a href="https://www.tigerdata.com/"><em>TimescaleDB</em></a> (desde junio del 25 se ha renombrado a <em>TigerData</em>), los cuales están optimizadas para datos indexados por tiempo, con una alta eficiencia en escritura continua y permitiendo realizar consultas por rangos temporales. Entre sus ventajas conviene destacar que son muy adecuadas para sensores y métricas, tienen un buen rendimiento en grandes volúmenes de datos, ya que los datos se almacenan comprimidos y optimizados por tiempo, y facilitan el análisis histórico</p>
+</li>
+<li>
+<p>Bases de datos NoSQL.</p>
+<p>Son muy utilizadas en IoT debido a su flexibilidad y escalabilidad horizontal, y aunque tienen menos funciones específicas para series temporales que las anteriores, están añadiéndolas como funcionalidades extra. Por ejemplo, tanto MongoDB mediante las <a href="https://www.mongodb.com/docs/manual/core/timeseries-collections">colecciones de series temporales</a> o Redis, con el módulo <a href="https://redis.io/docs/latest/develop/data-types/timeseries/">TimeSeries</a>, permiten almacenar y consultar datos de series temporales</p>
+</li>
+<li>
+<p>Bases de datos relacionales.</p>
+<p>Aunque no siempre son la opción principal, las bases de datos relacionales siguen siendo útiles en ciertos contextos IoT. Dicho esto, dentro del campo del Big Data, no se recomienda su uso para ingestas masivas ni con altas frecuencias.</p>
+</li>
+</ol>
+<h3 id="donde-encaja-cada-nivel-en-nuestro-proyecto">Dónde encaja cada nivel en nuestro proyecto<a class="headerlink" href="#donde-encaja-cada-nivel-en-nuestro-proyecto" title="Permanent link">&para;</a></h3>
+<p>Estos cinco niveles no son alternativas excluyentes: en una instalación real conviven. Nuestro laboratorio los reproduce casi todos:</p>
+<table>
+<thead>
+<tr>
+<th>Nivel</th>
+<th>En OTITIA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Edge</em> / dispositivo</td>
+<td>Simulado por los flujos de Node-RED</td>
+</tr>
+<tr>
+<td><em>Gateway</em></td>
+<td>El propio Node-RED y el broker Mosquitto</td>
+</tr>
+<tr>
+<td><strong><abbr title="Time Series DataBase">TSDB</abbr></strong></td>
+<td><strong>InfluxDB</strong>, el destino principal de la sensórica</td>
+</tr>
+<tr>
+<td>NoSQL</td>
+<td>Fuera del alcance de este proyecto</td>
+</tr>
+<tr>
+<td>Relacional</td>
+<td>MySQL, para datos maestros y alarmas confirmadas</td>
+</tr>
+</tbody>
+</table>
+<p>Fíjate en el reparto: <strong>no todo el dato va a la <abbr title="Time Series DataBase">TSDB</abbr></strong>. Las lecturas de sensores sí, porque son series temporales puras. Pero el catálogo de dispositivos, o el registro de qué operario reconoció qué alarma, son datos relacionales y viven en MySQL. Elegir bien el almacén para cada tipo de dato es una de las decisiones de diseño que evaluaremos al final del proyecto.</p>
+<h2 id="el-laboratorio-otitia">El laboratorio OTITIA<a class="headerlink" href="#el-laboratorio-otitia" title="Permanent link">&para;</a></h2>
+<div class="admonition tip inline end">
+<p class="admonition-title">OTITIA</p>
+<p><strong>O</strong>peraciones y <strong>T</strong>ecnologías de la <strong>I</strong>nformación para la <strong>T</strong>elemetría <strong>I</strong>ndustrial <strong>A</strong>plicada. Todos los contenedores, redes y volúmenes llevan el prefijo <code>otitia-</code> para no colisionar con otros proyectos que tengas en tu máquina.</p>
+</div>
+<p>Montar cada pieza a mano en nuestro equipo sería inviable en 24 horas de clase: versiones de Java, dependencias de Node, servicios de sistema, puertos en conflicto... Por eso todo el laboratorio se despliega mediante <strong>Docker Compose</strong>, de forma que con un único comando tengamos el entorno completo funcionando, y con otro lo podamos destruir y volver a empezar.</p>
+<p>Tienes la descripción detallada de la arquitectura, de cada servicio y de la configuración en el documento <a href="otitia-stack.html">El stack OTITIA</a>. Aquí nos quedamos con lo imprescindible para arrancar.</p>
+<h3 id="arquitectura-itot">Arquitectura <abbr title="Information Technology">IT</abbr>/<abbr title="Operational Technology">OT</abbr><a class="headerlink" href="#arquitectura-itot" title="Permanent link">&para;</a></h3>
+<p>El stack no es una lista plana de servicios: reproduce a escala la separación que existe en cualquier planta industrial real entre dos mundos.</p>
+<ul>
+<li><strong><abbr title="Operational Technology">OT</abbr></strong> (<em>Operational Technology</em>): la tecnología en contacto con el proceso físico. Sensores, autómatas, actuadores, el bus de campo. Prioriza el determinismo y la disponibilidad.</li>
+<li><strong><abbr title="Information Technology">IT</abbr></strong> (<em>Information Technology</em>): la tecnología corporativa. Bases de datos, cuadros de mando, informes. Prioriza la integridad del dato y la seguridad.</li>
+</ul>
+<p>La convergencia <abbr title="Information Technology">IT</abbr>/<abbr title="Operational Technology">OT</abbr>, que es de lo que va la Industria 4.0, consiste en conectar ambos mundos <strong>de forma controlada</strong>: no se abre la planta a la red corporativa, sino que se establece un punto de cruce vigilado. En nuestro laboratorio eso se traduce en dos redes Docker (<code>otitia-ot</code> y <code>otitia-it</code>) y un único servicio que actúa de puente: <strong>Mosquitto</strong>.</p>
+<h3 id="los-servicios">Los servicios<a class="headerlink" href="#los-servicios" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>Puerto</th>
+<th>Papel en el proyecto</th>
+<th>Sesión</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Node-RED</strong></td>
+<td>1880</td>
+<td>Simulación de sensórica y lógica de flujo</td>
+<td>2</td>
+</tr>
+<tr>
+<td><strong>Mosquitto</strong></td>
+<td>1883</td>
+<td>Broker MQTT. El bus del sistema</td>
+<td>3</td>
+</tr>
+<tr>
+<td><strong>Telegraf</strong></td>
+<td>—</td>
+<td>Agente de ingesta declarativo</td>
+<td>4</td>
+</tr>
+<tr>
+<td><strong>InfluxDB 2.7</strong></td>
+<td>8086</td>
+<td>Base de datos de series temporales</td>
+<td>4, 5</td>
+</tr>
+<tr>
+<td><strong>InfluxDB 3 Core</strong></td>
+<td>8181</td>
+<td>Nueva generación, para comparar</td>
+<td>4</td>
+</tr>
+<tr>
+<td><strong>Grafana</strong></td>
+<td>3000</td>
+<td>Visualización y alertado</td>
+<td>6</td>
+</tr>
+<tr>
+<td><strong>MySQL</strong></td>
+<td>3306</td>
+<td>Datos maestros y alarmas</td>
+<td>4, 8</td>
+</tr>
+<tr>
+<td><strong>N8N</strong></td>
+<td>5678</td>
+<td>Automatización, alternativa a Telegraf</td>
+<td>4</td>
+</tr>
+<tr>
+<td><strong>WordPress</strong></td>
+<td>8080</td>
+<td>Publicación de resultados</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<h2 id="puesta-en-marcha">Puesta en marcha<a class="headerlink" href="#puesta-en-marcha" title="Permanent link">&para;</a></h2>
+<h3 id="requisitos-previos">Requisitos previos<a class="headerlink" href="#requisitos-previos" title="Permanent link">&para;</a></h3>
+<p>Necesitas <strong>Docker Desktop</strong> (Windows y macOS) o <strong>Docker Engine + Compose</strong> (Linux), y unos 20 GB libres de disco.</p>
+<table>
+<thead>
+<tr>
+<th>Escenario</th>
+<th>Recomendación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mínimo</td>
+<td>8 GB RAM, 4 núcleos, 20 GB SSD. Funciona, pero justo</td>
+</tr>
+<tr>
+<td>Recomendado</td>
+<td>16 GB RAM, 4-6 núcleos, 50 GB SSD</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition danger">
+<p class="admonition-title">Windows con WSL2: el error que arruina la sesión</p>
+<p>Si trabajas en Windows, usa el <em>backend</em> WSL2 y <strong>coloca el proyecto dentro del sistema de archivos de WSL</strong> (<code>~/proyectos/otitia</code>), <strong>nunca</strong> en <code>/mnt/c/Users/...</code>.</p>
+<p>Si lo pones en la unidad C:, cada lectura y escritura atraviesa una capa de traducción entre sistemas de archivos y el rendimiento de entrada/salida se desploma. El laboratorio arranca, pero va tan lento que resulta inutilizable, y el síntoma no apunta a la causa: parece que Docker está roto.</p>
+</div>
+<h3 id="arranque">Arranque<a class="headerlink" href="#arranque" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># Situarse en el directorio del proyecto</span>
+<span class="linenos" data-linenos="2 "></span><span class="nb">cd</span><span class="w"> </span>otitia
+<span class="linenos" data-linenos="3 "></span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># Levantar el perfil que usaremos durante el proyecto</span>
+<span class="linenos" data-linenos="5 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>v2<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Paciencia la primera vez</p>
+<p>El primer arranque descarga unos 3 GB de imágenes y puede tardar varios minutos según la conexión. Las siguientes veces el arranque es cuestión de segundos, porque las imágenes ya están en local.</p>
+</div>
+<p>El proyecto define varios <strong>perfiles</strong>, que permiten levantar subconjuntos del stack según lo que necesitemos:</p>
+<table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>Qué levanta</th>
+<th>RAM aprox.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>full</code></td>
+<td>Todo, incluido WordPress</td>
+<td>~4.5 GB</td>
+</tr>
+<tr>
+<td><code>lite</code></td>
+<td>Sin InfluxDB ni Telegraf</td>
+<td>~2.2 GB</td>
+</tr>
+<tr>
+<td><code>v2</code></td>
+<td>Con InfluxDB v2, sin v3 ni WordPress</td>
+<td>~3 GB</td>
+</tr>
+<tr>
+<td><code>v3</code></td>
+<td>Con InfluxDB v3, sin v2 ni WordPress</td>
+<td>~3.2 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Durante la mayor parte del proyecto usaremos <strong><code>v2</code></strong>, que es el mínimo necesario para el pipeline completo.</p>
+<h3 id="verificacion">Verificación<a class="headerlink" href="#verificacion" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># Estado de todos los contenedores</span>
+<span class="linenos" data-linenos="2 "></span>docker<span class="w"> </span>compose<span class="w"> </span>ps
+<span class="linenos" data-linenos="3 "></span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># Consumo de recursos en tiempo real (Ctrl+C para salir)</span>
+<span class="linenos" data-linenos="5 "></span>docker<span class="w"> </span>stats
+<span class="linenos" data-linenos="6 "></span>
+<span class="linenos" data-linenos="7 "></span><span class="c1"># Logs de un servicio concreto</span>
+<span class="linenos" data-linenos="8 "></span>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>influxdb
+</code></pre></div>
+<p>Todos los servicios deben aparecer como <code>running</code>. Si alguno aparece como <code>restarting</code>, se está cayendo en bucle: mira sus logs para ver la causa.</p>
+<h3 id="puntos-de-acceso">Puntos de acceso<a class="headerlink" href="#puntos-de-acceso" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>URL</th>
+<th>Credenciales</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node-RED</td>
+<td><a href="http://localhost:1880">http://localhost:1880</a></td>
+<td>(sin autenticación)</td>
+</tr>
+<tr>
+<td>InfluxDB 2.7</td>
+<td><a href="http://localhost:8086">http://localhost:8086</a></td>
+<td><code>admin</code> / <code>admin12345</code></td>
+</tr>
+<tr>
+<td>Grafana</td>
+<td><a href="http://localhost:3000">http://localhost:3000</a></td>
+<td><code>admin</code> / <code>admin</code></td>
+</tr>
+<tr>
+<td>N8N</td>
+<td><a href="http://localhost:5678">http://localhost:5678</a></td>
+<td><code>admin</code> / <code>admin</code></td>
+</tr>
+</tbody>
+</table>
+<p>Dedica unos minutos a recorrer las tres interfaces principales. No hay que hacer nada en ellas todavía; se trata de reconocer el terreno:</p>
+<ul>
+<li>En <strong>Node-RED</strong> verás un lienzo vacío con una paleta de nodos a la izquierda. Aquí construiremos los flujos de la sesión 2.</li>
+<li>En <strong>InfluxDB</strong> entra en <em>Data Explorer</em>. Estará vacío, lógicamente: aún no hemos ingerido nada.</li>
+<li>En <strong>Grafana</strong>, echa un vistazo a <em>Connections</em> y <em>Dashboards</em>. Es donde trabajaremos en la sesión 6.</li>
+</ul>
+<h3 id="comandos-que-usaras-a-diario">Comandos que usarás a diario<a class="headerlink" href="#comandos-que-usaras-a-diario" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Parar sin borrar datos</span>
+<span class="linenos" data-linenos=" 2 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>v2<span class="w"> </span>stop
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1"># Parar y eliminar contenedores (los volúmenes se conservan)</span>
+<span class="linenos" data-linenos=" 5 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>v2<span class="w"> </span>down
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># Reiniciar un único servicio</span>
+<span class="linenos" data-linenos=" 8 "></span>docker<span class="w"> </span>compose<span class="w"> </span>restart<span class="w"> </span>nodered
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># Entrar a un contenedor</span>
+<span class="linenos" data-linenos="11 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>otitia-influxdb<span class="w"> </span>bash
+</code></pre></div>
+<div class="admonition danger">
+<p class="admonition-title">El comando que no debes ejecutar sin pensar</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>v2<span class="w"> </span>down<span class="w"> </span>-v
+</code></pre></div>
+<p>La opción <code>-v</code> elimina los volúmenes, es decir, <strong>todos los datos ingeridos, todos tus flujos de Node-RED y todos tus cuadros de mando</strong>. Es la diferencia entre apagar el ordenador y formatearlo.</p>
+<p>Tiene su utilidad (empezar de cero cuando algo se ha corrompido), pero úsala solo de forma deliberada. Y exporta siempre tu trabajo al repositorio: es la única copia que sobrevive.</p>
+</div>
+<h2 id="nombres-de-host-el-error-mas-frecuente-del-proyecto">Nombres de host: el error más frecuente del proyecto<a class="headerlink" href="#nombres-de-host-el-error-mas-frecuente-del-proyecto" title="Permanent link">&para;</a></h2>
+<p>Merece la pena adelantar ahora un concepto que causará problemas en las sesiones 3, 4 y 6 si no queda claro desde el principio.</p>
+<p>Cada servicio se ejecuta <strong>dentro de su propio contenedor</strong>, con su propia red. Eso significa que la dirección de un servicio <strong>depende de quién pregunte</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Quién pregunta</th>
+<th>Dirección de InfluxDB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tu navegador</td>
+<td><code>http://localhost:8086</code></td>
+</tr>
+<tr>
+<td>Node-RED, Telegraf o Grafana</td>
+<td><code>http://influxdb:8086</code></td>
+</tr>
+</tbody>
+</table>
+<p>Cuando configures el origen de datos de Grafana o el nodo de InfluxDB en Node-RED, estás configurando <strong>un contenedor</strong>, así que la dirección correcta es el nombre del servicio, no <code>localhost</code>. Si pones <code>localhost</code>, el contenedor se busca a sí mismo y obtienes un error de conexión que no dice gran cosa.</p>
+<p>La misma regla aplica al broker (<code>otitia-mosquitto:1883</code>) y a la base de datos relacional (<code>mysql:3306</code>).</p>
+<h2 id="convenciones-del-proyecto">Convenciones del proyecto<a class="headerlink" href="#convenciones-del-proyecto" title="Permanent link">&para;</a></h2>
+<p>Fijamos ahora las convenciones que usaremos durante las ocho sesiones. Anótalas: a partir de la sesión 3 las darás por supuestas.</p>
+<p><strong>Jerarquía de topics MQTT</strong></p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>otitia/&lt;zona&gt;/&lt;dispositivo&gt;/&lt;magnitud&gt;
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span>otitia/aula/sensor01/temperatura
+<span class="linenos" data-linenos="4 "></span>otitia/aula/sensor01/humedad
+<span class="linenos" data-linenos="5 "></span>otitia/exterior/meteo/temperatura
+<span class="linenos" data-linenos="6 "></span>otitia/alertas/&lt;zona&gt;/&lt;nivel&gt;
+</code></pre></div>
+<p><strong>Modelo de datos en InfluxDB</strong></p>
+<ul>
+<li>Medida: <code>sensores</code></li>
+<li>Etiquetas (<em>tags</em>): <code>zona</code>, <code>dispositivo</code>, <code>magnitud</code></li>
+<li>Campos (<em>fields</em>): <code>valor</code>, <code>bateria</code></li>
+<li>Marca temporal en <abbr title="Coordinated Universal Time">UTC</abbr></li>
+</ul>
+<p><strong>Espacio de trabajo personal</strong>: si trabajamos contra el broker compartido del VPS, cada estudiante publica bajo <code>otitia/&lt;iniciales&gt;/...</code> para no pisarse con el resto.</p>
+<h2 id="problemas-frecuentes-en-el-primer-arranque">Problemas frecuentes en el primer arranque<a class="headerlink" href="#problemas-frecuentes-en-el-primer-arranque" title="Permanent link">&para;</a></h2>
+<p><strong>Un puerto ya está ocupado.</strong> Si tienes otro InfluxDB, Grafana o MySQL corriendo en tu máquina, el arranque fallará. Localiza el culpable con <code>docker ps -a</code>, o cambia el puerto del lado izquierdo en el <code>docker-compose.yml</code> (<code>"8087:8086"</code>).</p>
+<p><strong>MySQL se cae nada más arrancar.</strong> Si el volumen quedó corrupto de un intento anterior, hay que purgarlo:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>down
+<span class="linenos" data-linenos="2 "></span>docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>otitia-mysql-data
+<span class="linenos" data-linenos="3 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>v2<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p><strong>El equipo va lentísimo.</strong> Revisa <code>docker stats</code>. En Docker Desktop conviene asignar 6-8 GB de RAM y 2-4 vCPU al motor. Si tu máquina tiene 8 GB en total, considera trabajar con el perfil <code>lite</code> en las primeras sesiones.</p>
+<p><strong>Cambio el <code>.env</code> y no pasa nada.</strong> Las variables se leen al <strong>crear</strong> el contenedor, no al arrancarlo. Hay que hacer <code>docker compose up -d --force-recreate</code>.</p>
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://docs.docker.com/compose/">Documentación de Docker Compose</a></li>
+<li><a href="https://www.influxdata.com/products/influxdb/">InfluxDB - Time series database</a></li>
+<li><a href="https://mosquitto.org/documentation/">Eclipse Mosquitto</a></li>
+<li><a href="https://www.influxdata.com/what-is-time-series-data/">¿Qué son los datos de series temporales?</a></li>
+</ul>
+<h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>(<abbr title="Se han seleccionado e integrado sistemas de información que satisfacen las necesidades del problema.">RASBD.1f</abbr> / 0.5p) <strong>Caracterización de series temporales.</strong> Para cada uno de los siguientes conjuntos de datos, indica si constituye una serie temporal y, en caso afirmativo, si es de tipo métrica o evento. Justifica cada respuesta:</p>
+<ol>
+<li>Lecturas de un sensor de temperatura cada 5 minutos.</li>
+<li>El listado de alumnos matriculados en el ciclo.</li>
+<li>Registros de acceso a un edificio mediante tarjeta.</li>
+<li>Precio de cierre diario de una acción.</li>
+<li>El catálogo de productos de una tienda con su precio actual.</li>
+<li>Mensajes de error escritos por una aplicación en su fichero de log.</li>
+</ol>
+</li>
+<li>
+<p>(<abbr title="Se han seleccionado e integrado sistemas de información que satisfacen las necesidades del problema.">RASBD.1f</abbr> / 0.5p) <strong>Descomposición.</strong> Elige una magnitud que vayamos a simular en el proyecto (temperatura de un aula, consumo eléctrico o humedad) y describe cómo esperarías que fuesen sus cuatro componentes: tendencia, estacionalidad, ciclo y ruido. Indica en cada caso el periodo aproximado y la amplitud que consideras razonable. Este análisis lo reutilizarás en la sesión 2 para programar el simulador.</p>
+</li>
+<li>
+<p>(<abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">RABDA.1a</abbr> / 1p) <strong>Documentación del stack.</strong> Elabora una ficha del laboratorio que incluya, para cada servicio: imagen y versión, puertos publicados, redes a las que pertenece, volúmenes que utiliza y su papel dentro del pipeline. Acompáñala de un diagrama del flujo de datos de extremo a extremo, indicando por qué red viaja el dato en cada tramo.</p>
+</li>
+<li>
+<p>(<abbr title="Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.">RABDA.1a</abbr> / 0.5p) <strong>Verificación del entorno.</strong> Arranca el perfil <code>v2</code> y comprueba que los servicios responden. Adjunta capturas de Node-RED, InfluxDB UI y Grafana funcionando, junto con la salida de <code>docker compose ps</code> y <code>docker stats</code>.</p>
+</li>
+<li>
+<p>(<abbr title="Se han identificado las ventajas que ofrece unificar procesos, servicios, herramientas, métodos y sectores.">RAPIA.3a</abbr> / 0.5p) <strong>Convergencia <abbr title="Information Technology">IT</abbr>/<abbr title="Operational Technology">OT</abbr>.</strong> Explica qué servicios pertenecen a cada red del laboratorio y cuál actúa de puente entre ambas. ¿Qué ventajas aporta unificar en un mismo sistema las herramientas de planta y las corporativas? ¿Qué riesgos introduce? Relaciónalo con lo que ocurriría en una instalación industrial real.</p>
+</li>
+<li>
+<p>(<abbr title="Se han establecido objetivos y prioridades, secuenciación y organización del tiempo de realización.">RASBD.1e</abbr> / 0.5p) <strong>Plan de trabajo.</strong> Elabora el plan del equipo para las ocho sesiones: objetivos por sesión, reparto de responsabilidades e hitos de entrega. Lo revisaremos en la defensa final contrastando lo planificado con lo realmente ejecutado.</p>
+</li>
+</ol>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        <a href='https://ko-fi.com/T6T8GWT9N' title='Invítame a un café en ko-fi.com' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Invítame a un café en ko-fi.com' /></a>
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="Me encantan estos apuntes" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="Los apuntes son mejorables" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Gracias por tu tiempo. Si quieres me puedes <a href='https://ko-fi.com/T6T8GWT9N'>invitar a un café en ko-fi</a>.
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              ¡Gracias por tu colaboración! Ayúdame a mejorar los apuntes enviándome un mail a <a href="mailto:a.medrano@edu.gva.es">a.medrano@edu.gva.es</a> con tus comentarios.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2023-2026 Aitor Medrano - <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">Licencia CC BY-NC-SA</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://aitor-medrano.github.io/" target="_blank" rel="noopener" title="aitor-medrano.github.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2m-5.15 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56M14.34 14H9.66c-.1-.66-.16-1.32-.16-2s.06-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2M12 19.96c-.83-1.2-1.5-2.53-1.91-3.96h3.82c-.41 1.43-1.08 2.76-1.91 3.96M8 8H5.08A7.92 7.92 0 0 1 9.4 4.44C8.8 5.55 8.35 6.75 8 8m-2.92 8H8c.35 1.25.8 2.45 1.4 3.56A8 8 0 0 1 5.08 16m-.82-2C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2M12 4.03c.83 1.2 1.5 2.54 1.91 3.97h-3.82c.41-1.43 1.08-2.77 1.91-3.97M18.92 8h-2.95a15.7 15.7 0 0 0-1.38-3.56c1.84.63 3.37 1.9 4.33 3.56M12 2C6.47 2 2 6.5 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://aitor-medrano.github.io/blog" target="_blank" rel="noopener" title="aitor-medrano.github.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M224 24c0-13.3 10.7-24 24-24 145.8 0 264 118.2 264 264 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-119.3-96.7-216-216-216-13.3 0-24-10.7-24-24M80 96c26.5 0 48 21.5 48 48v224c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48c-8.8 0-16-7.2-16-16v-64c0-8.8 7.2-16 16-16 79.5 0 144 64.5 144 144s-64.5 144-144 144S32 447.5 32 368V144c0-26.5 21.5-48 48-48m168 0c92.8 0 168 75.2 168 168 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-66.3-53.7-120-120-120-13.3 0-24-10.7-24-24s10.7-24 24-24"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://bsky.app/profile/aitormedrano.bsky.social" target="_blank" rel="noopener" title="bsky.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M407.8 294.7c-3.3-.4-6.7-.8-10-1.3 3.4.4 6.7.9 10 1.3M288 227.1c-26.1-50.7-97.1-145.2-163.1-191.8C61.6-9.4 37.5-1.7 21.6 5.5 3.3 13.8 0 41.9 0 58.4S9.1 194 15 213.9c19.5 65.7 89.1 87.9 153.2 80.7 3.3-.5 6.6-.9 10-1.4-3.3.5-6.6 1-10 1.4-93.9 14-177.3 48.2-67.9 169.9C220.6 589.1 265.1 437.8 288 361.1c22.9 76.7 49.2 222.5 185.6 103.4 102.4-103.4 28.1-156-65.8-169.9-3.3-.4-6.7-.8-10-1.3 3.4.4 6.7.9 10 1.3 64.1 7.1 133.6-15.1 153.2-80.7C566.9 194 576 75 576 58.4s-3.3-44.7-21.6-52.9c-15.8-7.1-40-14.9-103.2 29.8C385.1 81.9 314.1 176.4 288 227.1"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://x.com/aitormedrano" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:<a.medrano@edu.gva.es>" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l208 156a48 48 0 0 0 57.6 0l208-156c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48zM0 196v188c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V196L313.6 344.8c-34.1 25.6-81.1 25.6-115.2 0z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Consentimiento de cookie</h4>
+<p>Esta página de apuntes utiliza cookies para reconocer las visitas, medir la efectividad de la documentación y averiguar si encuentras aquello que buscas o cómo has llegado a estos apuntes. Con tu consentimiento, me ayudas a mejorar estos materiales.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" checked>
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+    
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Aceptar</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Gestionar cookies</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

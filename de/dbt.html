@@ -1,0 +1,5692 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Industrializar el esquema en estrella con dbt Core sobre DuckDB. Analytics engineering, estructura de proyecto, profiles, sources, ref(), capas staging/marts y materializaciones view/table sobre el dataset retail_db.">
+      
+      
+      
+        <link rel="canonical" href="https://aitor-medrano.github.io/iabd/de/dbt.html">
+      
+      
+        <link rel="prev" href="dlt.html">
+      
+      
+        <link rel="next" href="airflow.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Transformación con dbt - Inteligencia Artificial y Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CJetbrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Jetbrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-VKM8BDY6KT"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-VKM8BDY6KT",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-VKM8BDY6KT",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Transformación con dbt - Inteligencia Artificial y Big Data" />
+<meta property="og:description" content="Industrializar el esquema en estrella con dbt Core sobre DuckDB. Analytics engineering, estructura de proyecto, profiles, sources, ref(), capas staging/marts y materializaciones view/table sobre el dataset retail_db." />
+<meta property="og:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/de/dbt.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://aitor-medrano.github.io/iabd/de/dbt.html" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Transformación con dbt - Inteligencia Artificial y Big Data" />
+<meta property="twitter:description" content="Industrializar el esquema en estrella con dbt Core sobre DuckDB. Analytics engineering, estructura de proyecto, profiles, sources, ref(), capas staging/marts y materializaciones view/table sobre el dataset retail_db." />
+<meta property="twitter:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/de/dbt.png" />
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#transformacion-con-dbt" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-header__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Inteligencia Artificial y Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Transformación con dbt
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo noche"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo noche" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo día"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo día" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-nav__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    Inteligencia Artificial y Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IABD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2627.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planning 26/27
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NoSQL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    NoSQL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/nosql.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento de datos. NoSQL
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/mongo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/modelado.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelado documental
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/agregaciones.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agregaciones en MongoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/rendimiento.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendimiento
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/replicacion.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y particionado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/pymongo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB y Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/series-temporales.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series temporales en MongoDB
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cloud
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/cloud.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/aws.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/s3.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/ec2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EC2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/lambda.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lambda
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/rds.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/dynamodb.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/waf.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WAF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/escalado.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización y Escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/emr.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EMR
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/athena.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Athena
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/glue.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glue
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingeniería de Datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ingeniería de Datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="bigdata.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Big Data
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="de.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingeniería de datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arq.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitecturas Big Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ciclo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida del dato
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="formatos.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Formatos de datos
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sql-analitico.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQL analítico
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="modelado-dimensional.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelado dimensional
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="object-storage.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento distribuido
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="motores-consulta.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motores de consulta
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="etl.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingesta de datos
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dlt.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extracción y carga con dlt
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transformación con dbt
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="dbt.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transformación con dbt
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#analytics-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Analytics engineering
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbt-core-y-dbt-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          <abbr title="data build tool">dbt</abbr> Core y <abbr title="data build tool">dbt</abbr> Cloud
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instalacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Instalación
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estructura-de-un-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Estructura de un proyecto
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Estructura de un proyecto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#las-tres-zonas-ahora-como-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Las tres zonas, ahora como código
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-dbt_projectyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Configuración: <code>dbt_project.yml</code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conexion-profilesyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Conexión: <code>profiles.yml</code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-1-cargando-un-modelo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Caso 1. Cargando un modelo
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso 1. Cargando un modelo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fuentes-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Fuentes de datos
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-primer-modelo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          El primer modelo
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creando-una-dimension-con-ref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Creando una dimensión con <code>ref()</code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capas-staging-y-marts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Capas: staging y marts
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#materializaciones-view-y-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Materializaciones: view y table
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejecutar-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Ejecutar el proyecto
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comprobar-el-resultado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Comprobar el resultado
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentacion-y-linaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Documentación y linaje
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#puesta-en-practica-de-extremo-a-extremo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Puesta en práctica de extremo a extremo
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          FAQ
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Referencias
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Actividades
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="airflow.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orquestación con Airflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pentaho.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pentaho
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="faker.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Faker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="stack-docker-de.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stack Docker
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosistema Hadoop
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ecosistema Hadoop
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hadoop.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hadoop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hdfs.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HDFS
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/sqoop.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sqoop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/flume.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hive1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hive I
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hive2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hive II
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spark
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Spark
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/spark.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosistema Spark
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/rdd.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/dataframeAPI.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DataFrames API
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/agregaciones.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agregaciones
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/catalog.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conectividad y catálogo
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/deltalake.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Delta Lake
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/streaming.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/join-window.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windowing y Joins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/stack-docker-spark.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stack Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flujo de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flujo de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/nifi1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nifi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/nifi2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nifi Avanzado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/kafka1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kafka
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/kafka2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kafka Clúster
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transferencia de conocimiento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Transferencia de conocimiento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hf/transferencia.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reaprendiendo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hf/hf.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hugging Face
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hf/gradio.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gradio
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hf/datasets.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../audio/audio.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tratamiento de audio
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../audio/audio-hf.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio en Hugging Face
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IoT
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ts/nodered.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ts/timeseries.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series temporales
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/series-temporales.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series temporales en MongoDB
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ts/influxdb.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../pia/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PIA
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PIA
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_2" id="__nav_11_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lara 22/23
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lara 22/23
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/01presentacion.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/02requisitos.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prototipado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/03visitaVK.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visita IES Victoria Kent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/04almacenamiento.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/05audio.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/11dataset.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creando el dataset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_3" id="__nav_11_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lara 23/24
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lara 23/24
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/21conociendo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conociendo Lara
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/22captura.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capturando audios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/29dataset.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creando el dataset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/30entrenamiento.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entrenando
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/31refinando.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refinando
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/32evaluando.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluando
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_4" id="__nav_11_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autoponic 22/23
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Autoponic 22/23
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/06autoponic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/07navarrosantafe.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visita IES Navarro Santafé
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/08timeseries.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/09powerbi.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visualización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/10actuadores.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Actuadores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_5" id="__nav_11_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autoponic 23/24
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Autoponic 23/24
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/23autoponic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conociendo Autoponic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/24nodered.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/25villena.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visita IES Navarro Santafé
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/26modelo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelo de datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/27dashboard.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cuadro de mandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tags.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#analytics-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Analytics engineering
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dbt-core-y-dbt-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          <abbr title="data build tool">dbt</abbr> Core y <abbr title="data build tool">dbt</abbr> Cloud
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instalacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Instalación
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estructura-de-un-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Estructura de un proyecto
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Estructura de un proyecto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#las-tres-zonas-ahora-como-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Las tres zonas, ahora como código
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-dbt_projectyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Configuración: <code>dbt_project.yml</code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conexion-profilesyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Conexión: <code>profiles.yml</code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-1-cargando-un-modelo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Caso 1. Cargando un modelo
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso 1. Cargando un modelo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fuentes-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Fuentes de datos
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-primer-modelo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          El primer modelo
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creando-una-dimension-con-ref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Creando una dimensión con <code>ref()</code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capas-staging-y-marts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Capas: staging y marts
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#materializaciones-view-y-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Materializaciones: view y table
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejecutar-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Ejecutar el proyecto
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comprobar-el-resultado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Comprobar el resultado
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentacion-y-linaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Documentación y linaje
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#puesta-en-practica-de-extremo-a-extremo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Puesta en práctica de extremo a extremo
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          FAQ
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Referencias
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Actividades
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navegación" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../index.html" class="md-path__link">
+        
+  <span class="md-ellipsis">
+    IABD
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="bigdata.html" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Ingeniería de Datos
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <nav class="md-tags" >
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:bda-ra1" class="md-tag">BDA RA1</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:data-engineering" class="md-tag">Data Engineering</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:duckdb" class="md-tag">DuckDB</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:minio" class="md-tag">MinIO</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:sbd-ra3" class="md-tag">SBD RA3</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:dbt" class="md-tag">dbt</a>
+      
+    
+  </nav>
+
+
+
+<div class="changelog">
+<p><em>Changelog:</em></p>
+<ul>
+<li>Nueva creación — Septiembre 2026</li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Apuntes en creación</p>
+<p>Esta sesión está en construcción. La versión final se publicará durante Octubre de 2026.</p>
+</div>
+<h1 id="transformacion-con-dbt">Transformación con <abbr title="data build tool">dbt</abbr><a class="headerlink" href="#transformacion-con-dbt" title="Permanent link">&para;</a></h1>
+<p>En sesiones anteriores hemos hecho varias cosas por separado. En la sesión de <a href="dlt.html">ingesta de datos con <em>dlt</em></a> resolvimos la <strong>E</strong> y la <strong>L</strong>: extrajimos <code>retail_db</code> de <em>MySQL</em> y lo cargamos <em>tal cual</em> en <em>DuckDB</em>, dentro del esquema <code>retail_db</code>. Y en la sesión de <a href="modelado-dimensional.html">modelado dimensional</a> diseñamos y construimos a mano el esquema en estrella sobre esos datos: la tabla de hechos <code>fact_ventas</code>, las dimensiones <code>dim_producto</code>, <code>dim_cliente</code> y <code>dim_fecha</code>, con sus claves subrogadas y su miembro desconocido.</p>
+<p>Aquella estrella la montamos con <em>scripts</em> sueltos de <code>CREATE TABLE AS</code>: funcionaban, pero eran un conjunto de sentencias que había que ejecutar en el orden correcto, a mano, sin versionar y sin forma de saber qué depende de qué.</p>
+<p>En esta sesión damos el salto que anunciamos entonces: nos vamos a centrar en la <strong>T</strong> e industrializar esas mismas transformaciones con <a href="https://www.getdbt.com/"><abbr title="data build tool">dbt</abbr></a>. La lógica <abbr title="Structured Query Language">SQL</abbr> es prácticamente la misma; lo que cambia es que pasa a ser un proyecto de ingeniería —versionado, con dependencias explícitas, materialización configurable y documentación— en lugar de un puñado de consultas.</p>
+<div class="admonition info">
+<p class="admonition-title">Dónde encaja <abbr title="data build tool">dbt</abbr></p>
+<p><abbr title="data build tool">dbt</abbr> no extrae ni carga datos: se apoya en el motor que ya los tiene (en nuestro caso <em>DuckDB</em>) y le manda <code>SELECT</code>. Es la pieza de transformación de un stack <abbr title="Extract, Load, Transform">ELT</abbr> moderno. La lógica sigue siendo <abbr title="Structured Query Language">SQL</abbr>; lo que aporta <abbr title="data build tool">dbt</abbr> es <em>ingeniería de software</em> alrededor de ese <abbr title="Structured Query Language">SQL</abbr>: dependencias, entornos, control de versiones, documentación y pruebas.</p>
+</div>
+<h2 id="analytics-engineering">Analytics engineering<a class="headerlink" href="#analytics-engineering" title="Permanent link">&para;</a></h2>
+<p>Durante años hubo dos perfiles muy separados. El ingeniero de datos (<em>data engineer</em>) montaba infaestructura y movía datos, pero no conocía el negocio. El analista de datos (<em>data analyst</em>) conocía el negocio y escribía <abbr title="Structured Query Language">SQL</abbr> —justo lo que hicimos en la sesión de modelado— pero trabajaba con consultas sueltas, sin control de versiones, que nadie más podía reutilizar ni verificar.</p>
+<p>El ingeniero analítico (<strong><em>analytics engineer</em></strong>) es el puente: aplica prácticas de desarrollo de software (control de versiones, modularidad, pruebas, revisión de código, integraciones continuas, documentación) al trabajo analítico en <abbr title="Structured Query Language">SQL</abbr>. En lugar de los <em>scripts</em> de <code>CREATE TABLE</code> que ejecutábamos a mano, produce un repositorio de modelos versionado, documentado y reproducible.</p>
+<div class="admonition info inline end">
+<p class="admonition-title">Linaje de los datos</p>
+<p>El linaje de los datos es la información de qué modelo depende de qué otro modelo o fuente. <abbr title="data build tool">dbt</abbr> lo construye automáticamente y lo dibuja en un grafo navegable.</p>
+</div>
+<p>De dicha necesidad surgió <abbr title="data build tool">dbt</abbr>, la herramienta que popularizó ese rol. Un modelo <abbr title="data build tool">dbt</abbr> es, simplemente, un <code>SELECT</code> guardado en un fichero <code>.sql</code>. <abbr title="data build tool">dbt</abbr> se encarga de convertir ese <code>SELECT</code> en una vista o una tabla dentro del almacén, de resolver en qué orden ejecutar los modelos y de mantener el linaje entre ellos. No hay que aprender un lenguaje nuevo: el 95 % es <abbr title="Structured Query Language">SQL</abbr>, el mismo que ya hemos utilizado hasta ahora.</p>
+<h2 id="dbt-core-y-dbt-cloud"><abbr title="data build tool">dbt</abbr> Core y <abbr title="data build tool">dbt</abbr> Cloud<a class="headerlink" href="#dbt-core-y-dbt-cloud" title="Permanent link">&para;</a></h2>
+<p>Existen dos formas de usar <abbr title="data build tool">dbt</abbr>:</p>
+<ul>
+<li><a href="https://github.com/dbt-labs/dbt-core"><abbr title="data build tool">dbt</abbr> Core</a> es la herramienta de línea de comandos, de código abierto (licencia Apache 2.0). Es lo que usaremos: gratis, se ejecuta en local o en cualquier orquestador como <em>Airflow</em> o <em>Prefect</em>, y no depende de ningún servicio.</li>
+<li><a href="https://www.getdbt.com/"><abbr title="data build tool">dbt</abbr> Cloud</a> es el producto <abbr title="Software as a Service">SaaS</abbr> comercial de <abbr title="data build tool">dbt</abbr> Labs: añade <abbr title="Integrated Development Environment">IDE</abbr> web, planificador, control de accesos y observabilidad sobre <abbr title="data build tool">dbt</abbr> Core.</li>
+</ul>
+<p>Todo lo que veremos funciona con <abbr title="data build tool">dbt</abbr> Core. Para conectarnos con <em>DuckDB</em> usaremos el <em>adaptador</em> <code>dbt-duckdb</code>, que es un <em>plugin</em> instalable aparte.</p>
+<div class="admonition note">
+<p class="admonition-title">¿Y <abbr title="data build tool">dbt</abbr> Fusion?</p>
+<p>Desde 2025 <em><abbr title="data build tool">dbt</abbr> Labs</em> desarrolla <a href="https://www.getdbt.com/product/fusion"><em>Fusion</em></a>, un motor nuevo escrito en <em>Rust</em> que sustituye al motor histórico en <em>Python</em>. No es un <abbr title="data build tool">dbt</abbr> distinto: usa el mismo lenguaje de proyecto (modelos, <code>ref()</code>, YAML), pero al comprender el <abbr title="Structured Query Language">SQL</abbr> de forma nativa aporta compilación local, detección de errores en el editor y linaje a nivel de columna, además de ser mucho más rápido en proyectos grandes.</p>
+</div>
+<h2 id="instalacion">Instalación<a class="headerlink" href="#instalacion" title="Permanent link">&para;</a></h2>
+<p>Si quieres instalar <em><abbr title="data build tool">dbt</abbr> Core</em> y el adaptador <code>dbt-duckdb</code> en tu máquina, la forma más sencilla es con <code>pip</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip<span class="w"> </span>install<span class="w"> </span>dbt-duckdb
+<span class="linenos" data-linenos="2 "></span>dbt<span class="w"> </span>--version
+</code></pre></div>
+<p>Al instalar <code>dbt-duckdb</code> se arrastran como dependencias tanto <code>dbt-core</code> como <code>duckdb</code>, así que no hay que instalarlos por separado.</p>
+<hr />
+<p>En nuestro caso, como ya está instalado en el contenedor <code>iabd-lab</code> (recuerda que te puedes conectar mediante <code>docker exec -it iabd-lab bash</code>), podemos comprobar directamente la instalación mediante:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>dbt<span class="w"> </span>--version
+<span class="linenos" data-linenos="2 "></span><span class="c1"># Core:</span>
+<span class="linenos" data-linenos="3 "></span><span class="c1">#   - installed: 1.12.3</span>
+<span class="linenos" data-linenos="4 "></span><span class="c1">#   - latest:    1.12.3 - Up to date!</span>
+<span class="linenos" data-linenos="5 "></span>
+<span class="linenos" data-linenos="6 "></span><span class="c1"># Plugins:</span>
+<span class="linenos" data-linenos="7 "></span><span class="c1">#   - duckdb: 1.11.0 - Up to date!</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Un comando, muchos subcomandos</p>
+<p><code>dbt</code> funciona con subcomandos, al estilo de <code>git</code>: <code>dbt run</code>, <code>dbt debug</code>, <code>dbt docs</code>, <code>dbt ls</code>... Los iremos viendo a lo largo de la sesión.</p>
+</div>
+<h2 id="estructura-de-un-proyecto">Estructura de un proyecto<a class="headerlink" href="#estructura-de-un-proyecto" title="Permanent link">&para;</a></h2>
+<p>El primer paso es crear un proyecto <abbr title="data build tool">dbt</abbr>, que es un repositorio de modelos versionado y documentado. Para ello, ejecutaremos el comando <a href="https://docs.getdbt.com/reference/commands/init?version=1"><code>dbt init</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>dbt<span class="w"> </span>init<span class="w"> </span>iabd_retail
+</code></pre></div>
+<p>El comando pregunta el adaptador y genera un esqueleto de carpetas:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd/
+<span class="linenos" data-linenos="2 "></span>├── profiles.yml             # cómo conectar con el almacén
+<span class="linenos" data-linenos="3 "></span>iabd_retail/
+<span class="linenos" data-linenos="4 "></span>├── dbt_project.yml          # configuración del proyecto
+</code></pre></div>
+<p>Como puedes observar, tenemos dos carpetas por separado, una para el proyecto <abbr title="data build tool">dbt</abbr> (<code>iabd_retail</code>) y otra para el fichero <code>profiles.yml</code> que contiene la conexión con <em>DuckDB</em>, y que <abbr title="data build tool">dbt</abbr> mantiene a propósito fuera del proyecto, porque ahí van las credenciales y no deben acabar versionadas en git.</p>
+<p>Así pues, la carpeta <code>iabd</code> almacena la conexión. En una instalación por defecto, normalmente, la ruta sería <code>~/.dbt/profiles.yml</code>, pero en nuestro caso la hemos configurado previamente mediante la variable de entorno <code>DBT_PROFILES_DIR</code> del <a href="resources/docker-stack/docker-compose.yml"><code>docker-compose.yml</code></a>.</p>
+<h3 id="las-tres-zonas-ahora-como-codigo">Las tres zonas, ahora como código<a class="headerlink" href="#las-tres-zonas-ahora-como-codigo" title="Permanent link">&para;</a></h3>
+<p>La estructura recomendada de un proyecto <em><abbr title="data build tool">dbt</abbr></em> no es una convención arbitraria: es la misma división en zonas que ya conocemos, expresada en carpetas.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>models/
+<span class="linenos" data-linenos="2 "></span>├── staging/        ← una vista por cada tabla del origen, sin lógica de negocio
+<span class="linenos" data-linenos="3 "></span>├── intermediate/   ← limpieza, combinaciones y cálculos reutilizables
+<span class="linenos" data-linenos="4 "></span>└── marts/          ← hechos, dimensiones y tablas de negocio
+</code></pre></div>
+<p>La correspondencia entre los tres vocabularios que hemos ido usando:</p>
+<table>
+<thead>
+<tr>
+<th>Zona</th>
+<th>Bucket en MinIO</th>
+<th>Carpeta en <abbr title="data build tool">dbt</abbr></th>
+<th>Qué contiene</th>
+<th>Materialización habitual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aterrizaje</td>
+<td><code>raw-data</code></td>
+<td><code>staging</code></td>
+<td>los datos del origen, renombrados y tipados, sin más</td>
+<td>vista</td>
+</tr>
+<tr>
+<td>Procesado</td>
+<td><code>processed</code></td>
+<td><code>intermediate</code></td>
+<td>lógica intermedia reutilizable entre varios <em>marts</em></td>
+<td>vista o tabla</td>
+</tr>
+<tr>
+<td>Presentación</td>
+<td><code>warehouse</code></td>
+<td><code>marts</code></td>
+<td><code>fact_ventas</code>, <code>dim_producto</code>, <code>dim_cliente</code>, <code>dim_fecha</code> y los <em>marts</em> de negocio</td>
+<td>tabla</td>
+</tr>
+</tbody>
+</table>
+<p>La razón de que <em>staging</em> se materialice como vista y los <em>marts</em> como tabla encaja con el propósito de cada zona. Una vista de <em>staging</em> no ocupa espacio y siempre refleja el estado actual del origen; un <em>mart</em> se consulta muchas veces al día y compensa pagar el coste de materializarlo una vez.</p>
+<div class="admonition tip">
+<p class="admonition-title">Una regla de oro del staging</p>
+<p>En <code>staging</code> no se hace lógica de negocio: solo renombrar columnas, ajustar tipos y poco más. Un modelo de <em>staging</em> debe poder leerse al lado de la tabla de origen y reconocerse sin esfuerzo. <ins>Toda decisión de negocio vive aguas abajo</ins>, en <code>intermediate</code> o en <code>marts</code>, donde se puede documentar y probar.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Dos salas o tres zonas</p>
+<p>La división original de <em>Kimball</em> es de dos: la <strong>trastienda</strong>, donde ocurre todo el proceso de ETL, y la <strong>sala</strong>, el área de presentación que consume el negocio. Partir la trastienda en aterrizaje y procesado es la lectura moderna de esa misma propuesta, nacida de que el almacenamiento barato permite conservar indefinidamente  una copia intacta del origen, algo impensable cuando <em>Kimball</em> escribió su libro.</p>
+<p>Conviene además no tomarse la frontera de forma dogmática. <em>Kimball</em> insistía en que el comensal no entra en la cocina, y con razón para los informes corporativos;  pero en la práctica actual es normal que un analista consulte directamente una tabla de <code>staging</code> para investigar una anomalía. La regla sigue viva para lo que se publica; para explorar, la puerta está más abierta de lo que estaba en los noventa.</p>
+</div>
+<h3 id="configuracion-dbt_projectyml">Configuración: <code>dbt_project.yml</code><a class="headerlink" href="#configuracion-dbt_projectyml" title="Permanent link">&para;</a></h3>
+<p>El fichero <code>dbt_project.yml</code> es el corazón del proyecto. Ahí se declara el nombre del proyecto, qué <em>profile</em> utiliza y la configuración por defecto de cada carpeta de modelos. En nuestro caso, queremos que todo lo que yazca bajo <code>staging/</code> se materialice como vista y lo que esté bajo <code>marts/</code> como tabla:</p>
+<div class="highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">'iabd_retail'</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">'1.0.0'</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="nt">profile</span><span class="p">:</span><span class="w"> </span><span class="s">'iabd_retail'</span>
+<span class="linenos" data-linenos=" 4 "></span>
+<span class="linenos" data-linenos=" 5 "></span><span class="nt">model-paths</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"models"</span><span class="p p-Indicator">]</span>
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># analysis-paths: ["analyses"] test-paths: ["tests"] ... rutas para otros tipos de artefactos que no usaremos en esta sesión</span>
+<span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span><span class="nt">models</span><span class="p">:</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">  </span><span class="nt">iabd_retail</span><span class="p">:</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="nt">staging</span><span class="p">:</span>
+<span class="hll"><span class="linenos" data-linenos="12 "></span><span class="w">      </span><span class="nt">+materialized</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">view</span><span class="w">      </span><span class="c1"># todo lo de staging/ será una vista</span>
+</span><span class="linenos" data-linenos="13 "></span><span class="w">    </span><span class="nt">marts</span><span class="p">:</span>
+<span class="hll"><span class="linenos" data-linenos="14 "></span><span class="w">      </span><span class="nt">+materialized</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table</span><span class="w">     </span><span class="c1"># todo lo de marts/ será una tabla</span>
+</span></code></pre></div>
+<p>Así pues, el resultado al que llegaremos una vez hayamos creado el modelo dimensional en estrella será similar al siguiente:</p>
+<pre class="mermaid"><code>---
+config:
+    treeView-beta:
+        showIcons: false
+---
+treeView-beta
+    iabd_retail/
+        dbt_project.yml          :::highlight   ## configuración del proyecto
+        models/
+            staging/             :::highlight   ## capa de limpieza (1 modelo por tabla origen)
+                _retail_sources.yml
+                stg_customers.sql
+                stg_orders.sql
+                stg_order_items.sql
+                stg_products.sql
+                stg_categories.sql
+                stg_departments.sql
+            marts/               :::highlight   ## la estrella (tablas de negocio)
+                dim_producto.sql
+                dim_cliente.sql
+                dim_fecha.sql
+                fact_ventas.sql
+                ingresos_por_departamento.sql</code></pre>
+<h3 id="conexion-profilesyml">Conexión: <code>profiles.yml</code><a class="headerlink" href="#conexion-profilesyml" title="Permanent link">&para;</a></h3>
+<p><abbr title="data build tool">dbt</abbr> separa <em>qué</em> transformar (los modelos, versionados en el repo) de <em>dónde</em> hacerlo (la conexión, que cambia entre tu portátil y producción). Esa conexión vive en <code>profiles.yml</code>.</p>
+<p>En un entorno real este fichero va en <code>~/.dbt/profiles.yml</code> para no meter las credenciales en el repositorio; en clase lo dejamos junto al proyecto para tenerlo todo a la vista.</p>
+<div class="highlight"><span class="filename">profiles.yml</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nt">iabd_retail</span><span class="p">:</span><span class="w">              </span><span class="c1"># debe coincidir con 'profile:' de dbt_project.yml</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dev</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">  </span><span class="nt">outputs</span><span class="p">:</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="nt">dev</span><span class="p">:</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">duckdb</span>
+<span class="linenos" data-linenos="6 "></span><span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/workspace/dbt/iabd/retail_el.duckdb</span>
+<span class="linenos" data-linenos="7 "></span><span class="w">      </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
+<span class="linenos" data-linenos="8 "></span><span class="w">      </span><span class="nt">threads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+</code></pre></div>
+<p>Para que nos funcione con duckdb, vamos a copiar el fichero <code>retail.duckdb</code> que generó dlt en la sesión de ingesta a la carpeta del proyecto <abbr title="data build tool">dbt</abbr>:   </p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>cp<span class="w"> </span>/workspace/retail_el.duckdb<span class="w"> </span>/workspace/dbt/iabd/retail_el.duckdb
+</code></pre></div>
+<p>Antes de ejecutar nada, conviene comprobar que la conexión funciona mediante <a href="https://docs.getdbt.com/reference/commands/debug?version=1"><code>dbt debug</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>16:45:59  Running with dbt=1.12.3
+<span class="linenos" data-linenos=" 2 "></span>16:45:59  dbt version: 1.12.3
+<span class="linenos" data-linenos=" 3 "></span>16:45:59  python version: 3.12.14
+<span class="linenos" data-linenos=" 4 "></span>16:45:59  python path: /usr/local/bin/python3.12
+<span class="linenos" data-linenos=" 5 "></span>16:45:59  os info: Linux-5.15.153.1-microsoft-standard-WSL2-x86_64-with-glibc2.41
+<span class="linenos" data-linenos=" 6 "></span>16:45:59  Using profiles dir at /workspace/dbt/iabd
+<span class="linenos" data-linenos=" 7 "></span>16:45:59  Using profiles.yml file at /workspace/dbt/iabd/profiles.yml
+<span class="linenos" data-linenos=" 8 "></span>16:45:59  Using dbt_project.yml file at /workspace/dbt/iabd_retail/dbt_project.yml
+<span class="linenos" data-linenos=" 9 "></span>16:45:59  adapter type: duckdb
+<span class="linenos" data-linenos="10 "></span>16:45:59  adapter version: 1.11.0
+<span class="linenos" data-linenos="11 "></span>16:45:59  Configuration:
+<span class="linenos" data-linenos="12 "></span>16:45:59    profiles.yml file [OK found and valid]
+<span class="linenos" data-linenos="13 "></span>16:45:59    dbt_project.yml file [OK found and valid]
+<span class="linenos" data-linenos="14 "></span>16:45:59  Required dependencies:
+<span class="linenos" data-linenos="15 "></span>16:45:59   - git [OK found]
+<span class="linenos" data-linenos="16 "></span>
+<span class="linenos" data-linenos="17 "></span>16:45:59  Connection:
+<span class="linenos" data-linenos="18 "></span>16:45:59    database: retail_el
+<span class="linenos" data-linenos="19 "></span>16:45:59    schema: main
+<span class="linenos" data-linenos="20 "></span>16:45:59    path: retail_el.duckdb
+<span class="linenos" data-linenos="21 "></span>...
+<span class="linenos" data-linenos="22 "></span>16:45:59    Connection test: [OK connection ok]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Bloqueo de escritura en DuckDB</p>
+<p>Recuerda que <em>DuckDB</em> admite un único proceso escritor sobre el mismo fichero. Si tienes abierta una consola de <em>DuckDB</em> apuntando a <code>retail_el.duckdb</code>, <code>dbt run</code> fallará con un error de bloqueo. Cierra cualquier otra conexión antes de ejecutar <abbr title="data build tool">dbt</abbr>.</p>
+</div>
+<h2 id="caso-1-cargando-un-modelo">Caso 1. Cargando un modelo<a class="headerlink" href="#caso-1-cargando-un-modelo" title="Permanent link">&para;</a></h2>
+<p>Una vez tenemos la configuración inicial, vamos a configurar los elementos del proyecto.</p>
+<h3 id="fuentes-de-datos">Fuentes de datos<a class="headerlink" href="#fuentes-de-datos" title="Permanent link">&para;</a></h3>
+<p>Los datos crudos que cargó dlt viven en el esquema <code>retail_db</code> que reside en el fichero <code>retail_el.duckdb</code>. Antes de transformarlos, debemos informarlos a <abbr title="data build tool">dbt</abbr> declarándolos como <strong><em>sources</em></strong> en un fichero YAML, el cual colocaremos en la carpeta <code>models/staging/</code> y lo llamaremos <code>_retail_sources.yml</code>.</p>
+<p>Esto no crea nada, solo le dice a <abbr title="data build tool">dbt</abbr> que dichas tablas ya existen y que serán la fuente de nuestros modelos:</p>
+<div class="highlight"><span class="filename">models/staging/_retail_sources.yml</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="nt">sources</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">retail_db</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"Tablas</span><span class="nv"> </span><span class="s">crudas</span><span class="nv"> </span><span class="s">cargadas</span><span class="nv"> </span><span class="s">por</span><span class="nv"> </span><span class="s">dlt</span><span class="nv"> </span><span class="s">desde</span><span class="nv"> </span><span class="s">MySQL</span><span class="nv"> </span><span class="s">en</span><span class="nv"> </span><span class="s">la</span><span class="nv"> </span><span class="s">sesión</span><span class="nv"> </span><span class="s">de</span><span class="nv"> </span><span class="s">ingesta."</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">retail_el</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raw</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="nt">tables</span><span class="p">:</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">orders</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">order_items</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">products</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">categories</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">departments</span>
+</code></pre></div>
+<p>Al configurar aquí la fuente, <abbr title="data build tool">dbt</abbr> puede generar documentación y pruebas de integridad sobre ella, y además nos permite referenciarla en los modelos sin escribir el nombre real de la tabla origen. De esta manera, en el <abbr title="Structured Query Language">SQL</abbr> de los modelos nunca escribimos el nombre real de la tabla origen, sino que en su lugar usamos la función <code>source()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">source</span><span class="p">(</span><span class="s1">'retail_db'</span><span class="p">,</span><span class="w"> </span><span class="s1">'customers'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+</code></pre></div>
+<p>¿Te suena la sintaxis <code>{{ ... }}</code>? Sí, es <a href="https://jinja.palletsprojects.com/en/stable/"><em>Jinja</em></a>, un motor de plantillas que <abbr title="data build tool">dbt</abbr> intercala en el <abbr title="Structured Query Language">SQL</abbr>.</p>
+<p>En tiempo de compilación, <abbr title="data build tool">dbt</abbr> sustituye <code>source('retail_db', 'customers')</code> por <code>"retail"."retail_db"."customers"</code>. Esto nos ofrece una mayor flexibilidad y mantenimiento, ya que si mañana el origen cambia de esquema, sólo debemos modificar una línea en el YAML y no cada consulta. 
+a, se toca <strong>una línea</strong> en el YAML y no cada consulta.</p>
+<h3 id="el-primer-modelo">El primer modelo<a class="headerlink" href="#el-primer-modelo" title="Permanent link">&para;</a></h3>
+<p>Un modelo de <em>staging</em> hace un trabajo modesto pero imprescindible: leer una tabla cruda, seleccionar las columnas útiles, renombrarlas a un vocabulario consistente y poco más. El resultado es una tabla con un formato y nombres de columnas consistentes, listos para ser utilizados en los modelos de análisis.</p>
+<p>Para cada una de las tablas, definiremos una consulta <abbr title="Structured Query Language">SQL</abbr> en un fichero <code>.sql</code> dentro de <code>models/staging/</code>. Por ejemplo, el modelo <code>stg_orders.sql</code> lee la tabla <code>orders</code> y renombra las columnas a un vocabulario consistente:</p>
+<div class="highlight"><span class="filename">models/staging/stg_orders.sql</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">with</span><span class="w"> </span><span class="n">fuente</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">source</span><span class="p">(</span><span class="s1">'retail_db'</span><span class="p">,</span><span class="w"> </span><span class="s1">'orders'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos="3 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span><span class="k">select</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="n">order_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">pedido_id</span><span class="p">,</span>
+<span class="linenos" data-linenos="6 "></span><span class="w">    </span><span class="k">cast</span><span class="p">(</span><span class="n">order_date</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nb">date</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">fecha</span><span class="p">,</span><span class="w">      </span><span class="c1">-- dlt cargó la fecha como timestamp, aquí la convertimos a DATE</span>
+<span class="linenos" data-linenos="7 "></span><span class="w">    </span><span class="n">order_customer_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">cliente_id</span><span class="p">,</span>
+<span class="linenos" data-linenos="8 "></span><span class="w">    </span><span class="n">order_status</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">estado</span>
+<span class="linenos" data-linenos="9 "></span><span class="k">from</span><span class="w"> </span><span class="n">fuente</span>
+</code></pre></div>
+<p>Aquí ya podemos ver el valor de la capa de <em>staging</em>, donde la columna <code>order_date</code> llegó como <code>timestamp</code> desde la ingesta, y la convertimos a <code>DATE</code> de una vez para todo el proyecto. En la sesión de modelado ese <code>CAST</code> lo repetíamos en cada consulta; ahora se hace una sola vez y todo lo que consuma <code>stg_orders</code> ya recibe la fecha con su tipo.</p>
+<p>Para poder probar el modelo, podemos ejecutar:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>dbt<span class="w"> </span>run<span class="w"> </span>--select<span class="w"> </span>stg_orders
+<span class="linenos" data-linenos=" 2 "></span><span class="c1"># 17:48:51  Running with dbt=1.12.3</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1"># 17:48:51  Registered adapter: duckdb=1.11.0</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1"># 17:48:52  [WARNING]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1"># There are 1 unused configuration paths:</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># - models.iabd_retail.marts</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># 17:48:52  Found 1 model, 6 sources, 500 macros</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1"># 17:48:52  </span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># 17:48:52  Concurrency: 4 threads (target='dev')</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># 17:48:52  </span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># 17:48:52  1 of 1 START sql view model main.stg_orders ..................................... [RUN]</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1"># 17:48:52  1 of 1 OK created sql view model main.stg_orders ................................ [OK in 0.09s]</span>
+<span class="linenos" data-linenos="13 "></span><span class="c1"># 17:48:52  </span>
+<span class="linenos" data-linenos="14 "></span><span class="c1"># 17:48:52  Finished running 1 view model in 0 hours 0 minutes and 0.18 seconds (0.18s).</span>
+<span class="linenos" data-linenos="15 "></span><span class="c1"># 17:48:52  </span>
+<span class="linenos" data-linenos="16 "></span><span class="c1"># 17:48:52  Completed successfully</span>
+<span class="linenos" data-linenos="17 "></span><span class="c1"># 17:48:52  </span>
+<span class="linenos" data-linenos="18 "></span><span class="c1"># 17:48:52  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=1</span>
+</code></pre></div>
+<p>Y si queremos comprobar que el modelo se ha creado correctamente, podemos abrir una consola de <em>DuckDB</em> y ejecutar un <code>SELECT</code> sobre la vista <code>stg_orders</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>duckdb<span class="w"> </span>/workspace/dbt/iabd/retail_el.duckdb
+</code></pre></div>
+<p>y comprobar que se ha creado la vista <code>stg_orders</code> en el esquema <code>main</code> de <em>DuckDB</em>, con los nombres de las columnas y tipos de datos que hemos definido en el modelo:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">main</span><span class="p">.</span><span class="n">stg_orders</span><span class="w"> </span><span class="k">limit</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="c1">-- ┌───────────┬────────────┬────────────┬────────────┐</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1">-- │ pedido_id │   fecha    │ cliente_id │   estado   │</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1">-- │   int64   │    date    │   int64    │  varchar   │</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1">-- ├───────────┼────────────┼────────────┼────────────┤</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1">-- │     25885 │ 2014-01-01 │       7253 │ PENDING    │</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1">-- │     25894 │ 2014-01-01 │       7839 │ PROCESSING │</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1">-- │     25915 │ 2014-01-01 │       2963 │ COMPLETE   │</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1">-- │     25942 │ 2014-01-01 │       1117 │ PROCESSING │</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1">-- │     25954 │ 2014-01-01 │       2582 │ PROCESSING │</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1">-- └───────────┴────────────┴────────────┴────────────┘</span>
+</code></pre></div>
+<div class="admonition example">
+<p class="admonition-title">El resto de los modelos de staging</p>
+<p>Los cinco siguen el mismo patrón que <code>stg_orders</code>: leen una fuente con <code>source()</code>, seleccionan las columnas útiles y las renombran al vocabulario del proyecto. Ni <em>joins</em> ni agregaciones: una tabla origen por modelo.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">customers</label><label for="__tabbed_1_2">order_items</label><label for="__tabbed_1_3">products</label><label for="__tabbed_1_4">categories</label><label for="__tabbed_1_5">departments</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><span class="filename">models/staging/stg_customers.sql</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">with</span><span class="w"> </span><span class="n">fuente</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">source</span><span class="p">(</span><span class="s1">'retail_db'</span><span class="p">,</span><span class="w"> </span><span class="s1">'customers'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="p">)</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="k">select</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="n">customer_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">cliente_id</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="n">customer_fname</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="n">customer_lname</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">apellido</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="n">customer_email</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">email</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="n">customer_city</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">ciudad</span><span class="p">,</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="n">customer_state</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">provincia</span>
+<span class="linenos" data-linenos="11 "></span><span class="k">from</span><span class="w"> </span><span class="n">fuente</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><span class="filename">models/staging/stg_order_items.sql</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">with</span><span class="w"> </span><span class="n">fuente</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">source</span><span class="p">(</span><span class="s1">'retail_db'</span><span class="p">,</span><span class="w"> </span><span class="s1">'order_items'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="p">)</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="k">select</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="n">order_item_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">linea_id</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="n">order_item_order_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">pedido_id</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="n">order_item_product_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">producto_id</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="n">order_item_quantity</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">cantidad</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="n">order_item_subtotal</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">subtotal</span><span class="p">,</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="n">order_item_product_price</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">precio_unitario</span>
+<span class="linenos" data-linenos="11 "></span><span class="k">from</span><span class="w"> </span><span class="n">fuente</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><span class="filename">models/staging/stg_products.sql</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">with</span><span class="w"> </span><span class="n">fuente</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">source</span><span class="p">(</span><span class="s1">'retail_db'</span><span class="p">,</span><span class="w"> </span><span class="s1">'products'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos="3 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span><span class="k">select</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="n">product_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">producto_id</span><span class="p">,</span>
+<span class="linenos" data-linenos="6 "></span><span class="w">    </span><span class="n">product_category_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">categoria_id</span><span class="p">,</span>
+<span class="linenos" data-linenos="7 "></span><span class="w">    </span><span class="n">product_name</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span>
+<span class="linenos" data-linenos="8 "></span><span class="w">    </span><span class="n">product_price</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">precio</span>
+<span class="linenos" data-linenos="9 "></span><span class="k">from</span><span class="w"> </span><span class="n">fuente</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><span class="filename">models/staging/stg_categories.sql</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">with</span><span class="w"> </span><span class="n">fuente</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">source</span><span class="p">(</span><span class="s1">'retail_db'</span><span class="p">,</span><span class="w"> </span><span class="s1">'categories'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos="3 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span><span class="k">select</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="n">category_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">categoria_id</span><span class="p">,</span>
+<span class="linenos" data-linenos="6 "></span><span class="w">    </span><span class="n">category_department_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">departamento_id</span><span class="p">,</span>
+<span class="linenos" data-linenos="7 "></span><span class="w">    </span><span class="n">category_name</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">nombre</span>
+<span class="linenos" data-linenos="8 "></span><span class="k">from</span><span class="w"> </span><span class="n">fuente</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><span class="filename">models/staging/stg_departments.sql</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">with</span><span class="w"> </span><span class="n">fuente</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">source</span><span class="p">(</span><span class="s1">'retail_db'</span><span class="p">,</span><span class="w"> </span><span class="s1">'departments'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos="3 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span><span class="k">select</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="n">department_id</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">departamento_id</span><span class="p">,</span>
+<span class="linenos" data-linenos="6 "></span><span class="w">    </span><span class="n">department_name</span><span class="w">  </span><span class="k">as</span><span class="w"> </span><span class="n">nombre</span>
+<span class="linenos" data-linenos="7 "></span><span class="k">from</span><span class="w"> </span><span class="n">fuente</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<h3 id="creando-una-dimension-con-ref">Creando una dimensión con <code>ref()</code><a class="headerlink" href="#creando-una-dimension-con-ref" title="Permanent link">&para;</a></h3>
+<p>Cuando un modelo depende de otro modelo (y no de una fuente), debemos emplear <a href="https://docs.getdbt.com/reference/dbt-jinja-functions/ref?version=1"><code>ref()</code></a> en lugar de <code>source()</code>. Este es el mecanismo más importante de <abbr title="data build tool">dbt</abbr>. Fíjate en <code>dim_producto</code>, la misma dimensión de la sesión de modelado —clave subrogada con <code>row_number()</code>, <code>LEFT JOIN</code> hacia categoría y departamento, y la fila del miembro desconocido— pero ahora leyendo de modelos de staging con <code>ref()</code>:</p>
+<div class="highlight"><span class="filename">models/marts/dim_producto.sql</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">with</span><span class="w"> </span><span class="n">productos</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">'stg_products'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="p">),</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">categorias</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">'stg_categories'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="p">),</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">departamentos</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">'stg_departments'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="p">),</span>
+<span class="linenos" data-linenos="10 "></span><span class="n">base</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="k">select</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">        </span><span class="n">row_number</span><span class="p">()</span><span class="w"> </span><span class="n">over</span><span class="w"> </span><span class="p">(</span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">producto_id</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">producto_sk</span><span class="p">,</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">        </span><span class="n">p</span><span class="p">.</span><span class="n">producto_id</span><span class="p">,</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">        </span><span class="n">p</span><span class="p">.</span><span class="n">nombre</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">        </span><span class="k">coalesce</span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="s1">'(sin asignar)'</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">categoria</span><span class="p">,</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">        </span><span class="k">coalesce</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="s1">'(sin asignar)'</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">departamento</span><span class="p">,</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">        </span><span class="n">p</span><span class="p">.</span><span class="n">precio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">precio_catalogo</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">    </span><span class="k">from</span><span class="w"> </span><span class="n">productos</span><span class="w"> </span><span class="n">p</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">    </span><span class="k">left</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">categorias</span><span class="w"> </span><span class="k">c</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">categoria_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">categoria_id</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">    </span><span class="k">left</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">departamentos</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">departamento_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">departamento_id</span>
+<span class="linenos" data-linenos="21 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="22 "></span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">base</span>
+<span class="linenos" data-linenos="23 "></span><span class="k">union</span><span class="w"> </span><span class="k">all</span>
+<span class="linenos" data-linenos="24 "></span><span class="k">select</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'(desconocido)'</span><span class="p">,</span><span class="w"> </span><span class="s1">'(desconocido)'</span><span class="p">,</span><span class="w"> </span><span class="s1">'(desconocido)'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w">   </span><span class="c1">-- miembro desconocido</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">ref() construye el grafo por ti</p>
+<p>Cada vez que un modelo referencia a otro con <code>ref()</code>, <abbr title="data build tool">dbt</abbr> anota esa dependencia. Con el conjunto de todas las dependencias construye un <em><abbr title="Directed Acyclic Graph (grafo dirigido acíclico)">DAG</abbr></em> (grafo dirigido acíclico) y deduce el orden de ejecución: primero staging, después las dimensiones, después el hecho que las referencia, y por último el informe. <strong>Nunca ordenamos nosotros las ejecuciones a mano</strong>; ese trabajo —el que en la sesión de modelado hacíamos vigilando el orden de los <code>CREATE TABLE</code>— es justo el que <abbr title="data build tool">dbt</abbr> nos quita.</p>
+</div>
+<h2 id="capas-staging-y-marts">Capas: staging y marts<a class="headerlink" href="#capas-staging-y-marts" title="Permanent link">&para;</a></h2>
+<p>No metemos todos los modelos en un saco. Un proyecto <abbr title="data build tool">dbt</abbr> se organiza en <strong>capas</strong>, y la convención más extendida distingue al menos dos:</p>
+<ul>
+<li><strong>staging</strong> — una vista por cada tabla origen. Limpieza ligera: renombrar columnas, castear tipos, estandarizar. No se hacen <em>joins</em> ni agregaciones. Es la "aduana" por donde entra todo dato crudo. Prefijo <code>stg_</code>.</li>
+<li><strong>marts</strong> — las tablas de negocio ya listas para consumo. Aquí vive nuestra estrella: las dimensiones (<code>dim_</code>), el hecho (<code>fact_ventas</code>) y los informes que se apoyan en ellos.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Nombres consistentes con la sesión de modelado</p>
+<p>Mantenemos los nombres que ya fijamos a mano: <code>fact_ventas</code>, <code>dim_producto</code>, <code>dim_cliente</code>, <code>dim_fecha</code>. Parte de la documentación de <abbr title="data build tool">dbt</abbr> usa el prefijo <code>fct_</code> para los hechos; aquí priorizamos la coherencia con lo que el alumnado ya construyó frente a la convención externa.</p>
+</div>
+<figure>
+  <img alt="Capas del proyecto dbt: fuentes crudas de dlt, staging como vistas y la estrella como tablas, con source() y ref() enlazando las capas" src="images/18dbt-capas.svg" />
+<br />
+<figcaption>Las fuentes crudas (dlt) entran por source(); los modelos se enlazan con ref(). fact_ventas resuelve sus claves subrogadas contra las dimensiones, también con ref().</figcaption>
+</figure>
+<p>La tabla de hechos conserva el <strong>grano de línea de pedido</strong> que decidimos en modelado (una fila por producto dentro de un pedido) y resuelve las claves subrogadas contra las dimensiones con <code>ref()</code>, redirigiendo al miembro desconocido con <code>coalesce(..., -1)</code>:</p>
+<div class="highlight"><span class="filename">models/marts/fact_ventas.sql</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">with</span><span class="w"> </span><span class="n">lineas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">'stg_order_items'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="p">),</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">pedidos</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">'stg_orders'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="p">),</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">producto</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">'dim_producto'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="p">),</span>
+<span class="linenos" data-linenos="10 "></span><span class="n">cliente</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">'dim_cliente'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos="12 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="13 "></span><span class="k">select</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="n">l</span><span class="p">.</span><span class="n">linea_id</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="n">p</span><span class="p">.</span><span class="n">pedido_id</span><span class="w">                      </span><span class="k">as</span><span class="w"> </span><span class="n">pedido_id</span><span class="p">,</span><span class="w">       </span><span class="c1">-- dimensión degenerada</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">    </span><span class="k">coalesce</span><span class="p">(</span><span class="n">dc</span><span class="p">.</span><span class="n">cliente_sk</span><span class="p">,</span><span class="w">  </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w">     </span><span class="k">as</span><span class="w"> </span><span class="n">cliente_sk</span><span class="p">,</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">    </span><span class="k">coalesce</span><span class="p">(</span><span class="n">dp</span><span class="p">.</span><span class="n">producto_sk</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w">     </span><span class="k">as</span><span class="w"> </span><span class="n">producto_sk</span><span class="p">,</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">    </span><span class="n">p</span><span class="p">.</span><span class="n">fecha</span><span class="w">                          </span><span class="k">as</span><span class="w"> </span><span class="n">fecha_id</span><span class="p">,</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">    </span><span class="n">p</span><span class="p">.</span><span class="n">estado</span><span class="p">,</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">    </span><span class="n">l</span><span class="p">.</span><span class="n">cantidad</span><span class="p">,</span><span class="w">                                          </span><span class="c1">-- aditiva</span>
+<span class="linenos" data-linenos="21 "></span><span class="w">    </span><span class="n">l</span><span class="p">.</span><span class="n">subtotal</span><span class="w">                       </span><span class="k">as</span><span class="w"> </span><span class="n">importe</span><span class="p">,</span><span class="w">         </span><span class="c1">-- aditiva</span>
+<span class="linenos" data-linenos="22 "></span><span class="w">    </span><span class="n">l</span><span class="p">.</span><span class="n">precio_unitario</span><span class="w">                                    </span><span class="c1">-- NO aditiva</span>
+<span class="linenos" data-linenos="23 "></span><span class="k">from</span><span class="w"> </span><span class="n">lineas</span><span class="w"> </span><span class="n">l</span>
+<span class="linenos" data-linenos="24 "></span><span class="k">join</span><span class="w"> </span><span class="n">pedidos</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">pedido_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">pedido_id</span>
+<span class="linenos" data-linenos="25 "></span><span class="k">left</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">producto</span><span class="w"> </span><span class="n">dp</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">dp</span><span class="p">.</span><span class="n">producto_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">producto_id</span>
+<span class="linenos" data-linenos="26 "></span><span class="k">left</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">cliente</span><span class="w">  </span><span class="n">dc</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">dc</span><span class="p">.</span><span class="n">cliente_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">cliente_id</span>
+</code></pre></div>
+<p>Para ver qué genera realmente <code>ref()</code>, podemos mirar el <abbr title="Structured Query Language">SQL</abbr> <em>compilado</em> (<abbr title="data build tool">dbt</abbr> lo deja en <code>target/compiled/</code>). Las llamadas Jinja han desaparecido y en su lugar hay nombres de tabla reales; observa cómo las dimensiones se resuelven a tablas del esquema <code>main</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">with</span><span class="w"> </span><span class="n">lineas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="ss">"retail"</span><span class="p">.</span><span class="ss">"main"</span><span class="p">.</span><span class="ss">"stg_order_items"</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="p">),</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">pedidos</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="ss">"retail"</span><span class="p">.</span><span class="ss">"main"</span><span class="p">.</span><span class="ss">"stg_orders"</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="p">),</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">producto</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="ss">"retail"</span><span class="p">.</span><span class="ss">"main"</span><span class="p">.</span><span class="ss">"dim_producto"</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="p">),</span>
+<span class="linenos" data-linenos="10 "></span><span class="n">cliente</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="ss">"retail"</span><span class="p">.</span><span class="ss">"main"</span><span class="p">.</span><span class="ss">"dim_cliente"</span>
+<span class="linenos" data-linenos="12 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="13 "></span><span class="p">...</span>
+</code></pre></div>
+<p>Y el último mart, <code>ingresos_por_departamento</code>, cierra el bucle con la pregunta que abría la sesión de modelado. Allí, responder <em>¿cuánto ingresamos por departamento?</em> costaba cuatro tablas y tres combinaciones; sobre la estrella es un <code>SELECT</code> con un solo <em>join</em>:</p>
+<div class="highlight"><span class="filename">models/marts/ingresos_por_departamento.sql</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">with</span><span class="w"> </span><span class="n">ventas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">'fact_ventas'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="p">),</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">producto</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">'dim_producto'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="p">)</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="k">select</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="n">dp</span><span class="p">.</span><span class="n">departamento</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="k">count</span><span class="p">(</span><span class="k">distinct</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">pedido_id</span><span class="p">)</span><span class="w">   </span><span class="k">as</span><span class="w"> </span><span class="n">pedidos</span><span class="p">,</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="k">sum</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">cantidad</span><span class="p">)</span><span class="w">               </span><span class="k">as</span><span class="w"> </span><span class="n">unidades</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="n">round</span><span class="p">(</span><span class="k">sum</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">importe</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w">      </span><span class="k">as</span><span class="w"> </span><span class="n">ingresos</span>
+<span class="linenos" data-linenos="12 "></span><span class="k">from</span><span class="w"> </span><span class="n">ventas</span><span class="w"> </span><span class="n">v</span>
+<span class="linenos" data-linenos="13 "></span><span class="k">join</span><span class="w"> </span><span class="n">producto</span><span class="w"> </span><span class="n">dp</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">dp</span><span class="p">.</span><span class="n">producto_sk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">producto_sk</span>
+<span class="linenos" data-linenos="14 "></span><span class="k">where</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">estado</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">(</span><span class="s1">'COMPLETE'</span><span class="p">,</span><span class="w"> </span><span class="s1">'CLOSED'</span><span class="p">)</span>
+<span class="linenos" data-linenos="15 "></span><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">dp</span><span class="p">.</span><span class="n">departamento</span>
+<span class="linenos" data-linenos="16 "></span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">ingresos</span><span class="w"> </span><span class="k">desc</span>
+</code></pre></div>
+<div class="admonition example">
+<p class="admonition-title">Las otras dos dimensiones: dim_cliente y dim_fecha</p>
+<p><code>dim_cliente</code> es idéntica en estructura a <code>dim_producto</code>: clave subrogada con
+<code>row_number()</code> y su fila para el miembro desconocido.</p>
+<div class="highlight"><span class="filename">models/marts/dim_cliente.sql</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">with</span><span class="w"> </span><span class="n">clientes</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">'stg_customers'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="p">),</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">base</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="k">select</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">        </span><span class="n">row_number</span><span class="p">()</span><span class="w"> </span><span class="n">over</span><span class="w"> </span><span class="p">(</span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">cliente_id</span><span class="p">)</span><span class="w">   </span><span class="k">as</span><span class="w"> </span><span class="n">cliente_sk</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">        </span><span class="n">cliente_id</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">        </span><span class="n">nombre</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">' '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">apellido</span><span class="w">                 </span><span class="k">as</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">        </span><span class="n">ciudad</span><span class="p">,</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">        </span><span class="n">provincia</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="k">from</span><span class="w"> </span><span class="n">clientes</span>
+<span class="linenos" data-linenos="12 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="13 "></span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">base</span>
+<span class="linenos" data-linenos="14 "></span><span class="k">union</span><span class="w"> </span><span class="k">all</span>
+<span class="linenos" data-linenos="15 "></span><span class="k">select</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'(desconocido)'</span><span class="p">,</span><span class="w"> </span><span class="s1">'(desconocido)'</span><span class="p">,</span><span class="w"> </span><span class="s1">'(desconocido)'</span><span class="w">   </span><span class="c1">-- miembro desconocido</span>
+</code></pre></div>
+<p><code>dim_fecha</code> no sale de ninguna tabla origen: se <strong>genera</strong> a partir del rango
+de fechas de los pedidos (con <code>range()</code> de DuckDB) y deriva los atributos de
+calendario que luego facilitan agrupar por mes, trimestre o día de la semana.</p>
+<div class="highlight"><span class="filename">models/marts/dim_fecha.sql</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">with</span><span class="w"> </span><span class="n">limites</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="k">min</span><span class="p">(</span><span class="n">fecha</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">desde</span><span class="p">,</span><span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="n">fecha</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">hasta</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">'stg_orders'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="p">),</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">dias</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="k">unnest</span><span class="p">(</span><span class="n">range</span><span class="p">(</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">        </span><span class="p">(</span><span class="k">select</span><span class="w"> </span><span class="n">desde</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">limites</span><span class="p">),</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">        </span><span class="p">(</span><span class="k">select</span><span class="w"> </span><span class="n">hasta</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">limites</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">interval</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">day</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">        </span><span class="nb">interval</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">day</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="p">))::</span><span class="nb">date</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">fecha_id</span>
+<span class="linenos" data-linenos="11 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="12 "></span><span class="k">select</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">    </span><span class="n">fecha_id</span><span class="p">,</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="k">year</span><span class="p">(</span><span class="n">fecha_id</span><span class="p">)</span><span class="w">     </span><span class="k">as</span><span class="w"> </span><span class="n">anio</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="n">quarter</span><span class="p">(</span><span class="n">fecha_id</span><span class="p">)</span><span class="w">  </span><span class="k">as</span><span class="w"> </span><span class="n">trimestre</span><span class="p">,</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">    </span><span class="k">month</span><span class="p">(</span><span class="n">fecha_id</span><span class="p">)</span><span class="w">    </span><span class="k">as</span><span class="w"> </span><span class="n">mes</span><span class="p">,</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">    </span><span class="p">[</span><span class="s1">'enero'</span><span class="p">,</span><span class="s1">'febrero'</span><span class="p">,</span><span class="s1">'marzo'</span><span class="p">,</span><span class="s1">'abril'</span><span class="p">,</span><span class="s1">'mayo'</span><span class="p">,</span><span class="s1">'junio'</span><span class="p">,</span><span class="s1">'julio'</span><span class="p">,</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">        </span><span class="s1">'agosto'</span><span class="p">,</span><span class="s1">'septiembre'</span><span class="p">,</span><span class="s1">'octubre'</span><span class="p">,</span><span class="s1">'noviembre'</span><span class="p">,</span><span class="s1">'diciembre'</span><span class="p">][</span><span class="k">month</span><span class="p">(</span><span class="n">fecha_id</span><span class="p">)]</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">mes_nombre</span><span class="p">,</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">    </span><span class="n">isodow</span><span class="p">(</span><span class="n">fecha_id</span><span class="p">)</span><span class="w">   </span><span class="k">as</span><span class="w"> </span><span class="n">dia_semana</span><span class="p">,</span>
+<span class="linenos" data-linenos="20 "></span><span class="w">    </span><span class="p">[</span><span class="s1">'lunes'</span><span class="p">,</span><span class="s1">'martes'</span><span class="p">,</span><span class="s1">'miércoles'</span><span class="p">,</span><span class="s1">'jueves'</span><span class="p">,</span><span class="s1">'viernes'</span><span class="p">,</span><span class="s1">'sábado'</span><span class="p">,</span>
+<span class="linenos" data-linenos="21 "></span><span class="w">        </span><span class="s1">'domingo'</span><span class="p">][</span><span class="n">isodow</span><span class="p">(</span><span class="n">fecha_id</span><span class="p">)]</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">dia_nombre</span><span class="p">,</span>
+<span class="linenos" data-linenos="22 "></span><span class="w">    </span><span class="n">isodow</span><span class="p">(</span><span class="n">fecha_id</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">es_finde</span>
+<span class="linenos" data-linenos="23 "></span><span class="k">from</span><span class="w"> </span><span class="n">dias</span>
+</code></pre></div>
+</div>
+<h2 id="materializaciones-view-y-table">Materializaciones: view y table<a class="headerlink" href="#materializaciones-view-y-table" title="Permanent link">&para;</a></h2>
+<p>La <em>materialización</em> decide cómo persiste <abbr title="data build tool">dbt</abbr> el resultado de un modelo en el almacén. En esta sesión usamos las dos básicas:</p>
+<ul>
+<li><strong>view</strong> — <abbr title="data build tool">dbt</abbr> crea una vista (<code>CREATE VIEW</code>). No ocupa espacio y siempre refleja los datos más recientes, pero se recalcula en cada consulta. Ideal para staging, donde la lógica es ligera.</li>
+<li><strong>table</strong> — <abbr title="data build tool">dbt</abbr> crea una tabla física (<code>CREATE TABLE AS SELECT</code>). Ocupa espacio y hay que reconstruirla para actualizarla, pero se consulta rápido porque el cálculo ya está hecho. Es exactamente lo que hacíamos a mano con los <code>CREATE TABLE AS</code> de la estrella; ahora lo declara la carpeta.</li>
+</ul>
+<p>La materialización se puede fijar por carpeta en <code>dbt_project.yml</code> (como hicimos) o modelo a modelo con un bloque <code>config()</code> al principio del <code>.sql</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="err">{{</span><span class="w"> </span><span class="n">config</span><span class="p">(</span><span class="n">materialized</span><span class="o">=</span><span class="s1">'table'</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="k">select</span><span class="w"> </span><span class="p">...</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Lo que aún hacemos a mano y <abbr title="data build tool">dbt</abbr> hará por nosotros</p>
+<p>En la sesión de modelado generamos las claves subrogadas con <code>row_number()</code> y versionamos la dimensión de cliente como <abbr title="Slowly Changing Dimension">SCD</abbr> tipo 2 escribiendo el histórico paso a paso. Esas dos piezas —claves subrogadas estables y versionado <abbr title="Slowly Changing Dimension">SCD</abbr>— son precisamente las que <abbr title="data build tool">dbt</abbr> industrializa con sus <em>snapshots</em> y con macros como <code>generate_surrogate_key</code>. Junto con las materializaciones <strong>incrementales</strong> para cargar el hecho sin reconstruirlo entero, las veremos en la sesión de cierre del bloque, ya sobre el pipeline completo dlt → DuckDB → <abbr title="data build tool">dbt</abbr>.</p>
+</div>
+<h2 id="ejecutar-el-proyecto">Ejecutar el proyecto<a class="headerlink" href="#ejecutar-el-proyecto" title="Permanent link">&para;</a></h2>
+<p>El comando estrella es <code>dbt run</code>. Compila todos los modelos, resuelve el orden a partir del <abbr title="Directed Acyclic Graph (grafo dirigido acíclico)">DAG</abbr> y los ejecuta contra DuckDB:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>Concurrency: 4 threads (target='dev')
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span>1 of 11 OK created sql view model main.stg_categories .............. [OK in 0.21s]
+<span class="linenos" data-linenos=" 4 "></span>...
+<span class="linenos" data-linenos=" 5 "></span>6 of 11 OK created sql view model main.stg_products ................ [OK in 0.08s]
+<span class="linenos" data-linenos=" 6 "></span>7 of 11 OK created sql table model main.dim_cliente ............... [OK in 0.13s]
+<span class="linenos" data-linenos=" 7 "></span>8 of 11 OK created sql table model main.dim_producto ............. [OK in 0.10s]
+<span class="linenos" data-linenos=" 8 "></span>9 of 11 OK created sql table model main.dim_fecha ................ [OK in 0.07s]
+<span class="linenos" data-linenos=" 9 "></span>10 of 11 OK created sql table model main.fact_ventas ............. [OK in 0.04s]
+<span class="linenos" data-linenos="10 "></span>11 of 11 OK created sql table model main.ingresos_por_departamento [OK in 0.07s]
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span>Finished running 5 table models, 6 view models in 0.79 seconds.
+<span class="linenos" data-linenos="13 "></span>Done. PASS=11 WARN=0 ERROR=0 SKIP=0 TOTAL=11
+</code></pre></div>
+<p>Observa el orden que eligió <abbr title="data build tool">dbt</abbr>: <strong>primero las 6 vistas de staging, después las 3 dimensiones, luego <code>fact_ventas</code> (que depende de ellas) y por último el informe</strong>. Nadie se lo dijo; lo dedujo del grafo de <code>ref()</code>. Y ejecuta en paralelo lo que puede (4 hilos), respetando siempre las dependencias.</p>
+<p>No siempre queremos reconstruir todo. Con <code>--select</code> se ejecuta un subconjunto. El operador <code>+</code> a la derecha del nombre incluye el modelo <strong>y todo lo que depende de él</strong> (aguas abajo):</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>dbt<span class="w"> </span>run<span class="w"> </span>--select<span class="w"> </span>stg_products+
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>1 of 4 OK created sql view model main.stg_products ................ [OK in 0.10s]
+<span class="linenos" data-linenos="2 "></span>2 of 4 OK created sql table model main.dim_producto ............. [OK in 0.10s]
+<span class="linenos" data-linenos="3 "></span>3 of 4 OK created sql table model main.fact_ventas ............. [OK in 0.06s]
+<span class="linenos" data-linenos="4 "></span>4 of 4 OK created sql table model main.ingresos_por_departamento [OK in 0.09s]
+<span class="linenos" data-linenos="5 "></span>Done. PASS=4 ... TOTAL=4
+</code></pre></div>
+<p>Cambiar <code>stg_products</code> disparó la reconstrucción de <code>dim_producto</code>, del hecho y del informe, que dependen de él en cadena, y solo de esos. Para listar los modelos sin ejecutarlos está <code>dbt ls</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>iabd_retail.marts.dim_cliente
+<span class="linenos" data-linenos="2 "></span>iabd_retail.marts.dim_fecha
+<span class="linenos" data-linenos="3 "></span>iabd_retail.marts.dim_producto
+<span class="linenos" data-linenos="4 "></span>iabd_retail.marts.fact_ventas
+<span class="linenos" data-linenos="5 "></span>iabd_retail.marts.ingresos_por_departamento
+<span class="linenos" data-linenos="6 "></span>iabd_retail.staging.stg_customers
+<span class="linenos" data-linenos="7 "></span>...
+</code></pre></div>
+<h2 id="comprobar-el-resultado">Comprobar el resultado<a class="headerlink" href="#comprobar-el-resultado" title="Permanent link">&para;</a></h2>
+<p>Igual que en la sesión de modelado, toda carga de un hecho termina con un control de calidad. La misma consulta de entonces, ahora sobre el <code>fact_ventas</code> que ha construido <abbr title="data build tool">dbt</abbr>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>┌───────┬──────────────┬─────────────┬─────────┬───────────────┐
+<span class="linenos" data-linenos="2 "></span>│ filas │ sin_producto │ sin_cliente │ pedidos │ importe_total │
+<span class="linenos" data-linenos="3 "></span>├───────┼──────────────┼─────────────┼─────────┼───────────────┤
+<span class="linenos" data-linenos="4 "></span>│   508 │            0 │           0 │     200 │      169034.4 │
+<span class="linenos" data-linenos="5 "></span>└───────┴──────────────┴─────────────┴─────────┴───────────────┘
+</code></pre></div>
+<p>508 filas (el grano de línea coincide con <code>order_items</code>), ninguna redirigida al miembro desconocido y 200 pedidos distintos. La dimensión de producto conserva su miembro desconocido:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>┌───────┬─────────────────────┐
+<span class="linenos" data-linenos="2 "></span>│ filas │ miembro_desconocido │
+<span class="linenos" data-linenos="3 "></span>├───────┼─────────────────────┤
+<span class="linenos" data-linenos="4 "></span>│    55 │                   1 │
+<span class="linenos" data-linenos="5 "></span>└───────┴─────────────────────┘
+</code></pre></div>
+<p>Y el informe final, ya consultable por cualquier herramienta de <abbr title="Business Intelligence">BI</abbr>, responde a la pregunta con la que empezó todo:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>┌──────────────┬─────────┬──────────┬──────────┐
+<span class="linenos" data-linenos=" 2 "></span>│ departamento │ pedidos │ unidades │ ingresos │
+<span class="linenos" data-linenos=" 3 "></span>├──────────────┼─────────┼──────────┼──────────┤
+<span class="linenos" data-linenos=" 4 "></span>│ Apparel      │      47 │      172 │ 25618.28 │
+<span class="linenos" data-linenos=" 5 "></span>│ Outdoors     │      38 │      148 │ 20268.52 │
+<span class="linenos" data-linenos=" 6 "></span>│ Fan Shop     │      51 │      171 │ 19278.29 │
+<span class="linenos" data-linenos=" 7 "></span>│ Golf         │      36 │      146 │ 12578.54 │
+<span class="linenos" data-linenos=" 8 "></span>│ Fitness      │      44 │      178 │ 10828.22 │
+<span class="linenos" data-linenos=" 9 "></span>│ Footwear     │      37 │      114 │  6348.86 │
+<span class="linenos" data-linenos="10 "></span>└──────────────┴─────────┴──────────┴──────────┘
+</code></pre></div>
+<h2 id="documentacion-y-linaje">Documentación y linaje<a class="headerlink" href="#documentacion-y-linaje" title="Permanent link">&para;</a></h2>
+<p><abbr title="data build tool">dbt</abbr> genera documentación del proyecto a partir del propio código y los ficheros YAML. Con dos comandos se construye y se sirve un sitio web navegable:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>dbt<span class="w"> </span>docs<span class="w"> </span>generate
+<span class="linenos" data-linenos="2 "></span>dbt<span class="w"> </span>docs<span class="w"> </span>serve
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>Building catalog
+<span class="linenos" data-linenos="2 "></span>Catalog written to target/catalog.json
+</code></pre></div>
+<p>Ese sitio incluye el catálogo de modelos, sus columnas y descripciones, y —lo más útil— el <strong>grafo de linaje</strong> interactivo: de un vistazo se ve qué source alimenta a qué modelo y qué depende de cuál, incluida la resolución de <code>fact_ventas</code> contra sus dimensiones. Es la misma información que usa <abbr title="data build tool">dbt</abbr> para ordenar <code>dbt run</code>, pero dibujada.</p>
+<h2 id="puesta-en-practica-de-extremo-a-extremo">Puesta en práctica de extremo a extremo<a class="headerlink" href="#puesta-en-practica-de-extremo-a-extremo" title="Permanent link">&para;</a></h2>
+<p>Recapitulando el hilo completo de las tres sesiones:</p>
+<ol>
+<li><strong>dlt</strong> cargó <code>retail_db</code> desde MySQL a DuckDB (esquema <code>retail_db</code>) — la <strong>E</strong> y la <strong>L</strong>.</li>
+<li>En <strong>modelado dimensional</strong> diseñamos la estrella y la construimos a mano con <code>CREATE TABLE AS</code>.</li>
+<li>Ahora <strong><abbr title="data build tool">dbt</abbr></strong> industrializa esa misma estrella: sources para el raw, staging para la limpieza, y marts para dimensiones, hecho e informe, todo enlazado con <code>ref()</code>.</li>
+<li><code>dbt run</code> resolvió el orden por el grafo y lo ejecutó; <code>dbt docs</code> documentó el resultado.</li>
+</ol>
+<p>Todo el "movimiento" de datos lo hizo el motor (DuckDB). <abbr title="data build tool">dbt</abbr> solo orquestó <code>SELECT</code>. Esa es la esencia del <abbr title="Extract, Load, Transform">ELT</abbr> moderno: <strong>cargar primero, transformar dentro del almacén con <abbr title="Structured Query Language">SQL</abbr> versionado</strong>.</p>
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<details class="question">
+<summary>¿<abbr title="data build tool">dbt</abbr> mueve o copia los datos entre sistemas?</summary>
+<p>No. <abbr title="data build tool">dbt</abbr> no tiene motor de datos propio: envía sentencias <abbr title="Structured Query Language">SQL</abbr> al almacén (DuckDB, en nuestro caso) y es ese motor el que hace el trabajo. Por eso <abbr title="data build tool">dbt</abbr> cubre solo la <strong>T</strong> del <abbr title="Extract, Load, Transform">ELT</abbr>; la extracción y la carga las hizo dlt.</p>
+</details>
+<details class="question">
+<summary>¿Cuándo uso source() y cuándo ref()?</summary>
+<p><code>source()</code> para las tablas crudas que <strong>entraron desde fuera</strong> (las que declaraste en el YAML de sources). <code>ref()</code> para referirte a <strong>otro modelo de tu propio proyecto</strong>. Regla práctica: si el nombre lleva prefijo <code>stg_</code>, <code>dim_</code> o <code>fact_</code>, es un modelo tuyo y va con <code>ref()</code>.</p>
+</details>
+<details class="question">
+<summary>¿Por qué staging como vista y marts como tabla?</summary>
+<p>Staging hace poco trabajo y conviene que siempre refleje el dato más reciente sin ocupar espacio: encaja con <strong>view</strong>. Los marts se consultan mucho y su cálculo es más costoso, así que interesa dejarlos persistidos y rápidos de leer: encaja con <strong>table</strong>, igual que los <code>CREATE TABLE</code> de la estrella. No es una regla rígida, es el punto de partida razonable.</p>
+</details>
+<details class="question">
+<summary>¿Qué pasa si escribo mal el nombre dentro de un ref()?</summary>
+<p><abbr title="data build tool">dbt</abbr> falla en la fase de compilación, antes de tocar la base de datos, con un error de tipo <em>depends on a node named ... which was not found</em>. Es una de las ventajas frente al <abbr title="Structured Query Language">SQL</abbr> suelto: los errores de dependencia se detectan al compilar, no en producción.</p>
+</details>
+<details class="question">
+<summary>¿Tengo que decirle a <abbr title="data build tool">dbt</abbr> en qué orden ejecutar los modelos?</summary>
+<p>No, y de hecho no se puede definir el orden a mano. <abbr title="data build tool">dbt</abbr> lo deriva del grafo de dependencias que construye con las llamadas a <code>ref()</code>. Por eso <code>fact_ventas</code>, que referencia a las dimensiones, siempre se ejecuta después de ellas sin que lo indiquemos.</p>
+</details>
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://www.getdbt.com/"><abbr title="data build tool">dbt</abbr> Labs</a></li>
+</ul>
+<h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<p>Para las actividades reutilizamos el proyecto <code>iabd_retail</code> y la estrella que estamos industrializando. Cada modelo nuevo se materializa según su carpeta y se comprueba con <code>dbt run</code>.</p>
+<ol>
+<li>
+<p><strong>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han determinado los procedimientos y mecanismos para la ingestión de datos.">CEBDA.1b</abbr> / 1p) Sources y staging.</strong> Comprueba que las seis tablas de <code>retail_db</code> están declaradas como <em>sources</em> en <code>_retail__sources.yml</code> y que existe un modelo de staging por cada una. Añade a <code>stg_order_items</code> la columna <code>precio_unitario</code> (a partir de <code>order_item_product_price</code>) y ejecuta <code>dbt run --select stg_order_items</code> confirmando que se materializa como vista.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Recuerda que un modelo de staging no hace <em>joins</em>: una source por modelo.</p>
+</div>
+</li>
+<li>
+<p><strong>(<abbr title="Valida las técnicas de Big Data para transformar una gran cantidad de datos en información significativa, facilitando la toma de decisiones de negocios.">RABDA.5</abbr> / <abbr title="Se ha realizado la limpieza y transformación de datos en base a los objetivos predeterminados.">CEBDA.5b</abbr> / 2p) Limpieza en staging.</strong> En <code>stg_customers</code>, además de renombrar, normaliza el email a minúsculas y crea una columna <code>nombre_completo</code>. Justifica en un comentario por qué esta limpieza va en staging y no en la dimensión, y comprueba que <code>dim_cliente</code> sigue construyéndose sin tocar su <abbr title="Structured Query Language">SQL</abbr>.</p>
+</li>
+<li>
+<p><strong>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RASBD.1</abbr> / <abbr title="Se han combinado diferentes fuentes y tipos de datos.">CESBD.1c</abbr> <abbr title="Se ha construido un conjunto de datos complejos y se han relacionado entre sí.">CESBD.1d</abbr> / 2p) La dimensión de cliente.</strong> Revisa <code>dim_cliente</code> y comprueba que reproduce la de la sesión de modelado: clave subrogada con <code>row_number()</code> y miembro desconocido. Ejecuta <code>dbt run --select dim_cliente</code> y valida con una consulta que hay exactamente una fila con <code>cliente_sk = -1</code> y que el resto de claves subrogadas son únicas.</p>
+</li>
+<li>
+<p><strong>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 2p) Materializaciones.</strong> Cambia la materialización de <code>ingresos_por_departamento</code> de <code>table</code> a <code>view</code> mediante un bloque <code>config()</code> en el propio modelo (sobrescribiendo la herencia de la carpeta). Ejecuta <code>dbt run --select ingresos_por_departamento</code>, consulta el <code>information_schema</code> y verifica que el objeto pasó de <code>BASE TABLE</code> a <code>VIEW</code>. Vuelve a dejarlo como <code>table</code> y razona en qué caso preferirías cada opción para un mart de informe.</p>
+</li>
+<li>
+<p><strong>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han presentado los resultados y las soluciones al cliente final en una forma fácil de interpretar.">CEBDA.1e</abbr> / 1p) Documentación y linaje.</strong> Genera la documentación con <code>dbt docs generate</code> y sírvela con <code>dbt docs serve</code>. Localiza <code>fact_ventas</code> en el grafo de linaje y anota, aguas arriba, todos los modelos y sources de los que depende hasta llegar a <code>retail_db</code>. Comprueba que aparecen las dependencias hacia <code>dim_producto</code> y <code>dim_cliente</code>.</p>
+</li>
+<li>
+<p><strong>(<abbr title="Gestiona y almacena datos facilitando la búsqueda de respuestas en grandes conjuntos de datos.">RASBD.3</abbr> / <abbr title="Se han extraído y almacenado datos de diversas fuentes, para ser tratados en distintos escenarios.">CESBD.3a</abbr> / 3p) Un nuevo informe sobre la estrella.</strong> Aprovechando <code>dim_fecha</code>, crea el mart <code>ventas_mensuales</code> que devuelva, por año y mes, el número de pedidos completados y los ingresos totales, uniendo <code>fact_ventas</code> con <code>dim_fecha</code> por <code>fecha_id</code>. Decide y justifica su materialización, y captura la salida real de <code>dbt run</code> y de una consulta al modelo.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Solo se cuentan pedidos en estado <code>COMPLETE</code> o <code>CLOSED</code>, igual que en <code>ingresos_por_departamento</code>. La ventaja de unir con <code>dim_fecha</code> es que el nombre del mes y el trimestre ya vienen calculados.</p>
+</div>
+</li>
+</ol>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        <a href='https://ko-fi.com/T6T8GWT9N' title='Invítame a un café en ko-fi.com' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Invítame a un café en ko-fi.com' /></a>
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="Me encantan estos apuntes" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="Los apuntes son mejorables" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Gracias por tu tiempo. Si quieres me puedes <a href='https://ko-fi.com/T6T8GWT9N'>invitar a un café en ko-fi</a>.
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              ¡Gracias por tu colaboración! Ayúdame a mejorar los apuntes enviándome un mail a <a href="mailto:a.medrano@edu.gva.es">a.medrano@edu.gva.es</a> con tus comentarios.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="dlt.html" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Extracción y carga con dlt">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Extracción y carga con dlt
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="airflow.html" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Orquestación con Airflow">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Orquestación con Airflow
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2023-2026 Aitor Medrano - <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">Licencia CC BY-NC-SA</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://aitor-medrano.github.io/" target="_blank" rel="noopener" title="aitor-medrano.github.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2m-5.15 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56M14.34 14H9.66c-.1-.66-.16-1.32-.16-2s.06-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2M12 19.96c-.83-1.2-1.5-2.53-1.91-3.96h3.82c-.41 1.43-1.08 2.76-1.91 3.96M8 8H5.08A7.92 7.92 0 0 1 9.4 4.44C8.8 5.55 8.35 6.75 8 8m-2.92 8H8c.35 1.25.8 2.45 1.4 3.56A8 8 0 0 1 5.08 16m-.82-2C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2M12 4.03c.83 1.2 1.5 2.54 1.91 3.97h-3.82c.41-1.43 1.08-2.77 1.91-3.97M18.92 8h-2.95a15.7 15.7 0 0 0-1.38-3.56c1.84.63 3.37 1.9 4.33 3.56M12 2C6.47 2 2 6.5 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://aitor-medrano.github.io/blog" target="_blank" rel="noopener" title="aitor-medrano.github.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M224 24c0-13.3 10.7-24 24-24 145.8 0 264 118.2 264 264 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-119.3-96.7-216-216-216-13.3 0-24-10.7-24-24M80 96c26.5 0 48 21.5 48 48v224c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48c-8.8 0-16-7.2-16-16v-64c0-8.8 7.2-16 16-16 79.5 0 144 64.5 144 144s-64.5 144-144 144S32 447.5 32 368V144c0-26.5 21.5-48 48-48m168 0c92.8 0 168 75.2 168 168 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-66.3-53.7-120-120-120-13.3 0-24-10.7-24-24s10.7-24 24-24"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://bsky.app/profile/aitormedrano.bsky.social" target="_blank" rel="noopener" title="bsky.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M407.8 294.7c-3.3-.4-6.7-.8-10-1.3 3.4.4 6.7.9 10 1.3M288 227.1c-26.1-50.7-97.1-145.2-163.1-191.8C61.6-9.4 37.5-1.7 21.6 5.5 3.3 13.8 0 41.9 0 58.4S9.1 194 15 213.9c19.5 65.7 89.1 87.9 153.2 80.7 3.3-.5 6.6-.9 10-1.4-3.3.5-6.6 1-10 1.4-93.9 14-177.3 48.2-67.9 169.9C220.6 589.1 265.1 437.8 288 361.1c22.9 76.7 49.2 222.5 185.6 103.4 102.4-103.4 28.1-156-65.8-169.9-3.3-.4-6.7-.8-10-1.3 3.4.4 6.7.9 10 1.3 64.1 7.1 133.6-15.1 153.2-80.7C566.9 194 576 75 576 58.4s-3.3-44.7-21.6-52.9c-15.8-7.1-40-14.9-103.2 29.8C385.1 81.9 314.1 176.4 288 227.1"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://x.com/aitormedrano" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:<a.medrano@edu.gva.es>" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l208 156a48 48 0 0 0 57.6 0l208-156c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48zM0 196v188c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V196L313.6 344.8c-34.1 25.6-81.1 25.6-115.2 0z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Consentimiento de cookie</h4>
+<p>Esta página de apuntes utiliza cookies para reconocer las visitas, medir la efectividad de la documentación y averiguar si encuentras aquello que buscas o cómo has llegado a estos apuntes. Con tu consentimiento, me ayudas a mejorar estos materiales.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" checked>
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+    
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Aceptar</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Gestionar cookies</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

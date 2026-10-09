@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  Este fichero se monta vía HIVE_CUSTOM_CONF_DIR. El entrypoint de la imagen de Hive
+  lo enlaza dentro de /opt/hive/conf, de modo que el cliente HDFS de Hive lo lee.
+  La imagen NO genera un hdfs-site.xml propio, así que añadirlo aquí no pisa nada.
+-->
+<configuration>
+  <property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://namenode:8020</value>
+  </property>
+  <property>
+    <name>dfs.client.use.datanode.hostname</name>
+    <value>true</value>
+  </property>
+</configuration>

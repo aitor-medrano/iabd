@@ -1,0 +1,12 @@
+# Perfil de dbt. La imagen fija DBT_PROFILES_DIR a este directorio,
+# así que no hace falta ~/.dbt/profiles.yml.
+retail:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      # MISMO fichero que escribe dlt: dlt carga, dbt transforma
+      path: /workspace/data/retail.duckdb
+      threads: 4
+      extensions:
+        - httpfs

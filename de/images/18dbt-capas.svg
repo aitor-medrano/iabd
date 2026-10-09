@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 350" font-family="'Segoe UI', Roboto, sans-serif">
+  <!--
+    Paleta IABD:
+      #2b3a42  oscuro   -> nodos de origen (raw / dlt)
+      #3fa39b  teal     -> capa staging (vistas)
+      #7d5ba6  púrpura  -> dimensiones y hecho (tablas de la estrella)
+      #c0603f  terracota-> mart de informe (capa de consumo)
+      #2f6fed  azul     -> flechas de flujo de datos
+    Contraste texto blanco sobre relleno: AA verificado.
+  -->
+  <defs>
+    <marker id="flow" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#2f6fed"/>
+    </marker>
+  </defs>
+
+  <text x="115" y="30" text-anchor="middle" font-size="15" font-weight="600" fill="#2b3a42">Fuentes (raw · dlt)</text>
+  <text x="360" y="30" text-anchor="middle" font-size="15" font-weight="600" fill="#2b3a42">Staging (vistas)</text>
+  <text x="655" y="30" text-anchor="middle" font-size="15" font-weight="600" fill="#2b3a42">Marts · estrella (tablas)</text>
+
+  <!-- ===== Fuentes ===== -->
+  <g fill="#2b3a42">
+    <rect x="30" y="50"  width="170" height="30" rx="6"/>
+    <rect x="30" y="88"  width="170" height="30" rx="6"/>
+    <rect x="30" y="126" width="170" height="30" rx="6"/>
+    <rect x="30" y="164" width="170" height="30" rx="6"/>
+    <rect x="30" y="202" width="170" height="30" rx="6"/>
+    <rect x="30" y="240" width="170" height="30" rx="6"/>
+  </g>
+  <g fill="#ffffff" font-size="12.5" text-anchor="middle">
+    <text x="115" y="69">customers</text>
+    <text x="115" y="107">orders</text>
+    <text x="115" y="145">order_items</text>
+    <text x="115" y="183">products</text>
+    <text x="115" y="221">categories</text>
+    <text x="115" y="259">departments</text>
+  </g>
+
+  <!-- ===== Staging ===== -->
+  <g fill="#3fa39b">
+    <rect x="275" y="50"  width="170" height="30" rx="6"/>
+    <rect x="275" y="88"  width="170" height="30" rx="6"/>
+    <rect x="275" y="126" width="170" height="30" rx="6"/>
+    <rect x="275" y="164" width="170" height="30" rx="6"/>
+    <rect x="275" y="202" width="170" height="30" rx="6"/>
+    <rect x="275" y="240" width="170" height="30" rx="6"/>
+  </g>
+  <g fill="#ffffff" font-size="12.5" text-anchor="middle">
+    <text x="360" y="69">stg_customers</text>
+    <text x="360" y="107">stg_orders</text>
+    <text x="360" y="145">stg_order_items</text>
+    <text x="360" y="183">stg_products</text>
+    <text x="360" y="221">stg_categories</text>
+    <text x="360" y="259">stg_departments</text>
+  </g>
+
+  <!-- ===== Dimensiones + hecho ===== -->
+  <g fill="#7d5ba6">
+    <rect x="540" y="50"  width="150" height="30" rx="6"/>
+    <rect x="540" y="88"  width="150" height="30" rx="6"/>
+    <rect x="540" y="126" width="150" height="30" rx="6"/>
+    <rect x="540" y="180" width="150" height="34" rx="6"/>
+  </g>
+  <g fill="#ffffff" font-size="12.5" text-anchor="middle">
+    <text x="615" y="69">dim_producto</text>
+    <text x="615" y="107">dim_cliente</text>
+    <text x="615" y="145">dim_fecha</text>
+    <text x="615" y="201" font-weight="600">fact_ventas</text>
+  </g>
+
+  <!-- ===== Informe ===== -->
+  <rect x="700" y="248" width="150" height="34" rx="6" fill="#c0603f"/>
+  <text x="775" y="269" text-anchor="middle" font-size="11" fill="#ffffff" font-weight="600">ingresos_por_departamento</text>
+
+  <!-- source(): fuente -> staging (1 a 1) -->
+  <g stroke="#2f6fed" stroke-width="2" marker-end="url(#flow)" fill="none">
+    <line x1="202" y1="65"  x2="271" y2="65"/>
+    <line x1="202" y1="103" x2="271" y2="103"/>
+    <line x1="202" y1="141" x2="271" y2="141"/>
+    <line x1="202" y1="179" x2="271" y2="179"/>
+    <line x1="202" y1="217" x2="271" y2="217"/>
+    <line x1="202" y1="255" x2="271" y2="255"/>
+  </g>
+
+  <!-- ref(): staging -> dimensiones -->
+  <g stroke="#2f6fed" stroke-width="2" marker-end="url(#flow)" fill="none">
+    <path d="M447 179 C 500 179, 500 65, 536 65"/>
+    <path d="M447 217 C 500 217, 500 70, 536 70"/>
+    <path d="M447 255 C 500 255, 500 75, 536 75"/>
+    <path d="M447 65 C 500 65, 505 103, 536 103"/>
+    <path d="M447 103 C 500 103, 505 145, 536 145"/>
+  </g>
+
+  <!-- ref(): staging -> fact_ventas -->
+  <g stroke="#2f6fed" stroke-width="2" marker-end="url(#flow)" fill="none">
+    <path d="M447 141 C 495 197, 500 197, 536 197"/>
+    <path d="M447 103 C 480 150, 500 190, 536 191"/>
+  </g>
+
+  <!-- ref() interno: dims -> fact_ventas (discontinua) -->
+  <g stroke="#2f6fed" stroke-width="2" fill="none" stroke-dasharray="5 4">
+    <path d="M615 80  C 615 130, 615 150, 615 176" marker-end="url(#flow)"/>
+    <path d="M690 103 C 725 135, 662 162, 660 176" marker-end="url(#flow)"/>
+    <path d="M690 141 C 715 158, 668 165, 665 176" marker-end="url(#flow)"/>
+  </g>
+
+  <!-- ref(): fact -> informe -->
+  <path d="M690 205 C 730 220, 742 235, 750 246" stroke="#2f6fed" stroke-width="2" marker-end="url(#flow)" fill="none"/>
+
+  <!-- etiquetas de funciones -->
+  <text x="236" y="300" text-anchor="middle" font-size="13" font-weight="600" fill="#2f6fed">source()</text>
+  <text x="493" y="300" text-anchor="middle" font-size="13" font-weight="600" fill="#2f6fed">ref()</text>
+
+  <!-- leyenda -->
+  <text x="30" y="325" font-size="11.5" fill="#5a6b73">La misma estrella de la sesión de modelado, ahora como modelos versionados.</text>
+  <text x="540" y="325" font-size="11.5" fill="#5a6b73">— — ref() interno: fact_ventas resuelve las claves subrogadas contra las dimensiones.</text>
+</svg>

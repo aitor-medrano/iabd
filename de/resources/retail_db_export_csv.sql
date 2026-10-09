@@ -1,0 +1,35 @@
+SELECT * INTO OUTFILE '/tmp/orders.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+FROM orders;
+
+SELECT * INTO OUTFILE '/tmp/categories.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+FROM categories;
+
+SELECT * INTO OUTFILE '/tmp/products.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+FROM products;
+
+SELECT * INTO OUTFILE '/tmp/customers.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+FROM customers;
+
+SELECT * INTO OUTFILE '/tmp/order_items.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+FROM orders;
+
+SELECT * INTO OUTFILE '/tmp/departments.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+FROM departments;

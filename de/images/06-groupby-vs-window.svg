@@ -1,0 +1,67 @@
+<svg viewBox="0 0 740 400" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="arw2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="738" height="398" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+
+  <text x="370" y="30" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">GROUP BY vs función de ventana</text>
+
+  <!-- ============ Entrada ============ -->
+  <text x="120" y="86" text-anchor="middle" font-size="13" font-weight="600" fill="#334155">Datos de entrada</text>
+  <!-- cabecera -->
+  <rect x="40" y="96" width="95" height="26" fill="#eef2f7" stroke="#cbd5e1"/>
+  <rect x="135" y="96" width="65" height="26" fill="#eef2f7" stroke="#cbd5e1"/>
+  <text x="87" y="113" text-anchor="middle" font-size="11.5" fill="#334155">categoria</text>
+  <text x="167" y="113" text-anchor="middle" font-size="11.5" fill="#334155">importe</text>
+  <!-- filas -->
+  <g font-size="11.5" fill="#334155">
+    <rect x="40" y="122" width="95" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="135" y="122" width="65" height="24" fill="#fff" stroke="#e2e8f0"/>
+    <text x="87" y="138" text-anchor="middle">Ropa</text><text x="167" y="138" text-anchor="middle">100</text>
+    <rect x="40" y="146" width="95" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="135" y="146" width="65" height="24" fill="#fff" stroke="#e2e8f0"/>
+    <text x="87" y="162" text-anchor="middle">Ropa</text><text x="167" y="162" text-anchor="middle">200</text>
+    <rect x="40" y="170" width="95" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="135" y="170" width="65" height="24" fill="#fff" stroke="#e2e8f0"/>
+    <text x="87" y="186" text-anchor="middle">Calzado</text><text x="167" y="186" text-anchor="middle">50</text>
+    <rect x="40" y="194" width="95" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="135" y="194" width="65" height="24" fill="#fff" stroke="#e2e8f0"/>
+    <text x="87" y="210" text-anchor="middle">Calzado</text><text x="167" y="210" text-anchor="middle">150</text>
+  </g>
+
+  <!-- flechas -->
+  <line x1="205" y1="150" x2="426" y2="112" stroke="#64748b" stroke-width="1.6" marker-end="url(#arw2)"/>
+  <line x1="205" y1="165" x2="426" y2="290" stroke="#64748b" stroke-width="1.6" marker-end="url(#arw2)"/>
+
+  <!-- ============ GROUP BY ============ -->
+  <text x="430" y="70" font-size="12.5" font-weight="700" fill="#065f46">GROUP BY — colapsa a una fila por grupo</text>
+  <rect x="430" y="80" width="95" height="26" fill="#d1fae5" stroke="#10b981"/>
+  <rect x="525" y="80" width="105" height="26" fill="#d1fae5" stroke="#10b981"/>
+  <text x="477" y="97" text-anchor="middle" font-size="11.5" fill="#065f46">categoria</text>
+  <text x="577" y="97" text-anchor="middle" font-size="11.5" fill="#065f46">SUM(importe)</text>
+  <g font-size="11.5" fill="#334155">
+    <rect x="430" y="106" width="95" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="525" y="106" width="105" height="24" fill="#fff" stroke="#e2e8f0"/>
+    <text x="477" y="122" text-anchor="middle">Ropa</text><text x="577" y="122" text-anchor="middle">300</text>
+    <rect x="430" y="130" width="95" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="525" y="130" width="105" height="24" fill="#fff" stroke="#e2e8f0"/>
+    <text x="477" y="146" text-anchor="middle">Calzado</text><text x="577" y="146" text-anchor="middle">200</text>
+  </g>
+  <text x="430" y="172" font-size="10.5" fill="#94a3b8" font-family="ui-monospace, monospace">2 filas · se pierde el detalle</text>
+
+  <!-- ============ Window ============ -->
+  <text x="430" y="214" font-size="12.5" font-weight="700" fill="#92400e">Función de ventana — conserva todas las filas</text>
+  <rect x="430" y="224" width="85" height="26" fill="#eef2f7" stroke="#cbd5e1"/>
+  <rect x="515" y="224" width="60" height="26" fill="#eef2f7" stroke="#cbd5e1"/>
+  <rect x="575" y="224" width="95" height="26" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="472" y="241" text-anchor="middle" font-size="11.5" fill="#334155">categoria</text>
+  <text x="545" y="241" text-anchor="middle" font-size="11.5" fill="#334155">importe</text>
+  <text x="622" y="241" text-anchor="middle" font-size="11" fill="#92400e">total_cat</text>
+  <g font-size="11.5" fill="#334155">
+    <rect x="430" y="250" width="85" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="515" y="250" width="60" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="575" y="250" width="95" height="24" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="472" y="266" text-anchor="middle">Ropa</text><text x="545" y="266" text-anchor="middle">100</text><text x="622" y="266" text-anchor="middle" fill="#92400e">300</text>
+    <rect x="430" y="274" width="85" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="515" y="274" width="60" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="575" y="274" width="95" height="24" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="472" y="290" text-anchor="middle">Ropa</text><text x="545" y="290" text-anchor="middle">200</text><text x="622" y="290" text-anchor="middle" fill="#92400e">300</text>
+    <rect x="430" y="298" width="85" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="515" y="298" width="60" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="575" y="298" width="95" height="24" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="472" y="314" text-anchor="middle">Calzado</text><text x="545" y="314" text-anchor="middle">50</text><text x="622" y="314" text-anchor="middle" fill="#92400e">200</text>
+    <rect x="430" y="322" width="85" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="515" y="322" width="60" height="24" fill="#fff" stroke="#e2e8f0"/><rect x="575" y="322" width="95" height="24" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="472" y="338" text-anchor="middle">Calzado</text><text x="545" y="338" text-anchor="middle">150</text><text x="622" y="338" text-anchor="middle" fill="#92400e">200</text>
+  </g>
+  <text x="430" y="360" font-size="10.5" fill="#94a3b8" font-family="ui-monospace, monospace">SUM(importe) OVER (PARTITION BY categoria)</text>
+</svg>

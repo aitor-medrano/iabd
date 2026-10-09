@@ -3,8 +3,7 @@
 #  ------------------------------------------------------------
 #  Arranque selectivo según la sesión:
 #
-#    docker compose --profile kafka up -d            # broker único (Kafka 1, casos 3/4)
-#    docker compose --profile kafka-connect up -d    # broker único (Kafka 1, Kafka Connect)
+#    docker compose --profile kafka up -d            # broker único (Kafka 1, casos 3/4, Kafka Connect)
 #    docker compose --profile kafka-cluster up -d    # 3 brokers KRaft (Kafka 2 - caso 2)
 #    docker compose --profile spark up -d            # cluster Spark completo + MinIO + Hive
 #    docker compose --profile spark-single up -d     # Spark en modo local[*] desde Jupyter
@@ -152,7 +151,7 @@ services:
     hostname: kafka
     extra_hosts:
       - "kafka:127.0.0.1"
-    profiles: ["kafka", "kafka-connect"]
+    profiles: ["kafka"]
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
@@ -190,7 +189,7 @@ services:
     image: provectuslabs/kafka-ui:latest
     container_name: iabd-kafka-ui
     hostname: kafka-ui
-    profiles: ["kafka", "kafka-cluster", "kafka-connect"]
+    profiles: ["kafka", "kafka-cluster"]
     environment:
       # Cluster 0: broker único (visible cuando arrancas --profile kafka)
       KAFKA_CLUSTERS_0_NAME: single
@@ -472,7 +471,7 @@ services:
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__CORE__FERNET_KEY: ""
       AIRFLOW__WEBSERVER__SECRET_KEY: "iabd-secret-key-cambiar-en-prod"
-      _PIP_ADDITIONAL_REQUIREMENTS: "kafka-python boto3 requests pymongo apache-airflow-providers-apache-spark"
+      _PIP_ADDITIONAL_REQUIREMENTS: "confluent-kafka boto3 requests pymongo apache-airflow-providers-apache-spark"
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs

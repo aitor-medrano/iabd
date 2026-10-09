@@ -1,0 +1,66 @@
+<svg viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <rect x="1" y="1" width="718" height="398" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+
+  <text x="360" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">Parquet: projection + predicate pushdown</text>
+  <text x="360" y="50" text-anchor="middle" font-size="11.5" fill="#64748b" font-family="ui-monospace, monospace">SELECT sum(importe) FROM ventas WHERE mes = 4</text>
+
+  <!-- etiquetas de row group (izquierda) -->
+  <text x="20" y="154" font-size="11" fill="#94a3b8">RG 1</text>
+  <text x="20" y="168" font-size="9.5" fill="#cbd5e1">mes 1–2</text>
+  <text x="20" y="218" font-size="11" font-weight="700" fill="#065f46">RG 2</text>
+  <text x="20" y="232" font-size="9.5" fill="#059669">mes 3–4 ✓</text>
+  <text x="20" y="282" font-size="11" fill="#94a3b8">RG 3</text>
+  <text x="20" y="296" font-size="9.5" fill="#cbd5e1">mes 5–6</text>
+
+  <!-- cabecera de columnas -->
+  <g font-size="12" font-weight="600">
+    <rect x="180" y="90" width="110" height="28" fill="#dbeafe" stroke="#3b82f6"/>
+    <text x="235" y="108" text-anchor="middle" fill="#1e40af">mes</text>
+    <rect x="290" y="90" width="110" height="28" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="345" y="108" text-anchor="middle" fill="#94a3b8">categoria</text>
+    <rect x="400" y="90" width="110" height="28" fill="#d1fae5" stroke="#10b981"/>
+    <text x="455" y="108" text-anchor="middle" fill="#065f46">importe</text>
+    <rect x="510" y="90" width="110" height="28" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="565" y="108" text-anchor="middle" fill="#94a3b8">cliente</text>
+  </g>
+
+  <!-- RG1 (saltado por predicado) -->
+  <g>
+    <rect x="180" y="120" width="110" height="60" fill="#f8fafc" stroke="#e2e8f0"/>
+    <rect x="290" y="120" width="110" height="60" fill="#f8fafc" stroke="#e2e8f0"/>
+    <rect x="400" y="120" width="110" height="60" fill="#f8fafc" stroke="#e2e8f0"/>
+    <rect x="510" y="120" width="110" height="60" fill="#f8fafc" stroke="#e2e8f0"/>
+  </g>
+
+  <!-- RG2 (se lee) -->
+  <g>
+    <rect x="180" y="182" width="110" height="60" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+    <rect x="290" y="182" width="110" height="60" fill="#f8fafc" stroke="#e2e8f0"/>
+    <rect x="400" y="182" width="110" height="60" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/>
+    <rect x="510" y="182" width="110" height="60" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="235" y="216" text-anchor="middle" font-size="11" fill="#1e40af">leído</text>
+    <text x="455" y="216" text-anchor="middle" font-size="11" fill="#065f46">leído</text>
+  </g>
+
+  <!-- RG3 (saltado por predicado) -->
+  <g>
+    <rect x="180" y="244" width="110" height="60" fill="#f8fafc" stroke="#e2e8f0"/>
+    <rect x="290" y="244" width="110" height="60" fill="#f8fafc" stroke="#e2e8f0"/>
+    <rect x="400" y="244" width="110" height="60" fill="#f8fafc" stroke="#e2e8f0"/>
+    <rect x="510" y="244" width="110" height="60" fill="#f8fafc" stroke="#e2e8f0"/>
+  </g>
+
+  <!-- líneas guía de saltado -->
+  <text x="345" y="154" text-anchor="middle" font-size="10" fill="#cbd5e1">— saltado (predicado) —</text>
+  <text x="345" y="278" text-anchor="middle" font-size="10" fill="#cbd5e1">— saltado (predicado) —</text>
+
+  <!-- leyenda -->
+  <rect x="180" y="330" width="14" height="14" fill="#d1fae5" stroke="#10b981"/>
+  <text x="200" y="342" font-size="11" fill="#334155">projection: columna de salida</text>
+  <rect x="380" y="330" width="14" height="14" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="400" y="342" font-size="11" fill="#334155">predicado: columna del filtro</text>
+  <rect x="560" y="330" width="14" height="14" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="580" y="342" font-size="11" fill="#94a3b8">no se lee</text>
+
+  <text x="360" y="372" text-anchor="middle" font-size="12" fill="#0f172a">Se leen <tspan font-weight="700" fill="#065f46">2</tspan> de <tspan font-weight="700">12</tspan> bloques del fichero</text>
+</svg>

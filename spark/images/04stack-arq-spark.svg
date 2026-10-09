@@ -1,0 +1,76 @@
+<svg viewBox="0 0 720 560" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="aD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#495057"/></marker>
+    <marker id="aB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1971c2"/></marker>
+    <marker id="aG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#868e96"/></marker>
+    <style>
+      .svc{fill:#fff;stroke:#ced4da;stroke-width:1.4}
+      .svct{font-weight:600;font-size:13px;fill:#212529;text-anchor:middle}
+      .sub{font-size:10.5px;fill:#868e96;text-anchor:middle}
+      .cyl{fill:#f1f3f5;stroke:#868e96;stroke-width:1.3}
+      .cyltop{fill:#e9ecef;stroke:#868e96;stroke-width:1.3}
+      .one{fill:#f8f9fa;stroke:#adb5bd;stroke-width:1.3;stroke-dasharray:5 3}
+      .onet{font-weight:600;font-size:12px;fill:#868e96;text-anchor:middle}
+      .ctrl{fill:none;stroke:#495057;stroke-width:1.6}
+      .data{fill:none;stroke:#1971c2;stroke-width:1.6;stroke-dasharray:5 4}
+      .init{fill:none;stroke:#868e96;stroke-width:1.4;stroke-dasharray:4 3}
+      .eb{font-weight:600;font-size:11px;fill:#1971c2}
+      .e{font-weight:600;font-size:11px;fill:#495057}
+      .eg{font-weight:600;font-size:10.5px;fill:#868e96}
+    </style>
+  </defs>
+
+  <!-- Host -->
+  <rect x="236" y="20" width="248" height="42" rx="10" fill="#f1f3f5" stroke="#adb5bd" stroke-width="1.4"/>
+  <text x="360" y="46" text-anchor="middle" font-weight="600" font-size="13" fill="#212529">Tu equipo — navegador</text>
+  <line x1="360" y1="62" x2="360" y2="110" class="ctrl" marker-end="url(#aD)"/>
+  <text x="368" y="84" font-size="10.5" fill="#868e96">localhost · 8888 (Jupyter) · 8080 (Spark UI) · 9001 (MinIO)</text>
+
+  <!-- Grupo spark -->
+  <rect x="40" y="112" width="640" height="432" rx="10" fill="#FFF4E6" stroke="#E8590C" stroke-width="1.5"/>
+  <text x="56" y="134" font-weight="600" font-size="13" fill="#E8590C">perfil: spark / spark-single</text>
+
+  <!-- aristas -->
+  <line x1="230" y1="183" x2="358" y2="183" class="ctrl" marker-end="url(#aD)"/>
+  <text x="294" y="177" class="e" text-anchor="middle">driver</text>
+  <line x1="390" y1="210" x2="184" y2="249" class="ctrl" marker-end="url(#aD)"/>
+  <line x1="435" y1="210" x2="435" y2="249" class="ctrl" marker-end="url(#aD)"/>
+
+  <polyline points="360,190 300,190 300,330 160,330 160,351" class="data" marker-end="url(#aB)"/>
+  <text x="252" y="324" class="eb">s3a://</text>
+  <polyline points="510,190 560,190 560,380 512,380" class="data" marker-end="url(#aB)"/>
+  <text x="554" y="298" class="eb" transform="rotate(-90 554 298)" text-anchor="middle">metastore</text>
+
+  <line x1="155" y1="452" x2="155" y2="410" class="init" marker-end="url(#aG)"/>
+  <text x="163" y="436" class="eg">crea buckets</text>
+  <line x1="435" y1="452" x2="435" y2="410" class="init" marker-end="url(#aG)"/>
+  <text x="443" y="436" class="eg">init esquema</text>
+
+  <!-- nodos -->
+  <rect class="svc" x="80" y="156" width="150" height="54" rx="8"/>
+  <text class="svct" x="155" y="180">jupyter</text><text class="sub" x="155" y="196">driver</text>
+  <rect class="svc" x="360" y="156" width="150" height="54" rx="8"/>
+  <text class="svct" x="435" y="187">spark-master</text>
+  <rect class="svc" x="80" y="250" width="150" height="54" rx="8"/>
+  <text class="svct" x="155" y="281">spark-worker-1</text>
+  <rect class="svc" x="360" y="250" width="150" height="54" rx="8"/>
+  <text class="svct" x="435" y="273">spark-worker-2</text><text class="sub" x="435" y="289">(solo perfil spark)</text>
+
+  <path class="cyl" d="M80,359 A75,7 0 0 1 230,359 V401 A75,7 0 0 1 80,401 Z"/>
+  <ellipse class="cyltop" cx="155" cy="359" rx="75" ry="7"/>
+  <text class="svct" x="155" y="383">minio</text><text class="sub" x="155" y="397">S3</text>
+  <path class="cyl" d="M360,359 A75,7 0 0 1 510,359 V401 A75,7 0 0 1 360,401 Z"/>
+  <ellipse class="cyltop" cx="435" cy="359" rx="75" ry="7"/>
+  <text class="svct" x="435" y="385" font-size="12">mysql-metastore</text>
+
+  <rect class="one" x="80" y="452" width="150" height="44" rx="8"/>
+  <text class="onet" x="155" y="470">minio-init</text><text class="sub" x="155" y="485">one-shot</text>
+  <rect class="one" x="360" y="452" width="150" height="44" rx="8"/>
+  <text class="onet" x="435" y="470">hive-init</text><text class="sub" x="435" y="485">one-shot</text>
+
+  <!-- leyenda -->
+  <rect x="540" y="452" width="132" height="84" rx="8" fill="#f8f9fa" stroke="#ced4da" stroke-width="1.2"/>
+  <line x1="552" y1="470" x2="584" y2="470" class="ctrl" marker-end="url(#aD)"/><text x="592" y="474" font-size="10.5" fill="#495057">control</text>
+  <line x1="552" y1="492" x2="584" y2="492" class="data" marker-end="url(#aB)"/><text x="592" y="496" font-size="10.5" fill="#495057">datos</text>
+  <line x1="552" y1="514" x2="584" y2="514" class="init" marker-end="url(#aG)"/><text x="592" y="518" font-size="10.5" fill="#495057">init</text>
+</svg>
