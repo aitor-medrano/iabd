@@ -1,5 +1,5 @@
 with fuente as (
-    select * from {{ source('retail_db', 'categories') }}
+    select * from {{ source('src_retail_db', 'categories') }}
 )
 select
     category_id             as categoria_id,

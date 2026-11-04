@@ -1,16 +1,11 @@
 with ventas as (
-    select * from {{ ref('fact_ventas') }}
-),
-producto as (
-    select * from {{ ref('dim_producto') }}
+    select * from {{ ref('int_ventas_enriquecidas') }}
 )
 select
-    dp.departamento,
-    count(distinct v.pedido_id)   as pedidos,
-    sum(v.cantidad)               as unidades,
-    round(sum(v.importe), 2)      as ingresos
-from ventas v
-join producto dp on dp.producto_sk = v.producto_sk
-where v.estado in ('COMPLETE', 'CLOSED')
-group by dp.departamento
+    departamento,
+    count(distinct pedido_id)   as pedidos,
+    sum(cantidad)               as unidades,
+    round(sum(importe), 2)      as ingresos
+from ventas
+group by departamento
 order by ingresos desc

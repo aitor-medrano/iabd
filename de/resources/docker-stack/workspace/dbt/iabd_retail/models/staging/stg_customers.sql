@@ -1,5 +1,5 @@
 with fuente as (
-    select * from {{ source('retail_db', 'customers') }}
+    select * from {{ source('src_retail_db', 'customers') }}
 )
 select
     customer_id     as cliente_id,

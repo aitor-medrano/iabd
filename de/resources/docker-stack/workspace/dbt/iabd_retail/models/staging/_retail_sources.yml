@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: retail_db
+  - name: src_retail_db
     description: "Tablas crudas cargadas por dlt desde MySQL en la sesión de ingesta."
     database: retail_el
     schema: raw
@@ -12,3 +12,12 @@ sources:
       - name: products
       - name: categories
       - name: departments
+
+  - name: src_lago
+    description: "Ficheros parquet depositados en el lago por el equipo de logística."
+    schema: lago
+    tables:
+      - name: devoluciones
+        description: "Una fila por línea devuelta."
+        meta:
+          external_location: "read_parquet('/workspace/lago/devoluciones.parquet')"

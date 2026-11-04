@@ -1,5 +1,5 @@
 with fuente as (
-    select * from {{ source('retail_db', 'order_items') }}
+    select * from {{ source('src_retail_db', 'order_items') }}
 )
 select
     order_item_id             as linea_id,
