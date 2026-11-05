@@ -6349,9 +6349,9 @@ treeView-beta
 <h2 id="recapitulando">Recapitulando<a class="headerlink" href="#recapitulando" title="Permanent link">&para;</a></h2>
 <p>Llegábamos a esta sesión con <code>retail_db</code> ya cargado en <em>DuckDB</em> por <abbr title="data load tool">dlt</abbr> y con una estrella construida a mano en la sesión de modelado, a base de <code>CREATE TABLE AS</code> ejecutados en el orden correcto. Lo que hemos hecho aquí es convertir aquello en un proyecto de ingeniería:</p>
 <ol>
-<li>En el Caso 1 reconstruimos la estrella como modelos versionados: las tablas crudas declaradas como fuentes, una capa de <em>staging</em> que limpia y renombra, y los <em>marts</em> con las dimensiones, el hecho y el informe de negocio.</li>
-<li>En el Caso 2 entró una segunda fuente que ni siquiera es una tabla —un fichero <em>parquet</em> depositado en el lago— y con ella un segundo hecho que reutiliza las dimensiones del primero. La lógica que se repetía entre dos <em>marts</em> nos llevó a la capa <code>intermediate</code>.</li>
-<li>En el Caso 3 escribimos lo que sabíamos del proyecto y lo que dábamos por supuesto. Y las pruebas encontraron dos cosas que no sabíamos: que el grano del hecho no era el que habíamos declarado, y que la dimensión de fecha se había quedado corta al añadir el segundo hecho.</li>
+<li>En el <a href="#caso-1-creando-la-estrella">Caso 1</a> reconstruimos la estrella como modelos versionados: las tablas crudas declaradas como fuentes, una capa de <em>staging</em> que limpia y renombra, y los <em>marts</em> con las dimensiones, el hecho y el informe de negocio.</li>
+<li>En el <a href="#caso-2-incorporando-otra-fuente">Caso 2</a> entró una segunda fuente que ni siquiera es una tabla —un fichero <em>parquet</em> depositado en el lago— y con ella un segundo hecho que reutiliza las dimensiones del primero. La lógica que se repetía entre dos <em>marts</em> nos llevó a la capa <code>intermediate</code>.</li>
+<li>En el <a href="#caso-3-documentacion-y-prueba">Caso 3</a> escribimos lo que sabíamos del proyecto y lo que dábamos por supuesto. Y las pruebas encontraron dos cosas que no sabíamos: que el grano del hecho no era el que habíamos declarado, y que la dimensión de fecha se había quedado corta al añadir el segundo hecho.</li>
 </ol>
 <p>En ningún momento le hemos dicho a <abbr title="data build tool">dbt</abbr> en qué orden ejecutar nada. El grafo sale solo de las llamadas a <code>source()</code> y <code>ref()</code>, y es el mismo que ordena el <code>dbt run</code>, el que decide qué reconstruir con <code>--select modelo+</code> y el que se dibuja en la documentación.</p>
 <p>Y todo el movimiento de datos lo ha hecho el motor —<em>DuckDB</em>—, con <abbr title="data build tool">dbt</abbr> limitándose a orquestar sentencias <code>SELECT</code>. Esa es la esencia del <abbr title="Extract, Load, Transform">ELT</abbr>: la <strong>E</strong> y la <strong>L</strong> se hacen una sola vez, y la <strong>T</strong> se repite tantas veces como haga falta, con <abbr title="Structured Query Language">SQL</abbr> versionado y sin tocar nunca los datos originales.</p>
@@ -6434,21 +6434,21 @@ treeView-beta
 <p>Las actividades parten del proyecto <code>iabd_retail</code> que hemos construido a lo largo de los tres casos. Para cada actividad, debes adjuntar capturas de pantalla o el texto de la salida del terminal que demuestren que la has completado.</p>
 <ol>
 <li>
-<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 2p) Montar y verificar el proyecto completo. Deja el proyecto funcionando de principio a fin y demuéstralo con cuatro evidencias:</p>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 3p) Realiza los casos 1, 2 y 4, dejando el proyecto funcionando de principio a fin y demuéstralo con cuatro evidencias:</p>
 <ul>
 <li>El <code>dbt run</code> completo. Deben construirse <ins>15 modelos</ins>: siete de <em>staging</em>, uno intermedio y siete <em>marts</em>.</li>
 <li>El inventario de lo que ha quedado en el almacén, consultando <code>information_schema.tables</code> del esquema <code>main</code>. Deben salir <ins>7 tablas y 8 vistas</ins>; comprueba que las que son vistas se corresponden con las carpetas que las declaran así.</li>
 <li>El <code>dbt test</code> con las <ins>8 pruebas</ins> en verde y sin ningún aviso de obsolescencia.</li>
-<li>Una cifra de negocio: el contenido de <code>tasa_devolucion_departamento</code>.
-Por último, genera la documentación y localiza en el grafo de linaje el camino que va desde el fichero <em>parquet</em> del lago hasta ese último <em>mart</em>. Anota por cuántos modelos pasa.</li>
+<li>Una cifra de negocio: el contenido de <code>tasa_devolucion_departamento</code>.</li>
 </ul>
+<p>Por último, genera la documentación y localiza en el grafo de linaje el camino que va desde el fichero <em>parquet</em> del lago hasta ese último <em>mart</em>. Anota por cuántos modelos pasa.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>Si <code>dbt run</code> falla con un error de bloqueo, es que tienes una consola de <em>DuckDB</em> abierta contra el mismo fichero. Recuerda que solo admite un proceso escritor.</p>
 </div>
 </li>
 <li>
-<p>(<abbr title="Valida las técnicas de Big Data para transformar una gran cantidad de datos en información significativa, facilitando la toma de decisiones de negocios.">RABDA.5</abbr> / <abbr title="Se ha realizado la limpieza y transformación de datos en base a los objetivos predeterminados.">CEBDA.5b</abbr> / 2p) Limpieza en staging. En <code>stg_customers</code>, además de renombrar las columnas, normaliza el email a minúsculas y añade una columna <code>nombre_completo</code> que concatene nombre y apellido.</p>
+<p>(<abbr title="Valida las técnicas de Big Data para transformar una gran cantidad de datos en información significativa, facilitando la toma de decisiones de negocios.">RABDA.5</abbr> / <abbr title="Se ha realizado la limpieza y transformación de datos en base a los objetivos predeterminados.">CEBDA.5b</abbr> / 2p) En <code>stg_customers</code>, además de renombrar las columnas, normaliza el email a minúsculas y añade una columna <code>nombre_completo</code> que concatene nombre y apellido.</p>
 <p>Después responde a dos preguntas, en un comentario dentro del propio modelo:</p>
 <ul>
 <li>¿Por qué esta limpieza va en <em>staging</em> y no dentro de <code>dim_cliente</code>?</li>
@@ -6458,21 +6458,23 @@ Por último, genera la documentación y localiza en el grafo de linaje el camino
 <p>Ejecuta <code>dbt run --select stg_customers+</code> y comprueba que la dimensión se reconstruye sin errores.</p>
 </li>
 <li>
-<p>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RASBD.1</abbr> / <abbr title="Se ha construido un conjunto de datos complejos y se han relacionado entre sí.">CESBD.1d</abbr> / 3p) Un informe mensual de ventas. Crea el <em>mart</em> <code>ventas_mensuales</code>, que devuelva por año y mes el número de pedidos entregados y los ingresos totales, con el nombre del mes en lugar del número.</p>
-<p>Antes de escribir el <abbr title="Structured Query Language">SQL</abbr>, decide <ins>de qué modelo partes</ins>: tienes <code>fact_ventas</code> y tienes <code>int_ventas_enriquecidas</code>. Justifica la elección en un comentario, porque no da igual.
-Sobre la materialización:
-* Créalo primero como vista, declarándolo con un bloque <code>config()</code> en el propio modelo para llevarle la contraria a su carpeta.
-* Comprueba en <code>information_schema.tables</code> que el objeto es efectivamente una <code>VIEW</code>.
-* Quita el <code>config()</code>, vuelve a ejecutarlo y comprueba que ahora es una <code>BASE TABLE</code>.
-* Decide cuál de las dos dejas y explica por qué, pensando en cómo se va a consultar un informe así.</p>
+<p>(<abbr title="Aplica técnicas de análisis de datos que integran, procesan y analizan la información, adaptando e implementando sistemas que las utilicen.">RASBD.1</abbr> / <abbr title="Se ha construido un conjunto de datos complejos y se han relacionado entre sí.">CESBD.1d</abbr> / 2p) Crea el <em>mart</em> <code>ventas_mensuales</code>, que devuelva por año y mes el número de pedidos entregados y los ingresos totales, con el nombre del mes en lugar del número.</p>
+<p>Antes de escribir el <abbr title="Structured Query Language">SQL</abbr>, decide de qué modelo partes: tienes <code>fact_ventas</code> y <code>int_ventas_enriquecidas</code>. Justifica la elección en un comentario, porque no da igual.</p>
+<p>Sobre la materialización:</p>
+<ul>
+<li>Créalo primero como vista, declarándolo con un bloque <code>config()</code> en el propio modelo para llevarle la contraria a su carpeta.</li>
+<li>Comprueba en <code>information_schema.tables</code> que el objeto es efectivamente una <code>VIEW</code>.</li>
+<li>Quita el <code>config()</code>, vuelve a ejecutarlo y comprueba que ahora es una <code>BASE TABLE</code>.</li>
+<li>Decide cuál de las dos dejas y explica por qué, pensando en cómo se va a consultar un informe así.</li>
+</ul>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>El nombre del mes ya está calculado en <code>dim_fecha</code>, junto con el trimestre y el día de la semana. No hay que volver a derivarlo.</p>
 </div>
 </li>
 <li>
-<p>(<abbr title="Genera mecanismos de integridad de los datos, comprobando su mantenimiento en los sistemas de ficheros distribuidos y valorando la sobrecarga que conlleva en el tratamiento de los datos. (5 horas)">RABDA.3</abbr> <abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se ha valorado la importancia de la calidad de los datos en los sistemas de ficheros distribuidos.">CEBDA.3a</abbr> <abbr title="Se han presentado los resultados y las soluciones al cliente final en una forma fácil de interpretar.">CEBDA.1e</abbr> / 4p) Documentar y probar las devoluciones. Haz con <code>fact_devoluciones</code> lo mismo que hicimos en clase con <code>fact_ventas</code>: descríbelo en el YAML y declárale pruebas.
-    En la parte de documentación, describe el modelo y sus columnas. Céntrate en lo que no se deduce leyendo el nombre de la columna: cuál es el grano, qué columnas vienen del fichero del lago y cuáles se han resuelto contra las dimensiones.</p>
+<p>(<abbr title="Genera mecanismos de integridad de los datos, comprobando su mantenimiento en los sistemas de ficheros distribuidos y valorando la sobrecarga que conlleva en el tratamiento de los datos. (5 horas)">RABDA.3</abbr> <abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se ha valorado la importancia de la calidad de los datos en los sistemas de ficheros distribuidos.">CEBDA.3a</abbr> <abbr title="Se han presentado los resultados y las soluciones al cliente final en una forma fácil de interpretar.">CEBDA.1e</abbr> / 2p) Documenta y prueba las devoluciones, igual que hicimos con <code>fact_ventas</code>.</p>
+<p>En la parte de documentación, describe el modelo y sus columnas. Céntrate en lo que no se deduce leyendo el nombre de la columna: cuál es el grano, qué columnas vienen del fichero del lago y cuáles se han resuelto contra las dimensiones.</p>
 <p>En la parte de pruebas, declara al menos estas cinco:</p>
 <table>
 <thead>
@@ -6518,7 +6520,7 @@ Sobre la materialización:
 </ul>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>Para los <code>accepted_values</code> no te fíes de la memoria: mira primero qué valores hay de verdad con un <code>select distinct motivo from main.fact_devoluciones</code>. Y recuerda que los parámetros de una prueba van anidados bajo <code>arguments:</code>.</p>
+<p>Para los <code>accepted_values</code>,  mira primero qué valores hay de verdad recuperando con una consulta los valores distintos.</p>
 </div>
 </li>
 </ol>
