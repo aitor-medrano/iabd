@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: fact_ventas
+    description: "Hechos de venta con grano de línea de pedido."
+    columns:
+      - name: linea_id
+        description: "Clave del hecho: identificador de la línea de pedido en el origen."
+        data_tests:
+          - unique
+          - not_null
+      - name: pedido_id
+        description: "Dimensión degenerada: identificador del pedido, sin dimensión propia."
+        data_tests:
+          - not_null
+      - name: producto_sk
+        description: "Clave subrogada del producto. -1 si el producto no está en la dimensión."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:                      
+                to: ref('dim_producto')
+                field: producto_sk
+      - name: estado
+        description: "Estado del pedido tal y como viene del origen."
+        data_tests:
+          - accepted_values:
+              arguments:                      
+                values: ['CANCELED','CLOSED','COMPLETE','ON_HOLD','PAYMENT_REVIEW',
+                         'PENDING','PENDING_PAYMENT','PROCESSING','SUSPECTED_FRAUD']
+
+  - name: fact_devoluciones
+    description: "Hechos de devolución con grano de línea devuelta."
+    columns:
+      - name: fecha_id
+        description: "Fecha de la devolución. Apunta a la dimensión conformada de fecha."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:                      # <-- y aquí
+                to: ref('dim_fecha')
+                field: fecha_id

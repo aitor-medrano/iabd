@@ -6,9 +6,13 @@
   
     
     as (
-      with limites as (
-    select min(fecha) as desde, max(fecha) as hasta
-    from "retail_el"."main"."stg_orders"
+      with fechas as (
+    select fecha from "retail_el"."main"."stg_orders"
+    union all
+    select fecha from "retail_el"."main"."stg_devoluciones"
+),
+limites as (
+    select min(fecha) as desde, max(fecha) as hasta from fechas
 ),
 dias as (
     select unnest(range(
@@ -23,10 +27,10 @@ select
     quarter(fecha_id)  as trimestre,
     month(fecha_id)    as mes,
     ['enero','febrero','marzo','abril','mayo','junio','julio',
-     'agosto','septiembre','octubre','noviembre','diciembre'][month(fecha_id)] as mes_nombre,
+        'agosto','septiembre','octubre','noviembre','diciembre'][month(fecha_id)] as mes_nombre,
     isodow(fecha_id)   as dia_semana,
     ['lunes','martes','miércoles','jueves','viernes','sábado',
-     'domingo'][isodow(fecha_id)] as dia_nombre,
+        'domingo'][isodow(fecha_id)] as dia_nombre,
     isodow(fecha_id) >= 6 as es_finde
 from dias
     );
