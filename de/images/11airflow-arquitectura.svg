@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif">
+  <!--
+    Paleta del bloque:
+      #2b3a42 oscuro (metadatos, numeración, contenedores ajenos a Airflow)
+      #4f8a6d verde (contenedores de Airflow)
+      #eef6f1 verde claro (piezas internas de un contenedor)
+      #c0603f terracota (carpetas del anfitrión y almacenamiento)
+      #2f6fed azul (flechas de datos)
+      #8a8f98 gris (flechas de control, discontinuas)
+    Los números coinciden con los del diagrama lógico (11airflow-componentes.svg).
+  -->
+  <defs>
+    <marker id="fa" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#2f6fed"/>
+    </marker>
+    <marker id="fg" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#8a8f98"/>
+    </marker>
+    <marker id="ft" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#c0603f"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="540" fill="#ffffff"/>
+
+  <!-- ===== Flechas ===== -->
+  <!-- 6: navegador -> api-server -->
+  <line x1="220" y1="62" x2="298" y2="62" stroke="#8a8f98" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#fg)"/>
+  <text x="259" y="84" text-anchor="middle" font-size="11" fill="#5f6670">puerto 8082</text>
+  <!-- api-server -> postgres -->
+  <line x1="300" y1="100" x2="224" y2="188" stroke="#8a8f98" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#fg)"/>
+  <!-- 3: scheduler -> postgres -->
+  <line x1="300" y1="318" x2="224" y2="262" stroke="#8a8f98" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#fg)"/>
+  <!-- 2: dag-processor -> postgres -->
+  <path d="M 300 432 C 250 420, 160 360, 125 278" fill="none" stroke="#8a8f98" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#fg)"/>
+  <!-- 1: carpeta dags -> dag-processor (montaje) -->
+  <line x1="220" y1="470" x2="298" y2="470" stroke="#c0603f" stroke-width="2" stroke-dasharray="2 3" marker-end="url(#ft)"/>
+
+  <!-- Datos: procesos -> mysql / workspace / minio -->
+  <path d="M 542 212 C 600 200, 620 90, 678 70" fill="none" stroke="#2f6fed" stroke-width="2.5" marker-end="url(#fa)"/>
+  <text x="636" y="146" font-size="11" fill="#2f6fed">dlt lee</text>
+  <line x1="542" y1="230" x2="678" y2="230" stroke="#2f6fed" stroke-width="2.5" marker-end="url(#fa)"/>
+  <text x="610" y="222" text-anchor="middle" font-size="11" fill="#2f6fed">dlt y dbt</text>
+  <path d="M 542 248 C 600 260, 620 330, 678 338" fill="none" stroke="#2f6fed" stroke-width="2.5" marker-end="url(#fa)"/>
+  <text x="604" y="318" font-size="11" fill="#2f6fed">publicar</text>
+  <!-- lab -> workspace (montaje compartido) -->
+  <path d="M 920 470 L 940 470 L 940 230 L 922 230" fill="none" stroke="#c0603f" stroke-width="2" stroke-dasharray="2 3" marker-end="url(#ft)"/>
+
+  <!-- ===== Cajas ===== -->
+  <!-- Navegador -->
+  <rect x="30" y="34" width="190" height="56" rx="8" fill="#ffffff" stroke="#2b3a42" stroke-width="2"/>
+  <text x="125" y="58" text-anchor="middle" font-size="14" font-weight="600" fill="#2b3a42">Navegador</text>
+  <text x="125" y="76" text-anchor="middle" font-size="12" fill="#2b3a42">localhost:8082</text>
+
+  <!-- postgres -->
+  <rect x="30" y="190" width="190" height="86" rx="10" fill="#2b3a42"/>
+  <text x="125" y="222" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">iabd-de-</text>
+  <text x="125" y="239" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">postgres-airflow</text>
+  <text x="125" y="260" text-anchor="middle" font-size="12" fill="#ffffff">base de metadatos</text>
+
+  <!-- carpeta dags -->
+  <rect x="30" y="440" width="190" height="62" rx="8" fill="#ffffff" stroke="#c0603f" stroke-width="2"/>
+  <text x="125" y="464" text-anchor="middle" font-size="14" font-weight="600" fill="#c0603f">./airflow/dags</text>
+  <text x="125" y="482" text-anchor="middle" font-size="11" fill="#c0603f">montada en /opt/airflow/dags</text>
+  <text x="125" y="496" text-anchor="middle" font-size="11" fill="#c0603f">de todos los contenedores</text>
+
+  <!-- api-server -->
+  <rect x="300" y="30" width="260" height="84" rx="10" fill="#4f8a6d"/>
+  <text x="430" y="58" text-anchor="middle" font-size="14" font-weight="600" fill="#ffffff">iabd-de-airflow-apiserver</text>
+  <text x="430" y="78" text-anchor="middle" font-size="12" fill="#ffffff">API server</text>
+  <text x="430" y="96" text-anchor="middle" font-size="12" fill="#ffffff">interfaz web · API REST · Execution API</text>
+
+  <!-- contenedor scheduler -->
+  <rect x="300" y="160" width="260" height="210" rx="10" fill="#4f8a6d"/>
+  <text x="314" y="182" font-size="14" font-weight="600" fill="#ffffff">iabd-de-airflow-scheduler</text>
+  <rect x="318" y="196" width="224" height="72" rx="8" fill="#eef6f1"/>
+  <text x="400" y="224" text-anchor="middle" font-size="13" font-weight="600" fill="#2b3a42">procesos de tarea</text>
+  <text x="400" y="242" text-anchor="middle" font-size="11" fill="#2b3a42">los workers del</text>
+  <text x="400" y="256" text-anchor="middle" font-size="11" fill="#2b3a42">LocalExecutor</text>
+  <rect x="318" y="298" width="224" height="56" rx="8" fill="#eef6f1"/>
+  <text x="430" y="322" text-anchor="middle" font-size="13" font-weight="600" fill="#2b3a42">Scheduler</text>
+  <text x="430" y="340" text-anchor="middle" font-size="11" fill="#2b3a42">+ LocalExecutor</text>
+
+  <!-- dag-processor -->
+  <rect x="300" y="420" width="260" height="82" rx="10" fill="#4f8a6d"/>
+  <text x="430" y="452" text-anchor="middle" font-size="14" font-weight="600" fill="#ffffff">iabd-de-airflow-dag-processor</text>
+  <text x="430" y="472" text-anchor="middle" font-size="12" fill="#ffffff">DAG processor</text>
+
+  <!-- mysql-retail -->
+  <rect x="680" y="34" width="240" height="62" rx="10" fill="#ffffff" stroke="#2b3a42" stroke-width="2"/>
+  <text x="800" y="60" text-anchor="middle" font-size="14" font-weight="600" fill="#2b3a42">iabd-de-mysql-retail</text>
+  <text x="800" y="79" text-anchor="middle" font-size="12" fill="#2b3a42">retail_db, el origen</text>
+
+  <!-- workspace -->
+  <rect x="680" y="196" width="240" height="70" rx="8" fill="#ffffff" stroke="#c0603f" stroke-width="2"/>
+  <text x="800" y="222" text-anchor="middle" font-size="14" font-weight="600" fill="#c0603f">./workspace</text>
+  <text x="800" y="241" text-anchor="middle" font-size="11" fill="#c0603f">retail_el.duckdb · scripts · dbt</text>
+  <text x="800" y="256" text-anchor="middle" font-size="11" fill="#c0603f">montada en /workspace</text>
+
+  <!-- minio -->
+  <rect x="680" y="310" width="240" height="62" rx="10" fill="#ffffff" stroke="#c0603f" stroke-width="2"/>
+  <text x="800" y="336" text-anchor="middle" font-size="14" font-weight="600" fill="#c0603f">iabd-de-minio</text>
+  <text x="800" y="355" text-anchor="middle" font-size="12" fill="#c0603f">raw-data · processed</text>
+
+  <!-- lab -->
+  <rect x="680" y="440" width="240" height="62" rx="10" fill="#ffffff" stroke="#2b3a42" stroke-width="2"/>
+  <text x="800" y="466" text-anchor="middle" font-size="14" font-weight="600" fill="#2b3a42">iabd-de-lab</text>
+  <text x="800" y="485" text-anchor="middle" font-size="12" fill="#2b3a42">Jupyter · trabajo manual</text>
+  <text x="932" y="390" text-anchor="end" font-size="11" fill="#c0603f">mismo fichero</text>
+  <text x="932" y="404" text-anchor="end" font-size="11" fill="#c0603f">DuckDB</text>
+
+  <!-- 4 y 5 se dibujan encima del contenedor -->
+  <line x1="430" y1="297" x2="430" y2="271" stroke="#2b3a42" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#fg)"/>
+  <line x1="500" y1="195" x2="500" y2="116" stroke="#8a8f98" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#fg)"/>
+  <text x="510" y="142" font-size="11" fill="#5f6670">estado y logs</text>
+
+  <!-- ===== Pasos (mismos números que el diagrama lógico) ===== -->
+  <circle cx="259" cy="454" r="11" fill="#2b3a42"/><text x="259" y="458" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text>
+  <circle cx="196" cy="388" r="11" fill="#2b3a42"/><text x="196" y="392" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text>
+  <circle cx="252" cy="304" r="11" fill="#2b3a42"/><text x="252" y="308" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text>
+  <circle cx="455" cy="283" r="11" fill="#2b3a42"/><text x="455" y="287" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">4</text>
+  <circle cx="525" cy="168" r="11" fill="#2b3a42"/><text x="525" y="172" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">5</text>
+  <circle cx="259" cy="46" r="11" fill="#2b3a42"/><text x="259" y="50" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">6</text>
+
+  <!-- Leyenda -->
+  <line x1="30" y1="525" x2="64" y2="525" stroke="#8a8f98" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="72" y="529" font-size="12" fill="#2b3a42">control</text>
+  <line x1="140" y1="525" x2="174" y2="525" stroke="#2f6fed" stroke-width="2.5"/>
+  <text x="182" y="529" font-size="12" fill="#2b3a42">datos</text>
+  <line x1="240" y1="525" x2="274" y2="525" stroke="#c0603f" stroke-width="2" stroke-dasharray="2 3"/>
+  <text x="282" y="529" font-size="12" fill="#2b3a42">carpeta montada</text>
+</svg>

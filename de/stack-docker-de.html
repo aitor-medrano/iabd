@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Montaje de un stack Docker con HDFS, YARN, MinIO como object storage, Hive sobre metastore MySQL, Trino y un nodo de ingeniería de datos con DuckDB, dlt y dbt, para dar soporte a todo el bloque de ingeniería de datos.">
+        <meta name="description" content="Stack Docker Compose del bloque de ingeniería de datos con HDFS y YARN, MinIO como almacén de objetos, Hive Metastore sobre MySQL, Trino, un nodo de trabajo con DuckDB, dlt y dbt, y Airflow 3 para orquestar el ELT.">
       
       
       
@@ -74,7 +74,7 @@
   
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Stack Docker para Ingeniería de datos - Inteligencia Artificial y Big Data" />
-<meta property="og:description" content="Montaje de un stack Docker con HDFS, YARN, MinIO como object storage, Hive sobre metastore MySQL, Trino y un nodo de ingeniería de datos con DuckDB, dlt y dbt, para dar soporte a todo el bloque de ingeniería de datos." />
+<meta property="og:description" content="Stack Docker Compose del bloque de ingeniería de datos con HDFS y YARN, MinIO como almacén de objetos, Hive Metastore sobre MySQL, Trino, un nodo de trabajo con DuckDB, dlt y dbt, y Airflow 3 para orquestar el ELT." />
 <meta property="og:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/de/stack-docker-de.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
@@ -82,7 +82,7 @@
 <meta property="og:url" content="https://aitor-medrano.github.io/iabd/de/stack-docker-de.html" />
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:title" content="Stack Docker para Ingeniería de datos - Inteligencia Artificial y Big Data" />
-<meta property="twitter:description" content="Montaje de un stack Docker con HDFS, YARN, MinIO como object storage, Hive sobre metastore MySQL, Trino y un nodo de ingeniería de datos con DuckDB, dlt y dbt, para dar soporte a todo el bloque de ingeniería de datos." />
+<meta property="twitter:description" content="Stack Docker Compose del bloque de ingeniería de datos con HDFS y YARN, MinIO como almacén de objetos, Hive Metastore sobre MySQL, Trino, un nodo de trabajo con DuckDB, dlt y dbt, y Airflow 3 para orquestar el ELT." />
 <meta property="twitter:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/de/stack-docker-de.png" />
 </head>
   
@@ -1618,6 +1618,14 @@
   </span>
   
   
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
 
       </a>
     </li>
@@ -1764,6 +1772,19 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#contenido-de-la-carpeta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Contenido de la carpeta
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#arquitectura" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1791,11 +1812,11 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#profiles-disponibles" class="md-nav__link">
+  <a href="#profiles" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          Profiles disponibles
+          Profiles
         </span>
       
     </span>
@@ -1817,11 +1838,37 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#parar-y-volver-a-arrancar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Parar y volver a arrancar
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#servicios-y-puertos" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
           Servicios y puertos
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credenciales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Credenciales
         </span>
       
     </span>
@@ -1888,11 +1935,11 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mysql-metastore-y-mysql-retail" class="md-nav__link">
+  <a href="#mysql-retail-y-retail-init" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          mysql-metastore y mysql-retail
+          mysql-retail y retail-init
         </span>
       
     </span>
@@ -1901,11 +1948,11 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#hive-metastore" class="md-nav__link">
+  <a href="#mysql-metastore-y-hive-metastore" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          hive-metastore
+          mysql-metastore y hive-metastore
         </span>
       
     </span>
@@ -1957,7 +2004,7 @@
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          airflow
+          Airflow
         </span>
       
     </span>
@@ -1966,11 +2013,11 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#hdfs-init-minio-init-retail-init-y-airflow-init" class="md-nav__link">
+  <a href="#los-contenedores-de-inicializacion" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          hdfs-init, minio-init, retail-init y airflow-init
+          Los contenedores de inicialización
         </span>
       
     </span>
@@ -1980,6 +2027,19 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Versiones
+        </span>
+      
+    </span>
+  </a>
   
 </li>
       
@@ -4346,6 +4406,19 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#contenido-de-la-carpeta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Contenido de la carpeta
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#arquitectura" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4373,11 +4446,11 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#profiles-disponibles" class="md-nav__link">
+  <a href="#profiles" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          Profiles disponibles
+          Profiles
         </span>
       
     </span>
@@ -4399,11 +4472,37 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#parar-y-volver-a-arrancar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Parar y volver a arrancar
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#servicios-y-puertos" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
           Servicios y puertos
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credenciales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Credenciales
         </span>
       
     </span>
@@ -4470,11 +4569,11 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mysql-metastore-y-mysql-retail" class="md-nav__link">
+  <a href="#mysql-retail-y-retail-init" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          mysql-metastore y mysql-retail
+          mysql-retail y retail-init
         </span>
       
     </span>
@@ -4483,11 +4582,11 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#hive-metastore" class="md-nav__link">
+  <a href="#mysql-metastore-y-hive-metastore" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          hive-metastore
+          mysql-metastore y hive-metastore
         </span>
       
     </span>
@@ -4539,7 +4638,7 @@
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          airflow
+          Airflow
         </span>
       
     </span>
@@ -4548,11 +4647,11 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#hdfs-init-minio-init-retail-init-y-airflow-init" class="md-nav__link">
+  <a href="#los-contenedores-de-inicializacion" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          hdfs-init, minio-init, retail-init y airflow-init
+          Los contenedores de inicialización
         </span>
       
     </span>
@@ -4562,6 +4661,19 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Versiones
+        </span>
+      
+    </span>
+  </a>
   
 </li>
       
@@ -4741,37 +4853,60 @@
 <p><em>Changelog:</em></p>
 <ul>
 <li>Nueva creación — Julio 2026</li>
+<li>Actualización — Noviembre 2026: Airflow 3 (<code>api-server</code> y <code>dag-processor</code>), catálogos de <em>Trino</em> por almacenamiento, nodo <code>lab</code> independiente de <em>MinIO</em>, profiles revisados y versiones actualizadas.</li>
 </ul>
 </div>
 <h1 id="stack-docker-para-ingenieria-de-datos"><em>Stack</em> <em>Docker</em> para Ingeniería de datos<a class="headerlink" href="#stack-docker-para-ingenieria-de-datos" title="Permanent link">&para;</a></h1>
-<p>A lo largo del bloque de ingeniería de datos vamos a necesitar bastantes piezas: un sistema de ficheros distribuido y un almacén de objetos donde dejar los datos, un catálogo que sepa qué tablas hay y dónde viven, uno o varios motores para consultarlos, y un orquestador que lo coordine todo. En vez de instalar cada herramienta por separado, las levantamos mediante <em>Docker Compose</em>, de manera que con un único comando tengamos el entorno completo y reproducible.</p>
-<p>La clave de este montaje es que <strong>nada arranca por defecto</strong>: todos los servicios están detrás de <em>profiles</em>. Encendemos sólo las piezas que necesitamos en cada sesión, lo que ahorra memoria y evita levantar Hadoop entero cuando sólo queremos trastear con <em>DuckDB</em>.</p>
+<p>A lo largo del bloque de ingeniería de datos necesitamos bastantes piezas: un sistema de ficheros distribuido y un almacén de objetos donde dejar los datos, un catálogo que sepa qué tablas hay y dónde viven, varios motores para consultarlos, una base de datos operacional de la que extraer, y un orquestador que lo coordine todo. En vez de instalar cada herramienta por separado, las levantamos con <em>Docker Compose</em>, de manera que con un único comando tenemos un entorno completo y reproducible.</p>
+<p>Esta página es la referencia del entorno: qué contiene, cómo se arranca en cada sesión y qué papel cumple cada contenedor. No hace falta leerla de una sentada; vuelve a ella cada vez que una sesión te pida levantar algo nuevo.</p>
 <div class="admonition info">
 <p class="admonition-title">Un stack docente, no de producción</p>
-<p>Este montaje prioriza que las cosas funcionen a la primera en el aula. Hemos desactivado los permisos de <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em>, los servicios de <em>Hadoop</em> corren como <code>root</code> y ni <em>JupyterLab</em> ni <em>MinIO</em> piden credenciales robustas. En un entorno real ninguna de esas decisiones sería aceptable, pero aquí nos ahorran fricción para centrarnos en lo que nos interesa.</p>
+<p>Este montaje prioriza que las cosas funcionen a la primera en el aula. Los permisos de <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em> están desactivados, los servicios de <em>Hadoop</em> corren como <code>root</code>, <em>JupyterLab</em> no pide token y todas las credenciales son triviales y están escritas en claro en el fichero <code>.env</code>. En un entorno real ninguna de esas decisiones sería aceptable, pero aquí nos ahorran fricción para centrarnos en lo que nos interesa.</p>
 </div>
+<h2 id="contenido-de-la-carpeta">Contenido de la carpeta<a class="headerlink" href="#contenido-de-la-carpeta" title="Permanent link">&para;</a></h2>
+<p>Todo el stack vive en una carpeta <code>docker-stack</code> con esta estructura:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>docker-stack/
+<span class="linenos" data-linenos=" 2 "></span>├── docker-compose.yml      # definición de todos los servicios
+<span class="linenos" data-linenos=" 3 "></span>├── .env                    # versiones de las imágenes y credenciales
+<span class="linenos" data-linenos=" 4 "></span>├── hadoop/
+<span class="linenos" data-linenos=" 5 "></span>│   ├── config/             # core-site, hdfs-site, yarn-site y mapred-site
+<span class="linenos" data-linenos=" 6 "></span>│   └── scripts/            # start-hdfs.sh: formatea el namenode sólo la primera vez
+<span class="linenos" data-linenos=" 7 "></span>├── hive/
+<span class="linenos" data-linenos=" 8 "></span>│   ├── Dockerfile          # Hive + driver JDBC de MySQL + JAR de S3A
+<span class="linenos" data-linenos=" 9 "></span>│   └── conf/               # core-site (HDFS y MinIO) y hdfs-site
+<span class="linenos" data-linenos="10 "></span>├── trino/
+<span class="linenos" data-linenos="11 "></span>│   ├── catalog/            # un fichero .properties por catálogo
+<span class="linenos" data-linenos="12 "></span>│   └── hadoop/             # configuración del cliente HDFS de Trino
+<span class="linenos" data-linenos="13 "></span>├── duckdb/
+<span class="linenos" data-linenos="14 "></span>│   ├── Dockerfile          # imagen del nodo lab
+<span class="linenos" data-linenos="15 "></span>│   └── requirements.txt    # duckdb, dlt, dbt, boto3, jupyterlab...
+<span class="linenos" data-linenos="16 "></span>├── airflow/
+<span class="linenos" data-linenos="17 "></span>│   ├── Dockerfile          # Airflow + entorno virtual con dlt y dbt
+<span class="linenos" data-linenos="18 "></span>│   └── dags/               # aquí dejamos nuestros DAG
+<span class="linenos" data-linenos="19 "></span>├── sample-data/            # retail_db: create_db.sql, CSV y parquet
+<span class="linenos" data-linenos="20 "></span>└── workspace/              # nuestra carpeta de trabajo (lab y Airflow)
+</code></pre></div>
+<p>Hay dos carpetas que conviene distinguir. <code>sample-data</code> contiene los datos de partida y se monta en modo sólo lectura, así que nunca la vamos a estropear. <code>workspace</code>, en cambio, es nuestra: empieza vacía y en ella iremos dejando cuadernos, scripts de <em>dlt</em>, proyectos de <em>dbt</em> y ficheros <em>DuckDB</em> sesión a sesión. Como es una carpeta del anfitrión montada en los contenedores, lo que guardemos ahí sobrevive aunque borremos y recreemos el stack.</p>
 <h2 id="arquitectura">Arquitectura<a class="headerlink" href="#arquitectura" title="Permanent link">&para;</a></h2>
-<p>El stack se organiza en capas. Arriba, la orquestación con <em>Airflow</em>; debajo, los motores que ejecutan nuestro trabajo; después el catálogo y el origen de datos; luego el almacenamiento, que aquí tiene dos sabores (<em><abbr title="Hadoop Distributed File System">HDFS</abbr></em> y <em>MinIO</em>); y por último el cómputo de <em><abbr title="Yet Another Resource Negotiator">YARN</abbr></em>. Aparte quedan varios contenedores que se ejecutan una sola vez para dejar el entorno preparado.</p>
+<p>El stack se organiza en capas. Arriba, la orquestación con <em>Airflow</em>; debajo, los motores con los que trabajamos; después el catálogo y la base de datos de origen; luego el almacenamiento, que aquí tiene tres formas (<em><abbr title="Hadoop Distributed File System">HDFS</abbr></em>, <em>MinIO</em> y la carpeta compartida <code>workspace</code>); y por último el cómputo de <em><abbr title="Yet Another Resource Negotiator">YARN</abbr></em>. Aparte quedan los contenedores que se ejecutan una sola vez para dejar el entorno preparado.</p>
 <figure>
   <img alt="Arquitectura del stack Docker de ingeniería de datos" src="images/99stack-de-arquitectura.svg" />
 <br />
-<figcaption>Las cuatro capas del stack, con HDFS y MinIO como almacenamiento y Airflow orquestando el ELT</figcaption>
+<figcaption>Capas del stack: Airflow orquesta, lab y Trino procesan, el metastore cataloga, y HDFS, MinIO y workspace almacenan</figcaption>
 </figure>
 <p>Si nos fijamos en las flechas, hay tres tipos de tráfico y conviene tenerlos claros desde el principio:</p>
 <ul>
-<li>Las flechas oscuras son <strong>metadatos</strong>: <em>Trino</em> le pregunta al metastore qué columnas tiene una tabla y en qué ruta están sus ficheros.</li>
-<li>Las flechas azules son <strong>datos</strong>: una vez conocida la ruta, el motor va directamente a por los ficheros al <code>datanode</code> o a <em>MinIO</em>.</li>
-<li>Las flechas verdes son <strong>orquestación</strong>: <em>Airflow</em> dispara la tubería <em>dlt → dbt</em> que se ejecuta en el nodo <code>lab</code>.</li>
+<li>Las flechas oscuras son de metadatos o de control: <em>Trino</em> le pregunta al metastore qué columnas tiene una tabla y en qué ruta están sus ficheros, y los componentes de <em>Airflow</em> guardan su estado en <em>Postgres</em>.</li>
+<li>Las flechas azules son de datos: una vez conocida la ruta, el motor va directamente a por los ficheros al <code>datanode</code> o a <em>MinIO</em>, y <code>dlt</code> extrae las tablas de <code>mysql-retail</code>.</li>
+<li>La flecha verde es de orquestación: el planificador de <em>Airflow</em> ejecuta la tubería <em>dlt → dbt</em> sobre la misma carpeta <code>workspace</code> que usamos desde el nodo <code>lab</code>.</li>
 </ul>
-<p>Esta separación entre <em>dónde está el dato</em> y <em>el dato en sí</em> es la idea central de un lago de datos, y la volveremos a encontrar en <a href="../cloud/athena.html">Athena</a> sobre <em><abbr title="Simple Storage Service">S3</abbr></em> con el catálogo de <em>Glue</em>.</p>
+<p>La separación entre <em>dónde está el dato</em> y <em>el dato en sí</em> es la idea central de un lago de datos, y la volveremos a encontrar en <a href="../cloud/athena.html">Athena</a> sobre <em><abbr title="Simple Storage Service">S3</abbr></em> con el catálogo de <em>Glue</em>.</p>
 <h2 id="puesta-en-marcha">Puesta en marcha<a class="headerlink" href="#puesta-en-marcha" title="Permanent link">&para;</a></h2>
-<p>Necesitaremos <em>Docker</em> con <em>Docker Compose v2</em> y unos 8 GB de memoria disponibles.</p>
-<p>Este stack tiene bastantes servicios y rara vez los necesitamos todos a la vez: en la sesión de motores de consulta nos interesan <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em>, <em>Hive</em> y <em>Trino</em>, mientras que en las de ingesta y transformación sólo hacen falta <em>MinIO</em> y el nodo de <em>DuckDB/dlt/dbt</em>. Para no arrancar de más, todos los servicios están detrás de <em>profiles</em> de <em>Compose</em>. Esto tiene una consecuencia importante: un <code>docker compose up</code> a secas <strong>no arranca nada</strong>; hay que indicarle qué <em>profile</em> queremos.</p>
-<p>Por ejemplo, para arrancar el stack completo haríamos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker-compose<span class="w"> </span>--profile<span class="w"> </span>all<span class="w"> </span>up<span class="w"> </span>-d
-</code></pre></div>
-<h3 id="profiles-disponibles">Profiles disponibles<a class="headerlink" href="#profiles-disponibles" title="Permanent link">&para;</a></h3>
-<p>Hay dos niveles. Los <em>profiles de componente</em> encienden una pieza concreta del stack:</p>
+<p>Necesitaremos <em>Docker</em> con <em>Docker Compose v2</em> y, para levantar el stack completo, unos 8 GB de memoria libres. Todos los comandos de esta página se lanzan desde la carpeta <code>docker-stack</code>.</p>
+<p>Una vez <a href="resources/docker-stack.zip">descargado el <em>zip</em></a> con todos los archivos, lo descomprimimos en una carpeta de trabajo que nos sea cómoda, ya que accederemos a ella en numerosas ocasiones, ya sea para abrir cuadernos, dejar scripts de <em>dlt</em> o proyectos de <em>dbt</em>, o consultar los ficheros <em>DuckDB</em>. La carpeta <code>workspace</code> se crea vacía la primera vez que arrancamos el stack.</p>
+<h3 id="profiles">Profiles<a class="headerlink" href="#profiles" title="Permanent link">&para;</a></h3>
+<p>Este stack tiene diecinueve servicios y rara vez los necesitamos todos a la vez: en la sesión de motores de consulta nos interesan <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em>, <em>Hive</em> y <em>Trino</em>, mientras que en las de ingesta y transformación sólo hacen falta el nodo <code>lab</code> y la base de datos de origen. Para no arrancar de más, todos los servicios están detrás de <em>profiles</em> de <em>Compose</em>. Esto tiene una consecuencia importante: un <code>docker compose up -d</code> a secas no arranca nada; hay que indicarle qué <em>profile</em> queremos.</p>
+<p>Hay dos niveles. Los profiles de componente encienden una pieza concreta del stack:</p>
 <table>
 <thead>
 <tr>
@@ -4784,36 +4919,31 @@
 <tr>
 <td><code>hadoop</code></td>
 <td>namenode, datanode, resourcemanager, nodemanager, hdfs-init</td>
-<td><abbr title="Hadoop Distributed File System">HDFS</abbr> + <abbr title="Yet Another Resource Negotiator">YARN</abbr></td>
+<td><em><abbr title="Hadoop Distributed File System">HDFS</abbr></em> + <em><abbr title="Yet Another Resource Negotiator">YARN</abbr></em></td>
 </tr>
 <tr>
 <td><code>minio</code></td>
 <td>minio, minio-init</td>
-<td>Object storage (el lago)</td>
+<td>Almacén de objetos</td>
 </tr>
 <tr>
 <td><code>hive</code></td>
 <td>mysql-metastore, hive-metastore, hiveserver2</td>
-<td>Catálogo de Hive</td>
-</tr>
-<tr>
-<td><code>trino</code></td>
-<td>trino</td>
-<td>Motor de consulta sobre el lago</td>
+<td>Catálogo de <em>Hive</em>. Necesita <code>hadoop</code></td>
 </tr>
 <tr>
 <td><code>lab</code></td>
-<td>mysql-retail, lab, retail-init</td>
-<td>DuckDB + dlt + dbt (y <code>retail_db</code>)</td>
+<td>lab, mysql-retail, retail-init</td>
+<td><em>DuckDB</em> + <em>dlt</em> + <em>dbt</em> + <em>JupyterLab</em>, con <code>retail_db</code></td>
 </tr>
 <tr>
 <td><code>airflow</code></td>
-<td>postgres-airflow, airflow-init, airflow-webserver, airflow-scheduler</td>
-<td>Orquestación del <abbr title="Extract, Load, Transform">ELT</abbr></td>
+<td>postgres-airflow, airflow-init, airflow-apiserver, airflow-scheduler, airflow-dag-processor</td>
+<td>Orquestación (arrastra también <em>MinIO</em> y <code>retail_db</code>)</td>
 </tr>
 </tbody>
 </table>
-<p>Por encima hay tres <em>profiles paraguas</em> que combinan los anteriores, para no tener que recordarlos sesión a sesión:</p>
+<p>Por encima hay tres profiles paraguas que combinan los anteriores, para no tener que recordarlos sesión a sesión:</p>
 <table>
 <thead>
 <tr>
@@ -4825,13 +4955,13 @@
 <tbody>
 <tr>
 <td><code>lake</code></td>
-<td>hadoop + minio + hive + trino</td>
-<td>Consultar el lago (sesiones 3 a 7)</td>
+<td>hadoop + hive + trino + minio + <code>retail_db</code></td>
+<td>Consultar el lago</td>
 </tr>
 <tr>
 <td><code>elt</code></td>
 <td>minio + lab + airflow</td>
-<td>Ingesta, dbt y orquestación (sesiones 8 a 11)</td>
+<td>Ingesta, transformación y orquestación</td>
 </tr>
 <tr>
 <td><code>all</code></td>
@@ -4840,45 +4970,61 @@
 </tr>
 </tbody>
 </table>
-<p>A continuación se muestra un diagrama de cómo se relacionan los <em>profiles</em> de componente y los <em>profiles</em> paraguas, y qué servicios comparten:</p>
+<p>Tres detalles que no se ven a simple vista en las tablas:</p>
+<ul>
+<li><em>Trino</em> no tiene profile propio: sólo arranca con <code>lake</code> o con <code>all</code>, porque sin metastore ni almacenamiento no tendría nada que consultar.</li>
+<li><code>hive</code> no se puede levantar solo. El metastore espera a que <code>hdfs-init</code> haya creado el directorio del <em>warehouse</em> en <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em>, así que siempre va acompañado de <code>hadoop</code> (o dentro de <code>lake</code>).</li>
+<li>La base de datos de origen (<code>mysql-retail</code> y su contenedor de carga <code>retail-init</code>) tampoco tiene profile propio: la arrastran <code>lab</code>, <code>airflow</code>, <code>lake</code> y <code>elt</code>, que son todos los escenarios que la necesitan. En <code>lake</code> está porque <em>Trino</em> federa consultas contra <code>retail_db</code> mediante su conector <em>MySQL</em>.</li>
+</ul>
+<p>El siguiente diagrama resume qué contenedores enciende cada profile y cuáles comparten <code>lake</code> y <code>elt</code>:</p>
 <figure>
   <img alt="Relación entre profiles y contenedores" src="images/99profiles-contenedores.svg" />
 <br />
 <figcaption>Profiles de componente, profiles paraguas y servicios compartidos</figcaption>
 </figure>
-<div class="admonition note">
-<p class="admonition-title">Las fuentes viajan con <code>lake</code></p>
-<p>Además de los cuatro componentes, <code>lake</code> arranca también <code>mysql-retail</code> y <code>retail-init</code>. El motivo es que en la sesión de motores de consulta <em>Trino</em> federa contra <code>retail_db</code> mediante su conector <em>MySQL</em>, así que la fuente tiene que estar disponible. El nodo <code>lab</code> en sí, en cambio, no forma parte de <code>lake</code>.</p>
-</div>
 <h3 id="arrancar-segun-la-sesion">Arrancar según la sesión<a class="headerlink" href="#arrancar-segun-la-sesion" title="Permanent link">&para;</a></h3>
-<p>Así pues, el primer paso es elegir qué <em>profile</em> queremos levantar según la sesión que vayamos a trabajar:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Ingesta, dbt, ELT y orquestación (sesiones 8 a 11): MinIO + nodo lab + Airflow</span>
-<span class="linenos" data-linenos=" 2 "></span>docker-compose<span class="w"> </span>--profile<span class="w"> </span>elt<span class="w"> </span>up<span class="w"> </span>-d
+<p>El primer paso de cada sesión es elegir qué profile levantamos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="c1"># Formatos, SQL analítico, dlt y dbt: nodo lab + retail_db</span>
+<span class="linenos" data-linenos=" 2 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>lab<span class="w"> </span>up<span class="w"> </span>-d
 <span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="c1"># Consultar el lago (sesiones 3 a 7): HDFS + Hive + Trino</span>
-<span class="linenos" data-linenos=" 5 "></span>docker-compose<span class="w"> </span>--profile<span class="w"> </span>lake<span class="w"> </span>up<span class="w"> </span>-d
+<span class="linenos" data-linenos=" 4 "></span><span class="c1"># Almacenamiento distribuido y motores de consulta: HDFS + MinIO + Hive + Trino</span>
+<span class="linenos" data-linenos=" 5 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>lake<span class="w"> </span>up<span class="w"> </span>-d
 <span class="linenos" data-linenos=" 6 "></span>
-<span class="linenos" data-linenos=" 7 "></span><span class="c1"># Todo el stack</span>
-<span class="linenos" data-linenos=" 8 "></span>docker-compose<span class="w"> </span>--profile<span class="w"> </span>all<span class="w"> </span>up<span class="w"> </span>-d
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># Orquestación con Airflow: MinIO + lab + Airflow</span>
+<span class="linenos" data-linenos=" 8 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>elt<span class="w"> </span>up<span class="w"> </span>-d
 <span class="linenos" data-linenos=" 9 "></span>
-<span class="linenos" data-linenos="10 "></span><span class="c1"># Estado y logs</span>
-<span class="linenos" data-linenos="11 "></span>docker<span class="w"> </span>compose<span class="w"> </span>ps
-<span class="linenos" data-linenos="12 "></span>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>hive-metastore<span class="w"> </span>trino
+<span class="linenos" data-linenos="10 "></span><span class="c1"># Todo el stack</span>
+<span class="linenos" data-linenos="11 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>all<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
-<p>Los <em>profiles</em> son combinables. Por ejemplo, en la sesión de motores de consulta, para comparar <em>Trino</em> y <em>DuckDB</em> sobre el mismo lago, añadimos el nodo lab al escenario <code>lake</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker-compose<span class="w"> </span>--profile<span class="w"> </span>lake,<span class="w"> </span>lab<span class="w"> </span>up<span class="w"> </span>-d
+<p>Los profiles se pueden combinar repitiendo la opción. Por ejemplo, en la sesión de <a href="motores-consulta.html">motores de consulta</a>, para comparar <em>Trino</em> y <em>DuckDB</em> sobre el mismo lago, añadimos el nodo <code>lab</code> al escenario <code>lake</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>lake<span class="w"> </span>--profile<span class="w"> </span>lab<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
-<p>El arranque está encadenado mediante <code>healthcheck</code> y <code>depends_on</code>, de modo que cada servicio espera a que el anterior esté realmente listo. En el escenario <code>lake</code> el orden es <code>namenode</code> → <code>datanode</code> → <code>hdfs-init</code> → <code>hive-metastore</code> → <code>hiveserver2</code> → <code>trino</code>; en <code>elt</code>, <code>minio</code> y <code>mysql</code> → <code>retail-init</code> → <code>lab</code>.</p>
+<p>Para comprobar el estado y seguir los logs:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>lake<span class="w"> </span>ps
+<span class="linenos" data-linenos="2 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>lake<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>hive-metastore<span class="w"> </span>trino
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">El primer arranque tarda</p>
+<p>La primera vez que levantamos un profile, <em>Docker</em> descarga las imágenes y además construye tres propias: <code>hive-mysql</code> (para <code>hive-metastore</code> y <code>hiveserver2</code>), <code>iabd-de-lab</code> y <code>iabd-de-airflow</code>. Puede llevar varios minutos. Los siguientes arranques ya reutilizan las imágenes.</p>
+</div>
+<p>El arranque está encadenado mediante <code>healthcheck</code> y <code>depends_on</code>, de modo que cada servicio espera a que el anterior esté realmente listo:</p>
+<ul>
+<li>En <code>lake</code>: <code>namenode</code> → <code>datanode</code> → <code>hdfs-init</code> → <code>hive-metastore</code> (que además espera a <code>mysql-metastore</code>) → <code>hiveserver2</code> y <code>trino</code>.</li>
+<li>En <code>lab</code>: <code>mysql-retail</code> → <code>retail-init</code> → <code>lab</code>.</li>
+<li>En <code>airflow</code>: <code>postgres-airflow</code> → <code>airflow-init</code> → <code>airflow-apiserver</code>, <code>airflow-scheduler</code> y <code>airflow-dag-processor</code>.</li>
+</ul>
 <div class="admonition info">
 <p class="admonition-title">Los init acaban en <em>exited</em></p>
-<p>Los contenedores <code>hdfs-init</code>, <code>minio-init</code>, <code>retail-init</code> y <code>airflow-init</code> hacen su trabajo y terminan. Verlos como <em>exited (0)</em> en <code>docker compose ps</code> es lo correcto, no es un error.</p>
+<p>Los contenedores <code>hdfs-init</code>, <code>minio-init</code>, <code>retail-init</code> y <code>airflow-init</code> hacen su trabajo y terminan. Verlos como <em>exited (0)</em> en <code>docker compose ps -a</code> es lo correcto, no es un error.</p>
 </div>
-<div class="admonition tip">
-<p class="admonition-title">Para el día a día, <code>stop</code>/<code>start</code> en vez de <code>down</code>/<code>up</code></p>
-<p>Una vez construido el stack, para apagarlo y encenderlo entre sesiones usa <code>docker compose stop</code> y <code>docker compose start</code>. Reserva <code>docker compose down</code> para cuando quieras recrearlo de cero, porque elimina también la red y los contenedores.</p>
-</div>
+<h3 id="parar-y-volver-a-arrancar">Parar y volver a arrancar<a class="headerlink" href="#parar-y-volver-a-arrancar" title="Permanent link">&para;</a></h3>
+<p>Entre sesiones no hace falta destruir nada. Para apagar y encender el stack usamos <code>stop</code> y <code>start</code>, indicando el mismo profile con el que lo levantamos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>lake<span class="w"> </span>stop
+<span class="linenos" data-linenos="2 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>lake<span class="w"> </span>start
+</code></pre></div>
+<p><code>docker compose --profile all down</code> elimina los contenedores y la red, aunque conserva los volúmenes con los datos de <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em>, <em>MinIO</em> y las bases de datos. Si además queremos empezar de cero, <code>docker compose --profile all down -v</code> borra también esos volúmenes. La carpeta <code>workspace</code> no se ve afectada en ningún caso.</p>
 <h3 id="servicios-y-puertos">Servicios y puertos<a class="headerlink" href="#servicios-y-puertos" title="Permanent link">&para;</a></h3>
-<p>Una vez arrancado, según el <em>profile</em> activo tendremos disponibles algunas de estas interfaces:</p>
+<p>Según el profile activo, tendremos disponibles algunas de estas interfaces desde nuestra máquina:</p>
 <table>
 <thead>
 <tr>
@@ -4890,8 +5036,8 @@
 <tbody>
 <tr>
 <td><code>namenode</code></td>
-<td>9870</td>
-<td><a href="http://localhost:9870">http://localhost:9870</a></td>
+<td>9870 · 8020</td>
+<td><a href="http://localhost:9870">http://localhost:9870</a> (web) · <abbr title="Remote Procedure Call">RPC</abbr> de <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em></td>
 </tr>
 <tr>
 <td><code>datanode</code></td>
@@ -4910,8 +5056,28 @@
 </tr>
 <tr>
 <td><code>minio</code></td>
-<td>9001</td>
-<td><a href="http://localhost:9001">http://localhost:9001</a> (consola) · 9000 (<abbr title="Application Programming Interface">API</abbr> <abbr title="Simple Storage Service">S3</abbr>)</td>
+<td>9001 · 9000</td>
+<td><a href="http://localhost:9001">http://localhost:9001</a> (consola) · <abbr title="Application Programming Interface">API</abbr> <em><abbr title="Simple Storage Service">S3</abbr></em></td>
+</tr>
+<tr>
+<td><code>mysql-metastore</code></td>
+<td>3306</td>
+<td><em>MySQL</em> (catálogo de <em>Hive</em>)</td>
+</tr>
+<tr>
+<td><code>mysql-retail</code></td>
+<td>3307</td>
+<td><em>MySQL</em> (origen <code>retail_db</code>)</td>
+</tr>
+<tr>
+<td><code>hive-metastore</code></td>
+<td>9083</td>
+<td><em>Thrift</em></td>
+</tr>
+<tr>
+<td><code>hiveserver2</code></td>
+<td>10000 · 10002</td>
+<td><em><abbr title="Java Database Connectivity">JDBC</abbr></em> · <a href="http://localhost:10002">http://localhost:10002</a> (web)</td>
 </tr>
 <tr>
 <td><code>trino</code></td>
@@ -4920,112 +5086,181 @@
 </tr>
 <tr>
 <td><code>lab</code></td>
-<td>8888</td>
-<td><a href="http://localhost:8888">http://localhost:8888</a></td>
+<td>8888 · 8081</td>
+<td><a href="http://localhost:8888">http://localhost:8888</a> (<em>JupyterLab</em>) · <a href="http://localhost:8081">http://localhost:8081</a> (documentación de <em>dbt</em>)</td>
 </tr>
 <tr>
-<td><code>airflow-webserver</code></td>
+<td><code>airflow-apiserver</code></td>
 <td>8082</td>
 <td><a href="http://localhost:8082">http://localhost:8082</a></td>
 </tr>
+</tbody>
+</table>
+<p>Fíjate en que los puertos sólo importan cuando accedemos desde fuera. Entre contenedores se hablan por nombre de servicio y puerto interno a través de la red <code>bigdata</code>: desde el nodo <code>lab</code>, <em>MinIO</em> es <code>minio:9000</code> y la base de datos de origen es <code>mysql-retail:3306</code>, no <code>localhost:3307</code>.</p>
+<h3 id="credenciales">Credenciales<a class="headerlink" href="#credenciales" title="Permanent link">&para;</a></h3>
+<p>Todas están definidas en el fichero <code>.env</code>:</p>
+<table>
+<thead>
 <tr>
-<td><code>hiveserver2</code></td>
-<td>10002</td>
-<td><a href="http://localhost:10002">http://localhost:10002</a></td>
+<th>Servicio</th>
+<th>Usuario</th>
+<th>Contraseña</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>MinIO</em></td>
+<td><code>minioadmin</code></td>
+<td><code>minioadmin123</code></td>
 </tr>
 <tr>
-<td><code>hive-metastore</code></td>
-<td>9083</td>
-<td>Thrift</td>
+<td><code>mysql-retail</code> (aplicación, sobre <code>retail_db</code>)</td>
+<td><code>iabd</code></td>
+<td><code>iabd</code></td>
 </tr>
 <tr>
-<td><code>mysql-metastore</code></td>
-<td>3306</td>
-<td>MySQL (catálogo)</td>
+<td><code>mysql-retail</code> y <code>mysql-metastore</code> (administración)</td>
+<td><code>root</code></td>
+<td><code>rootpass</code></td>
 </tr>
 <tr>
-<td><code>mysql-retail</code></td>
-<td>3307</td>
-<td>MySQL (origen <code>retail_db</code>)</td>
+<td><code>mysql-metastore</code> (usuario de <em>Hive</em>)</td>
+<td><code>hive</code></td>
+<td><code>hive</code></td>
+</tr>
+<tr>
+<td><em>Airflow</em></td>
+<td><code>admin</code></td>
+<td><code>admin</code></td>
 </tr>
 </tbody>
 </table>
 <h2 id="los-contenedores">Los contenedores<a class="headerlink" href="#los-contenedores" title="Permanent link">&para;</a></h2>
-<!--
-TODO: Revisar
-El mapeo es: namenode/datanode/resourcemanager/nodemanager/hdfs-init → hadoop; minio/minio-init → minio; mysql → hive y lab; hive-metastore/hiveserver2 → hive; trino → trino; lab/retail-init → lab.
--->
-
 <p>Vamos a recorrer cada pieza explicando qué hace y en qué sesión la utilizamos.</p>
 <h3 id="namenode-y-datanode">namenode y datanode<a class="headerlink" href="#namenode-y-datanode" title="Permanent link">&para;</a></h3>
 <p>Forman <a href="../hadoop/hdfs.html"><abbr title="Hadoop Distributed File System">HDFS</abbr></a>. El <code>namenode</code> es el cerebro: no almacena ni un solo byte de nuestros ficheros, sino el árbol de directorios y, para cada fichero, la lista de bloques que lo componen y en qué nodos están. El <code>datanode</code> es donde sí viven los bloques, y los sirve directamente a quien se los pida.</p>
-<p>Cuando un cliente quiere leer un fichero, el <code>namenode</code> le responde con la ubicación de los bloques, y a partir de ahí el cliente habla directamente con el <code>datanode</code>. Este detalle, que parece menor, explica buena parte del comportamiento de <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em>. Hemos fijado la replicación a 1 porque sólo tenemos un <code>datanode</code>; en un clúster real el valor por defecto es 3.</p>
+<p>Cuando un cliente quiere leer un fichero, el <code>namenode</code> le responde con la ubicación de los bloques, y a partir de ahí el cliente habla directamente con el <code>datanode</code>. Este detalle, que parece menor, explica buena parte del comportamiento de <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em>, y también una de las líneas de configuración del stack: como dentro de <em>Docker</em> las IP internas no son alcanzables desde todas partes, hemos configurado el <code>namenode</code> para que devuelva el nombre del <code>datanode</code> en lugar de su IP.</p>
+<p>Hemos fijado la replicación a 1 porque sólo tenemos un <code>datanode</code>; en un clúster real el valor por defecto es 3. El <code>namenode</code> sólo se formatea en el primer arranque, así que el contenido de <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em> se conserva entre sesiones en su volumen.</p>
+<p>Los usamos en la sesión de <a href="object-storage.html">almacenamiento distribuido</a>.</p>
 <h3 id="resourcemanager-y-nodemanager">resourcemanager y nodemanager<a class="headerlink" href="#resourcemanager-y-nodemanager" title="Permanent link">&para;</a></h3>
-<p>Forman <a href="../hadoop/hadoop.html"><abbr title="Yet Another Resource Negotiator">YARN</abbr></a>, el gestor de recursos del ecosistema <em>Hadoop</em>. El <code>resourcemanager</code> decide qué trabajos se ejecutan y con cuántos recursos; el <code>nodemanager</code> es quien realmente los lanza.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>resourcemanager<span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">  </span>hadoop<span class="w"> </span>jar<span class="w"> </span>/opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar<span class="w"> </span>pi<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">10</span>
+<p>Forman <a href="../hadoop/hadoop.html"><abbr title="Yet Another Resource Negotiator">YARN</abbr></a>, el gestor de recursos del ecosistema <em>Hadoop</em>. El <code>resourcemanager</code> decide qué trabajos se ejecutan y con cuántos recursos; el <code>nodemanager</code> es quien realmente los lanza. Para verlo en acción podemos lanzar el ejemplo clásico que estima el número π con <em>MapReduce</em> y seguirlo en <a href="http://localhost:8088">http://localhost:8088</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>resourcemanager<span class="w"> </span>bash
+<span class="linenos" data-linenos="2 "></span>hadoop<span class="w"> </span>jar<span class="w"> </span>/opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar<span class="w"> </span>pi<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">¿Para qué queremos <abbr title="Yet Another Resource Negotiator">YARN</abbr> si vamos a usar Trino?</p>
-<p>Para nada imprescindible, y de hecho <em>Trino</em> no lo usa. Lo mantenemos porque es la forma más directa de ver cómo se planifica y ejecuta un trabajo distribuido en el ecosistema <em>Hadoop</em> clásico, que es justo lo que estudiamos en la sesión de <a href="../hadoop/hadoop.html">Hadoop</a>.</p>
+<p>No es imprescindible, y de hecho ni <em>Trino</em> ni <em>DuckDB</em> lo usan. Lo mantenemos porque es la forma más directa de ver cómo se planifica y ejecuta un trabajo distribuido en el ecosistema <em>Hadoop</em> clásico. Si vas justo de memoria, puedes parar <code>resourcemanager</code> y <code>nodemanager</code> sin que el resto del escenario <code>lake</code> se entere.</p>
 </div>
 <h3 id="minio-y-minio-init">minio y minio-init<a class="headerlink" href="#minio-y-minio-init" title="Permanent link">&para;</a></h3>
-<p><em>MinIO</em> es un almacén de objetos compatible con la <abbr title="Application Programming Interface">API</abbr> de <em><abbr title="Simple Storage Service">S3</abbr></em>: nuestro lago de datos "moderno", la alternativa a <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em>. Todo lo que aprendimos sobre <a href="../cloud/s3.html"><abbr title="Simple Storage Service">S3</abbr></a> aplica aquí, pero corriendo en local. Ofrece una consola web en el puerto 9001 y la <abbr title="Application Programming Interface">API</abbr> <em><abbr title="Simple Storage Service">S3</abbr></em> en el 9000.</p>
+<p><em>MinIO</em> es un almacén de objetos compatible con la <abbr title="Application Programming Interface">API</abbr> de <em><abbr title="Simple Storage Service">S3</abbr></em>: nuestro lago de datos "moderno", la alternativa a <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em>. Todo lo que aprendimos sobre <a href="../cloud/s3.html"><abbr title="Simple Storage Service">S3</abbr></a> aplica aquí, pero corriendo en local. Ofrece la <abbr title="Application Programming Interface">API</abbr> <em><abbr title="Simple Storage Service">S3</abbr></em> en el puerto 9000 y una consola web en el 9001.</p>
 <p>El contenedor de un solo uso <code>minio-init</code> crea los <em>buckets</em> <code>raw-data</code>, <code>processed</code> y <code>warehouse</code>, que es la separación por capas habitual en un lago (datos crudos, procesados y servidos).</p>
+<div class="admonition note">
+<p class="admonition-title">La consola de MinIO es sólo un explorador</p>
+<p>El proyecto de código abierto de <em>MinIO</em> se archivó en 2026 y fijamos su última versión oficial. Desde mediados de 2025 la consola web sólo permite navegar por los <em>buckets</em> y los objetos; la administración (usuarios, políticas, etc.) se hace con el cliente <code>mc</code>, que tenemos instalado en el nodo <code>lab</code>.</p>
+</div>
 <div class="admonition tip">
 <p class="admonition-title"><abbr title="Hadoop Distributed File System">HDFS</abbr> y MinIO conviven a propósito</p>
-<p>Tener los dos almacenamientos nos permite contrastar el enfoque clásico (<em><abbr title="Hadoop Distributed File System">HDFS</abbr></em>, con el cómputo cerca del dato) frente al moderno (object storage, con cómputo y almacenamiento separados). <em>Trino</em> puede consultar tablas que viven en cualquiera de los dos.</p>
+<p>Tener los dos almacenamientos nos permite contrastar el enfoque clásico (<em><abbr title="Hadoop Distributed File System">HDFS</abbr></em>, con el cómputo cerca del dato) frente al moderno (almacén de objetos, con cómputo y almacenamiento separados). <em>Trino</em> puede consultar tablas que viven en cualquiera de los dos.</p>
 </div>
-<h3 id="mysql-metastore-y-mysql-retail">mysql-metastore y mysql-retail<a class="headerlink" href="#mysql-metastore-y-mysql-retail" title="Permanent link">&para;</a></h3>
-<p>Tenemos dos contenedores <em>MySQL</em>, y es importante entender por qué están separados, porque cumplen papeles que no tienen nada que ver:</p>
+<p>Los usamos en las sesiones de <a href="object-storage.html">almacenamiento distribuido</a>, <a href="motores-consulta.html">motores de consulta</a> y <a href="dlt.html">extracción y carga con dlt</a>.</p>
+<h3 id="mysql-retail-y-retail-init">mysql-retail y retail-init<a class="headerlink" href="#mysql-retail-y-retail-init" title="Permanent link">&para;</a></h3>
+<p><code>mysql-retail</code> aloja la base de datos <code>retail_db</code>, nuestra tienda ficticia de artículos deportivos, con sus tablas <code>customers</code>, <code>orders</code>, <code>order_items</code>, <code>products</code>, <code>categories</code> y <code>departments</code>. Hace de origen operacional: es la base de datos transaccional de la que extraemos los datos, igual que haríamos en un caso real.</p>
+<p>El contenedor <code>retail-init</code> carga <code>retail_db</code> a partir de <code>sample-data/create_db.sql</code> y crea el usuario de aplicación <code>iabd</code>, con permisos de lectura y escritura sólo sobre esa base de datos. Así, <code>dlt</code>, <em>Trino</em> y <em>Airflow</em> se conectan con un usuario propio en lugar de hacerlo como <code>root</code>, que es lo que haríamos en producción.</p>
+<p>Para echar un vistazo a los datos de origen:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>mysql-retail<span class="w"> </span>mysql<span class="w"> </span>-u<span class="w"> </span>iabd<span class="w"> </span>-piabd<span class="w"> </span>retail_db
+</code></pre></div>
+<h3 id="mysql-metastore-y-hive-metastore">mysql-metastore y hive-metastore<a class="headerlink" href="#mysql-metastore-y-hive-metastore" title="Permanent link">&para;</a></h3>
+<p><code>hive-metastore</code> es el catálogo. Guarda, para cada tabla, su esquema de columnas, el formato de los ficheros y la ruta donde se encuentran. Lo interesante es que no almacena datos: sólo apunta a ellos, tanto si viven en <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em> como en <em>MinIO</em>. Esos metadatos los persiste en la base de datos <code>metastore</code> de <code>mysql-metastore</code>.</p>
+<p>Tenemos por tanto dos contenedores <em>MySQL</em>, y es importante entender por qué están separados, porque cumplen papeles que no tienen nada que ver:</p>
 <ul>
-<li><strong><code>mysql-metastore</code></strong> aloja la base de datos <code>metastore</code>, donde <em>Hive</em> guarda su catálogo. Aquí sólo hay <strong>metadatos</strong>: qué tablas existen, qué columnas tienen y en qué ruta viven sus ficheros. Ni un solo dato de negocio.</li>
-<li><strong><code>mysql-retail</code></strong> aloja la base de datos <code>retail_db</code>, que hace de <strong>origen operacional</strong>. Es la base de datos transaccional de la que <code>dlt</code> extrae los datos, igual que haríamos en un caso real.</li>
+<li>En <code>mysql-metastore</code> sólo hay metadatos: qué tablas existen, qué columnas tienen y en qué ruta viven sus ficheros. Ni un solo dato de negocio.</li>
+<li>En <code>mysql-retail</code> sólo hay datos de negocio: los pedidos y clientes de la tienda.</li>
 </ul>
-<p>Podríamos haberlo montado todo en un único <em>MySQL</em>, y de hecho es tentador porque son la misma tecnología. Pero mezclar el catálogo con el dato de origen confunde dos conceptos que conviene tener bien diferenciados: una cosa es <em>dónde apuntan las tablas</em> y otra muy distinta <em>de dónde vienen los datos</em>. Separarlos también hace que cada <em>profile</em> sea preciso: <code>mysql-metastore</code> sólo aparece donde hay catálogo (<code>hive</code>, <code>lake</code>), y <code>mysql-retail</code> sólo donde se necesita el origen (<code>lab</code>, <code>elt</code>, <code>airflow</code>, <code>lake</code>).</p>
-<h3 id="hive-metastore">hive-metastore<a class="headerlink" href="#hive-metastore" title="Permanent link">&para;</a></h3>
-<p>Es el catálogo. Guarda, para cada tabla, su esquema de columnas, el formato de los ficheros y la ruta donde se encuentran. Lo interesante es que <em>no</em> almacena datos: sólo apunta a ellos, tanto si viven en <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em> como en <em>MinIO</em>.</p>
-<p>Su valor está en que es un catálogo <strong>compartido</strong>. Una tabla creada desde <em>Trino</em> es inmediatamente visible desde <em>HiveServer2</em>, y lo mismo ocurriría con <em>Spark</em>, tal y como veremos en la sesión de <a href="../spark/catalog.html">conectividad y catálogo</a>.</p>
-<div class="admonition warning">
-<p class="admonition-title">El driver <abbr title="Java Database Connectivity">JDBC</abbr> no viene incluido</p>
-<p>La imagen oficial de <em>Hive</em> no incorpora el conector de <em>MySQL</em>. Por eso el stack construye una imagen propia que añade <code>mysql-connector-j</code> a <code>/opt/hive/lib</code>. Si alguna vez montas un metastore desde cero y ves errores de driver no encontrado, ya sabes por dónde van los tiros.</p>
+<p>Podríamos haberlo montado todo en un único <em>MySQL</em>, y es tentador porque son la misma tecnología. Pero mezclar el catálogo con el dato de origen confunde dos conceptos que conviene tener bien diferenciados: una cosa es <em>dónde apuntan las tablas</em> y otra muy distinta <em>de dónde vienen los datos</em>. Separarlos también hace que cada profile sea preciso: <code>mysql-metastore</code> sólo aparece donde hay catálogo (<code>hive</code>, <code>lake</code>), y <code>mysql-retail</code> sólo donde se necesita el origen.</p>
+<p>El valor del metastore está en que es un catálogo compartido. Una tabla creada desde <em>Trino</em> es inmediatamente visible desde <em>HiveServer2</em>, y lo mismo ocurrirá con <em>Spark</em> en la sesión de <a href="../spark/catalog.html">conectividad y catálogo</a>.</p>
+<div class="admonition info">
+<p class="admonition-title">Una imagen de Hive propia</p>
+<p>La imagen oficial de <em>Hive</em> no incluye el driver <em><abbr title="Java Database Connectivity">JDBC</abbr></em> de <em>MySQL</em>, ni tiene en su <em>classpath</em> las librerías para leer de <em><abbr title="Simple Storage Service">S3</abbr></em>. Por eso el stack construye una imagen propia (<code>hive/Dockerfile</code>) que añade <code>mysql-connector-j</code> y copia los JAR <code>hadoop-aws</code> y <code>bundle</code> a <code>/opt/hive/lib</code>. Gracias a ellos, <em>Hive</em> puede declarar tablas sobre <em>MinIO</em> usando rutas <code>s3a://</code>.</p>
 </div>
 <h3 id="hiveserver2">hiveserver2<a class="headerlink" href="#hiveserver2" title="Permanent link">&para;</a></h3>
-<p>Nos permite lanzar <em>HiveQL</em> mediante <em><abbr title="Java Database Connectivity">JDBC</abbr></em>, típicamente con <code>beeline</code>. Es la puerta de entrada "clásica" al catálogo y la usamos en las sesiones de <a href="../hadoop/hive1.html">Hive I</a> y <a href="../hadoop/hive2.html">Hive II</a>.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>hiveserver2<span class="w"> </span>beeline<span class="w"> </span>-u<span class="w"> </span><span class="s2">"jdbc:hive2://localhost:10000/"</span>
+<p>Nos permite lanzar <em>HiveQL</em> mediante <em><abbr title="Java Database Connectivity">JDBC</abbr></em>, típicamente con <code>beeline</code>. Es la puerta de entrada "clásica" al catálogo y la usamos en la sesión de <a href="motores-consulta.html">motores de consulta</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>hiveserver2<span class="w"> </span>beeline<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;jdbc:hive2://localhost:10000/&#39;</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">SHOW</span><span class="w"> </span><span class="n">DATABASES</span><span class="p">;</span>
-<span class="linenos" data-linenos="2 "></span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">retail</span><span class="p">.</span><span class="n">orders</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="trino">trino<a class="headerlink" href="#trino" title="Permanent link">&para;</a></h3>
-<p><em>Trino</em> es un motor de consultas SQL distribuido pensado para el lago de datos. Se conecta al metastore para saber qué tablas hay y dónde están, y después lee los ficheros directamente de <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em> o <em>MinIO</em>. Su gran virtud es la federación: puede consultar en la misma sentencia datos que viven en sistemas distintos, incluido <code>retail_db</code> en <em>MySQL</em>.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>trino<span class="w"> </span>trino
+<p><em>Trino</em> es un motor de consultas SQL distribuido pensado para el lago de datos. Se conecta al metastore para saber qué tablas hay y dónde están, y después lee los ficheros directamente de <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em> o <em>MinIO</em>. Su gran virtud es la federación: puede combinar en la misma sentencia datos que viven en sistemas distintos, incluido <code>retail_db</code> en <em>MySQL</em>.</p>
+<p>En <em>Trino</em> cada fichero de <code>trino/catalog</code> define un catálogo, y el nombre del fichero es el nombre del catálogo:</p>
+<table>
+<thead>
+<tr>
+<th>Catálogo</th>
+<th>Conector</th>
+<th>Apunta a</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lago_hdfs</code></td>
+<td><code>hive</code></td>
+<td>Metastore + <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em></td>
+</tr>
+<tr>
+<td><code>lago_minio</code></td>
+<td><code>hive</code></td>
+<td>Metastore + <em>MinIO</em></td>
+</tr>
+<tr>
+<td><code>mysql</code></td>
+<td><code>mysql</code></td>
+<td><code>retail_db</code> en <code>mysql-retail</code></td>
+</tr>
+<tr>
+<td><code>tpch</code></td>
+<td><code>tpch</code></td>
+<td>Datos sintéticos generados al vuelo</td>
+</tr>
+</tbody>
+</table>
+<p>Los dos catálogos del lago comparten el mismo metastore; lo único que cambia es el sistema de ficheros que saben leer. Para entrar en su cliente:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>trino<span class="w"> </span>trino
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">demo</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="k">location</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'hdfs://namenode:8020/user/hive/warehouse/demo.db'</span><span class="p">);</span>
+<p>Y para comprobar que todo el circuito funciona, podemos copiar una tabla de <code>tpch</code> al lago y volver a leerla:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">lago_hdfs</span><span class="p">.</span><span class="n">demo</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="k">location</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;hdfs://namenode:8020/user/hive/warehouse/demo.db&#39;</span><span class="p">);</span>
 <span class="linenos" data-linenos="3 "></span>
-<span class="linenos" data-linenos="4 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">demo</span><span class="p">.</span><span class="n">nation</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'PARQUET'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span>
+<span class="linenos" data-linenos="4 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">lago_hdfs</span><span class="p">.</span><span class="n">demo</span><span class="p">.</span><span class="n">nation</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;PARQUET&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span>
 <span class="linenos" data-linenos="5 "></span><span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">tpch</span><span class="p">.</span><span class="n">tiny</span><span class="p">.</span><span class="n">nation</span><span class="p">;</span>
 <span class="linenos" data-linenos="6 "></span>
-<span class="linenos" data-linenos="7 "></span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">demo</span><span class="p">.</span><span class="n">nation</span><span class="p">;</span>
+<span class="linenos" data-linenos="7 "></span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lago_hdfs</span><span class="p">.</span><span class="n">demo</span><span class="p">.</span><span class="n">nation</span><span class="p">;</span>
 </code></pre></div>
-<p>Con estas tres sentencias hemos hecho el recorrido completo: <em>Trino</em> ha escrito ficheros <em>parquet</em>, ha registrado la tabla en el metastore de <em>Hive</em> y ha vuelto a leerla.</p>
+<p>Con estas tres sentencias hemos hecho el recorrido completo: <em>Trino</em> ha registrado el esquema y la tabla en el metastore de <em>Hive</em>, ha escrito ficheros <em>Parquet</em> en <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em> y ha vuelto a leerlos.</p>
 <h3 id="lab">lab<a class="headerlink" href="#lab" title="Permanent link">&para;</a></h3>
-<p>Es nuestro nodo de trabajo, y probablemente el que más usaremos. Contiene las tres piezas de un flujo <em><abbr title="Extract, Load, Transform">ELT</abbr></em> moderno:</p>
+<p>Es nuestro nodo de trabajo, y el que más usaremos. Contiene las tres piezas de un flujo <em><abbr title="Extract, Load, Transform">ELT</abbr></em> moderno:</p>
 <ul>
-<li><strong>dlt</strong> para la extracción y carga (<em>EL</em>).</li>
-<li><strong>DuckDB</strong> como motor analítico donde aterrizan y se consultan los datos.</li>
-<li><strong>dbt</strong> para las transformaciones (<em>T</em>).</li>
+<li><em>dlt</em> para la extracción y carga (<em>EL</em>).</li>
+<li><em>DuckDB</em> como motor analítico donde aterrizan y se consultan los datos.</li>
+<li><em>dbt</em> para las transformaciones (<em>T</em>).</li>
 </ul>
-<p>Incluye además <code>boto3</code> y el <em><abbr title="Command Line Interface">CLI</abbr></em> de <em>AWS</em> para hablar con <em>MinIO</em>, <em>JupyterLab</em> en <a href="http://localhost:8888">http://localhost:8888</a> y el <abbr title="Command Line Interface">CLI</abbr> de <em>DuckDB</em>, de modo que podemos trabajar tanto con cuadernos como con SQL puro.</p>
-<p>Lo utilizamos en las sesiones de <a href="formatos.html">formatos de datos</a>, SQL analítico con <em>DuckDB</em>, <a href="object-storage.html">del <abbr title="Hadoop Distributed File System">HDFS</abbr> al object storage</a> y en las sesiones dedicadas a <em>dbt</em>.</p>
+<p>Además trae <em>JupyterLab</em> en <a href="http://localhost:8888">http://localhost:8888</a> (sin token), el <abbr title="Command Line Interface">CLI</abbr> de <em>DuckDB</em>, el cliente <code>mc</code> de <em>MinIO</em> y el <abbr title="Software Development Kit">SDK</abbr> <code>boto3</code> junto con el <abbr title="Command Line Interface">CLI</abbr> de <em>AWS</em>, de modo que podemos trabajar tanto con cuadernos como con SQL puro o desde el terminal:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>lab<span class="w"> </span>bash
+</code></pre></div>
+<p>Unos cuantos detalles de la imagen nos van a ahorrar trabajo:</p>
+<ul>
+<li>Las variables <code>AWS_*</code> ya apuntan a <em>MinIO</em>, así que <code>boto3</code> y <code>aws</code> funcionan sin configurar nada, y <code>mc</code> trae preconfigurado el alias <code>local</code> (<code>mc ls local/</code>).</li>
+<li>Las variables <code>MYSQL_HOST</code>, <code>MYSQL_USER</code> y <code>MYSQL_PASSWORD</code> contienen los datos de conexión a <code>retail_db</code>.</li>
+<li>Las extensiones <code>httpfs</code>, <code>mysql</code> y <code>parquet</code> de <em>DuckDB</em> vienen instaladas en la imagen, así que no dependemos de descargarlas en el aula.</li>
+<li><code>DBT_PROFILES_DIR</code> apunta a <code>/workspace/dbt/iabd</code>, que es donde <em>dbt</em> busca el fichero <code>profiles.yml</code>.</li>
+<li>El puerto 8081 está reservado para servir la documentación de <em>dbt</em> (<code>dbt docs serve --host 0.0.0.0 --port 8080</code>).</li>
+</ul>
+<p>El nodo <code>lab</code> no depende de <em>MinIO</em>: arranca solo con su profile, y para trabajar contra el lago basta con añadir <code>minio</code> (o <code>lake</code>). Lo usamos en las sesiones de <a href="formatos.html">formatos de datos</a>, <a href="sql-analitico.html">SQL analítico</a>, <a href="modelado-dimensional.html">modelado dimensional</a>, <a href="motores-consulta.html">motores de consulta</a>, <a href="dlt.html">dlt</a> y <a href="dbt.html">dbt</a>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Contenedores nativos en Apple Silicon</p>
-<p>Las imágenes de <em>Hadoop</em> y <em>Hive</em> sólo se publican para <code>amd64</code>, así que en un Mac con chip M se ejecutan emuladas. Las de <code>lab</code>, <code>mysql</code>, <code>minio</code>, <code>trino</code>, <em>Airflow</em> y <em>Postgres</em>, en cambio, son multiarquitectura y corren de forma nativa.</p>
+<p>Las imágenes de <em>Hadoop</em> y <em>Hive</em> sólo se publican para <code>amd64</code>, así que en un Mac con chip M se ejecutan emuladas y van más lentas. Las de <code>lab</code>, <em>MySQL</em>, <em>MinIO</em>, <em>Trino</em>, <em>Airflow</em> y <em>Postgres</em>, en cambio, son multiarquitectura y corren de forma nativa.</p>
 </div>
-<h3 id="airflow">airflow<a class="headerlink" href="#airflow" title="Permanent link">&para;</a></h3>
-<p>Es nuestro orquestador. Mientras que en el nodo <code>lab</code> lanzamos el <em><abbr title="Extract, Load, Transform">ELT</abbr></em> a mano (primero <code>dlt</code>, luego <code>dbt</code>), <em>Airflow</em> nos permite encadenar esos pasos en un <em><abbr title="Directed Acyclic Graph (grafo dirigido acíclico)">DAG</abbr></em>, programarlos, reintentarlos si fallan y ver de un vistazo qué se ha ejecutado y con qué resultado. Lo trabajamos en las sesiones dedicadas a la orquestación del pipeline.</p>
-<p>El profile <code>airflow</code> levanta cuatro contenedores:</p>
+<h3 id="airflow">Airflow<a class="headerlink" href="#airflow" title="Permanent link">&para;</a></h3>
+<p>Es nuestro orquestador. En el nodo <code>lab</code> lanzamos el <em><abbr title="Extract, Load, Transform">ELT</abbr></em> a mano (primero <code>dlt</code>, luego <code>dbt</code>); <em>Airflow</em> nos permite encadenar esos pasos en un <em><abbr title="Directed Acyclic Graph (grafo dirigido acíclico)">DAG</abbr></em>, programarlos, reintentarlos si fallan y ver de un vistazo qué se ha ejecutado y con qué resultado. Lo trabajamos en la sesión de <a href="airflow.html">orquestación con Airflow</a>.</p>
+<p>Usamos <em>Airflow</em> 3, que reparte el trabajo en varios componentes. El profile <code>airflow</code> levanta cinco contenedores:</p>
 <table>
 <thead>
 <tr>
@@ -5036,49 +5271,121 @@ El mapeo es: namenode/datanode/resourcemanager/nodemanager/hdfs-init → hadoop;
 <tbody>
 <tr>
 <td><code>postgres-airflow</code></td>
-<td>Backend de metadatos (Postgres 16)</td>
+<td>Base de datos de metadatos de <em>Airflow</em> (<em>Postgres</em> 16)</td>
 </tr>
 <tr>
 <td><code>airflow-init</code></td>
-<td>Migra la base de datos y crea el usuario admin</td>
+<td>Construye la imagen, migra la base de datos y crea el usuario <code>admin</code></td>
 </tr>
 <tr>
-<td><code>airflow-webserver</code></td>
-<td>Interfaz web en <a href="http://localhost:8082">http://localhost:8082</a></td>
+<td><code>airflow-apiserver</code></td>
+<td>Interfaz web y <abbr title="Application Programming Interface">API</abbr> REST, en <a href="http://localhost:8082">http://localhost:8082</a></td>
 </tr>
 <tr>
 <td><code>airflow-scheduler</code></td>
-<td>Planificador, con <code>LocalExecutor</code></td>
+<td>Planifica los <em><abbr title="Directed Acyclic Graph (grafo dirigido acíclico)">DAG</abbr></em> y ejecuta sus tareas (<code>LocalExecutor</code>)</td>
+</tr>
+<tr>
+<td><code>airflow-dag-processor</code></td>
+<td>Lee y analiza los ficheros de <code>airflow/dags</code></td>
 </tr>
 </tbody>
 </table>
-<p>La imagen de <em>Airflow</em> incorpora <em>dlt</em> y <em>dbt</em> (vía <code>_PIP_ADDITIONAL_REQUIREMENTS</code>), de modo que las tareas del <em><abbr title="Directed Acyclic Graph (grafo dirigido acíclico)">DAG</abbr></em> ejecutan exactamente el mismo pipeline que probamos en el <code>lab</code>. El usuario administrador se crea en el primer arranque con credenciales <code>admin</code> / <code>admin</code>.</p>
+<p>Los <em><abbr title="Directed Acyclic Graph (grafo dirigido acíclico)">DAG</abbr></em> se dejan en la carpeta <code>airflow/dags</code> del stack, y aparecen en pausa al crearse, así que hay que activarlos desde la interfaz.</p>
+<p>Lo importante es entender dónde se ejecuta el <em><abbr title="Extract, Load, Transform">ELT</abbr></em> cuando lo lanza <em>Airflow</em>: no en el nodo <code>lab</code>, sino en el propio <code>airflow-scheduler</code>. La imagen de <em>Airflow</em> incluye un entorno virtual en <code>/opt/airflow/elt</code> con las mismas versiones de <em>dlt</em>, <em>dbt</em> y <em>DuckDB</em> que el <code>lab</code>, y las tareas lo invocan mediante la variable <code>$ELT_BIN</code> (por ejemplo, <code>$ELT_BIN/dbt run</code>). Como ambos contenedores montan la misma carpeta <code>workspace</code>, el <em><abbr title="Directed Acyclic Graph (grafo dirigido acíclico)">DAG</abbr></em> ejecuta exactamente los mismos scripts y escribe en los mismos ficheros <em>DuckDB</em> que usamos a mano.</p>
 <div class="admonition note">
-<p class="admonition-title">Por qué un Postgres aparte para Airflow</p>
-<p><em>Airflow</em> guarda su propio estado (ejecuciones, tareas, conexiones) en una base de datos que consulta y actualiza constantemente. Le damos un <em>Postgres</em> dedicado en lugar de reutilizar el <code>mysql</code> del metastore para no mezclar el estado del orquestador con nuestros datos, igual que haríamos en producción.</p>
+<p class="admonition-title">¿Por qué un entorno virtual aparte?</p>
+<p><em>Airflow</em> no importa <em>dlt</em> ni <em>dbt</em>: los ejecuta como comandos, igual que haríamos nosotros desde el terminal. Instalarlos en un entorno propio evita choques de dependencias entre ambos mundos, que de hecho se han dado: <code>dbt-core</code> y las restricciones de instalación de <em>Airflow</em> han llegado a exigir versiones incompatibles de la librería <code>pathspec</code>.</p>
 </div>
-<h3 id="hdfs-init-minio-init-retail-init-y-airflow-init">hdfs-init, minio-init, retail-init y airflow-init<a class="headerlink" href="#hdfs-init-minio-init-retail-init-y-airflow-init" title="Permanent link">&para;</a></h3>
-<p>Son contenedores de un solo uso. <code>hdfs-init</code> crea en <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em> los directorios <code>/user/hive/warehouse</code> y <code>/tmp</code> con los permisos adecuados; <code>minio-init</code> crea en <em>MinIO</em> los tres <em>buckets</em> del lago; <code>retail-init</code> carga la base de datos <code>retail_db</code> en <em>MySQL</em>; y <code>airflow-init</code> migra la base de metadatos de <em>Airflow</em> y crea el usuario admin.</p>
-<p>Este patrón, un contenedor que prepara el entorno y termina, es muy habitual y evita tener que documentar pasos manuales que alguien acabará olvidando.</p>
+<div class="admonition warning">
+<p class="admonition-title">Un fichero DuckDB, un escritor</p>
+<p><em>DuckDB</em> sólo admite un proceso escribiendo en el mismo fichero a la vez. Si un <em><abbr title="Directed Acyclic Graph (grafo dirigido acíclico)">DAG</abbr></em> está ejecutando <code>dbt run</code> y a la vez tenemos el mismo fichero abierto desde un cuaderno o desde el <abbr title="Command Line Interface">CLI</abbr> en el <code>lab</code>, una de las dos partes fallará al intentar bloquearlo. Antes de lanzar un <em><abbr title="Directed Acyclic Graph (grafo dirigido acíclico)">DAG</abbr></em>, cierra las conexiones al fichero desde el <code>lab</code>, y cuando sólo vayas a consultar, ábrelo con <code>-readonly</code> para no dejarlo bloqueado.</p>
+</div>
+<p>Le damos a <em>Airflow</em> un <em>Postgres</em> dedicado en lugar de reutilizar alguno de los <em>MySQL</em> para no mezclar el estado del orquestador con nuestros datos, igual que haríamos en producción.</p>
+<h3 id="los-contenedores-de-inicializacion">Los contenedores de inicialización<a class="headerlink" href="#los-contenedores-de-inicializacion" title="Permanent link">&para;</a></h3>
+<p><code>hdfs-init</code>, <code>minio-init</code>, <code>retail-init</code> y <code>airflow-init</code> son contenedores de un solo uso:</p>
+<ul>
+<li><code>hdfs-init</code> crea en <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em> los directorios <code>/user/hive/warehouse</code> y <code>/tmp</code> con permisos abiertos.</li>
+<li><code>minio-init</code> crea en <em>MinIO</em> los tres <em>buckets</em> del lago.</li>
+<li><code>retail-init</code> carga <code>retail_db</code> en <code>mysql-retail</code> y crea el usuario <code>iabd</code>.</li>
+<li><code>airflow-init</code> migra la base de metadatos de <em>Airflow</em> y crea el usuario <code>admin</code>.</li>
+</ul>
+<p>Todos son idempotentes: si se vuelven a ejecutar en un arranque posterior, no rompen lo que ya existe. Este patrón, un contenedor que prepara el entorno y termina, es muy habitual y evita tener que documentar pasos manuales que alguien acabará olvidando.</p>
+<h2 id="versiones">Versiones<a class="headerlink" href="#versiones" title="Permanent link">&para;</a></h2>
+<p>Todas las versiones están fijadas en el fichero <code>.env</code>, de modo que el entorno es el mismo en todos los equipos del aula:</p>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Versión</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Hadoop</em></td>
+<td>3.4.1</td>
+</tr>
+<tr>
+<td><em>Hive</em></td>
+<td>4.1.0</td>
+</tr>
+<tr>
+<td><em>Trino</em></td>
+<td>482</td>
+</tr>
+<tr>
+<td><em>MySQL</em></td>
+<td>8.0</td>
+</tr>
+<tr>
+<td><em>MinIO</em></td>
+<td><code>RELEASE.2025-09-07T16-13-09Z</code></td>
+</tr>
+<tr>
+<td><em>DuckDB</em></td>
+<td>1.5.6</td>
+</tr>
+<tr>
+<td><em>dlt</em></td>
+<td>1.32.0</td>
+</tr>
+<tr>
+<td><em>dbt Core</em> / <em>dbt-duckdb</em></td>
+<td>1.12.3 / 1.11.0</td>
+</tr>
+<tr>
+<td><em>Airflow</em></td>
+<td>3.4.0</td>
+</tr>
+<tr>
+<td><em>Postgres</em></td>
+<td>16</td>
+</tr>
+</tbody>
+</table>
 <h2 id="el-recorrido-elt-completo">El recorrido <abbr title="Extract, Load, Transform">ELT</abbr> completo<a class="headerlink" href="#el-recorrido-elt-completo" title="Permanent link">&para;</a></h2>
-<p>Con el profile <code>elt</code> levantado, podemos recorrer las tres letras de <em><abbr title="Extract, Load, Transform">ELT</abbr></em> de principio a fin.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="nv">COMPOSE_PROFILES</span><span class="o">=</span>elt<span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
-<span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="c1"># EL: dlt replica mysql-retail -&gt; DuckDB, en el esquema retail_raw</span>
-<span class="linenos" data-linenos=" 4 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>lab<span class="w"> </span>python<span class="w"> </span>/workspace/dlt/mysql_to_duckdb.py
-<span class="linenos" data-linenos=" 5 "></span>
-<span class="linenos" data-linenos=" 6 "></span><span class="c1"># T: dbt transforma, de staging a marts</span>
-<span class="linenos" data-linenos=" 7 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-w<span class="w"> </span>/workspace/dbt/retail<span class="w"> </span>lab<span class="w"> </span>dbt<span class="w"> </span>run
-<span class="linenos" data-linenos=" 8 "></span>
-<span class="linenos" data-linenos=" 9 "></span><span class="c1"># Consultamos el resultado</span>
-<span class="linenos" data-linenos="10 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>lab<span class="w"> </span>duckdb<span class="w"> </span>/workspace/data/retail.duckdb<span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="11 "></span><span class="w">  </span>-c<span class="w"> </span><span class="s2">"SELECT * FROM main_marts.ventas_por_ciudad;"</span>
+<p>Una vez completadas las sesiones de <a href="dlt.html">dlt</a> y <a href="dbt.html">dbt</a>, en la carpeta <code>workspace</code> tendremos un pipeline que recorre las tres letras de <em><abbr title="Extract, Load, Transform">ELT</abbr></em> de principio a fin. Con el profile <code>lab</code> levantado, lo podemos ejecutar a mano:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>lab<span class="w"> </span>up<span class="w"> </span>-d
+<span class="linenos" data-linenos="2 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>lab<span class="w"> </span>bash
 </code></pre></div>
-<p>Fijémonos en el reparto de responsabilidades: <em>dlt</em> no transforma nada, se limita a traer los datos tal cual están en origen. Y <em>dbt</em> no sabe nada de extracción, sólo transforma lo que ya está cargado. Esa separación es precisamente lo que distingue <em><abbr title="Extract, Load, Transform">ELT</abbr></em> de <em><abbr title="Extract, Transform, Load">ETL</abbr></em>, concepto que introducimos en la sesión de <a href="etl.html">ingesta de datos</a>. Una vez que el recorrido funciona a mano, es cuando lo llevamos a un <em><abbr title="Directed Acyclic Graph (grafo dirigido acíclico)">DAG</abbr></em> de <em>Airflow</em> para automatizarlo.</p>
+<p>Y ya dentro del contenedor:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># EL: dlt replica retail_db en DuckDB, en el esquema raw</span>
+<span class="linenos" data-linenos="2 "></span>python<span class="w"> </span>/workspace/dlt/retail_el.py
+<span class="linenos" data-linenos="3 "></span>
+<span class="linenos" data-linenos="4 "></span><span class="c1"># T: dbt transforma, de staging a marts</span>
+<span class="linenos" data-linenos="5 "></span><span class="nb">cd</span><span class="w"> </span>/workspace/dbt/iabd_retail
+<span class="linenos" data-linenos="6 "></span>dbt<span class="w"> </span>run
+<span class="linenos" data-linenos="7 "></span>
+<span class="linenos" data-linenos="8 "></span><span class="c1"># Consultamos el resultado</span>
+<span class="linenos" data-linenos="9 "></span>duckdb<span class="w"> </span>-readonly<span class="w"> </span>/workspace/dbt/iabd/retail_el.duckdb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT * FROM ingresos_por_departamento&quot;</span>
+</code></pre></div>
+<p>Fijémonos en el reparto de responsabilidades: <em>dlt</em> no transforma nada, se limita a traer los datos tal cual están en origen. Y <em>dbt</em> no sabe nada de extracción, sólo transforma lo que ya está cargado. Esa separación es precisamente lo que distingue <em><abbr title="Extract, Load, Transform">ELT</abbr></em> de <em><abbr title="Extract, Transform, Load">ETL</abbr></em>, concepto que introducimos en la sesión de <a href="etl.html">ingesta de datos</a>. Una vez que el recorrido funciona a mano, en la sesión de <a href="airflow.html">Airflow</a> lo convertimos en un <em><abbr title="Directed Acyclic Graph (grafo dirigido acíclico)">DAG</abbr></em> que encadena estos mismos pasos y añade las pruebas de <em>dbt</em>.</p>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Documentación de <a href="https://trino.io/docs/current/">Trino</a> y su <a href="https://trino.io/docs/current/connector/hive.html">conector Hive</a>.</li>
-<li>Documentación de <a href="https://duckdb.org/docs/">DuckDB</a>, <a href="https://docs.getdbt.com/">dbt</a> y <a href="https://dlthub.com/docs/intro">dlt</a>.</li>
+<li>Documentación de <a href="https://docs.docker.com/compose/how-tos/profiles/">Docker Compose sobre profiles</a>.</li>
+<li>Documentación de <a href="https://trino.io/docs/current/">Trino</a> y de sus conectores <a href="https://trino.io/docs/current/connector/hive.html">Hive</a> y <a href="https://trino.io/docs/current/connector/mysql.html">MySQL</a>.</li>
+<li>Documentación de <a href="https://duckdb.org/docs/">DuckDB</a>, <a href="https://dlthub.com/docs/intro">dlt</a> y <a href="https://docs.getdbt.com/">dbt</a>.</li>
+<li>Documentación de <a href="https://airflow.apache.org/docs/apache-airflow/stable/">Airflow</a> y su guía de <a href="https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html">ejecución con Docker Compose</a>.</li>
 <li>Documentación de <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">boto3</a>, el <abbr title="Software Development Kit">SDK</abbr> de <em>AWS</em> para Python.</li>
 <li>Imágenes oficiales de <a href="https://hub.docker.com/r/apache/hadoop">Apache Hadoop</a> y <a href="https://hub.docker.com/r/apache/hive">Apache Hive</a> en <em>Docker Hub</em>.</li>
 </ul>
@@ -5088,16 +5395,16 @@ El mapeo es: namenode/datanode/resourcemanager/nodemanager/hdfs-init → hadoop;
 
 1. (RABDA.1 / CEBDA.1a (Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.) / 1p) Levanta el stack con el profile `lake` y comprueba su funcionamiento:
     1. Adjunta una captura de la interfaz del `namenode` y otra de la consola de *MinIO* mostrando los *buckets* creados.
-    2. Ejecuta la prueba de humo de *Trino* con el catálogo `tpch` y adjunta el resultado.
+    2. Ejecuta la prueba de *Trino* que copia `tpch.tiny.nation` al catálogo `lago_hdfs` y adjunta el resultado.
     3. Explica con tus palabras qué información ha viajado al metastore y qué información se ha escrito en el almacenamiento.
 
-2. (RABDA.1 / CEBDA.1b (Se han determinado los procedimientos y mecanismos para la ingestión de datos.) / 1p) Con el profile `elt`, realiza el recorrido *ELT* completo:
+2. (RABDA.1 / CEBDA.1b (Se han determinado los procedimientos y mecanismos para la ingestión de datos.) / 1p) Con el profile `lab`, realiza el recorrido *ELT* completo:
     1. Adjunta la salida del pipeline de *dlt* indicando cuántas filas se han cargado en cada tabla.
-    2. Ejecuta `dbt run` y explica qué diferencia hay entre los modelos de `staging` y los de `marts`.
-    3. Consulta la tabla `ventas_por_ciudad` y comprueba los valores.
+    2. Ejecuta `dbt run` y explica qué diferencia hay entre los modelos de `staging`, `intermediate` y `marts`.
+    3. Consulta la tabla `ingresos_por_departamento` y comprueba los valores.
 
 3. (RABDA.1 / CEBDA.1a (Se ha caracterizado el proceso de diseño y construcción de soluciones en sistemas de almacenamiento de datos.) / 1p) A partir del diagrama de profiles, responde:
-    1. ¿Qué contenedores levanta `COMPOSE_PROFILES=lake` y cuáles `COMPOSE_PROFILES=elt`? ¿Cuál es el único servicio de almacenamiento que comparten?
+    1. ¿Qué contenedores levanta `--profile lake` y cuáles `--profile elt`? ¿Qué servicios comparten?
     2. ¿Por qué `mysql-retail` aparece en más profiles que `mysql-metastore`?
     3. Justifica por qué el nodo `lab` no forma parte de `lake` pero `mysql-retail` sí.
 -->

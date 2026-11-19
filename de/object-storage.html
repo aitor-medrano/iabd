@@ -2048,6 +2048,14 @@
   </span>
   
   
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
 
       </a>
     </li>
@@ -5162,7 +5170,7 @@
 <span class="linenos" data-linenos="46 "></span><span class="c1"># FSCK ended at Sun Aug 09 17:17:43 UTC 2026 in 11 milliseconds</span>
 <span class="linenos" data-linenos="47 "></span>
 <span class="linenos" data-linenos="48 "></span>
-<span class="linenos" data-linenos="49 "></span><span class="c1"># The filesystem under path '/user/root/data/ventas.csv' is HEALTHY</span>
+<span class="linenos" data-linenos="49 "></span><span class="c1"># The filesystem under path &#39;/user/root/data/ventas.csv&#39; is HEALTHY</span>
 </code></pre></div>
 <p>Merece la pena leer la salida despacio, porque en ella está todo lo que hemos explicado:</p>
 <ul>
@@ -5180,7 +5188,7 @@
 </figure>
 
 <p>Una vez que hemos visto los datos en el <code>namenode</code>, vamos a comprobar que los bloques existen de verdad en el <code>datanode</code>. Para ello, vamos a buscar los ficheros que comienzan por <code>blk_</code> en el directorio de datos del <code>datanode</code>. En nuestro <em>stack</em>, ese directorio es <code>/opt/hadoop/dfs/data</code> dentro del contenedor <code>datanode</code>. Así pues, desde un nuevo terminal, ejecutamos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>datanode<span class="w"> </span>find<span class="w"> </span>/opt/hadoop/dfs/data<span class="w"> </span>-name<span class="w"> </span><span class="s2">"blk_*"</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>datanode<span class="w"> </span>find<span class="w"> </span>/opt/hadoop/dfs/data<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;blk_*&quot;</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="c1"># /opt/hadoop/dfs/data/current/BP-1630857084-172.18.0.6-1786005448532/current/finalized/subdir0/subdir0/blk_1073741827</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="c1"># /opt/hadoop/dfs/data/current/BP-1630857084-172.18.0.6-1786005448532/current/finalized/subdir0/subdir0/blk_1073741827_1003.meta</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="c1"># /opt/hadoop/dfs/data/current/BP-1630857084-172.18.0.6-1786005448532/current/finalized/subdir0/subdir0/blk_1073741826</span>
@@ -5214,7 +5222,7 @@
 <p>Ese segundo fichero es el <abbr title="Cyclic Redundancy Check">CRC</abbr> del que hablábamos en la teoría, hecho materia. <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em> calcula una suma de verificación cada 512 bytes de datos y la guarda aparte; al leer, recalcula y compara. Si no coincide, descarta ese bloque y va a por otra réplica.</p>
 <p>Y como los bloques son ficheros normales, podemos ver el contenido de cualquiera de ellos con un simple <code>head</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>datanode<span class="w"> </span>bash
-<span class="linenos" data-linenos="2 "></span>head<span class="w"> </span>-c<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="k">$(</span>find<span class="w"> </span>/opt/hadoop/dfs/data<span class="w"> </span>-name<span class="w"> </span><span class="s1">'blk_*'</span><span class="w"> </span>!<span class="w"> </span>-name<span class="w"> </span><span class="s1">'*.meta'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+<span class="linenos" data-linenos="2 "></span>head<span class="w"> </span>-c<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="k">$(</span>find<span class="w"> </span>/opt/hadoop/dfs/data<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;blk_*&#39;</span><span class="w"> </span>!<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;*.meta&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="c1"># fecha,tienda_id,producto_id,categoria,provincia,importe</span>
 <span class="linenos" data-linenos="4 "></span><span class="c1"># 2023-03-07,410,5595,Deporte,Valencia,206.27</span>
 <span class="linenos" data-linenos="5 "></span><span class="c1"># 2024-07-18,181,6989,Deporte,Barcelona,30.66</span>
@@ -5509,12 +5517,12 @@
 <p>En un clúster <abbr title="Hadoop Distributed File System">HDFS</abbr> real, el cliente de línea de comandos es genérico: la misma orden puede apuntar a <code>file://</code> (local), a <code>hdfs://</code> (<abbr title="Hadoop Distributed File System">HDFS</abbr>) o a un object storage, y lo que cambia es el esquema de la URI y el conector que lo implementa.</p>
 <p><strong><em>S3A</em></strong> es precisamente el conector de <em>Hadoop</em> que hace que un <em>bucket</em> de <abbr title="Simple Storage Service">S3</abbr>/MinIO se comporte como si fuera un sistema de ficheros. Su clase es <code>org.apache.hadoop.fs.s3a.S3AFileSystem</code>, y se invoca con el esquema <strong><code>s3a://</code></strong>. Gracias a él, <em>Spark</em> lee y escribe en <em>object storage</em> con el mismo <abbr title="Application Programming Interface">API</abbr> con el que antes leía de <abbr title="Hadoop Distributed File System">HDFS</abbr>: solo cambia el prefijo de la ruta. Es el conector que usarás cuando lleguemos al bloque de <a href="../spark/spark.html"><em>Spark</em></a>.</p>
 <p>Así pues, para leer y escribir en <em>object storage</em> desde <em>Spark</em> basta con cambiar el esquema de la URI, desde:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">"hdfs://namenode:8020/data/retail_db/orders"</span><span class="p">)</span>
-<span class="linenos" data-linenos="2 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">"hdfs://namenode:8020/data/retail_db/orders_out"</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">&quot;hdfs://namenode:8020/data/retail_db/orders&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">&quot;hdfs://namenode:8020/data/retail_db/orders_out&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>a hacerlo con <code>s3a://</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">"s3a://raw-data/retail_db/orders"</span><span class="p">)</span>
-<span class="linenos" data-linenos="2 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">"s3a://processed/retail_db/orders_out"</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">&quot;s3a://raw-data/retail_db/orders&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">&quot;s3a://processed/retail_db/orders_out&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Ese es todo el cambio de cara al código. La abstracción de "sistema de ficheros" se mantiene; debajo, el conector <code>s3a://</code> traduce cada operación a llamadas a la <abbr title="Application Programming Interface">API</abbr> de <abbr title="Simple Storage Service">S3</abbr>.</p>
 <div class="admonition note">
@@ -5682,11 +5690,11 @@ se cortan y se combinan, y <code>warehouse</code> es el comedor.</p>
 <p>Abre <em>JupyterLab</em> en <a href="http://localhost:8888">http://localhost:8888</a> y crea un cuaderno sobre el cual iremos probando diferentes fragmentos de código. Lo primero es crear un cliente <code>boto3</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 <span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">"s3"</span><span class="p">)</span>   <span class="c1"># endpoint y credenciales vienen del entorno</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">)</span>   <span class="c1"># endpoint y credenciales vienen del entorno</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="c1"># ¿Qué buckets tenemos?</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">s3</span><span class="o">.</span><span class="n">list_buckets</span><span class="p">()[</span><span class="s2">"Buckets"</span><span class="p">]:</span>
-<span class="linenos" data-linenos=" 7 "></span>    <span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="s2">"Name"</span><span class="p">])</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">s3</span><span class="o">.</span><span class="n">list_buckets</span><span class="p">()[</span><span class="s2">&quot;Buckets&quot;</span><span class="p">]:</span>
+<span class="linenos" data-linenos=" 7 "></span>    <span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">])</span>
 <span class="linenos" data-linenos=" 8 "></span><span class="c1"># processed</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="c1"># raw-data</span>
 <span class="linenos" data-linenos="10 "></span><span class="c1"># warehouse</span>
@@ -5695,43 +5703,43 @@ se cortan y se combinan, y <code>warehouse</code> es el comedor.</p>
 <p class="admonition-title">¿Sin credenciales en el código?</p>
 <p><code>boto3</code> lee automáticamente <code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code> y <code>AWS_ENDPOINT_URL</code> del entorno, y el <code>docker-compose.yml</code> ya las inyecta en el contenedor <code>lab</code>. Si ejecutaras esto desde tu propia máquina tendrías que ser explícito:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
-<span class="linenos" data-linenos="2 "></span>    <span class="s2">"s3"</span><span class="p">,</span>
-<span class="linenos" data-linenos="3 "></span>    <span class="n">endpoint_url</span><span class="o">=</span><span class="s2">"http://localhost:9000"</span><span class="p">,</span>
-<span class="linenos" data-linenos="4 "></span>    <span class="n">aws_access_key_id</span><span class="o">=</span><span class="s2">"minioadmin"</span><span class="p">,</span>
-<span class="linenos" data-linenos="5 "></span>    <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="s2">"minioadmin123"</span><span class="p">,</span>
+<span class="linenos" data-linenos="2 "></span>    <span class="s2">&quot;s3&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="3 "></span>    <span class="n">endpoint_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:9000&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="n">aws_access_key_id</span><span class="o">=</span><span class="s2">&quot;minioadmin&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="5 "></span>    <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="s2">&quot;minioadmin123&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="6 "></span><span class="p">)</span>
 </code></pre></div>
 </div>
 <p>Listemos ahora los objetos de un <em>bucket</em>, con sus metadatos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">respuesta</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">list_objects_v2</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="s2">"raw-data"</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">respuesta</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">list_objects_v2</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="s2">&quot;raw-data&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span>
-<span class="linenos" data-linenos="3 "></span><span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">respuesta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Contents"</span><span class="p">,</span> <span class="p">[]):</span>
-<span class="linenos" data-linenos="4 "></span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">obj</span><span class="p">[</span><span class="s2">"Key"</span><span class="p">]</span><span class="si">:</span><span class="s1">40</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">obj</span><span class="p">[</span><span class="s2">"Size"</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;10</span><span class="si">}</span><span class="s1"> bytes   </span><span class="si">{</span><span class="n">obj</span><span class="p">[</span><span class="s2">"ETag"</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-<span class="linenos" data-linenos="5 "></span><span class="c1"># orders.csv                                  2862229 bytes   "76a376756e6073733fd7f8f37ab1a738"</span>
-<span class="linenos" data-linenos="6 "></span><span class="c1"># retail_db_orders.csv                        2862229 bytes   "76a376756e6073733fd7f8f37ab1a738"</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">respuesta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Contents&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obj</span><span class="p">[</span><span class="s2">&quot;Key&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">40</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">obj</span><span class="p">[</span><span class="s2">&quot;Size&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;10</span><span class="si">}</span><span class="s1"> bytes   </span><span class="si">{</span><span class="n">obj</span><span class="p">[</span><span class="s2">&quot;ETag&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="c1"># orders.csv                                  2862229 bytes   &quot;76a376756e6073733fd7f8f37ab1a738&quot;</span>
+<span class="linenos" data-linenos="6 "></span><span class="c1"># retail_db_orders.csv                        2862229 bytes   &quot;76a376756e6073733fd7f8f37ab1a738&quot;</span>
 </code></pre></div>
 <p>Fíjate en lo que devuelve la <a href="https://docs.aws.amazon.com/boto3/latest/reference/services/s3.html"><abbr title="Application Programming Interface">API</abbr></a>: clave, tamaño y <em>ETag</em>. Nada de bloques, ni de nodos, ni de factor de replicación. Compáralo con la salida de <code>hdfs fsck</code> que obtuviste antes: en <em><abbr title="Hadoop Distributed File System">HDFS</abbr></em> el sistema te cuenta cómo está construido el fichero por dentro; en object storage el objeto es una caja negra que sólo tiene identidad, tamaño y huella.</p>
 <p>Podemos pedir los metadatos de un objeto concreto sin descargarlo:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">meta</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">head_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="s2">"raw-data"</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="s2">"orders.csv"</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">meta</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">head_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="s2">&quot;raw-data&quot;</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="s2">&quot;orders.csv&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span>
-<span class="linenos" data-linenos="3 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Tamaño:"</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">"ContentLength"</span><span class="p">])</span>
-<span class="linenos" data-linenos="4 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">"ETag:  "</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">"ETag"</span><span class="p">])</span>
-<span class="linenos" data-linenos="5 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Fecha: "</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">"LastModified"</span><span class="p">])</span>
+<span class="linenos" data-linenos="3 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tamaño:&quot;</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;ContentLength&quot;</span><span class="p">])</span>
+<span class="linenos" data-linenos="4 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ETag:  &quot;</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;ETag&quot;</span><span class="p">])</span>
+<span class="linenos" data-linenos="5 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fecha: &quot;</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;LastModified&quot;</span><span class="p">])</span>
 <span class="linenos" data-linenos="6 "></span><span class="c1"># Tamaño: 2862229</span>
-<span class="linenos" data-linenos="7 "></span><span class="c1"># ETag:   "76a376756e6073733fd7f8f37ab1a738"</span>
+<span class="linenos" data-linenos="7 "></span><span class="c1"># ETag:   &quot;76a376756e6073733fd7f8f37ab1a738&quot;</span>
 <span class="linenos" data-linenos="8 "></span><span class="c1"># Fecha:  2026-08-12 10:22:32+00:00</span>
 </code></pre></div>
 <p>Y subir y descargar objetos mediante <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3/client/upload_file.html"><code>upload_file</code></a> y <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3/client/download_file.html"><code>download_file</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># Subir</span>
-<span class="linenos" data-linenos="2 "></span><span class="n">s3</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="s2">"/sample-data/retail_db/retail_db_orders.csv"</span><span class="p">,</span> <span class="s2">"raw-data"</span><span class="p">,</span> <span class="s2">"copias/orders_copia.csv"</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">s3</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="s2">&quot;/sample-data/retail_db/retail_db_orders.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;raw-data&quot;</span><span class="p">,</span> <span class="s2">&quot;copias/orders_copia.csv&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span>
 <span class="linenos" data-linenos="4 "></span><span class="c1"># Descargar</span>
-<span class="linenos" data-linenos="5 "></span><span class="n">s3</span><span class="o">.</span><span class="n">download_file</span><span class="p">(</span><span class="s2">"raw-data"</span><span class="p">,</span> <span class="s2">"orders.csv"</span><span class="p">,</span> <span class="s2">"bajado.csv"</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="n">s3</span><span class="o">.</span><span class="n">download_file</span><span class="p">(</span><span class="s2">&quot;raw-data&quot;</span><span class="p">,</span> <span class="s2">&quot;orders.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;bajado.csv&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Si no queremos descargar todos los datos, podemos leer un rango de bytes concreto con el parámetro <code>Range</code> de <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3/client/get_object.html"><code>get_object</code></a>. Esto es útil para inspeccionar un fichero grande sin bajarlo entero, o para leer solo las columnas que nos interesan de un <em>Parquet</em>.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="c1"># Leer los primeros bytes sin descargar el fichero entero</span>
-<span class="linenos" data-linenos="2 "></span><span class="n">cuerpo</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="s2">"raw-data"</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="s2">"orders.csv"</span><span class="p">,</span> <span class="n">Range</span><span class="o">=</span><span class="s2">"bytes=0-120"</span><span class="p">)[</span><span class="s2">"Body"</span><span class="p">]</span>
-<span class="linenos" data-linenos="3 "></span><span class="nb">print</span><span class="p">(</span><span class="n">cuerpo</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">))</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">cuerpo</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="s2">&quot;raw-data&quot;</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="s2">&quot;orders.csv&quot;</span><span class="p">,</span> <span class="n">Range</span><span class="o">=</span><span class="s2">&quot;bytes=0-120&quot;</span><span class="p">)[</span><span class="s2">&quot;Body&quot;</span><span class="p">]</span>
+<span class="linenos" data-linenos="3 "></span><span class="nb">print</span><span class="p">(</span><span class="n">cuerpo</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
 <span class="linenos" data-linenos="4 "></span><span class="c1"># order_id,order_date,order_customer_id,order_status</span>
 <span class="linenos" data-linenos="5 "></span><span class="c1"># 1,2013-07-25 00:00:00,11599,CLOSED</span>
 <span class="linenos" data-linenos="6 "></span><span class="c1"># 2,2013-07-25 00:00:00,256,PENDING_P</span>
@@ -5740,10 +5748,10 @@ se cortan y se combinan, y <code>warehouse</code> es el comedor.</p>
 <div class="admonition tip">
 <p class="admonition-title">Prefijos, no carpetas</p>
 <p>Para listar los archivos de una carpeta, hay que pedir un prefijo explícitamente:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">respuesta</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">list_objects_v2</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="s2">"raw-data"</span><span class="p">,</span> <span class="n">Prefix</span><span class="o">=</span><span class="s2">"copias/"</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">respuesta</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">list_objects_v2</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="s2">&quot;raw-data&quot;</span><span class="p">,</span> <span class="n">Prefix</span><span class="o">=</span><span class="s2">&quot;copias/&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="2 "></span>
-<span class="linenos" data-linenos="3 "></span><span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">respuesta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Contents"</span><span class="p">,</span> <span class="p">[]):</span>
-<span class="linenos" data-linenos="4 "></span>    <span class="nb">print</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s2">"Key"</span><span class="p">])</span>
+<span class="linenos" data-linenos="3 "></span><span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">respuesta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Contents&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="nb">print</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s2">&quot;Key&quot;</span><span class="p">])</span>
 <span class="linenos" data-linenos="5 "></span><span class="c1"># copias/orders_copia.csv</span>
 </code></pre></div>
 <p>Si nos fijamos en el resultado devuelto, verás que la clave completa que devuelve es <code>copias/orders_copia.csv</code>, no <code>orders_copia.csv</code>. La barra forma parte del nombre, no separa nada.</p>
@@ -5759,10 +5767,10 @@ se cortan y se combinan, y <code>warehouse</code> es el comedor.</p>
 <span class="linenos" data-linenos=" 3 "></span>
 <span class="linenos" data-linenos=" 4 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="n">SECRET</span><span class="w"> </span><span class="n">minio</span><span class="w"> </span><span class="p">(</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="k">TYPE</span><span class="w"> </span><span class="n">s3</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="n">KEY_ID</span><span class="w"> </span><span class="s1">'minioadmin'</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="n">SECRET</span><span class="w"> </span><span class="s1">'minioadmin123'</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="n">ENDPOINT</span><span class="w"> </span><span class="s1">'minio:9000'</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="n">URL_STYLE</span><span class="w"> </span><span class="s1">'path'</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="n">KEY_ID</span><span class="w"> </span><span class="s1">&#39;minioadmin&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="n">SECRET</span><span class="w"> </span><span class="s1">&#39;minioadmin123&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="n">ENDPOINT</span><span class="w"> </span><span class="s1">&#39;minio:9000&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="n">URL_STYLE</span><span class="w"> </span><span class="s1">&#39;path&#39;</span><span class="p">,</span>
 <span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="n">USE_SSL</span><span class="w"> </span><span class="k">false</span>
 <span class="linenos" data-linenos="11 "></span><span class="p">);</span>
 </code></pre></div>
@@ -5771,18 +5779,18 @@ se cortan y se combinan, y <code>warehouse</code> es el comedor.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="n">con</span> <span class="o">=</span> <span class="n">duckdb</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"INSTALL httpfs; LOAD httpfs;"</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;INSTALL httpfs; LOAD httpfs;&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 5 "></span>
-<span class="linenos" data-linenos=" 6 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"""</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="s2">    CREATE OR REPLACE SECRET minio (</span>
 <span class="linenos" data-linenos=" 8 "></span><span class="s2">        TYPE s3,</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="s2">        KEY_ID 'minioadmin',</span>
-<span class="linenos" data-linenos="10 "></span><span class="s2">        SECRET 'minioadmin123',</span>
-<span class="linenos" data-linenos="11 "></span><span class="s2">        ENDPOINT 'minio:9000',</span>
-<span class="linenos" data-linenos="12 "></span><span class="s2">        URL_STYLE 'path',</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="s2">        KEY_ID &#39;minioadmin&#39;,</span>
+<span class="linenos" data-linenos="10 "></span><span class="s2">        SECRET &#39;minioadmin123&#39;,</span>
+<span class="linenos" data-linenos="11 "></span><span class="s2">        ENDPOINT &#39;minio:9000&#39;,</span>
+<span class="linenos" data-linenos="12 "></span><span class="s2">        URL_STYLE &#39;path&#39;,</span>
 <span class="linenos" data-linenos="13 "></span><span class="s2">        USE_SSL false</span>
 <span class="linenos" data-linenos="14 "></span><span class="s2">    );</span>
-<span class="linenos" data-linenos="15 "></span><span class="s2">"""</span><span class="p">)</span>
+<span class="linenos" data-linenos="15 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
 </code></pre></div>
 </div>
 </div>
@@ -5798,7 +5806,7 @@ se cortan y se combinan, y <code>warehouse</code> es el comedor.</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">SELECT</span><span class="w"> </span><span class="n">order_status</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">n</span>
-<span class="hll"><span class="linenos" data-linenos=" 2 "></span><span class="k">FROM</span><span class="w"> </span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'s3://raw-data/orders.csv'</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos=" 2 "></span><span class="k">FROM</span><span class="w"> </span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;s3://raw-data/orders.csv&#39;</span><span class="p">)</span>
 </span><span class="linenos" data-linenos=" 3 "></span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">order_status</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="c1">-- ┌─────────────────┬───────┐</span>
@@ -5818,12 +5826,12 @@ se cortan y se combinan, y <code>warehouse</code> es el comedor.</p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"""</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="s2">    SELECT order_status, count(*) AS n</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="s2">    FROM read_csv('s3://raw-data/orders.csv')</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="s2">    FROM read_csv(&#39;s3://raw-data/orders.csv&#39;)</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="s2">    GROUP BY order_status</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="s2">    ORDER BY n DESC;</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="s2">"""</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="c1"># ┌─────────────────┬───────┐</span>
 <span class="linenos" data-linenos=" 8 "></span><span class="c1"># │  order_status   │   n   │</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="c1"># │     varchar     │ int64 │</span>
@@ -5846,9 +5854,9 @@ se cortan y se combinan, y <code>warehouse</code> es el comedor.</p>
 <p>Una vez que ya podemos acceder a los datos desde <em>DuckDB</em>, vamos a hacer algo más interesante: particionar la tabla <code>orders</code> por su estado y almacenarla en formato <em>Parquet</em>, todo mediante  <code>s3://</code>, sin descargar el fichero a local.</p>
 <p>Para ello, usamos la sentencia <code>COPY</code> de <em>DuckDB</em>, que permite escribir el resultado de una consulta en un formato determinado. En este caso, vamos a leer el CSV crudo desde el <em>bucket</em> <code>raw-data</code> y escribirlo en la zona <code>processed</code>, particionado por <code>order_status</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">COPY</span><span class="w"> </span><span class="p">(</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'s3://raw-data/orders.csv'</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;s3://raw-data/orders.csv&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="3 "></span><span class="p">)</span>
-<span class="linenos" data-linenos="4 "></span><span class="k">TO</span><span class="w"> </span><span class="s1">'s3://processed/retail_db/orders'</span>
+<span class="linenos" data-linenos="4 "></span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;s3://processed/retail_db/orders&#39;</span>
 <span class="linenos" data-linenos="5 "></span><span class="p">(</span><span class="n">FORMAT</span><span class="w"> </span><span class="n">parquet</span><span class="p">,</span><span class="w"> </span><span class="n">PARTITION_BY</span><span class="w"> </span><span class="p">(</span><span class="n">order_status</span><span class="p">),</span><span class="w"> </span><span class="n">OVERWRITE_OR_IGNORE</span><span class="p">);</span>
 </code></pre></div>
 <p>La opción <code>PARTITION_BY (order_status)</code> es la que genera el árbol de prefijos <code>order_status=valor/</code>, y <code>OVERWRITE_OR_IGNORE</code> permite relanzar la escritura sobre una ruta que ya existe.</p>
@@ -5871,7 +5879,7 @@ treeView-beta
             ...</code></pre>
 <p>Cada <code>order_status=.../</code> no es una carpeta real, es un <strong>prefijo de clave</strong>. Y observa un detalle clave: la columna <code>order_status</code> ya no está dentro de los ficheros Parquet. Puedes comprobarlo pidiendo el esquema físico (desactivando la inferencia por <em>path</em>):</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="k">DESCRIBE</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="k">FROM</span><span class="w"> </span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">'s3://processed/retail_db/orders/order_status=COMPLETE/*.parquet'</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="k">FROM</span><span class="w"> </span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;s3://processed/retail_db/orders/order_status=COMPLETE/*.parquet&#39;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">                  </span><span class="n">hive_partitioning</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">);</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="err">┌───────────────────┬─────────────┬─────────┬─────────┬─────────┬─────────┐</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="err">│</span><span class="w">    </span><span class="k">column_name</span><span class="w">    </span><span class="err">│</span><span class="w"> </span><span class="n">column_type</span><span class="w"> </span><span class="err">│</span><span class="w">  </span><span class="k">null</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="k">key</span><span class="w">   </span><span class="err">│</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="err">│</span><span class="w">  </span><span class="n">extra</span><span class="w">  </span><span class="err">│</span>
@@ -5884,10 +5892,10 @@ treeView-beta
 </code></pre></div>
 <p>Tres columnas, no cuatro. La columna <code>order_status</code> ha desaparecido del fichero, ya que su valor está codificado en el nombre del prefijo, tal como vimos en la <a href="sql-analitico.html#manejando-ficheros-grandes">sesión anterior</a>.</p>
 <p>Podemos verlo también desde <em>Python</em>, y de paso comprobar que lo que la consola muestra como un árbol son claves planas:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">respuesta</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">list_objects_v2</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="s2">"processed"</span><span class="p">,</span> <span class="n">Prefix</span><span class="o">=</span><span class="s2">"retail_db/orders/"</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">respuesta</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">list_objects_v2</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="s2">&quot;processed&quot;</span><span class="p">,</span> <span class="n">Prefix</span><span class="o">=</span><span class="s2">&quot;retail_db/orders/&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">respuesta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Contents"</span><span class="p">,</span> <span class="p">[]):</span>
-<span class="linenos" data-linenos=" 4 "></span>    <span class="nb">print</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s2">"Key"</span><span class="p">])</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">respuesta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Contents&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+<span class="linenos" data-linenos=" 4 "></span>    <span class="nb">print</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s2">&quot;Key&quot;</span><span class="p">])</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="c1"># retail_db/orders/order_status=CANCELED/data_0.parquet</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="c1"># retail_db/orders/order_status=CLOSED/data_0.parquet</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="c1"># retail_db/orders/order_status=COMPLETE/data_0.parquet</span>
@@ -5905,29 +5913,29 @@ treeView-beta
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="n">con</span> <span class="o">=</span> <span class="n">duckdb</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"INSTALL mysql; LOAD mysql;"</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;INSTALL mysql; LOAD mysql;&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 5 "></span>
-<span class="linenos" data-linenos=" 6 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"""</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="s2">    ATTACH 'host=mysql-retail user=root password=rootpass database=retail_db'</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="s2">    ATTACH &#39;host=mysql-retail user=root password=rootpass database=retail_db&#39;</span>
 <span class="linenos" data-linenos=" 8 "></span><span class="s2">    AS retail (TYPE mysql);</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="s2">"""</span><span class="p">);</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">);</span>
 <span class="linenos" data-linenos="10 "></span>
-<span class="linenos" data-linenos="11 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"""</span>
+<span class="linenos" data-linenos="11 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos="12 "></span><span class="s2">    CREATE OR REPLACE SECRET minio (</span>
 <span class="linenos" data-linenos="13 "></span><span class="s2">        TYPE s3,</span>
-<span class="linenos" data-linenos="14 "></span><span class="s2">        KEY_ID 'minioadmin',</span>
-<span class="linenos" data-linenos="15 "></span><span class="s2">        SECRET 'minioadmin123',</span>
-<span class="linenos" data-linenos="16 "></span><span class="s2">        ENDPOINT 'minio:9000',</span>
-<span class="linenos" data-linenos="17 "></span><span class="s2">        URL_STYLE 'path',</span>
+<span class="linenos" data-linenos="14 "></span><span class="s2">        KEY_ID &#39;minioadmin&#39;,</span>
+<span class="linenos" data-linenos="15 "></span><span class="s2">        SECRET &#39;minioadmin123&#39;,</span>
+<span class="linenos" data-linenos="16 "></span><span class="s2">        ENDPOINT &#39;minio:9000&#39;,</span>
+<span class="linenos" data-linenos="17 "></span><span class="s2">        URL_STYLE &#39;path&#39;,</span>
 <span class="linenos" data-linenos="18 "></span><span class="s2">        USE_SSL false</span>
 <span class="linenos" data-linenos="19 "></span><span class="s2">    );</span>
-<span class="linenos" data-linenos="20 "></span><span class="s2">"""</span><span class="p">)</span>
+<span class="linenos" data-linenos="20 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="21 "></span>
-<span class="linenos" data-linenos="22 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"""</span>
+<span class="linenos" data-linenos="22 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos="23 "></span><span class="s2">    COPY (SELECT * FROM retail.customers)</span>
-<span class="linenos" data-linenos="24 "></span><span class="s2">    TO 's3://processed/retail_db/customers'</span>
+<span class="linenos" data-linenos="24 "></span><span class="s2">    TO &#39;s3://processed/retail_db/customers&#39;</span>
 <span class="linenos" data-linenos="25 "></span><span class="s2">    (FORMAT parquet, PARTITION_BY (customer_state), OVERWRITE_OR_IGNORE);</span>
-<span class="linenos" data-linenos="26 "></span><span class="s2">"""</span><span class="p">);</span>
+<span class="linenos" data-linenos="26 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">);</span>
 </code></pre></div>
 </div>
 <div class="admonition tip">

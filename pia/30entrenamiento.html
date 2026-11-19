@@ -1612,6 +1612,14 @@
   </span>
   
   
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
 
       </a>
     </li>
@@ -4263,37 +4271,37 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline</span>
 <span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="n">device</span> <span class="o">=</span> <span class="s2">"cuda:0"</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">"cpu"</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda:0&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span>
-<span class="linenos" data-linenos=" 6 "></span>    <span class="s2">"automatic-speech-recognition"</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">"openai/whisper-base"</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span>
+<span class="linenos" data-linenos=" 6 "></span>    <span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai/whisper-base&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="p">)</span>
 <span class="linenos" data-linenos=" 8 "></span>
 <span class="linenos" data-linenos=" 9 "></span><span class="c1"># Cargamos nuestro dataset</span>
 <span class="linenos" data-linenos="10 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_from_disk</span>
 <span class="linenos" data-linenos="11 "></span>
-<span class="linenos" data-linenos="12 "></span><span class="n">DATASET_PATH</span> <span class="o">=</span> <span class="s2">"/home/jupyter-iabd/audioslara/dataset/"</span>
+<span class="linenos" data-linenos="12 "></span><span class="n">DATASET_PATH</span> <span class="o">=</span> <span class="s2">&quot;/home/jupyter-iabd/audioslara/dataset/&quot;</span>
 <span class="linenos" data-linenos="13 "></span><span class="n">lara_dataset</span> <span class="o">=</span> <span class="n">load_from_disk</span><span class="p">(</span><span class="n">DATASET_PATH</span><span class="p">)</span>
 <span class="linenos" data-linenos="14 "></span>
 <span class="linenos" data-linenos="15 "></span><span class="c1"># Remuestreamos los audios a 16000</span>
 <span class="linenos" data-linenos="16 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">Audio</span>
 <span class="linenos" data-linenos="17 "></span>
-<span class="linenos" data-linenos="18 "></span><span class="n">lara_dataset</span> <span class="o">=</span> <span class="n">lara_dataset</span><span class="o">.</span><span class="n">cast_column</span><span class="p">(</span><span class="s2">"audio"</span><span class="p">,</span> <span class="n">Audio</span><span class="p">(</span><span class="n">sampling_rate</span><span class="o">=</span><span class="mi">16000</span><span class="p">))</span>
+<span class="linenos" data-linenos="18 "></span><span class="n">lara_dataset</span> <span class="o">=</span> <span class="n">lara_dataset</span><span class="o">.</span><span class="n">cast_column</span><span class="p">(</span><span class="s2">&quot;audio&quot;</span><span class="p">,</span> <span class="n">Audio</span><span class="p">(</span><span class="n">sampling_rate</span><span class="o">=</span><span class="mi">16000</span><span class="p">))</span>
 <span class="linenos" data-linenos="19 "></span>
 <span class="linenos" data-linenos="20 "></span><span class="c1"># Recuperamos un audio aleatorio</span>
 <span class="linenos" data-linenos="21 "></span><span class="n">un_audio</span> <span class="o">=</span> <span class="n">lara_dataset</span><span class="o">.</span><span class="n">shuffle</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos" data-linenos="22 "></span><span class="c1"># {'audio': {'path': '6564612039048d0f405c668a_1711368297.wav',</span>
-<span class="linenos" data-linenos="23 "></span><span class="c1">#   'array': array([ 5.09317033e-10, -5.82076609e-11, -7.71251507e-10, ...,</span>
+<span class="linenos" data-linenos="22 "></span><span class="c1"># {&#39;audio&#39;: {&#39;path&#39;: &#39;6564612039048d0f405c668a_1711368297.wav&#39;,</span>
+<span class="linenos" data-linenos="23 "></span><span class="c1">#   &#39;array&#39;: array([ 5.09317033e-10, -5.82076609e-11, -7.71251507e-10, ...,</span>
 <span class="linenos" data-linenos="24 "></span><span class="c1">#           3.66814737e-03,  1.89103803e-03, -1.90643012e-03]),</span>
-<span class="linenos" data-linenos="25 "></span><span class="c1">#   'sampling_rate': 16000},</span>
-<span class="linenos" data-linenos="26 "></span><span class="c1">#  'texto': 'LOS MOLINOS DE LA MANCHA SON MUY GRANDES.'}</span>
+<span class="linenos" data-linenos="25 "></span><span class="c1">#   &#39;sampling_rate&#39;: 16000},</span>
+<span class="linenos" data-linenos="26 "></span><span class="c1">#  &#39;texto&#39;: &#39;LOS MOLINOS DE LA MANCHA SON MUY GRANDES.&#39;}</span>
 <span class="linenos" data-linenos="27 "></span>
 <span class="linenos" data-linenos="28 "></span><span class="c1"># Mostramos el reproductor de un audio (en un cuaderno de Jupyter)</span>
 <span class="linenos" data-linenos="29 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Audio</span>
-<span class="linenos" data-linenos="30 "></span><span class="n">Audio</span><span class="p">(</span><span class="n">un_audio</span><span class="p">[</span><span class="s2">"audio"</span><span class="p">][</span><span class="s2">"array"</span><span class="p">],</span><span class="n">rate</span><span class="o">=</span><span class="n">un_audio</span><span class="p">[</span><span class="s2">"audio"</span><span class="p">][</span><span class="s2">"sampling_rate"</span><span class="p">])</span>
+<span class="linenos" data-linenos="30 "></span><span class="n">Audio</span><span class="p">(</span><span class="n">un_audio</span><span class="p">[</span><span class="s2">&quot;audio&quot;</span><span class="p">][</span><span class="s2">&quot;array&quot;</span><span class="p">],</span><span class="n">rate</span><span class="o">=</span><span class="n">un_audio</span><span class="p">[</span><span class="s2">&quot;audio&quot;</span><span class="p">][</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">])</span>
 <span class="linenos" data-linenos="31 "></span>
 <span class="linenos" data-linenos="32 "></span><span class="c1"># Realizamos la inferencia del audio</span>
-<span class="linenos" data-linenos="33 "></span><span class="n">pipe</span><span class="p">(</span><span class="n">un_audio</span><span class="p">[</span><span class="s2">"audio"</span><span class="p">],</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
-<span class="linenos" data-linenos="34 "></span><span class="c1"># {'text': ' La monía ya ha hecho un muy grande.'}</span>
+<span class="linenos" data-linenos="33 "></span><span class="n">pipe</span><span class="p">(</span><span class="n">un_audio</span><span class="p">[</span><span class="s2">&quot;audio&quot;</span><span class="p">],</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+<span class="linenos" data-linenos="34 "></span><span class="c1"># {&#39;text&#39;: &#39; La monía ya ha hecho un muy grande.&#39;}</span>
 </code></pre></div>
 <h2 id="tareas-a-realizar">Tareas a realizar<a class="headerlink" href="#tareas-a-realizar" title="Permanent link">&para;</a></h2>
 <p>En esta quincena, nos vamos a centrar en realizar el entrenamiento a partir del <em>dataset</em> generado en la sesión anterior, probando con el modelo <em>Whisper</em> con diferentes tamaños, evaluando el tiempo necesario de entrenamiento, así como los tiempos de respuesta en la inferencia de los datos.</p>

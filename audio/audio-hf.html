@@ -1616,6 +1616,14 @@
   </span>
   
   
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
 
       </a>
     </li>
@@ -4464,7 +4472,7 @@
 <span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">gradio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
 <span class="linenos" data-linenos=" 5 "></span>
 <span class="linenos" data-linenos=" 6 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span>
-<span class="hll"><span class="linenos" data-linenos=" 7 "></span>    <span class="s2">"automatic-speech-recognition"</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">"openai/whisper-base"</span>
+<span class="hll"><span class="linenos" data-linenos=" 7 "></span>    <span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai/whisper-base&quot;</span>
 </span><span class="linenos" data-linenos=" 8 "></span><span class="p">)</span>
 <span class="linenos" data-linenos=" 9 "></span>
 <span class="linenos" data-linenos="10 "></span><span class="k">def</span><span class="w"> </span><span class="nf">transcribe</span><span class="p">(</span><span class="n">audio</span><span class="p">):</span>
@@ -4473,12 +4481,12 @@
 <span class="linenos" data-linenos="13 "></span>    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="linenos" data-linenos="14 "></span>    <span class="n">y</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
 <span class="linenos" data-linenos="15 "></span>
-<span class="hll"><span class="linenos" data-linenos="16 "></span>    <span class="k">return</span> <span class="n">pipe</span><span class="p">({</span><span class="s2">"sampling_rate"</span><span class="p">:</span> <span class="n">sr</span><span class="p">,</span> <span class="s2">"raw"</span><span class="p">:</span> <span class="n">y</span><span class="p">})[</span><span class="s2">"text"</span><span class="p">]</span>
+<span class="hll"><span class="linenos" data-linenos="16 "></span>    <span class="k">return</span> <span class="n">pipe</span><span class="p">({</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">:</span> <span class="n">sr</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">})[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
 </span><span class="linenos" data-linenos="17 "></span>
 <span class="linenos" data-linenos="18 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
 <span class="linenos" data-linenos="19 "></span>    <span class="n">transcribe</span><span class="p">,</span>
-<span class="linenos" data-linenos="20 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s2">"microphone"</span><span class="p">]),</span>
-<span class="linenos" data-linenos="21 "></span>    <span class="s2">"text"</span><span class="p">,</span>
+<span class="linenos" data-linenos="20 "></span>    <span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;microphone&quot;</span><span class="p">]),</span>
+<span class="linenos" data-linenos="21 "></span>    <span class="s2">&quot;text&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="22 "></span><span class="p">)</span>
 <span class="linenos" data-linenos="23 "></span>
 <span class="linenos" data-linenos="24 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
@@ -4494,7 +4502,7 @@
 
 <p>Podemos probar a cambiar el tamaño del modelo y, en el caso de tener GPU, podemos indicarle que la queremos utilizar mediante el parámetro <code>device=0</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span>
-<span class="linenos" data-linenos="2 "></span>    <span class="s2">"automatic-speech-recognition"</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">"openai/whisper-medium"</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span>
+<span class="linenos" data-linenos="2 "></span>    <span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai/whisper-medium&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span>
 <span class="linenos" data-linenos="3 "></span><span class="p">)</span>
 </code></pre></div>
 <!--
@@ -4515,7 +4523,7 @@
 <span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">gradio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="linenos" data-linenos=" 5 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span>
-<span class="linenos" data-linenos=" 6 "></span>    <span class="s2">"automatic-speech-recognition"</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">"openai/whisper-base"</span>
+<span class="linenos" data-linenos=" 6 "></span>    <span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai/whisper-base&quot;</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="p">)</span>
 <span class="linenos" data-linenos=" 8 "></span>
 <span class="hll"><span class="linenos" data-linenos=" 9 "></span><span class="k">def</span><span class="w"> </span><span class="nf">transcribe</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">nuevo_fragmento</span><span class="p">):</span>
@@ -4528,12 +4536,12 @@
 </span><span class="linenos" data-linenos="16 "></span>    <span class="k">else</span><span class="p">:</span>
 <span class="linenos" data-linenos="17 "></span>        <span class="n">stream</span> <span class="o">=</span> <span class="n">y</span>
 <span class="linenos" data-linenos="18 "></span>
-<span class="hll"><span class="linenos" data-linenos="19 "></span>    <span class="k">return</span> <span class="n">stream</span><span class="p">,</span> <span class="n">pipe</span><span class="p">({</span><span class="s2">"sampling_rate"</span><span class="p">:</span> <span class="n">sr</span><span class="p">,</span> <span class="s2">"raw"</span><span class="p">:</span> <span class="n">stream</span><span class="p">})[</span><span class="s2">"text"</span><span class="p">]</span>
+<span class="hll"><span class="linenos" data-linenos="19 "></span>    <span class="k">return</span> <span class="n">stream</span><span class="p">,</span> <span class="n">pipe</span><span class="p">({</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">:</span> <span class="n">sr</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span> <span class="n">stream</span><span class="p">})[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
 </span><span class="linenos" data-linenos="20 "></span>
 <span class="linenos" data-linenos="21 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
 <span class="linenos" data-linenos="22 "></span>    <span class="n">transcribe</span><span class="p">,</span>
-<span class="hll"><span class="linenos" data-linenos="23 "></span>    <span class="p">[</span><span class="s2">"state"</span><span class="p">,</span> <span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s2">"microphone"</span><span class="p">],</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">)],</span>
-</span><span class="hll"><span class="linenos" data-linenos="24 "></span>    <span class="p">[</span><span class="s2">"state"</span><span class="p">,</span> <span class="s2">"text"</span><span class="p">],</span>
+<span class="hll"><span class="linenos" data-linenos="23 "></span>    <span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;microphone&quot;</span><span class="p">],</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">)],</span>
+</span><span class="hll"><span class="linenos" data-linenos="24 "></span>    <span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">],</span>
 </span><span class="hll"><span class="linenos" data-linenos="25 "></span>    <span class="n">live</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 </span><span class="linenos" data-linenos="26 "></span><span class="p">)</span>
 <span class="linenos" data-linenos="27 "></span>
@@ -4553,18 +4561,18 @@
 <div class="highlight"><span class="filename">gradio-bark.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">gradio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
 <span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">"text-to-speech"</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">"suno/bark-small"</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;text-to-speech&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;suno/bark-small&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 5 "></span>
 <span class="linenos" data-linenos=" 6 "></span><span class="k">def</span><span class="w"> </span><span class="nf">tts</span><span class="p">(</span><span class="n">frase</span><span class="p">):</span>
 <span class="linenos" data-linenos=" 7 "></span>    <span class="n">audio_generated</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">(</span><span class="n">frase</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 8 "></span>
-<span class="linenos" data-linenos=" 9 "></span>    <span class="k">return</span> <span class="n">audio_generated</span><span class="p">[</span><span class="s2">"sampling_rate"</span><span class="p">],</span><span class="n">audio_generated</span><span class="p">[</span><span class="s2">"audio"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos" data-linenos=" 9 "></span>    <span class="k">return</span> <span class="n">audio_generated</span><span class="p">[</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">],</span><span class="n">audio_generated</span><span class="p">[</span><span class="s2">&quot;audio&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 <span class="linenos" data-linenos="10 "></span>
 <span class="linenos" data-linenos="11 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
 <span class="linenos" data-linenos="12 "></span>    <span class="n">tts</span><span class="p">,</span>
-<span class="linenos" data-linenos="13 "></span>    <span class="n">inputs</span><span class="o">=</span><span class="n">gr</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"Teclea el texto a pronunciar"</span><span class="p">),</span>
-<span class="linenos" data-linenos="14 "></span>    <span class="n">outputs</span><span class="o">=</span><span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"audio generado"</span><span class="p">),</span>
-<span class="linenos" data-linenos="15 "></span>    <span class="n">title</span><span class="o">=</span><span class="s2">"De texto a voz"</span><span class="p">,</span>
+<span class="linenos" data-linenos="13 "></span>    <span class="n">inputs</span><span class="o">=</span><span class="n">gr</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Teclea el texto a pronunciar&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos="14 "></span>    <span class="n">outputs</span><span class="o">=</span><span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;audio generado&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos="15 "></span>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;De texto a voz&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="16 "></span><span class="p">)</span>
 <span class="linenos" data-linenos="17 "></span>
 <span class="linenos" data-linenos="18 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
@@ -4580,13 +4588,13 @@
 <div class="highlight"><span class="filename">gradio-bark-processor.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoProcessor</span><span class="p">,</span> <span class="n">BarkModel</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">gradio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
 <span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="n">model_name</span><span class="o">=</span><span class="s2">"suno/bark-small"</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;suno/bark-small&quot;</span>
 <span class="linenos" data-linenos=" 5 "></span>
 <span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="n">processor</span> <span class="o">=</span> <span class="n">AutoProcessor</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
 </span><span class="hll"><span class="linenos" data-linenos=" 7 "></span><span class="n">model</span> <span class="o">=</span> <span class="n">BarkModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
 </span><span class="linenos" data-linenos=" 8 "></span>
 <span class="linenos" data-linenos=" 9 "></span><span class="c1"># Selección de voz - Valores: https://suno-ai.notion.site/8b8e8749ed514b0cbf3f699013548683</span>
-<span class="hll"><span class="linenos" data-linenos="10 "></span><span class="n">voice_preset</span> <span class="o">=</span> <span class="s2">"v2/es_speaker_0"</span>
+<span class="hll"><span class="linenos" data-linenos="10 "></span><span class="n">voice_preset</span> <span class="o">=</span> <span class="s2">&quot;v2/es_speaker_0&quot;</span>
 </span><span class="linenos" data-linenos="11 "></span>
 <span class="linenos" data-linenos="12 "></span><span class="k">def</span><span class="w"> </span><span class="nf">tts</span><span class="p">(</span><span class="n">frase</span><span class="p">):</span>
 <span class="linenos" data-linenos="13 "></span>    <span class="c1"># Obtenemos el procesador</span>
@@ -4602,9 +4610,9 @@
 <span class="linenos" data-linenos="23 "></span>
 <span class="linenos" data-linenos="24 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
 <span class="linenos" data-linenos="25 "></span>    <span class="n">tts</span><span class="p">,</span>
-<span class="linenos" data-linenos="26 "></span>    <span class="n">inputs</span><span class="o">=</span><span class="n">gr</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"Teclea el texto a pronunciar"</span><span class="p">),</span>
-<span class="linenos" data-linenos="27 "></span>    <span class="n">outputs</span><span class="o">=</span><span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"audio generado"</span><span class="p">),</span>
-<span class="linenos" data-linenos="28 "></span>    <span class="n">title</span><span class="o">=</span><span class="s2">"De texto a voz"</span><span class="p">,</span>
+<span class="linenos" data-linenos="26 "></span>    <span class="n">inputs</span><span class="o">=</span><span class="n">gr</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Teclea el texto a pronunciar&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos="27 "></span>    <span class="n">outputs</span><span class="o">=</span><span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;audio generado&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos="28 "></span>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;De texto a voz&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="29 "></span><span class="p">)</span>
 <span class="linenos" data-linenos="30 "></span>
 <span class="linenos" data-linenos="31 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
@@ -4615,31 +4623,31 @@
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">gradio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gr</span>
 <span class="linenos" data-linenos=" 4 "></span>
-<span class="hll"><span class="linenos" data-linenos=" 5 "></span><span class="n">transcriber</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">"automatic-speech-recognition"</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">"openai/whisper-base"</span><span class="p">)</span>
-</span><span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="n">tts</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">"text-to-speech"</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">"suno/bark-small"</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos=" 5 "></span><span class="n">transcriber</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;automatic-speech-recognition&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;openai/whisper-base&quot;</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="n">tts</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;text-to-speech&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;suno/bark-small&quot;</span><span class="p">)</span>
 </span><span class="linenos" data-linenos=" 7 "></span>
 <span class="linenos" data-linenos=" 8 "></span><span class="k">def</span><span class="w"> </span><span class="nf">transcribe</span><span class="p">(</span><span class="n">audio</span><span class="p">):</span>
 <span class="linenos" data-linenos=" 9 "></span>    <span class="n">sr</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">audio</span>
 <span class="linenos" data-linenos="10 "></span>    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="linenos" data-linenos="11 "></span>    <span class="n">y</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
 <span class="linenos" data-linenos="12 "></span>
-<span class="hll"><span class="linenos" data-linenos="13 "></span>    <span class="n">text_generated</span> <span class="o">=</span> <span class="n">transcriber</span><span class="p">({</span><span class="s2">"sampling_rate"</span><span class="p">:</span> <span class="n">sr</span><span class="p">,</span> <span class="s2">"raw"</span><span class="p">:</span> <span class="n">y</span><span class="p">})[</span><span class="s2">"text"</span><span class="p">]</span>
+<span class="hll"><span class="linenos" data-linenos="13 "></span>    <span class="n">text_generated</span> <span class="o">=</span> <span class="n">transcriber</span><span class="p">({</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">:</span> <span class="n">sr</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">})[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
 </span><span class="hll"><span class="linenos" data-linenos="14 "></span>    <span class="n">audio_generated</span> <span class="o">=</span> <span class="n">tts</span><span class="p">(</span><span class="n">text_generated</span><span class="p">)</span>
 </span><span class="linenos" data-linenos="15 "></span>
-<span class="linenos" data-linenos="16 "></span>    <span class="n">audio_returned</span> <span class="o">=</span> <span class="n">audio_generated</span><span class="p">[</span><span class="s2">"sampling_rate"</span><span class="p">],</span><span class="n">audio_generated</span><span class="p">[</span><span class="s2">"audio"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos" data-linenos="16 "></span>    <span class="n">audio_returned</span> <span class="o">=</span> <span class="n">audio_generated</span><span class="p">[</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">],</span><span class="n">audio_generated</span><span class="p">[</span><span class="s2">&quot;audio&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 <span class="linenos" data-linenos="17 "></span>
 <span class="hll"><span class="linenos" data-linenos="18 "></span>    <span class="k">return</span> <span class="p">[</span><span class="n">text_generated</span><span class="p">,</span> <span class="n">audio_returned</span><span class="p">]</span>
 </span><span class="linenos" data-linenos="19 "></span>
 <span class="linenos" data-linenos="20 "></span>
 <span class="linenos" data-linenos="21 "></span><span class="n">demo</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">Interface</span><span class="p">(</span>
 <span class="linenos" data-linenos="22 "></span>    <span class="n">transcribe</span><span class="p">,</span>
-<span class="linenos" data-linenos="23 "></span>    <span class="n">inputs</span><span class="o">=</span><span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s2">"microphone"</span><span class="p">]),</span>
+<span class="linenos" data-linenos="23 "></span>    <span class="n">inputs</span><span class="o">=</span><span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;microphone&quot;</span><span class="p">]),</span>
 <span class="linenos" data-linenos="24 "></span>    <span class="n">outputs</span><span class="o">=</span><span class="p">[</span>
-<span class="linenos" data-linenos="25 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"texto generado"</span><span class="p">),</span>
-<span class="linenos" data-linenos="26 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"audio generado"</span><span class="p">)</span>
+<span class="linenos" data-linenos="25 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;texto generado&quot;</span><span class="p">),</span>
+<span class="linenos" data-linenos="26 "></span>        <span class="n">gr</span><span class="o">.</span><span class="n">Audio</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;audio generado&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="27 "></span>    <span class="p">],</span>
-<span class="linenos" data-linenos="28 "></span>    <span class="n">title</span><span class="o">=</span><span class="s2">"De audio a Whisper y TTS"</span><span class="p">,</span>
-<span class="linenos" data-linenos="29 "></span>    <span class="n">description</span><span class="o">=</span><span class="s2">"Transcribe el audio y luego sintetiza el texto en audio"</span>
+<span class="linenos" data-linenos="28 "></span>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;De audio a Whisper y TTS&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="29 "></span>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Transcribe el audio y luego sintetiza el texto en audio&quot;</span>
 <span class="linenos" data-linenos="30 "></span><span class="p">)</span>
 <span class="linenos" data-linenos="31 "></span>
 <span class="linenos" data-linenos="32 "></span><span class="n">demo</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>

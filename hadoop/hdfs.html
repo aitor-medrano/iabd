@@ -1616,6 +1616,14 @@
   </span>
   
   
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
 
       </a>
     </li>
@@ -5170,23 +5178,23 @@ Application Master (Por job)
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">hdfs</span><span class="w"> </span><span class="kn">import</span> <span class="n">InsecureClient</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="c1"># Datos de conexión</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="n">HDFS_HOSTNAME</span> <span class="o">=</span> <span class="s1">'iabd-virtualbox'</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">HDFS_HOSTNAME</span> <span class="o">=</span> <span class="s1">&#39;iabd-virtualbox&#39;</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="n">HDFS_PORT</span> <span class="o">=</span> <span class="mi">9870</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="n">HDFSCLI_CONNECTION_STRING</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'http://</span><span class="si">{</span><span class="n">HDFS_HOSTNAME</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">HDFS_PORT</span><span class="si">}</span><span class="s1">'</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">HDFSCLI_CONNECTION_STRING</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HDFS_HOSTNAME</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">HDFS_PORT</span><span class="si">}</span><span class="s1">&#39;</span>
 <span class="linenos" data-linenos=" 7 "></span>
 <span class="linenos" data-linenos=" 8 "></span><span class="c1"># En nuestro caso, al no usar Kerberos, creamos una conexión no segura</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="n">hdfs_client</span> <span class="o">=</span> <span class="n">InsecureClient</span><span class="p">(</span><span class="n">HDFSCLI_CONNECTION_STRING</span><span class="p">)</span>
 <span class="linenos" data-linenos="10 "></span>
-<span class="linenos" data-linenos="11 "></span><span class="c1"># Leemos el fichero de 'El quijote' que tenemos en HDFS</span>
-<span class="linenos" data-linenos="12 "></span><span class="n">fichero</span> <span class="o">=</span> <span class="s1">'/user/iabd/el_quijote.txt'</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># Leemos el fichero de &#39;El quijote&#39; que tenemos en HDFS</span>
+<span class="linenos" data-linenos="12 "></span><span class="n">fichero</span> <span class="o">=</span> <span class="s1">&#39;/user/iabd/el_quijote.txt&#39;</span>
 <span class="linenos" data-linenos="13 "></span><span class="k">with</span> <span class="n">hdfs_client</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fichero</span><span class="p">)</span> <span class="k">as</span> <span class="n">reader</span><span class="p">:</span>
 <span class="linenos" data-linenos="14 "></span>    <span class="n">texto</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 <span class="linenos" data-linenos="15 "></span>
 <span class="linenos" data-linenos="16 "></span><span class="nb">print</span><span class="p">(</span><span class="n">texto</span><span class="p">)</span>
 <span class="linenos" data-linenos="17 "></span>
 <span class="linenos" data-linenos="18 "></span><span class="c1"># Creamos una cadena con formato CSV y la almacenamos en HDFS</span>
-<span class="linenos" data-linenos="19 "></span><span class="n">datos</span><span class="o">=</span><span class="s2">"nombre,apellidos</span><span class="se">\n</span><span class="s2">Aitor,Medrano</span><span class="se">\n</span><span class="s2">Pedro,Casas"</span>
-<span class="linenos" data-linenos="20 "></span><span class="n">hdfs_client</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"/user/iabd/datos.csv"</span><span class="p">,</span> <span class="n">datos</span><span class="p">)</span>
+<span class="linenos" data-linenos="19 "></span><span class="n">datos</span><span class="o">=</span><span class="s2">&quot;nombre,apellidos</span><span class="se">\n</span><span class="s2">Aitor,Medrano</span><span class="se">\n</span><span class="s2">Pedro,Casas&quot;</span>
+<span class="linenos" data-linenos="20 "></span><span class="n">hdfs_client</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;/user/iabd/datos.csv&quot;</span><span class="p">,</span> <span class="n">datos</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <p>Actualmente la librería <a href="https://arrow.apache.org/docs/index.html"><strong><em>PyArrow</em></strong></a> es la más utilizada para trabajar con HDFS desde <em>Python</em>, ya que ofrece un alto rendimiento y soporte para los formatos de datos más comunes en el mundo del <em>Big Data</em> (como <em>Parquet</em> y <em>Avro</em>).</p>
@@ -5202,42 +5210,42 @@ Application Master (Por job)
 <p>Y luego, utilizar la clase <a href="https://arrow.apache.org/docs/python/generated/pyarrow.fs.HadoopFileSystem.html"><code>HadoopFileSystem</code></a> para conectarnos a HDFS. Así pues, podemos repetir el ejemplo anterior:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="kn">import</span> <span class="n">fs</span>
 <span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="n">HDFS_HOSTNAME</span> <span class="o">=</span> <span class="s1">'iabd-virtualbox'</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">HDFS_HOSTNAME</span> <span class="o">=</span> <span class="s1">&#39;iabd-virtualbox&#39;</span>
 <span class="hll"><span class="linenos" data-linenos=" 4 "></span><span class="n">HDFS_PORT</span> <span class="o">=</span> <span class="mi">9000</span>  <span class="c1"># Puerto nativo de HDFS (no WebHDFS)</span>
 </span><span class="linenos" data-linenos=" 5 "></span>
 <span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="n">hdfs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">HadoopFileSystem</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">HDFS_HOSTNAME</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">HDFS_PORT</span><span class="p">)</span>
 </span><span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span><span class="c1"># Leemos el fichero de 'El quijote' que tenemos en HDFS</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="n">fichero</span> <span class="o">=</span> <span class="s1">'/user/iabd/el_quijote.txt'</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1"># Leemos el fichero de &#39;El quijote&#39; que tenemos en HDFS</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">fichero</span> <span class="o">=</span> <span class="s1">&#39;/user/iabd/el_quijote.txt&#39;</span>
 <span class="hll"><span class="linenos" data-linenos="10 "></span><span class="k">with</span> <span class="n">hdfs</span><span class="o">.</span><span class="n">open_input_stream</span><span class="p">(</span><span class="n">fichero</span><span class="p">)</span> <span class="k">as</span> <span class="n">reader</span><span class="p">:</span>
-</span><span class="linenos" data-linenos="11 "></span>    <span class="n">texto</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span>
+</span><span class="linenos" data-linenos="11 "></span>    <span class="n">texto</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="12 "></span>
 <span class="linenos" data-linenos="13 "></span><span class="nb">print</span><span class="p">(</span><span class="n">texto</span><span class="p">)</span>
 <span class="linenos" data-linenos="14 "></span>
 <span class="linenos" data-linenos="15 "></span><span class="c1"># Creamos una cadena con formato CSV y la almacenamos en HDFS</span>
-<span class="linenos" data-linenos="16 "></span><span class="n">datos</span> <span class="o">=</span> <span class="s2">"nombre,apellidos</span><span class="se">\n</span><span class="s2">Aitor,Medrano</span><span class="se">\n</span><span class="s2">Pedro,Casas"</span>
-<span class="hll"><span class="linenos" data-linenos="17 "></span><span class="k">with</span> <span class="n">hdfs</span><span class="o">.</span><span class="n">open_output_stream</span><span class="p">(</span><span class="s2">"/user/iabd/datos.csv"</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
-</span><span class="linenos" data-linenos="18 "></span>    <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">datos</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">))</span>
+<span class="linenos" data-linenos="16 "></span><span class="n">datos</span> <span class="o">=</span> <span class="s2">&quot;nombre,apellidos</span><span class="se">\n</span><span class="s2">Aitor,Medrano</span><span class="se">\n</span><span class="s2">Pedro,Casas&quot;</span>
+<span class="hll"><span class="linenos" data-linenos="17 "></span><span class="k">with</span> <span class="n">hdfs</span><span class="o">.</span><span class="n">open_output_stream</span><span class="p">(</span><span class="s2">&quot;/user/iabd/datos.csv&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+</span><span class="linenos" data-linenos="18 "></span>    <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">datos</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
 </code></pre></div>
 <p>En el mundo real, los formatos de los archivos normalmente serán <em>Avro</em> y/o <em>Parquet</em>, y el acceso lo realizaremos en gran medida mediante la librería de <em>Pandas</em>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.parquet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pq</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="kn">import</span> <span class="n">fs</span>
 <span class="linenos" data-linenos=" 4 "></span>
-<span class="linenos" data-linenos=" 5 "></span><span class="n">HDFS_HOSTNAME</span> <span class="o">=</span> <span class="s1">'iabd-virtualbox'</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">HDFS_HOSTNAME</span> <span class="o">=</span> <span class="s1">&#39;iabd-virtualbox&#39;</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="n">HDFS_PORT</span> <span class="o">=</span> <span class="mi">9000</span> 
 <span class="linenos" data-linenos=" 7 "></span><span class="n">hdfs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">HadoopFileSystem</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">HDFS_HOSTNAME</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">HDFS_PORT</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 8 "></span>
 <span class="linenos" data-linenos=" 9 "></span><span class="n">datos_dict</span> <span class="o">=</span> <span class="p">{</span>
-<span class="linenos" data-linenos="10 "></span>    <span class="s1">'nombre'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Aitor'</span><span class="p">,</span> <span class="s1">'Pedro'</span><span class="p">],</span>
-<span class="linenos" data-linenos="11 "></span>    <span class="s1">'apellidos'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Medrano'</span><span class="p">,</span> <span class="s1">'Casas'</span><span class="p">]</span>
+<span class="linenos" data-linenos="10 "></span>    <span class="s1">&#39;nombre&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Aitor&#39;</span><span class="p">,</span> <span class="s1">&#39;Pedro&#39;</span><span class="p">],</span>
+<span class="linenos" data-linenos="11 "></span>    <span class="s1">&#39;apellidos&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Medrano&#39;</span><span class="p">,</span> <span class="s1">&#39;Casas&#39;</span><span class="p">]</span>
 <span class="linenos" data-linenos="12 "></span><span class="p">}</span>
 <span class="linenos" data-linenos="13 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">datos_dict</span><span class="p">)</span>
-<span class="hll"><span class="linenos" data-linenos="14 "></span><span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s1">'/user/iabd/datos.parquet'</span><span class="p">,</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">hdfs</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos="14 "></span><span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s1">&#39;/user/iabd/datos.parquet&#39;</span><span class="p">,</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">hdfs</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </span><span class="linenos" data-linenos="15 "></span>
 <span class="linenos" data-linenos="16 "></span><span class="c1"># Si queremos hacerlo mediante PyArrow directamente sin Pandas:</span>
 <span class="linenos" data-linenos="17 "></span><span class="c1"># tabla = pa.table(datos_dict)</span>
-<span class="linenos" data-linenos="18 "></span><span class="c1"># pq.write_table(tabla, '/user/iabd/datos.parquet', filesystem=hdfs)</span>
+<span class="linenos" data-linenos="18 "></span><span class="c1"># pq.write_table(tabla, &#39;/user/iabd/datos.parquet&#39;, filesystem=hdfs)</span>
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Otras librerías</p>

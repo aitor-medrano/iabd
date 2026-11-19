@@ -1912,6 +1912,14 @@
   </span>
   
   
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
 
       </a>
     </li>
@@ -4812,11 +4820,11 @@ Pero si queremos que sólo exista durante la ejecución de uno o más trabajos, 
 <span class="linenos" data-linenos=" 3 "></span>  ~~  \_#####\
 <span class="linenos" data-linenos=" 4 "></span>  ~~     \###|
 <span class="linenos" data-linenos=" 5 "></span>  ~~       \#/ ___   https://aws.amazon.com/linux/amazon-linux-2023
-<span class="linenos" data-linenos=" 6 "></span>   ~~       V~' '-&gt;
+<span class="linenos" data-linenos=" 6 "></span>   ~~       V~&#39; &#39;-&gt;
 <span class="linenos" data-linenos=" 7 "></span>    ~~~         /
 <span class="linenos" data-linenos=" 8 "></span>      ~~._.   _/
 <span class="linenos" data-linenos=" 9 "></span>         _/ _/
-<span class="linenos" data-linenos="10 "></span>       _/m/'
+<span class="linenos" data-linenos="10 "></span>       _/m/&#39;
 <span class="linenos" data-linenos="11 "></span>Last login: Sun Jan 21 10:08:18 2024
 <span class="linenos" data-linenos="12 "></span>
 <span class="linenos" data-linenos="13 "></span>EEEEEEEEEEEEEEEEEEEE MMMMMMMM           MMMMMMMM RRRRRRRRRRRRRRR    
@@ -4934,8 +4942,8 @@ Tras ello, desde Hue, crearemos una tabla con Hive sobre dicha tabla y realizare
 <span class="linenos" data-linenos="4 "></span><span class="w">    </span>--username<span class="o">=</span>admin<span class="w"> </span>--password<span class="o">=</span>adminadmin<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="5 "></span><span class="w">    </span>--table<span class="o">=</span>customers<span class="w"> </span>--driver<span class="o">=</span>org.mariadb.jdbc.Driver<span class="w">   </span><span class="se">\</span>
 <span class="linenos" data-linenos="6 "></span><span class="w">    </span>--target-dir<span class="o">=</span>/user/iabd/sqoop/customers<span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="7 "></span><span class="w">    </span>--fields-terminated-by<span class="o">=</span><span class="s1">','</span><span class="w"> </span>--lines-terminated-by<span class="w"> </span><span class="s1">'\n'</span><span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="8 "></span><span class="w">    </span>--columns<span class="w"> </span><span class="s2">"customer_id,customer_fname,customer_lname,customer_city"</span>
+<span class="linenos" data-linenos="7 "></span><span class="w">    </span>--fields-terminated-by<span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="w"> </span>--lines-terminated-by<span class="w"> </span><span class="s1">&#39;\n&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="8 "></span><span class="w">    </span>--columns<span class="w"> </span><span class="s2">&quot;customer_id,customer_fname,customer_lname,customer_city&quot;</span>
 </code></pre></div>
 <p>Antes de crear el paso, necesitamos preparar el <em>bucket</em> de S3 (puedes utilizar cualquier de los empleados en las sesiones anteriores; si no fuera el caso, crea el <em>bucket</em> y añade una carpeta).</p>
 <p>Ahora sí, una vez ya tenemos el <em>script</em> y el <em>bucket</em> de S3, lo subimos al mismo:</p>
@@ -4967,9 +4975,9 @@ Tras ello, desde Hue, crearemos una tabla con Hive sobre dicha tabla y realizare
 <span class="linenos" data-linenos="10 "></span><span class="w">  </span><span class="n">city</span><span class="w"> </span><span class="n">STRING</span>
 <span class="linenos" data-linenos="11 "></span><span class="p">)</span>
 <span class="linenos" data-linenos="12 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">DELIMITED</span><span class="w">  </span>
-<span class="linenos" data-linenos="13 "></span><span class="n">FIELDS</span><span class="w"> </span><span class="n">TERMINATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">','</span><span class="w">  </span>
+<span class="linenos" data-linenos="13 "></span><span class="n">FIELDS</span><span class="w"> </span><span class="n">TERMINATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="w">  </span>
 <span class="linenos" data-linenos="14 "></span><span class="n">STORED</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TEXTFILE</span>
-<span class="linenos" data-linenos="15 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">'/user/iabd/sqoop/customers'</span><span class="p">;</span>
+<span class="linenos" data-linenos="15 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;/user/iabd/sqoop/customers&#39;</span><span class="p">;</span>
 <span class="linenos" data-linenos="16 "></span>
 <span class="linenos" data-linenos="17 "></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">customers</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
 </code></pre></div>
@@ -5015,9 +5023,9 @@ Tras ello, desde Hue, crearemos una tabla con Hive sobre dicha tabla y realizare
 <span class="linenos" data-linenos=" 8 "></span><span class="w">  </span><span class="n">city</span><span class="w"> </span><span class="n">STRING</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="p">)</span>
 <span class="linenos" data-linenos="10 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">DELIMITED</span><span class="w">  </span>
-<span class="linenos" data-linenos="11 "></span><span class="n">FIELDS</span><span class="w"> </span><span class="n">TERMINATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">','</span><span class="w">  </span>
+<span class="linenos" data-linenos="11 "></span><span class="n">FIELDS</span><span class="w"> </span><span class="n">TERMINATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="w">  </span>
 <span class="linenos" data-linenos="12 "></span><span class="n">STORED</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TEXTFILE</span>
-<span class="linenos" data-linenos="13 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">'s3n://s3iabd/emr'</span><span class="p">;</span>
+<span class="linenos" data-linenos="13 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;s3n://s3iabd/emr&#39;</span><span class="p">;</span>
 <span class="linenos" data-linenos="14 "></span>
 <span class="linenos" data-linenos="15 "></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">customers3</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
 </code></pre></div>

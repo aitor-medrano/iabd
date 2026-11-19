@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" width="900" height="420" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif">
+  <!--
+    Paleta del bloque:
+      #2b3a42 oscuro (estados intermedios, texto)
+      #4f8a6d verde (éxito)
+      #c0603f terracota (fallo)
+      #8a8f98 gris (transiciones, estados que no se ejecutan)
+      #b08a2e ocre (reintento)
+    Los estados finales llevan doble borde.
+  -->
+  <defs>
+    <marker id="fg" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#8a8f98"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="420" fill="#ffffff"/>
+
+  <!-- Transiciones del camino principal -->
+  <line x1="150" y1="85" x2="188" y2="85" stroke="#8a8f98" stroke-width="2" marker-end="url(#fg)"/>
+  <line x1="320" y1="85" x2="388" y2="85" stroke="#8a8f98" stroke-width="2" marker-end="url(#fg)"/>
+  <text x="354" y="72" text-anchor="middle" font-size="11" fill="#5f6670">hay hueco</text>
+  <line x1="520" y1="85" x2="588" y2="85" stroke="#8a8f98" stroke-width="2" marker-end="url(#fg)"/>
+  <text x="554" y="72" text-anchor="middle" font-size="11" fill="#5f6670">se lanza</text>
+  <line x1="720" y1="85" x2="758" y2="85" stroke="#8a8f98" stroke-width="2" marker-end="url(#fg)"/>
+  <text x="739" y="72" text-anchor="middle" font-size="11" fill="#5f6670">bien</text>
+
+  <!-- running -> up_for_retry / failed -->
+  <line x1="630" y1="110" x2="630" y2="208" stroke="#8a8f98" stroke-width="2" marker-end="url(#fg)"/>
+  <text x="622" y="150" text-anchor="end" font-size="11" fill="#5f6670">falla y quedan</text>
+  <text x="622" y="164" text-anchor="end" font-size="11" fill="#5f6670">reintentos</text>
+  <path d="M 700 110 C 740 150, 790 170, 815 208" fill="none" stroke="#8a8f98" stroke-width="2" marker-end="url(#fg)"/>
+  <text x="790" y="150" font-size="11" fill="#5f6670">falla sin</text>
+  <text x="790" y="164" font-size="11" fill="#5f6670">reintentos</text>
+
+  <!-- up_for_retry -> scheduled -->
+  <path d="M 565 235 C 420 235, 290 210, 262 112" fill="none" stroke="#8a8f98" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#fg)"/>
+  <text x="415" y="250" text-anchor="middle" font-size="11" fill="#5f6670">pasa retry_delay</text>
+
+  <!-- sin estado -> upstream_failed / skipped -->
+  <line x1="85" y1="110" x2="85" y2="288" stroke="#8a8f98" stroke-width="2" marker-end="url(#fg)"/>
+  <text x="93" y="190" font-size="11" fill="#5f6670">falla una</text>
+  <text x="93" y="204" font-size="11" fill="#5f6670">tarea anterior</text>
+  <path d="M 140 110 C 200 200, 250 250, 268 288" fill="none" stroke="#8a8f98" stroke-width="2" marker-end="url(#fg)"/>
+  <text x="222" y="190" font-size="11" fill="#5f6670">se salta</text>
+
+  <text x="169" y="34" text-anchor="middle" font-size="11" fill="#5f6670">se cumplen las</text>
+  <text x="169" y="48" text-anchor="middle" font-size="11" fill="#5f6670">dependencias</text>
+
+  <!-- Estados intermedios -->
+  <rect x="20" y="60" width="130" height="50" rx="10" fill="#ffffff" stroke="#8a8f98" stroke-width="2" stroke-dasharray="5 3"/>
+  <text x="85" y="90" text-anchor="middle" font-size="14" fill="#2b3a42" font-style="italic">sin estado</text>
+
+  <rect x="190" y="60" width="130" height="50" rx="10" fill="#ffffff" stroke="#2b3a42" stroke-width="2"/>
+  <text x="255" y="90" text-anchor="middle" font-size="14" fill="#2b3a42" font-family="monospace">scheduled</text>
+
+  <rect x="390" y="60" width="130" height="50" rx="10" fill="#ffffff" stroke="#2b3a42" stroke-width="2"/>
+  <text x="455" y="90" text-anchor="middle" font-size="14" fill="#2b3a42" font-family="monospace">queued</text>
+
+  <rect x="590" y="60" width="130" height="50" rx="10" fill="#2b3a42"/>
+  <text x="655" y="90" text-anchor="middle" font-size="14" fill="#ffffff" font-family="monospace">running</text>
+
+  <rect x="565" y="210" width="130" height="50" rx="10" fill="#ffffff" stroke="#b08a2e" stroke-width="2"/>
+  <text x="630" y="240" text-anchor="middle" font-size="14" fill="#8a6a1e" font-family="monospace">up_for_retry</text>
+
+  <!-- Estados finales (doble borde) -->
+  <rect x="760" y="60" width="120" height="50" rx="10" fill="#4f8a6d"/>
+  <rect x="764" y="64" width="112" height="42" rx="7" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+  <text x="820" y="90" text-anchor="middle" font-size="14" fill="#ffffff" font-family="monospace">success</text>
+
+  <rect x="760" y="210" width="120" height="50" rx="10" fill="#c0603f"/>
+  <rect x="764" y="214" width="112" height="42" rx="7" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+  <text x="820" y="240" text-anchor="middle" font-size="14" fill="#ffffff" font-family="monospace">failed</text>
+
+  <rect x="10" y="290" width="150" height="50" rx="10" fill="#ffffff" stroke="#c0603f" stroke-width="2"/>
+  <rect x="14" y="294" width="142" height="42" rx="7" fill="none" stroke="#c0603f" stroke-width="1"/>
+  <text x="85" y="320" text-anchor="middle" font-size="14" fill="#c0603f" font-family="monospace">upstream_failed</text>
+
+  <rect x="210" y="290" width="120" height="50" rx="10" fill="#ffffff" stroke="#8a8f98" stroke-width="2"/>
+  <rect x="214" y="294" width="112" height="42" rx="7" fill="none" stroke="#8a8f98" stroke-width="1"/>
+  <text x="270" y="320" text-anchor="middle" font-size="14" fill="#5f6670" font-family="monospace">skipped</text>
+
+  <!-- Leyenda -->
+  <rect x="440" y="372" width="34" height="20" rx="5" fill="#ffffff" stroke="#2b3a42" stroke-width="2"/>
+  <text x="482" y="387" font-size="12" fill="#2b3a42">estado intermedio</text>
+  <rect x="610" y="372" width="34" height="20" rx="5" fill="#ffffff" stroke="#2b3a42" stroke-width="2"/>
+  <rect x="613" y="375" width="28" height="14" rx="3" fill="none" stroke="#2b3a42" stroke-width="1"/>
+  <text x="652" y="387" font-size="12" fill="#2b3a42">estado final</text>
+</svg>
