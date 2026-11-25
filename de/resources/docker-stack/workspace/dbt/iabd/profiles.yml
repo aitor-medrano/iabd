@@ -1,8 +1,17 @@
 iabd_retail:              # debe coincidir con 'profile:' de dbt_project.yml
-  target: dev
-  outputs:
+target: dev
+outputs:
     dev:
-      type: duckdb
-      path: /workspace/dbt/iabd/retail_el.duckdb
-      schema: main
-      threads: 4
+    type: duckdb
+    path: /workspace/dbt/iabd/retail_el.duckdb
+    schema: main
+    threads: 4
+    extensions:
+        - httpfs
+    secrets:
+        - type: s3
+        key_id: "{{ env_var('AWS_ACCESS_KEY_ID') }}"
+        secret: "{{ env_var('AWS_SECRET_ACCESS_KEY') }}"
+        endpoint: minio:9000
+        url_style: path
+        use_ssl: false

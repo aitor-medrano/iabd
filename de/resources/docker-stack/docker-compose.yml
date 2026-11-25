@@ -9,7 +9,8 @@
 #   minio    minio minio-init
 #   hive     mysql-metastore hive-metastore hiveserver2
 #   lab      mysql-retail lab retail-init
-#   airflow  postgres-airflow airflow-init airflow-webserver airflow-scheduler
+#   airflow  postgres-airflow airflow-init airflow-apiserver airflow-scheduler
+#            airflow-dag-processor
 #
 # PROFILES PARAGUAS (alto nivel):
 #   all      arranca TODO el stack
@@ -51,7 +52,7 @@ x-hadoop-config-vols: &hadoop-config-vols
 x-airflow-env: &airflow-env
   AIRFLOW__CORE__EXECUTOR: LocalExecutor
   AIRFLOW__CORE__AUTH_MANAGER: airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
-  AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres-airflow/airflow
+  AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg://airflow:airflow@postgres-airflow/airflow
   AIRFLOW__CORE__LOAD_EXAMPLES: "false"
   AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
   # En Airflow 3 las tareas ya no tocan la base de metadatos: hablan con el
@@ -59,6 +60,8 @@ x-airflow-env: &airflow-env
   AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-apiserver:8080/execution/
   AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW_JWT_SECRET}
   AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
+  # Busca DAG nuevos cada 30 s (por defecto, 300 s): en clase no queremos esperar.
+  AIRFLOW__DAG_PROCESSOR__REFRESH_INTERVAL: "30"
   AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER}
   AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
   AWS_ENDPOINT_URL: http://minio:9000
@@ -67,6 +70,13 @@ x-airflow-env: &airflow-env
   MYSQL_DATABASE_SOURCE: retail_db
   MYSQL_USER: ${RETAIL_USER}
   MYSQL_PASSWORD: ${RETAIL_PASSWORD}
+  # Artefactos de dbt (SQL compilado y logs) en una carpeta propia de Airflow:
+  DBT_TARGET_PATH: /tmp/dbt/target
+  DBT_LOG_PATH: /tmp/dbt/logs
+  # dbt y dlt sin telemetría, y logs de dbt sin códigos de color
+  DO_NOT_TRACK: "1"
+  RUNTIME__DLTHUB_TELEMETRY: "false"
+  DBT_USE_COLORS: "false"
 
 # Solo airflow-init construye la imagen (mismo patrón que hive-metastore);
 # el resto de servicios de Airflow reutilizan la imagen ya construida.
@@ -464,9 +474,9 @@ services:
       retries: 15
     networks: [bigdata]
  
-  # One-shot: construye la imagen, migra la BD de metadatos y crea el usuario
-  # admin. Idempotente. El entrypoint oficial hace la migración y el usuario
-  # al ver _AIRFLOW_DB_MIGRATE y _AIRFLOW_WWW_USER_CREATE.
+  # One-shot: construye la imagen, migra la BD de metadatos, crea el usuario
+  # admin y el pool duckdb. Idempotente. El entrypoint oficial hace la migración
+  # y el usuario al ver _AIRFLOW_DB_MIGRATE y _AIRFLOW_WWW_USER_CREATE.
   airflow-init:
     <<: *airflow-common
     build:
@@ -492,7 +502,7 @@ services:
       - |
         mkdir -p /opt/airflow/{logs,dags,plugins}
         chown -R "${AIRFLOW_UID:-50000}:0" /opt/airflow/{logs,dags,plugins}
-        /entrypoint airflow version
+        /entrypoint airflow pools set duckdb 1 "Escrituras en retail_el.duckdb: una tarea a la vez"
         echo "Airflow inicializado."
     depends_on:
       postgres-airflow:

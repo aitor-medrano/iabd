@@ -4312,56 +4312,50 @@ timeline
 </thead>
 <tbody>
 <tr>
-<td>1.- Spark: fundamentos</td>
-<td>Por qué Spark y cuándo. Arquitectura (driver/executors, DAG, lazy, shuffle); Spark vs Polars/DuckDB (cuándo escalar); RDD → DataFrame → Spark SQL. Hands-on en tu stack (Jupyter como driver).</td>
+<td>1.- Lakehouse con Iceberg</td>
+<td>Del <em>data swamp</em> a los formatos de tabla abiertos: ACID, <em>snapshots</em>, <em>time travel</em>, evolución de esquema y de particionado. Iceberg frente a Delta y Hudi. Catálogo REST con Polaris. Hands-on sin Spark: tablas Iceberg desde PyIceberg y DuckDB, <code>MERGE</code> y capas bronze/silver/gold.</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
-<td>2.- DataFrames en profundidad</td>
-<td>Transformaciones/acciones, joins, particionado, funciones de columna, UDFs vs nativas, PyArrow, ANSI mode (Spark 4).</td>
+<td>2.- Spark: fundamentos</td>
+<td>Por qué Spark y cuándo. Arquitectura (driver/executors, DAG, ejecución perezosa, shuffle). Spark frente a DuckDB y Polars: cuándo escalar. De RDD (mención) a DataFrame y Spark SQL. Hands-on: Spark leyendo las tablas Iceberg de la sesión 1 a través de Polaris.</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
-<td>3.- Spark SQL, catálogo y optimización</td>
-<td>Catalyst, explain, broadcast joins, caching, AQE; Hive Metastore como catálogo (ya lo tienes).</td>
+<td>3.- DataFrames y fuentes en paralelo</td>
+<td>Transformaciones y acciones, joins, funciones de columna, UDF frente a nativas, PyArrow, modo ANSI. Lectura y escritura en paralelo: MySQL por particiones JDBC, MongoDB con su conector, CSV y JSON masivos.</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
-<td>4.- Arquitectura medallion</td>
-<td>Bronze/silver/gold: diseño, idempotencia, calidad por capa. Hands-on: raw → bronze en MinIO.</td>
+<td>4.- Optimización</td>
+<td>Catalyst y <code>explain</code>, AQE, <em>broadcast joins</em>, caché, particionado y la Spark UI. Medir el mismo mart en DuckDB y en Spark.</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
-<td>5.- Open table formats</td>
-<td>El problema del data swamp; ACID, time travel, schema evolution; Iceberg vs Delta vs Hudi y por qué Iceberg es el estándar emergente. Hands-on ligero: tabla Iceberg en Athena o Spark (puente al bloque 2).</td>
+<td>5.- Medallion con Spark e Iceberg</td>
+<td>Diseño por capas, idempotencia y calidad en cada capa. <code>MERGE INTO</code> y SCD tipo 2 con <code>clientes_historico</code>. Hands-on: bronze → silver → gold de <code>retail_db</code>.</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
-<td>6.- Delta Lake (I)</td>
-<td>Transaction log, ACID, time travel, schema evolution, MERGE/UPSERT. Hands-on: bronze → silver.</td>
+<td>6.- Mantenimiento e interoperabilidad</td>
+<td>Compactación (<code>rewrite_data_files</code>), <code>expire_snapshots</code>, ficheros huérfanos, particionado oculto. Las mismas tablas desde DuckDB y Trino. Delta y UniForm como contrapunto; Databricks y Fabric como plataformas gestionadas.</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
-<td>7.- Delta Lake (II) + interoperabilidad</td>
-<td>OPTIMIZE/Z-ORDER/compaction, vacuum; UniForm (leer Delta como Iceberg); Delta vs Iceberg en el mercado. Hands-on: silver → gold + mantenimiento.</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>8.- Declarative pipelines + capstone</td>
-<td>Pipeline medallion end-to-end (Spark 4.1 declarative pipelines); mención a Databricks/Fabric como plataformas gestionadas. Repaso.</td>
+<td>7.- Orquestación y <em>declarative pipelines</em></td>
+<td>Spark dentro del DAG de Airflow (dlt → Spark → Iceberg). Spark Declarative Pipelines (Spark 4.1). Proyecto final de punta a punta.</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td><a href="spark/stack-docker-spark.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"/></svg></span> Stack Docker</a></td>
-<td>Stack Docker para el bloque de Spark: Cluster de Spark, DeltaLake, Kafka, Airflow</td>
+<td>Stack Docker para el bloque de Spark: clúster de Spark, Polaris, Kafka, Airflow</td>
 <td></td>
 <td></td>
 </tr>

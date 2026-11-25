@@ -4707,12 +4707,12 @@
 <p>También es posible crear una instancia de RDS directamente desde AWS CLI. Para ello, el primer paso es crear el grupo de seguridad mediante <code>ec2 create-security-group</code>, al cual le ponemos un nombre para luego poder referenciarlo:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>ec2<span class="w"> </span>create-security-group<span class="w"> </span><span class="se">\</span>
 <span class="hll"><span class="linenos" data-linenos="2 "></span><span class="w">    </span>--group-name<span class="w"> </span>rds-public<span class="w"> </span><span class="se">\</span>
-</span><span class="linenos" data-linenos="3 "></span><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Acceso abierto para RDS MariaDB&quot;</span>
+</span><span class="linenos" data-linenos="3 "></span><span class="w">    </span>--description<span class="w"> </span><span class="s2">"Acceso abierto para RDS MariaDB"</span>
 </code></pre></div>
 <p>Tras su creación, obtendremos su identificador:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span>
-<span class="hll"><span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">&quot;GroupId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sg-03b19c935d87f01a0&quot;</span><span class="p">,</span>
-</span><span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">&quot;SecurityGroupArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:ec2:us-east-1:533267238455:security-group/sg-03b19c935d87f01a0&quot;</span>
+<span class="hll"><span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">"GroupId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sg-03b19c935d87f01a0"</span><span class="p">,</span>
+</span><span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">"SecurityGroupArn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:ec2:us-east-1:533267238455:security-group/sg-03b19c935d87f01a0"</span>
 <span class="linenos" data-linenos="4 "></span><span class="p">}</span>
 </code></pre></div>
 <p>A continuación, configuramos el grupo de seguridad y le añadimos una regla de entrada mediante <code>ec2 authorize-security-group-ingress</code> para permitir las conexiones al puerto de <em>MariaDB</em> desde cualquier dirección:</p>
@@ -4724,18 +4724,18 @@
 </code></pre></div>
 <p>Tras su ejecución, obtendremos de nuevo su identificador:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">&quot;Return&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">&quot;SecurityGroupRules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">"Return"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">"SecurityGroupRules"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="w">        </span><span class="p">{</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">            </span><span class="nt">&quot;SecurityGroupRuleId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sgr-0d90f0e63a9ba67d2&quot;</span><span class="p">,</span>
-<span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="w">            </span><span class="nt">&quot;GroupId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sg-03b19c935d87f01a0&quot;</span><span class="p">,</span>
-</span><span class="linenos" data-linenos=" 7 "></span><span class="w">            </span><span class="nt">&quot;GroupOwnerId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;533267238455&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="w">            </span><span class="nt">&quot;IsEgress&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="w">            </span><span class="nt">&quot;IpProtocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="10 "></span><span class="w">            </span><span class="nt">&quot;FromPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
-<span class="linenos" data-linenos="11 "></span><span class="w">            </span><span class="nt">&quot;ToPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
-<span class="linenos" data-linenos="12 "></span><span class="w">            </span><span class="nt">&quot;CidrIpv4&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="13 "></span><span class="w">            </span><span class="nt">&quot;SecurityGroupRuleArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:ec2:us-east-1:533267238455:security-group-rule/sgr-0d90f0e63a9ba67d2&quot;</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">            </span><span class="nt">"SecurityGroupRuleId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sgr-0d90f0e63a9ba67d2"</span><span class="p">,</span>
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="w">            </span><span class="nt">"GroupId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sg-03b19c935d87f01a0"</span><span class="p">,</span>
+</span><span class="linenos" data-linenos=" 7 "></span><span class="w">            </span><span class="nt">"GroupOwnerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"533267238455"</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">            </span><span class="nt">"IsEgress"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">            </span><span class="nt">"IpProtocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp"</span><span class="p">,</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">            </span><span class="nt">"FromPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">            </span><span class="nt">"ToPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">            </span><span class="nt">"CidrIpv4"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0/0"</span><span class="p">,</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">            </span><span class="nt">"SecurityGroupRuleArn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:ec2:us-east-1:533267238455:security-group-rule/sgr-0d90f0e63a9ba67d2"</span>
 <span class="linenos" data-linenos="14 "></span><span class="w">        </span><span class="p">}</span>
 <span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="p">]</span>
 <span class="linenos" data-linenos="16 "></span><span class="p">}</span>
