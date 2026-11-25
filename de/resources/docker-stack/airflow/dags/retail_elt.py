@@ -3,7 +3,10 @@ from datetime import timedelta
 import pendulum
 from airflow.providers.standard.operators.bash import BashOperator
 from airflow.sdk import CronTriggerTimetable, dag
+from airflow.sdk import Asset
  
+MARTS = Asset("s3://processed/marts/ingresos_por_departamento.parquet")
+
 # Proyecto dbt de la sesión de transformación: dbt se ejecuta desde aquí
 PROYECTO = "/workspace/dbt/iabd_retail"
 PERFIL = "/workspace/dbt/iabd"
@@ -42,8 +45,9 @@ def retail_elt():
     publicar = BashOperator(
         task_id="publicar",
         bash_command="$ELT_BIN/python /workspace/pipeline/publicar.py",
+        outlets=[MARTS],
     )
- 
+
     extraer >> transformar >> probar >> publicar
  
  

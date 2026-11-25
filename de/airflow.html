@@ -1752,6 +1752,19 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#tareas-y-operadores_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Tareas y operadores
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ejecuciones-y-estados" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4690,6 +4703,19 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#tareas-y-operadores_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Tareas y operadores
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ejecuciones-y-estados" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5318,7 +5344,7 @@
 </div>
 <h2 id="conceptos">Conceptos<a class="headerlink" href="#conceptos" title="Permanent link">&para;</a></h2>
 <h3 id="dag"><abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr><a class="headerlink" href="#dag" title="Permanent link">&para;</a></h3>
-<p>Un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> (<em>Directed Acyclic Graph</em>, grafo dirigido acíclico) es la definición de un flujo de trabajo: un conjunto de tareas y las dependencias entre ellas. Es dirigido porque las dependencias tienen sentido (<abbr title="data build tool, herramienta de construcción de datos">dbt</abbr> va después de <abbr title="data loading tool, herramienta de carga de datos">dlt</abbr>) y acíclico porque no puede haber ciclos (una tarea no puede depender, directa o indirectamente, de sí misma).</p>
+<p>Un <a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html"><abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr></a> (<em>Directed Acyclic Graph</em>, grafo dirigido acíclico) es la definición de un flujo de trabajo: un conjunto de tareas y las dependencias entre ellas. Es dirigido porque las dependencias tienen sentido (<abbr title="data build tool, herramienta de construcción de datos">dbt</abbr> va después de <abbr title="data loading tool, herramienta de carga de datos">dlt</abbr>) y acíclico porque no puede haber ciclos (una tarea no puede depender, directa o indirectamente, de sí misma).</p>
 <figure>
   <img alt="DAG de cuatro tareas" src="images/11airflow-dag.svg" width="400" />
 <br />
@@ -5327,16 +5353,18 @@
 <p>Las dependencias permiten paralelismo: en la figura, B y C pueden ejecutarse a la vez en cuanto termina A, y D espera a las dos.</p>
 <p>Cada <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> se escribe en un fichero <em>Python</em>, y <em>Airflow</em> los busca en una carpeta, <code>dags</code>, que lee periódicamente.</p>
 <h3 id="tareas-y-operadores">Tareas y operadores<a class="headerlink" href="#tareas-y-operadores" title="Permanent link">&para;</a></h3>
-<p>Una tarea es un paso del <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>. Cada tarea se crea a partir de un operador, que es la plantilla que define qué tipo de trabajo hace:</p>
+<h3 id="tareas-y-operadores_1">Tareas y operadores<a class="headerlink" href="#tareas-y-operadores_1" title="Permanent link">&para;</a></h3>
+<p>Una tarea es cada uno de los pasos de un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>: un nodo del grafo con un identificador propio, el <code>task_id</code>. Para crearla, lo habitual es partir de un <a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/operators.html">operador</a>, una plantilla que define un tipo de trabajo. La tarea es el operador con sus parámetros concretos. Por ejemplo, <code>BashOperator</code> sabe ejecutar comandos de <em>shell</em>, y una tarea <code>extraer</code> es un <code>BashOperator</code> que ejecuta el script de <abbr title="data loading tool, herramienta de carga de datos">dlt</abbr>.</p>
+<p>Según lo que hacen, distinguimos tres tipos de operadores:</p>
 <ul>
-<li><code>BashOperator</code> ejecuta un comando de shell. Es el que usaremos para lanzar <abbr title="data loading tool, herramienta de carga de datos">dlt</abbr> y <abbr title="data build tool, herramienta de construcción de datos">dbt</abbr>.</li>
-<li><code>@task</code>, el decorador de la <abbr title="Application Programming Interface">API</abbr> <em>TaskFlow</em>, convierte una función <em>Python</em> en una tarea.</li>
-<li>Hay cientos de operadores más en los paquetes de <em>providers</em>, para bases de datos, servicios de nube o herramientas como <em>Spark</em>.</li>
-<li>Los <em>sensores</em> son operadores especiales que esperan a que se cumpla una condición, como que aparezca un fichero, antes de dejar pasar al resto del <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>. No los usaremos, ya que desde <em>Airflow 3</em>, para esperar a un dato es más cómodo usar <em>Assets</em>, que verás en el caso extra.</li>
+<li>Los de <strong>acción</strong> ejecutan un trabajo. <code>BashOperator</code>, el que usaremos para lanzar <abbr title="data loading tool, herramienta de carga de datos">dlt</abbr> y <abbr title="data build tool, herramienta de construcción de datos">dbt</abbr>, ejecuta un comando, y <code>PythonOperator</code> ejecuta una función <em>Python</em>.</li>
+<li>Los de <strong>transferencia</strong> mueven datos entre dos sistemas, como de una base de datos a un <em>bucket</em>. Junto con muchos operadores de acción, se distribuyen en paquetes de <em>providers</em>: hay cientos, para bases de datos, servicios en la nube o herramientas como <em>Spark</em>.</li>
+<li>Los <strong>sensores</strong> no hacen ningún trabajo: esperan a que se cumpla una condición, como que aparezca un fichero, antes de dejar pasar al resto del <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>. Se utilizaban en versiones antiguas e <em>Airflow</em>, pero ya no se recomiendan porque son más complejos de usar y mantener que los <em>Assets</em>, que veremos en el caso extra.</li>
 </ul>
-<p>Las dependencias se declaran con el operador <strong><code>&gt;&gt;</code></strong>: <code>extraer &gt;&gt; transformar</code> significa que <code>transformar</code> no empieza hasta que <code>extraer</code> termina con éxito. También podemos emplear <code>&lt;&lt;</code> para indicar que una tarea depende de otra, y listas mediante corchetes (<strong><code>[]</code></strong>) para crear ramas paralelas: <code>extraer &gt;&gt; [transformar, validar] &gt;&gt; cargar</code>.</p>
+<p>Además de los operadores, hay una segunda forma de crear tareas: el decorador <code>@task</code> de la <abbr title="Application Programming Interface">API</abbr> <em>TaskFlow</em>, que convierte directamente una función <em>Python</em> en una tarea. Usaremos las dos.</p>
+<p>Las dependencias entre tareas se declaran con el operador <strong><code>&gt;&gt;</code></strong>: <code>extraer &gt;&gt; transformar</code> significa que <code>transformar</code> no empieza hasta que <code>extraer</code> termina con éxito. El operador <code>&lt;&lt;</code> expresa lo mismo en sentido contrario (<code>transformar &lt;&lt; extraer</code>), aunque se usa menos. Con una lista entre corchetes se crean ramas que se ejecutan en paralelo: en <code>extraer &gt;&gt; [transformar, validar] &gt;&gt; cargar</code>, <code>transformar</code> y <code>validar</code> empiezan a la vez cuando termina <code>extraer</code>, y <code>cargar</code> espera a que acaben las dos.</p>
 <h3 id="ejecuciones-y-estados">Ejecuciones y estados<a class="headerlink" href="#ejecuciones-y-estados" title="Permanent link">&para;</a></h3>
-<p>Cada vez que se ejecuta un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> se crea un <em><abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> run</em>, y cada tarea dentro de ese run es una <em>task instance</em> con su propio estado. El run también tiene estado (<code>queued</code>, <code>running</code>, <code>success</code> o <code>failed</code>), que depende del de sus tareas: termina en <code>success</code> si todas acaban bien y en <code>failed</code> si alguna falla.</p>
+<p>Cada vez que se ejecuta un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> se crea un <em><abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> run</em>, y cada tarea dentro de ese <em>run</em> es una <em>task instance</em> con su propio estado. El <em>run</em> también tiene estado (<code>queued</code>, <code>running</code>, <code>success</code> o <code>failed</code>) que depende del de sus tareas: termina en <code>success</code> si todas acaban bien y en <code>failed</code> si alguna falla.</p>
 <p>Así pues, una tarea recorre estos estados:</p>
 <figure>
   <img alt="Ciclo de vida de una tarea" src="images/11airflow-estados.svg" />
@@ -5464,7 +5492,7 @@
 <p>Relanzar una tarea a mano es algo cotidiano: desde la interfaz se puede limpiar (<em>Clear</em>) una tarea o un run completo, y <em>Airflow</em> los vuelve a ejecutar. Al limpiar una tarea, la interfaz permite incluir también las que dependen de ella (<em>Downstream</em>) o de las que ella depende (<em>Upstream</em>).</p>
 <p>En nuestro caso, nuestro pipeline ya es idempotente sin haberlo buscado. <abbr title="data loading tool, herramienta de carga de datos">dlt</abbr> carga con <code>write_disposition="replace"</code> y <abbr title="data build tool, herramienta de construcción de datos">dbt</abbr> reconstruye vistas y tablas desde cero en cada ejecución, así que lanzarlo dos veces deja el mismo resultado. Una tarea que añadiera filas sin comprobar si ya existían no lo sería: cada reintento duplicaría datos.</p>
 <h2 id="arquitectura">Arquitectura<a class="headerlink" href="#arquitectura" title="Permanent link">&para;</a></h2>
-<p>Airflow no es un único programa, sino varios componentes que se coordinan a través de una base de datos de metadatos:</p>
+<p><em>Airflow</em> no es un único programa, sino varios componentes que se coordinan a través de una base de datos de metadatos:</p>
 <table>
 <thead>
 <tr>
@@ -5507,7 +5535,7 @@
 </tr>
 </tbody>
 </table>
-<p>El siguiente diagrama muestra la arquitectura lógica y el recorrido de un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> desde que lo escribimos hasta que vemos el resultado en la interfaz:</p>
+<p>El siguiente diagrama muestra la <a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html">arquitectura</a> lógica y el recorrido de un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> desde que lo escribimos hasta que vemos el resultado en la interfaz:</p>
 <figure>
   <img alt="Componentes de Airflow 3" src="images/11airflow-componentes.svg" />
 <br />
@@ -5622,7 +5650,8 @@
 <p>Esta es la forma habitual de trabajar, de manera que <em>Airflow</em> no importa las herramientas que orquesta, las lanza.</p>
 </div>
 <h2 id="caso-1-hola-airflow">Caso 1. Hola Airflow<a class="headerlink" href="#caso-1-hola-airflow" title="Permanent link">&para;</a></h2>
-<p>Para comenzar, vamos a crear un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> mínimo que recorra el ciclo completo: escribirlo, verlo en la interfaz, ejecutarlo y leer sus logs. Empezamos con una sola tarea y, cuando funcione, le añadiremos una segunda y la dependencia entre ambas.</p>
+<p>Para comenzar, vamos a crear un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> mínimo que recorra el ciclo completo: escribirlo, verlo en la interfaz, ejecutarlo y leer sus logs. Empezamos con una sola <a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/tasks.html">tarea</a> y, cuando funcione, le añadiremos una segunda y la dependencia entre ambas.</p>
+<p>Una tarea es la unidad mínima de trabajo de un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>. Cada tarea se ejecuta como un proceso independiente, y puede ser un <em>script</em> de <em>Python</em>, un comando de <em>shell</em>, una consulta SQL o cualquier otra cosa que podamos invocar desde <em>Python</em>. En nuestro caso, las tareas lanzarán <abbr title="data loading tool, herramienta de carga de datos">dlt</abbr> y <abbr title="data build tool, herramienta de construcción de datos">dbt</abbr> como comandos.</p>
 <h3 id="un-dag-con-una-tarea">Un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> con una tarea<a class="headerlink" href="#un-dag-con-una-tarea" title="Permanent link">&para;</a></h3>
 <p>Nuestro primer <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> sólo contiene un tarea, que imprime un saludo y la fecha lógica. Para ello, crearemos el fichero <code>hola_airflow.py</code> en la carpeta <code>dags</code> de <em>Airflow</em>:</p>
 <div class="highlight"><span class="filename">airflow/dags/hola_airflow.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pendulum</span>
@@ -5692,8 +5721,6 @@
 <span class="linenos" data-linenos="6 "></span><span class="c1">#              | 0:00             |         |                   |                  |                   |</span>
 </code></pre></div>
 <p>La fecha lógica es la medianoche del día 8, aunque la ejecución empezó a las 10:42, que es cuando activamos el <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>. El identificador del run, <code>scheduled__…</code>, indica que lo creó el <em>scheduler</em> según la programación.</p>
-<!-- ⚠️ Captura pendiente: vista de detalle (Grid) de hola_airflow con el run en verde. Fichero: images/11airflow-ui-grid.png -->
-
 <p>En la vista de detalle del <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>, cada columna es una ejecución y cada fila una tarea. Al pulsar </p>
 <figure>
     <img alt="Ejecución de un DAG en Airflow" src="images/11airflow-hola-airflow02.png" title="width=&quot;800" />
@@ -5787,7 +5814,7 @@ En menos de 30 segundos, el <em><abbr title="Directed Acyclic Graph, grafo dirig
 <p>Como puedes comprobar, la ejecución se identifica como <code>manual__2026-11-10T16:56:09.585468+00:00</code>, y la fecha lógica es la que le pasamos como parámetro, <code>2026-11-10</code>. La ejecución termina con éxito, y el log de cada tarea muestra lo que imprime nuestro código.</p>
 <p>La ejecución se hace en el momento, y la fecha lógica es la que pedimos. El <em>scheduler</em> no interviene, así que no hace falta que el <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> esté activo ni que el <em>scheduler</em> esté corriendo. Por lo tanto, tras crear un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>, usaremos <code>airflow dags test</code> para comprobar que hace lo que esperamos antes de activarlo.</p>
 <h3 id="backfill">Backfill<a class="headerlink" href="#backfill" title="Permanent link">&para;</a></h3>
-<p>El concepto de <em>backfill</em> es importante, porque nos permite recuperar ejecuciones pasadas. Formalmente, un <em>backfill</em> es una ejecución de un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> sobre un rango de fechas pasadas. Por ejemplo, si el <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> debería haberse ejecutado desde el día 1 y lo activamos el día 6, podemos pedirle que haga un <em>backfill</em> del 1 al 5. Cada ejecución tiene su fecha lógica, y <em>Airflow</em> lanza cada una como si fuera la primera vez.</p>
+<p>El concepto de <a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/backfill.html"><em>backfill</em></a> es importante, porque nos permite recuperar ejecuciones pasadas. Formalmente, un <em>backfill</em> es una ejecución de un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> sobre un rango de fechas pasadas. Por ejemplo, si el <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> debería haberse ejecutado desde el día 1 y lo activamos el día 6, podemos pedirle que haga un <em>backfill</em> del 1 al 5. Cada ejecución tiene su fecha lógica, y <em>Airflow</em> lanza cada una como si fuera la primera vez.</p>
 <p>Para ello, usamos el comando <a href="https://airflow.apache.org/docs/apache-airflow/stable/cli-and-env-variables-ref.html#airflow-backfill-create"><code>airflow backfill create</code></a> de la <abbr title="Command Line Interface, interfaz de línea de comandos">CLI</abbr>, indicando el identificador del <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> y el rango de fechas:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>airflow-scheduler<span class="w"> </span>airflow<span class="w"> </span>backfill<span class="w"> </span>create<span class="w"> </span>--dag-id<span class="w"> </span>hola_airflow<span class="w"> </span>--from-date<span class="w"> </span><span class="m">2026</span>-11-01<span class="w"> </span>--to-date<span class="w"> </span><span class="m">2026</span>-11-05
 <span class="linenos" data-linenos=" 2 "></span><span class="c1"># creating dag run               [airflow.serialization.definitions.dag] loc=dag.py:655 logical_date=DateTime(2026, 11, 1, 0, 0, 0, tzinfo=Timezone('UTC')) partition_key=None run_after=DateTime(2026, 11, 1, 0, 0, 0, tzinfo=Timezone('UTC')) run_id=backfill__2026-11-01T00:00:00+00:00</span>
@@ -6387,10 +6414,12 @@ En la sesión de transformación lo dejamos anunciado: el <code>dbt test</code> 
 <p class="admonition-title">Caso opcional</p>
 <p>Este caso no lo veremos en clase. El <em>pipeline</em> del bloque queda completo con el Caso 3; aquí damos un paso más, pensando en quién consume los datos que publicamos. Lo necesitarás si haces la actividad 4, que también es opcional.</p>
 </div>
-<p>Supongamos que el equipo de negocio quiere un informe de ingresos por departamento. Podríamos programarlo a las siete, con la esperanza de que el pipeline de las seis haya terminado. Pero si un día el pipeline tarda más, el informe saldría con los datos de ayer, y si las pruebas fallan, saldría igualmente, aunque no haya datos nuevos publicados.</p>
-<p>Lo que de verdad queremos es otra cosa: que el informe se genere cada vez que se publiquen datos nuevos, y solo entonces. Es la programación orientada a datos, y en Airflow se construye con <em>Assets</em>.</p>
-<p>Un <em>Asset</em> es un dato con nombre, identificado por un URI, que unas tareas producen y otros <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> consumen. Airflow no lee ni comprueba el dato: solo registra cuándo una tarea que lo declara como salida termina con éxito. Usamos como URI la ruta del <em>mart</em> publicado:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">Asset</span>
+<p>Supongamos que el equipo de negocio quiere un informe de ingresos por departamento. Podríamos programarlo a las siete, con la esperanza de que el <em>pipeline</em> de las seis haya terminado. Pero si un día el <em>pipeline</em> tarda más, el informe saldría con los datos de ayer, y si las pruebas fallan, saldría igualmente, aunque no haya datos nuevos publicados.</p>
+<p>¿Seguro que queremos eso? ¿Qué un informe dependa de un horario y no de los datos? ¿Qué se ejecute aunque no haya datos nuevos, o que no se ejecute aunque los haya? ¿Qué dependa de que el <em>pipeline</em> termine a tiempo, o que se publique un informe con datos erróneos?</p>
+<p>Lo que de verdad queremos es que el informe se genere cada vez que se publiquen datos nuevos, y solo entonces. Esto se conoce como <strong>programación orientada a datos</strong>, y en <em>Airflow</em> se construye mediante <a href="https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/assets.html"><em>Assets</em></a>.</p>
+<p>Un <em>Asset</em> es un dato con nombre, identificado por una URI, que unas tareas producen y otros <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> consumen. <em>Airflow</em> no lee ni comprueba el dato: solo registra cuándo una tarea que lo declara como salida termina con éxito.</p>
+<p>En nuestro caso, los <em>Assets</em> son los archivos parquet publicados en <em>MinIO</em>, de manera que usamos como URI la ruta del <em>mart</em> publicado. En el <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> <code>retail_elt</code>, el <em>Asset</em> se declara en la parte superior del fichero, para que esté disponible en todas las tareas:</p>
+<div class="highlight"><span class="filename">airflow/dags/retail_elt.py (fragmento)</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">Asset</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">MARTS</span> <span class="o">=</span> <span class="n">Asset</span><span class="p">(</span><span class="s2">"s3://processed/marts/ingresos_por_departamento.parquet"</span><span class="p">)</span>
 </code></pre></div>
@@ -6402,32 +6431,31 @@ En la sesión de transformación lo dejamos anunciado: el <code>dbt test</code> 
 <span class="hll"><span class="linenos" data-linenos="4 "></span>        <span class="n">outlets</span><span class="o">=</span><span class="p">[</span><span class="n">MARTS</span><span class="p">],</span>
 </span><span class="linenos" data-linenos="5 "></span>    <span class="p">)</span>
 </code></pre></div>
-<p>Cada vez que <code>publicar</code> termina con éxito, Airflow registra un evento sobre el <em>Asset</em>. Si <code>probar</code> falla y <code>publicar</code> no se ejecuta, no hay evento: el <em>gate</em> también protege a quien consume los datos.</p>
+<p>Cada vez que <code>publicar</code> termina con éxito, <em>Airflow</em> registra un evento sobre el <em>Asset</em>. Si <code>probar</code> fallase y <code>publicar</code> no se ejecutase, no habría evento. De esto se deduce que el <em>gate</em> también protege a quien consume los datos.</p>
 <h3 id="el-consumidor">El consumidor<a class="headerlink" href="#el-consumidor" title="Permanent link">&para;</a></h3>
-<p>El <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> del informe, en lugar de un horario, recibe una lista de <em>Assets</em> en <code>schedule</code>:</p>
+<p>Para el informe por departamentos, crearemos un nuevo <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> con su <em>Asset</em>:</p>
 <div class="highlight"><span class="filename">airflow/dags/informe_departamentos.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="sd">"""Informe para negocio: se ejecuta cada vez que retail_elt publica los marts."""</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pendulum</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow.providers.standard.operators.bash</span><span class="w"> </span><span class="kn">import</span> <span class="n">BashOperator</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">Asset</span><span class="p">,</span> <span class="n">dag</span>
 <span class="linenos" data-linenos=" 5 "></span>
-<span class="linenos" data-linenos=" 6 "></span><span class="n">MARTS</span> <span class="o">=</span> <span class="n">Asset</span><span class="p">(</span><span class="s2">"s3://processed/marts/ingresos_por_departamento.parquet"</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 7 "></span>
-<span class="linenos" data-linenos=" 8 "></span>
-<span class="linenos" data-linenos=" 9 "></span><span class="nd">@dag</span><span class="p">(</span>
-<span class="linenos" data-linenos="10 "></span>    <span class="n">schedule</span><span class="o">=</span><span class="p">[</span><span class="n">MARTS</span><span class="p">],</span>
-<span class="linenos" data-linenos="11 "></span>    <span class="n">start_date</span><span class="o">=</span><span class="n">pendulum</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="s2">"UTC"</span><span class="p">),</span>
-<span class="linenos" data-linenos="12 "></span>    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"iabd"</span><span class="p">,</span> <span class="s2">"elt"</span><span class="p">],</span>
-<span class="linenos" data-linenos="13 "></span><span class="p">)</span>
-<span class="linenos" data-linenos="14 "></span><span class="k">def</span><span class="w"> </span><span class="nf">informe_departamentos</span><span class="p">():</span>
-<span class="linenos" data-linenos="15 "></span>    <span class="n">BashOperator</span><span class="p">(</span>
-<span class="linenos" data-linenos="16 "></span>        <span class="n">task_id</span><span class="o">=</span><span class="s2">"informar"</span><span class="p">,</span>
-<span class="linenos" data-linenos="17 "></span>        <span class="n">bash_command</span><span class="o">=</span><span class="s2">"$ELT_BIN/python /workspace/pipeline/informe.py"</span><span class="p">,</span>
-<span class="linenos" data-linenos="18 "></span>    <span class="p">)</span>
-<span class="linenos" data-linenos="19 "></span>
-<span class="linenos" data-linenos="20 "></span>
-<span class="linenos" data-linenos="21 "></span><span class="n">informe_departamentos</span><span class="p">()</span>
+<span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="n">MARTS</span> <span class="o">=</span> <span class="n">Asset</span><span class="p">(</span><span class="s2">"s3://processed/marts/ingresos_por_departamento.parquet"</span><span class="p">)</span>
+</span><span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span><span class="nd">@dag</span><span class="p">(</span>
+<span class="hll"><span class="linenos" data-linenos=" 9 "></span>    <span class="n">schedule</span><span class="o">=</span><span class="p">[</span><span class="n">MARTS</span><span class="p">],</span>
+</span><span class="linenos" data-linenos="10 "></span>    <span class="n">start_date</span><span class="o">=</span><span class="n">pendulum</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="s2">"UTC"</span><span class="p">),</span>
+<span class="linenos" data-linenos="11 "></span>    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"iabd"</span><span class="p">,</span> <span class="s2">"elt"</span><span class="p">],</span>
+<span class="linenos" data-linenos="12 "></span><span class="p">)</span>
+<span class="linenos" data-linenos="13 "></span><span class="k">def</span><span class="w"> </span><span class="nf">informe_departamentos</span><span class="p">():</span>
+<span class="linenos" data-linenos="14 "></span>    <span class="n">BashOperator</span><span class="p">(</span>
+<span class="linenos" data-linenos="15 "></span>        <span class="n">task_id</span><span class="o">=</span><span class="s2">"informar"</span><span class="p">,</span>
+<span class="linenos" data-linenos="16 "></span>        <span class="n">bash_command</span><span class="o">=</span><span class="s2">"$ELT_BIN/python /workspace/pipeline/informe.py"</span><span class="p">,</span>
+<span class="linenos" data-linenos="17 "></span>    <span class="p">)</span>
+<span class="linenos" data-linenos="18 "></span>
+<span class="linenos" data-linenos="19 "></span><span class="n">informe_departamentos</span><span class="p">()</span>
 </code></pre></div>
-<p>El <em>Asset</em> se define en los dos ficheros con el mismo URI, que es lo que los enlaza. El informe lee el parquet publicado en MinIO, nunca el fichero de trabajo, así que puede ejecutarse aunque alguien tenga abierto <code>retail_el.duckdb</code>:</p>
+<p>El <em>Asset</em> se define en los dos ficheros con el mismo URI, que es lo que los enlaza. El informe lee el parquet publicado en <em>MinIO</em>, nunca el fichero de trabajo, así que puede ejecutarse aunque alguien tenga abierto <code>retail_el.duckdb</code>.</p>
+<p>En cuanto al script que genera el informe, es un simple <em>SELECT</em> sobre el <em>mart</em> publicado, que ordena los departamentos por ingresos:</p>
 <div class="highlight"><span class="filename">workspace/pipeline/informe.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="sd">"""Informe de ingresos por departamento a partir de los marts publicados en MinIO."""</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="linenos" data-linenos=" 3 "></span>
@@ -6451,17 +6479,51 @@ En la sesión de transformación lo dejamos anunciado: el <code>dbt test</code> 
 <span class="linenos" data-linenos="21 "></span>
 <span class="linenos" data-linenos="22 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="sa">f</span><span class="s2">"SELECT * FROM read_parquet('</span><span class="si">{</span><span class="n">ORIGEN</span><span class="si">}</span><span class="s2">') ORDER BY ingresos DESC"</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
-<!-- ⚠️ Comprobar el nombre de la columna de ingresos en ingresos_por_departamento -->
-
-<p>Activamos los dos <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> y lanzamos <code>retail_elt</code>. Cuando <code>publicar</code> termina, aparece un run de <code>informe_departamentos</code> con el prefijo <code>asset_triggered__</code>, sin fecha lógica: no corresponde a ningún instante del calendario, sino a un evento del dato. Su log muestra el informe:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Pegar desde el stack el log de informar (tabla de ingresos por departamento)
+<p>Igual que antes, previamente probamos el script desde un terminal de <code>lab</code> para ver que funciona y cuántas filas devuelve:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>lab<span class="w"> </span>python<span class="w"> </span>/workspace/pipeline/informe.py
+<span class="linenos" data-linenos=" 2 "></span><span class="c1"># ┌──────────────┬─────────┬──────────┬────────────┐</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1"># │ departamento │ pedidos │ unidades │  ingresos  │</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1"># │   varchar    │  int64  │  double  │   double   │</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1"># ├──────────────┼─────────┼──────────┼────────────┤</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># │ Fan Shop     │   17825 │  46000.0 │ 7449910.44 │</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># │ Apparel      │   14442 │  42020.0 │  3213349.8 │</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1"># │ Golf         │   11393 │  43493.0 │ 2018453.13 │</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># │ Footwear     │    5705 │  19127.0 │ 1782298.11 │</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># │ Outdoors     │    3794 │  11204.0 │  432381.06 │</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># │ Fitness      │     903 │   2539.0 │  116589.94 │</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1"># └──────────────┴─────────┴──────────┴────────────┘</span>
 </code></pre></div>
-<!-- ⚠️ Captura de la vista de Assets con el productor y el consumidor. Fichero: images/11airflow-assets.png -->
-
-<p>En la vista de <em>Assets</em> de la interfaz se ve qué <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> produce cada <em>Asset</em>, cuáles lo consumen y el historial de eventos. Si repetimos la prueba del <em>gate</em> con severidad <code>error</code>, <code>retail_elt</code> falla y el informe no se ejecuta.</p>
+<p>Ahora ya podemos activar el <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> <code>informe_departamentos</code> y comprobar que se ejecuta cada vez que <code>retail_elt</code> publica los <em>marts</em>. Cuando <code>publicar</code> termina, aparece un run de <code>informe_departamentos</code> con el prefijo <code>asset_triggered__</code>:</p>
+<figure>
+    <img alt="DAG disparado mediante Assets" src="images/11airflow-caso4.png" />
+    <figcaption><abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> disparado mediante Assets</figcaption>
+</figure>
+<p>Y en su log podemos ver el resultado del informe, que coincide con lo que vimos al probarlo desde <code>lab</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>[2026-11-25 21:01:48] INFO - Tmp dir root location: /tmp
+<span class="linenos" data-linenos=" 2 "></span>[2026-11-25 21:01:48] INFO - Running command: ['/usr/python/bin/bash', '-c', '$ELT_BIN/python /workspace/pipeline/informe.py']
+<span class="linenos" data-linenos=" 3 "></span>[2026-11-25 21:01:48] INFO - Output:
+<span class="linenos" data-linenos=" 4 "></span>[2026-11-25 21:01:48] INFO - ┌──────────────┬─────────┬──────────┬────────────┐
+<span class="linenos" data-linenos=" 5 "></span>[2026-11-25 21:01:48] INFO - │ departamento │ pedidos │ unidades │  ingresos  │
+<span class="linenos" data-linenos=" 6 "></span>[2026-11-25 21:01:48] INFO - │   varchar    │  int64  │  double  │   double   │
+<span class="linenos" data-linenos=" 7 "></span>[2026-11-25 21:01:48] INFO - ├──────────────┼─────────┼──────────┼────────────┤
+<span class="linenos" data-linenos=" 8 "></span>[2026-11-25 21:01:48] INFO - │ Fan Shop     │   17825 │  46000.0 │ 7449910.44 │
+<span class="linenos" data-linenos=" 9 "></span>[2026-11-25 21:01:48] INFO - │ Apparel      │   14442 │  42020.0 │  3213349.8 │
+<span class="linenos" data-linenos="10 "></span>[2026-11-25 21:01:48] INFO - │ Golf         │   11393 │  43493.0 │ 2018453.13 │
+<span class="linenos" data-linenos="11 "></span>[2026-11-25 21:01:48] INFO - │ Footwear     │    5705 │  19127.0 │ 1782298.11 │
+<span class="linenos" data-linenos="12 "></span>[2026-11-25 21:01:48] INFO - │ Outdoors     │    3794 │  11204.0 │  432381.06 │
+<span class="linenos" data-linenos="13 "></span>[2026-11-25 21:01:48] INFO - │ Fitness      │     903 │   2539.0 │  116589.94 │
+<span class="linenos" data-linenos="14 "></span>[2026-11-25 21:01:48] INFO - └──────────────┴─────────┴──────────┴────────────┘
+<span class="linenos" data-linenos="15 "></span>[2026-11-25 21:01:48] INFO - 
+<span class="linenos" data-linenos="16 "></span>[2026-11-25 21:01:49] INFO - Command exited with return code 0
+</code></pre></div>
+<p>En la pantalla principal de <em>Airflow</em> tenemos un resumen de los <em>Assets</em> que se producen y consumen, y en la vista de detalle de cada uno podemos ver qué <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> lo produce, cuáles lo consumen y el historial de eventos:</p>
+<figure>
+    <img alt="Información sobre los Assets en la interfaz de Airflow" src="images/11airflow-caso4-iu.png" />
+    <figcaption>Información sobre los Assets en la interfaz de Airflow</figcaption>
+</figure>
 <div class="admonition note">
 <p class="admonition-title">De <em>Datasets</em> a <em>Assets</em></p>
-<p>En Airflow 2 esta funcionalidad se llamaba <em>Datasets</em> (<code>from airflow.datasets import Dataset</code>). Airflow 3 la renombró a <em>Assets</em> y la amplió. Si encuentras <code>Dataset</code> en un tutorial, la idea es la misma.</p>
+<p>En <em>Airflow 2</em> esta funcionalidad se llamaba <em>Datasets</em> (<code>from airflow.datasets import Dataset</code>). <em>Airflow 3</em> la renombró a <em>Assets</em> y la amplió. Si encuentras <code>Dataset</code> en un tutorial, la idea es la misma.</p>
 </div>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
@@ -6471,19 +6533,19 @@ En la sesión de transformación lo dejamos anunciado: el <code>dbt test</code> 
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han aplicado herramientas de monitorización eficiente de los recursos.">CEBDA.4a</abbr>, <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr> / 1p) Realiza el caso 1 y modifica la programación de <code>hola_airflow</code> para que se ejecute de lunes a viernes a las 8:00 (<abbr title="Tiempo universal coordinado">UTC</abbr>). Después, lanza desde la interfaz un <em>backfill</em> con la primera semana del mes en curso.</p>
+<p>(<abbr title="Realiza el seguimiento de la monitorización de un sistema, asegurando la fiabilidad y estabilidad de los servicios que se proveen.">RABDA.4</abbr> / <abbr title="Se han aplicado herramientas de monitorización eficiente de los recursos.">CEBDA.4a</abbr>, <abbr title="Se han recogido métricas, procesamiento y visualización de los datos.">CEBDA.4b</abbr> / 1p) Realiza el <a href="#caso-1-hola-airflow">caso 1</a>. Después, lanza desde la interfaz un <em>backfill</em> con la primera semana del mes en curso.</p>
 <p>Debes entregar el código del <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>, una captura de la vista de detalle con los runs creados y responder en dos o tres líneas: ¿cuántos runs se han creado y por qué?, ¿qué fecha lógica tiene cada uno?</p>
 </li>
 <li>
-<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha probado la tolerancia a fallos de los sistemas.">CEBDA.2c</abbr> / 2p) Realiza el caso 2 y modifica <code>retail_elt</code> para que la tarea <code>extraer</code> tenga 2 reintentos con 1 minuto de espera entre ellos, mientras el resto de tareas mantiene la configuración del <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>. Después, provoca un fallo como en el apartado <a href="#cuando-algo-falla">Cuando algo falla</a>: abre <code>retail_el.duckdb</code> desde <code>lab</code>, lanza el <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> y cierra la conexión antes de que <code>extraer</code> agote sus reintentos.</p>
+<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha probado la tolerancia a fallos de los sistemas.">CEBDA.2c</abbr> / 2p) Realiza el <a href="#caso-2-orquestando-el-pipeline-elt">caso 2</a> y modifica <code>retail_elt</code> para que la tarea <code>extraer</code> tenga 2 reintentos con 1 minuto de espera entre ellos, mientras el resto de tareas mantiene la configuración del <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>. Después, provoca un fallo como en el apartado <a href="#cuando-algo-falla">Cuando algo falla</a>: abre <code>retail_el.duckdb</code> desde <code>lab</code>, lanza el <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> y cierra la conexión antes de que <code>extraer</code> agote sus reintentos.</p>
 <p>Debes entregar el código del <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>, una captura de la vista de detalle donde se vean los intentos de <code>extraer</code> y responder en dos o tres líneas: ¿cuántos intentos ha hecho <code>extraer</code> y por qué ha terminado en éxito?, ¿por qué <code>probar</code> no tiene reintentos?</p>
 </li>
 <li>
-<p>(<abbr title="Genera mecanismos de integridad de los datos, comprobando su mantenimiento en los sistemas de ficheros distribuidos y valorando la sobrecarga que conlleva en el tratamiento de los datos. (5 horas)">RABDA.3</abbr> / <abbr title="Se ha valorado la importancia de la calidad de los datos en los sistemas de ficheros distribuidos.">CEBDA.3a</abbr> / 1p) Realiza el caso 3 y añade al proyecto <abbr title="data build tool, herramienta de construcción de datos">dbt</abbr> una prueba singular, <code>importe_no_negativo.sql</code>, que compruebe que ninguna línea de <code>fact_ventas</code> tiene un <code>importe</code> negativo. Después, lanza <code>retail_elt</code>.</p>
+<p>(<abbr title="Genera mecanismos de integridad de los datos, comprobando su mantenimiento en los sistemas de ficheros distribuidos y valorando la sobrecarga que conlleva en el tratamiento de los datos. (5 horas)">RABDA.3</abbr> / <abbr title="Se ha valorado la importancia de la calidad de los datos en los sistemas de ficheros distribuidos.">CEBDA.3a</abbr> / 1p) Realiza el <a href="#caso-3-el-quality-gate">caso 3</a> y añade al proyecto <abbr title="data build tool, herramienta de construcción de datos">dbt</abbr> una prueba singular, <code>importe_no_negativo.sql</code>, que compruebe que ninguna línea de <code>fact_ventas</code> tiene un <code>importe</code> negativo. Después, lanza <code>retail_elt</code>.</p>
 <p>Debes entregar el fichero de la prueba, el resumen de <code>dbt test</code> del log de <code>probar</code> y responder en dos o tres líneas: ¿qué severidad le darías a la prueba y por qué?, ¿qué pasaría con los ficheros de <code>s3://processed/marts/</code> si la prueba fallara con esa severidad?</p>
 </li>
 <li>
-<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han presentado los resultados y las soluciones al cliente final en una forma fácil de interpretar.">CEBDA.1e</abbr> / 1p) A partir del caso extra, modifica <code>informe.py</code> para que, junto a los ingresos de cada departamento, muestre su tasa de devolución, leyendo los dos <em>marts</em> publicados en <em>MinIO</em>. Lanza <code>retail_elt</code> y entrega el script, el log del run de <code>informe_departamentos</code> con la tabla y una captura de la vista de <em>Assets</em> donde se vea que el run lo disparó la publicación.</p>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se han presentado los resultados y las soluciones al cliente final en una forma fácil de interpretar.">CEBDA.1e</abbr> / 1p) A partir del <a href="#caso-extra-programacion-orientada-a-datos-con-assets">caso extra</a>, modifica <code>informe.py</code> para que, junto a los ingresos de cada departamento, muestre su tasa de devolución, leyendo los dos <em>marts</em> publicados en <em>MinIO</em>. Lanza <code>retail_elt</code> y entrega el script, el log del run de <code>informe_departamentos</code> con la tabla y una captura de la vista de <em>Assets</em> donde se vea que el run lo disparó la publicación.</p>
 <div class="admonition tip">
 <p class="admonition-title">Pista</p>
 <ul>
