@@ -4813,10 +4813,10 @@
 <p>No vamos a reproducir aquí las 300 líneas del archivo, pero sí conviene entender los cuatro mecanismos que utiliza.</p>
 <h3 id="anclas-yaml-para-el-logging">Anclas YAML para el logging<a class="headerlink" href="#anclas-yaml-para-el-logging" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nt">x-logging</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;default-logging</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="s">"json-file"</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">  </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;json-file&quot;</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">  </span><span class="nt">options</span><span class="p">:</span>
-<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="nt">max-size</span><span class="p">:</span><span class="w"> </span><span class="s">"10m"</span>
-<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="nt">max-file</span><span class="p">:</span><span class="w"> </span><span class="s">"3"</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="nt">max-size</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10m&quot;</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="nt">max-file</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3&quot;</span>
 </code></pre></div>
 <p>Un servicio que lleve horas escribiendo logs puede llenar el disco. Esta configuración limita cada servicio a 3 archivos de 10 MB. La clave <code>x-logging</code> es una <strong>extensión</strong> (Compose ignora las claves que empiezan por <code>x-</code>), y <code>&amp;default-logging</code> define un <strong>ancla YAML</strong> que luego cada servicio reutiliza con <code>logging: *default-logging</code> sin repetir el bloque.</p>
 <h3 id="limites-de-memoria">Límites de memoria<a class="headerlink" href="#limites-de-memoria" title="Permanent link">&para;</a></h3>
@@ -4824,7 +4824,7 @@
 </code></pre></div>
 <p>Cada servicio tiene un techo de memoria. Sin ellos, InfluxDB o MySQL pueden crecer hasta ahogar un portátil de 8 GB. Los valores están calibrados para que el stack completo quepa holgadamente en 16 GB y sobreviva en 8 GB.</p>
 <h3 id="perfiles">Perfiles<a class="headerlink" href="#perfiles" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="w">    </span><span class="nt">profiles</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"full"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"v2"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"v3"</span><span class="p p-Indicator">]</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="w">    </span><span class="nt">profiles</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;full&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;v2&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;v3&quot;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <p>Los perfiles permiten arrancar <strong>subconjuntos</strong> del stack. Un servicio con perfiles solo se levanta si activas uno de ellos:</p>
 <table>
@@ -4971,7 +4971,7 @@
 <span class="linenos" data-linenos="14 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>otitia-influxdb<span class="w"> </span>bash
 <span class="linenos" data-linenos="15 "></span>
 <span class="linenos" data-linenos="16 "></span><span class="c1"># Suscribirse al bus MQTT desde el propio broker</span>
-<span class="linenos" data-linenos="17 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>otitia-mosquitto<span class="w"> </span>mosquitto_sub<span class="w"> </span>-t<span class="w"> </span><span class="s1">'otitia/#'</span><span class="w"> </span>-v
+<span class="linenos" data-linenos="17 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>otitia-mosquitto<span class="w"> </span>mosquitto_sub<span class="w"> </span>-t<span class="w"> </span><span class="s1">&#39;otitia/#&#39;</span><span class="w"> </span>-v
 </code></pre></div>
 <div class="admonition danger">
 <p class="admonition-title"><code>down -v</code> borra todo</p>
@@ -5083,7 +5083,7 @@
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="w">  </span><span class="nt">nodered</span><span class="p">:</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="c1"># ...</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
-<span class="hll"><span class="linenos" data-linenos="4 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ot</span><span class="w">          </span><span class="c1"># se elimina la línea "- it"</span>
+<span class="hll"><span class="linenos" data-linenos="4 "></span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ot</span><span class="w">          </span><span class="c1"># se elimina la línea &quot;- it&quot;</span>
 </span></code></pre></div>
 <p>Y aplicarlo recreando solo ese contenedor:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>v2<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--force-recreate<span class="w"> </span>nodered
@@ -5094,7 +5094,7 @@
 </div>
 <p>Tras el cambio, comprueba desde el propio contenedor que la base de datos ya no es alcanzable:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>otitia-nodered<span class="w"> </span>ping<span class="w"> </span>-c2<span class="w"> </span>influxdb
-<span class="linenos" data-linenos="2 "></span><span class="c1"># ping: bad address 'influxdb'</span>
+<span class="linenos" data-linenos="2 "></span><span class="c1"># ping: bad address &#39;influxdb&#39;</span>
 </code></pre></div>
 <p>Lo que debe ocurrir a continuación:</p>
 <ul>

@@ -4946,25 +4946,25 @@ https://learning.oreilly.com/library/view/understanding-etl/9781098159269/ch01.h
 <div class="highlight"><span class="filename">etl-pandas.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="c1"># ========== E ==========</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="n">df_products</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"pdi_product.csv"</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="n">df_manufacturers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"pdi_manufacturer.csv"</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">";"</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">df_products</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;pdi_product.csv&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">df_manufacturers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;pdi_manufacturer.csv&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 6 "></span>
 <span class="linenos" data-linenos=" 7 "></span><span class="c1"># ========== T ==========</span>
 <span class="linenos" data-linenos=" 8 "></span><span class="c1"># Filtramos los productos de la categoría Mix</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="n">df_products_filtered</span> <span class="o">=</span> <span class="n">df_products</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df_products</span><span class="p">[</span><span class="s2">"Category"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Mix"</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">df_products_filtered</span> <span class="o">=</span> <span class="n">df_products</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df_products</span><span class="p">[</span><span class="s2">&quot;Category&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Mix&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="10 "></span><span class="c1"># Join de productos con fabricantes</span>
 <span class="linenos" data-linenos="11 "></span><span class="n">df_joined</span> <span class="o">=</span> <span class="n">df_products_filtered</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
 <span class="linenos" data-linenos="12 "></span>    <span class="n">df_manufacturers</span><span class="p">,</span>
-<span class="linenos" data-linenos="13 "></span>    <span class="n">on</span><span class="o">=</span><span class="s2">"ManufacturerID"</span><span class="p">,</span>
-<span class="linenos" data-linenos="14 "></span>    <span class="n">how</span><span class="o">=</span><span class="s2">"left"</span>
+<span class="linenos" data-linenos="13 "></span>    <span class="n">on</span><span class="o">=</span><span class="s2">&quot;ManufacturerID&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="14 "></span>    <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span>
 <span class="linenos" data-linenos="15 "></span><span class="p">)</span>
 <span class="linenos" data-linenos="16 "></span><span class="c1"># Limpieza y transformaciones</span>
-<span class="linenos" data-linenos="17 "></span><span class="n">df_joined</span><span class="p">[</span><span class="s2">"ProductAndManufacturer"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-<span class="linenos" data-linenos="18 "></span>    <span class="n">df_joined</span><span class="p">[</span><span class="s2">"Product"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">" ("</span> <span class="o">+</span> <span class="n">df_joined</span><span class="p">[</span><span class="s2">"Manufacturer"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">")"</span>
+<span class="linenos" data-linenos="17 "></span><span class="n">df_joined</span><span class="p">[</span><span class="s2">&quot;ProductAndManufacturer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos" data-linenos="18 "></span>    <span class="n">df_joined</span><span class="p">[</span><span class="s2">&quot;Product&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="n">df_joined</span><span class="p">[</span><span class="s2">&quot;Manufacturer&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
 <span class="linenos" data-linenos="19 "></span><span class="p">)</span>
 <span class="linenos" data-linenos="20 "></span>
 <span class="linenos" data-linenos="21 "></span><span class="c1"># ========== L ==========</span>
-<span class="linenos" data-linenos="22 "></span><span class="n">df_joined</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="s2">"pdi_product_mix.json"</span><span class="p">)</span>
+<span class="linenos" data-linenos="22 "></span><span class="n">df_joined</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="s2">&quot;pdi_product_mix.json&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="hola-duckdb">Hola DuckDB<a class="headerlink" href="#hola-duckdb" title="Permanent link">&para;</a></h3>
 <p><a href="https://duckdb.org/"><em>DuckDB</em></a> es una base de datos analítica en proceso embebida, que permite ejecutar consultas SQL directamente sobre ficheros locales sin necesidad de cargar los datos en una base de datos. Soporta múltiples formatos de ficheros como CSV, Parquet, JSON, etc... y es capaz de manejar grandes volúmenes de datos gracias a su motor columnar y a su capacidad para trabajar con memoria externa. Hablando de ETL, <em>DuckDB</em> permite realizar operaciones de transformación y carga de datos directamente desde ficheros, lo que facilita la creación de pipelines ETL eficientes y escalables.</p>
@@ -4973,20 +4973,20 @@ https://learning.oreilly.com/library/view/understanding-etl/9781098159269/ch01.h
 <div class="highlight"><span class="filename">etl-duckdb.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>
 <span class="linenos" data-linenos=" 2 "></span>
 <span class="linenos" data-linenos=" 3 "></span><span class="c1"># ========== E ==========</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="n">duckdb</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"""</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">duckdb</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="s2">CREATE VIEW productos AS</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="s2">    SELECT * FROM read_csv('pdi_product.csv', header=true);</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="s2">"""</span><span class="p">)</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="c1">#duckdb.read_csv('pdi_product.csv', header=True).create_view('productos')</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="s2">    SELECT * FROM read_csv(&#39;pdi_product.csv&#39;, header=true);</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1">#duckdb.read_csv(&#39;pdi_product.csv&#39;, header=True).create_view(&#39;productos&#39;)</span>
 <span class="linenos" data-linenos=" 9 "></span>
-<span class="linenos" data-linenos="10 "></span><span class="n">duckdb</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"""</span>
+<span class="linenos" data-linenos="10 "></span><span class="n">duckdb</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos="11 "></span><span class="s2">CREATE VIEW fabricantes AS</span>
-<span class="linenos" data-linenos="12 "></span><span class="s2">    SELECT * FROM read_csv('pdi_manufacturer.csv', header=true, delim=';');</span>
-<span class="linenos" data-linenos="13 "></span><span class="s2">"""</span><span class="p">)</span>
-<span class="linenos" data-linenos="14 "></span><span class="c1">#duckdb.read_csv('pdi_manufacturer.csv', header=True, delim=';').create_view('fabricantes')</span>
+<span class="linenos" data-linenos="12 "></span><span class="s2">    SELECT * FROM read_csv(&#39;pdi_manufacturer.csv&#39;, header=true, delim=&#39;;&#39;);</span>
+<span class="linenos" data-linenos="13 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="14 "></span><span class="c1">#duckdb.read_csv(&#39;pdi_manufacturer.csv&#39;, header=True, delim=&#39;;&#39;).create_view(&#39;fabricantes&#39;)</span>
 <span class="linenos" data-linenos="15 "></span>
 <span class="linenos" data-linenos="16 "></span><span class="c1"># ========== T ==========</span>
-<span class="linenos" data-linenos="17 "></span><span class="n">duckdb</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"""</span>
+<span class="linenos" data-linenos="17 "></span><span class="n">duckdb</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos="18 "></span><span class="s2">CREATE VIEW productos_plus AS</span>
 <span class="linenos" data-linenos="19 "></span><span class="s2">SELECT</span>
 <span class="linenos" data-linenos="20 "></span><span class="s2">    p.ProductID,</span>
@@ -4995,18 +4995,18 @@ https://learning.oreilly.com/library/view/understanding-etl/9781098159269/ch01.h
 <span class="linenos" data-linenos="23 "></span><span class="s2">    p.Segment,</span>
 <span class="linenos" data-linenos="24 "></span><span class="s2">    p.ManufacturerID,</span>
 <span class="linenos" data-linenos="25 "></span><span class="s2">    f.Manufacturer,</span>
-<span class="linenos" data-linenos="26 "></span><span class="s2">    p.Product || ' (' || f.Manufacturer || ')' AS ProductNombreCompleto</span>
+<span class="linenos" data-linenos="26 "></span><span class="s2">    p.Product || &#39; (&#39; || f.Manufacturer || &#39;)&#39; AS ProductNombreCompleto</span>
 <span class="linenos" data-linenos="27 "></span><span class="s2">FROM productos p</span>
 <span class="linenos" data-linenos="28 "></span><span class="s2">    LEFT JOIN fabricantes f</span>
 <span class="linenos" data-linenos="29 "></span><span class="s2">    ON p.ManufacturerID = f.ManufacturerID</span>
-<span class="linenos" data-linenos="30 "></span><span class="s2">WHERE p.Category = 'Mix';</span>
-<span class="linenos" data-linenos="31 "></span><span class="s2">"""</span><span class="p">)</span>
+<span class="linenos" data-linenos="30 "></span><span class="s2">WHERE p.Category = &#39;Mix&#39;;</span>
+<span class="linenos" data-linenos="31 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="32 "></span>
 <span class="linenos" data-linenos="33 "></span><span class="c1"># ========== L ==========</span>
-<span class="linenos" data-linenos="34 "></span><span class="n">duckdb</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"""</span>
+<span class="linenos" data-linenos="34 "></span><span class="n">duckdb</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos="35 "></span><span class="s2">COPY productos_plus</span>
-<span class="linenos" data-linenos="36 "></span><span class="s2">TO 'pdi_product_mix_ddb.json'</span>
-<span class="linenos" data-linenos="37 "></span><span class="s2">"""</span><span class="p">)</span>
+<span class="linenos" data-linenos="36 "></span><span class="s2">TO &#39;pdi_product_mix_ddb.json&#39;</span>
+<span class="linenos" data-linenos="37 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Para más información, además de la <a href="https://duckdb.org/docs/">documentación oficial</a> y el <a href="https://duckdb.org/docs/stable/clients/python/overview">API de Python</a>, te recomiendo que revises en profundidad la sesión de <a href="sql-analitico.html">SQL analítico con DuckDB</a>.</p>
 <h2 id="la-ingesta-por-dentro">La ingesta por dentro<a class="headerlink" href="#la-ingesta-por-dentro" title="Permanent link">&para;</a></h2>

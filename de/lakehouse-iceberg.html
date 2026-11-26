@@ -1,0 +1,5706 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Formatos de tabla abiertos con Apache Iceberg. ACID, snapshots, time travel, evolución de esquema y de particionado, Iceberg frente a Delta y Hudi, catálogo REST con Apache Polaris y un lakehouse por capas construido con PyIceberg y DuckDB, sin Spark.">
+      
+      
+      
+        <link rel="canonical" href="https://aitor-medrano.github.io/iabd/de/lakehouse-iceberg.html">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lakehouse con Iceberg - Inteligencia Artificial y Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CJetbrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Jetbrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-VKM8BDY6KT"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-VKM8BDY6KT",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-VKM8BDY6KT",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Lakehouse con Iceberg - Inteligencia Artificial y Big Data" />
+<meta property="og:description" content="Formatos de tabla abiertos con Apache Iceberg. ACID, snapshots, time travel, evolución de esquema y de particionado, Iceberg frente a Delta y Hudi, catálogo REST con Apache Polaris y un lakehouse por capas construido con PyIceberg y DuckDB, sin Spark." />
+<meta property="og:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/de/lakehouse-iceberg.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://aitor-medrano.github.io/iabd/de/lakehouse-iceberg.html" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Lakehouse con Iceberg - Inteligencia Artificial y Big Data" />
+<meta property="twitter:description" content="Formatos de tabla abiertos con Apache Iceberg. ACID, snapshots, time travel, evolución de esquema y de particionado, Iceberg frente a Delta y Hudi, catálogo REST con Apache Polaris y un lakehouse por capas construido con PyIceberg y DuckDB, sin Spark." />
+<meta property="twitter:image" content="https://aitor-medrano.github.io/iabd/assets/images/social/de/lakehouse-iceberg.png" />
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lakehouse-con-iceberg" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-header__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Inteligencia Artificial y Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lakehouse con Iceberg
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo noche"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo noche" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Cambiar a modo día"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo día" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Inteligencia Artificial y Big Data" class="md-nav__button md-logo" aria-label="Inteligencia Artificial y Big Data" data-md-component="logo">
+      
+  <img src="../images/logoIABD3.png" alt="logo">
+
+    </a>
+    Inteligencia Artificial y Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IABD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2627.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Planning 26/27
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NoSQL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    NoSQL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/nosql.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento de datos. NoSQL
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/mongo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/modelado.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelado documental
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/agregaciones.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agregaciones en MongoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/rendimiento.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendimiento
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/replicacion.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y particionado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/pymongo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MongoDB y Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/series-temporales.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series temporales en MongoDB
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cloud
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/cloud.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/aws.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/s3.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/ec2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EC2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/lambda.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lambda
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/rds.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/dynamodb.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/waf.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WAF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/escalado.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización y Escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/emr.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EMR
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/athena.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Athena
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/glue.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glue
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingeniería de Datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ingeniería de Datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="bigdata.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Big Data
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="de.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingeniería de datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arq.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitecturas Big Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ciclo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida del dato
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="formatos.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Formatos de datos
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sql-analitico.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQL analítico
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="modelado-dimensional.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelado dimensional
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="object-storage.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento distribuido
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="motores-consulta.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motores de consulta
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="etl.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingesta de datos
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dlt.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extracción y carga con dlt
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dbt.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transformación con dbt
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="airflow.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orquestación con Airflow
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pentaho.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pentaho
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="faker.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Faker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="stack-docker-de.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stack Docker
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosistema Hadoop
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ecosistema Hadoop
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hadoop.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hadoop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hdfs.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HDFS
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/sqoop.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sqoop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/flume.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hive1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hive I
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hadoop/hive2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hive II
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spark
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Spark
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/spark.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosistema Spark
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/rdd.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/dataframeAPI.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DataFrames API
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/agregaciones.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agregaciones
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/catalog.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conectividad y catálogo
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/deltalake.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Delta Lake
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/streaming.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/join-window.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windowing y Joins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark/stack-docker-spark.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stack Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flujo de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flujo de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/nifi1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nifi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/nifi2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nifi Avanzado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/kafka1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kafka
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataflow/kafka2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kafka Clúster
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transferencia de conocimiento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Transferencia de conocimiento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hf/transferencia.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reaprendiendo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hf/hf.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hugging Face
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hf/gradio.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gradio
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hf/datasets.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../audio/audio.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tratamiento de audio
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../audio/audio-hf.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio en Hugging Face
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IoT
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ts/nodered.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ts/timeseries.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series temporales
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sa/series-temporales.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Series temporales en MongoDB
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--updated" title="Modificado">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ts/influxdb.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InfluxDB
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--new" title="Recién añadido">
+    </span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../pia/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PIA
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PIA
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_2" id="__nav_11_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lara 22/23
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lara 22/23
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/01presentacion.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/02requisitos.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prototipado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/03visitaVK.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visita IES Victoria Kent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/04almacenamiento.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/05audio.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/11dataset.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creando el dataset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_3" id="__nav_11_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lara 23/24
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lara 23/24
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/21conociendo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conociendo Lara
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/22captura.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capturando audios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/29dataset.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creando el dataset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/30entrenamiento.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entrenando
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/31refinando.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refinando
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/32evaluando.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluando
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_4" id="__nav_11_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autoponic 22/23
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Autoponic 22/23
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/06autoponic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/07navarrosantafe.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visita IES Navarro Santafé
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/08timeseries.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Almacenamiento datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/09powerbi.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visualización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/10actuadores.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Actuadores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_11_5" id="__nav_11_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autoponic 23/24
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Autoponic 23/24
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/23autoponic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conociendo Autoponic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/24nodered.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node-RED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/25villena.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visita IES Navarro Santafé
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/26modelo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modelo de datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pia/27dashboard.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cuadro de mandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tags.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#del-data-swamp-a-los-formatos-de-tabla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Del <em>data swamp</em> a los formatos de tabla
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Del data swamp a los formatos de tabla">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#el-problema-de-una-carpeta-de-ficheros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          El problema de una carpeta de ficheros
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#que-es-un-formato-de-tabla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Qué es un formato de tabla
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#las-cinco-capas-del-lakehouse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Las cinco capas del lakehouse
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anatomia-de-una-tabla-iceberg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Anatomía de una tabla Iceberg
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#las-garantias-y-de-donde-salen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Las garantías y de dónde salen
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Las garantías y de dónde salen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#atomicidad-y-concurrencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Atomicidad y concurrencia
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snapshots-y-time-travel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          <em>Snapshots</em> y <em>time travel</em>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evolucion-de-esquema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Evolución de esquema
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#particionado-oculto-y-evolucion-del-particionado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Particionado oculto y evolución del particionado
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actualizar-y-borrar-copy-on-write-y-merge-on-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Actualizar y borrar: <em>copy-on-write</em> y <em>merge-on-read</em>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iceberg-frente-a-delta-lake-y-hudi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Iceberg frente a Delta Lake y Hudi
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#el-catalogo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          El catálogo
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="El catálogo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-hace-un-catalogo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Qué hace un catálogo
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-especificacion-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          La especificación <abbr title="Representational State Transfer">REST</abbr>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apache-polaris" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Apache Polaris
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#polaris-en-nuestro-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Polaris en nuestro stack
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arrancando-el-entorno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Arrancando el entorno
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conectando-con-el-catalogo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Conectando con el catálogo
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-1-la-capa-bronze-con-pyiceberg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Caso 1. La capa bronze con PyIceberg
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso 1. La capa bronze con PyIceberg">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creando-la-primera-tabla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Creando la primera tabla
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#explorando-los-metadatos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Explorando los metadatos
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#una-segunda-extraccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Una segunda extracción
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viajando-en-el-tiempo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Viajando en el tiempo
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-2-la-capa-silver-con-duckdb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Caso 2. La capa silver con DuckDB
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso 2. La capa silver con DuckDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#el-mismo-catalogo-desde-otro-motor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          El mismo catálogo desde otro motor
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creando-silver-con-time-travel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Creando silver con <em>time travel</em>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aplicando-cambios-con-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Aplicando cambios con <code>MERGE</code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#que-ha-escrito-el-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Qué ha escrito el <code>MERGE</code>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lo-mismo-con-copy-on-write" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Lo mismo, con <em>copy-on-write</em>
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#un-catalogo-dos-motores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Un catálogo, dos motores
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caso-3-evolucion-sin-reescribir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Caso 3. Evolución sin reescribir
+        </span>
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caso 3. Evolución sin reescribir">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#anadiendo-una-columna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Añadiendo una columna
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#esquemas-en-el-tiempo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Esquemas en el tiempo
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cambiando-el-particionado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Cambiando el particionado
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-particionado-oculto-en-accion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          El particionado oculto en acción
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-capa-gold-y-lo-que-viene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          La capa gold y lo que viene
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          FAQ
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Referencias
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          Actividades
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <nav class="md-tags" >
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:bda-ra1" class="md-tag">BDA RA1</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:bda-ra2" class="md-tag">BDA RA2</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:bda-ra3" class="md-tag">BDA RA3</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:data-engineering" class="md-tag">Data Engineering</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:duckdb" class="md-tag">DuckDB</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:iceberg" class="md-tag">Iceberg</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:minio" class="md-tag">MinIO</a>
+      
+    
+      
+      
+      
+      
+        <a href="../tags.html#tag:polaris" class="md-tag">Polaris</a>
+      
+    
+  </nav>
+
+
+
+<div class="changelog">
+<p><em>Changelog:</em></p>
+<ul>
+<li>Nueva creación — Noviembre 2026</li>
+</ul>
+</div>
+<h1 id="lakehouse-con-iceberg">Lakehouse con Iceberg<a class="headerlink" href="#lakehouse-con-iceberg" title="Permanent link">&para;</a></h1>
+<figure style="float: right;">
+    <img src="images/19iceberg-logo.png" width="250" alt="Logo de Apache Iceberg">
+    <figcaption>Logo de Apache Iceberg</figcaption>
+</figure>
+
+<p>En el bloque anterior cerramos el ciclo ELT de <code>retail_db</code>: <em>dlt</em> copiaba las tablas de <em>MySQL</em> a <em>DuckDB</em>, <em>dbt</em> construía la estrella y <em>Airflow</em> lo orquestaba todo. La última tarea del DAG <code>retail_elt</code>, <code>publicar</code>, dejaba los <em>marts</em> como ficheros <em>Parquet</em> en <code>s3://processed/marts/</code>, listos para que el informe los leyera.</p>
+<p>Ese último paso funciona, pero tiene trampa. Un lago de ficheros <em>Parquet</em> sueltos no sabe qué ficheros forman una tabla, no guarda historia y no protege a quien lee de quien escribe. En esta sesión, la primera del bloque, vamos a convertir ese lago en un <em>lakehouse</em>: tablas con transacciones, historia y evolución, sobre el mismo almacenamiento de objetos y sin cambiar de formato de fichero. Lo haremos con <a href="https://iceberg.apache.org">Apache Iceberg</a>, el formato de tabla abierto de referencia, y con <a href="https://polaris.apache.org">Apache Polaris</a> como catálogo.</p>
+<p>Y lo haremos sin <em>Spark</em>. Usaremos herramientas que ya conocemos, <em>DuckDB</em> y <em>Python</em>, para dejar claro que el formato no depende del motor. En la sesión siguiente, <em>Spark</em> llegará como un motor más que lee y escribe exactamente las mismas tablas.</p>
+<h2 id="del-data-swamp-a-los-formatos-de-tabla">Del <em>data swamp</em> a los formatos de tabla<a class="headerlink" href="#del-data-swamp-a-los-formatos-de-tabla" title="Permanent link">&para;</a></h2>
+<h3 id="el-problema-de-una-carpeta-de-ficheros">El problema de una carpeta de ficheros<a class="headerlink" href="#el-problema-de-una-carpeta-de-ficheros" title="Permanent link">&para;</a></h3>
+<p>Durante la era <em>Hadoop</em>, una tabla era una carpeta. <em>Hive</em> guardaba en su <em>metastore</em> el esquema y la lista de particiones, y cada partición era una subcarpeta (<code>year=2026/month=11/</code>). Para saber qué ficheros formaban la tabla, el motor listaba el almacenamiento.</p>
+<p>Con unos pocos ficheros, esto funciona. Cuando el lago crece y varios procesos escriben a la vez, aparecen los problemas que convirtieron muchos <em>data lakes</em> en <em>data swamps</em>: había muchos datos, pero era difícil consultarlos, gobernarlos y fiarse de ellos. Volvamos a nuestra tarea <code>publicar</code> y hagámonos cinco preguntas:</p>
+<table>
+<thead>
+<tr>
+<th>Pregunta</th>
+<th>Con ficheros <em>Parquet</em> sueltos</th>
+<th>Con un formato de tabla</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Si el informe lee mientras <code>publicar</code> escribe, ¿qué ve?</td>
+<td>Puede ver la mitad de los ficheros nuevos</td>
+<td>El estado anterior o el nuevo, nunca una mezcla</td>
+</tr>
+<tr>
+<td>Si hoy publicamos un <em>mart</em> erróneo, ¿cómo recuperamos el de ayer?</td>
+<td>Con una copia de seguridad, si la hicimos</td>
+<td>Leyendo o restaurando la versión anterior</td>
+</tr>
+<tr>
+<td>Si dos procesos publican a la vez, ¿cuál gana?</td>
+<td>El último en escribir, y sin avisar</td>
+<td>Uno confirma; el otro detecta el conflicto y reintenta</td>
+</tr>
+<tr>
+<td>Si un pedido cambia de estado, ¿hay que reescribir el fichero?</td>
+<td>Sí, entero y a mano</td>
+<td>Se actualiza la fila; el formato decide cómo</td>
+</tr>
+<tr>
+<td>Si añadimos una columna o cambiamos el particionado, ¿se rompen los lectores?</td>
+<td>Probablemente</td>
+<td>No, y los ficheros antiguos no se tocan</td>
+</tr>
+</tbody>
+</table>
+<p>A esto se suma el rendimiento. En un almacenamiento de objetos como <em>MinIO</em> o <em>S3</em>, listar carpetas es lento y cuesta dinero, y <em>Hive</em> solo podía descartar ficheros tarde, durante la ejecución de la consulta.</p>
+<h3 id="que-es-un-formato-de-tabla">Qué es un formato de tabla<a class="headerlink" href="#que-es-un-formato-de-tabla" title="Permanent link">&para;</a></h3>
+<p>Un formato de tabla abierto añade una capa de metadatos sobre los ficheros de datos. Esos metadatos enumeran exactamente qué ficheros forman cada versión de la tabla, con su esquema, su particionado y estadísticas de cada fichero. Los datos siguen en <em>Parquet</em>: lo que cambia es cómo se describe la tabla.</p>
+<p>Alex Merced lo explica con una cocina llena de cajones. Para encontrar una cuchara podemos abrirlos todos, o mirar el tablón de la pared que dice dónde está cada cosa. Los metadatos son ese tablón. Gracias a ellos, el motor decide qué ficheros leer al planificar la consulta, con las estadísticas de los metadatos, y no al ejecutarla, listando carpetas y abriendo ficheros.</p>
+<div class="admonition info">
+<p class="admonition-title">Iceberg no sustituye a Parquet</p>
+<p><em>Parquet</em> es un formato de fichero: define cómo se guardan las filas dentro de un fichero. <em>Iceberg</em> es un formato de tabla: define qué ficheros forman una tabla y cómo evoluciona. Una tabla <em>Iceberg</em> son ficheros <em>Parquet</em> más sus metadatos.</p>
+</div>
+<p><em>Iceberg</em> nació en Netflix para resolver los límites de <em>Hive</em> con tablas enormes y es proyecto principal de la <em>Apache Software Foundation</em>. No pertenece a ningún fabricante, y por eso lo leen y escriben <em>Spark</em>, <em>Flink</em>, <em>Trino</em>, <em>DuckDB</em>, <em>Snowflake</em>, <em>BigQuery</em> o <em>Python</em>.</p>
+<h3 id="las-cinco-capas-del-lakehouse">Las cinco capas del lakehouse<a class="headerlink" href="#las-cinco-capas-del-lakehouse" title="Permanent link">&para;</a></h3>
+<p>Un <em>lakehouse</em> sobre <em>Iceberg</em> es modular: cada capa se puede cambiar sin tocar las demás. Nos servirá de mapa para todo el bloque.</p>
+<table>
+<thead>
+<tr>
+<th>Capa</th>
+<th>Qué hace</th>
+<th>En nuestro stack</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Almacenamiento</td>
+<td>Guarda los ficheros de datos y de metadatos</td>
+<td><em>MinIO</em></td>
+</tr>
+<tr>
+<td>Ingesta</td>
+<td>Escribe en las tablas, por lotes o en <em>streaming</em></td>
+<td><em>dlt</em>, <em>PyIceberg</em> y <em>DuckDB</em>; más adelante, <em>Spark</em> y <em>Kafka</em></td>
+</tr>
+<tr>
+<td>Catálogo</td>
+<td>Registra las tablas y coordina los cambios</td>
+<td><em>Polaris</em></td>
+</tr>
+<tr>
+<td>Federación</td>
+<td>Modela y consulta datos de varias fuentes</td>
+<td><em>DuckDB</em> y <em>Trino</em></td>
+</tr>
+<tr>
+<td>Consumo</td>
+<td>Informes, cuadros de mando, IA</td>
+<td>El informe de <em>Airflow</em>, cuadernos <em>Jupyter</em></td>
+</tr>
+</tbody>
+</table>
+<p>En esta sesión trabajaremos sobre todo en las tres primeras.</p>
+<h2 id="anatomia-de-una-tabla-iceberg">Anatomía de una tabla Iceberg<a class="headerlink" href="#anatomia-de-una-tabla-iceberg" title="Permanent link">&para;</a></h2>
+<p>Una tabla <em>Iceberg</em> se organiza como un árbol de metadatos que termina en los ficheros de datos:</p>
+<figure style="align: center;">
+    <img src="images/19iceberg-anatomia.svg" alt="Anatomía de una tabla Iceberg" width="700px">
+    <figcaption>Anatomía de una tabla Iceberg</figcaption>
+</figure>
+
+<ul>
+<li>El catálogo guarda, para cada tabla, un puntero al fichero <code>metadata.json</code> actual. Es la única pieza que no vive en el almacenamiento.</li>
+<li>El fichero <code>metadata.json</code> describe la tabla: sus esquemas, sus especificaciones de partición, la lista de <em>snapshots</em> y cuál es el actual. Cada cambio crea un <code>metadata.json</code> nuevo; los anteriores no se modifican.</li>
+<li>Cada <em>snapshot</em> apunta a una <em>manifest list</em> (<code>snap-*.avro</code>), que enumera los <em>manifests</em> de esa versión con el rango de valores de partición que cubre cada uno.</li>
+<li>Cada <em>manifest</em> (<code>*.avro</code>) enumera ficheros de datos o de borrado, con estadísticas por columna: número de filas, nulos, mínimo y máximo.</li>
+<li>Los ficheros de datos son <em>Parquet</em>. Los ficheros de borrado indican qué filas ya no forman parte de la tabla.</li>
+</ul>
+<p>Así, una consulta con un filtro sobre <code>order_date</code> se resuelve en dos podas: con la <em>manifest list</em> descarta los <em>manifests</em> cuyas particiones no encajan, y con los <em>manifests</em> descarta los ficheros cuyo mínimo y máximo quedan fuera del filtro. Solo lee los ficheros que pueden contener resultados.</p>
+<div class="admonition tip">
+<p class="admonition-title">Nada se modifica, todo se añade</p>
+<p>Ningún fichero de una tabla <em>Iceberg</em> se modifica nunca. Escribir es añadir ficheros nuevos (datos y metadatos) y mover un puntero. Esta idea explica casi todas las garantías que vamos a ver.</p>
+</div>
+<h2 id="las-garantias-y-de-donde-salen">Las garantías y de dónde salen<a class="headerlink" href="#las-garantias-y-de-donde-salen" title="Permanent link">&para;</a></h2>
+<h3 id="atomicidad-y-concurrencia">Atomicidad y concurrencia<a class="headerlink" href="#atomicidad-y-concurrencia" title="Permanent link">&para;</a></h3>
+<p>Cada escritura en <em>Iceberg</em> sigue los mismos pasos:</p>
+<ol>
+<li>El escritor lee el <code>metadata.json</code> actual a través del catálogo.</li>
+<li>Escribe sus ficheros de datos y sus metadatos nuevos. Nadie los ve todavía.</li>
+<li>Pide al catálogo que cambie el puntero al nuevo <code>metadata.json</code>, pero solo si sigue apuntando al que leyó en el paso 1.</li>
+<li>Si otro escritor se adelantó, el catálogo rechaza el cambio y el escritor vuelve a empezar desde el estado nuevo.</li>
+</ol>
+<figure style="align: center;">
+    <img src="images/19iceberg-commit.svg" alt="Commit optimista en Iceberg" width="700px">
+    <figcaption>Commit optimista en Iceberg</figcaption>
+</figure>
+
+<p>Es un control de concurrencia optimista: no hay bloqueos, se confía en que no habrá conflicto y se comprueba al final. El cambio de puntero es atómico, así que quien lee ve el estado anterior o el nuevo, nunca una mezcla. Por eso hablamos de transacciones <abbr title="Atomicity, Consistency, Isolation, Durability (atomicidad, consistencia, aislamiento y durabilidad)">ACID</abbr>. Dos procesos que añaden datos a particiones distintas no entran en conflicto; dos que sobrescriben los mismos datos, sí.</p>
+<h3 id="snapshots-y-time-travel"><em>Snapshots</em> y <em>time travel</em><a class="headerlink" href="#snapshots-y-time-travel" title="Permanent link">&para;</a></h3>
+<p>Cada <em>commit</em> crea un <em>snapshot</em>: una versión completa de la tabla. Los <em>snapshots</em> anteriores siguen en <code>metadata.json</code> y sus ficheros siguen en el almacenamiento, así que podemos:</p>
+<ul>
+<li>Leer la tabla tal como estaba en un <em>snapshot</em> o en un instante (<em>time travel</em>).</li>
+<li>Volver a un <em>snapshot</em> anterior (<em>rollback</em>).</li>
+<li>Ponerle nombre a un <em>snapshot</em> con un <em>tag</em> (<code>carga_inicial</code>, <code>cierre_noviembre</code>) o crear una rama (<em>branch</em>) que evoluciona por separado.</li>
+</ul>
+<p>Un <em>snapshot</em> no es una copia de la tabla: los <em>snapshots</em> comparten los ficheros que no han cambiado. Pero tampoco es gratis. Mientras exista un <em>snapshot</em>, sus ficheros no se pueden borrar, y un <em>tag</em> impide que su <em>snapshot</em> caduque.</p>
+<h3 id="evolucion-de-esquema">Evolución de esquema<a class="headerlink" href="#evolucion-de-esquema" title="Permanent link">&para;</a></h3>
+<p><em>Iceberg</em> identifica cada columna por un id interno, no por su nombre ni por su posición. Añadir, renombrar, reordenar o borrar columnas solo cambia los metadatos: no se reescribe ningún fichero. Las filas antiguas devuelven <code>NULL</code> en una columna nueva, y un <em>snapshot</em> anterior conserva el esquema que tenía.</p>
+<h3 id="particionado-oculto-y-evolucion-del-particionado">Particionado oculto y evolución del particionado<a class="headerlink" href="#particionado-oculto-y-evolucion-del-particionado" title="Permanent link">&para;</a></h3>
+<p>En <em>Hive</em>, particionar por mes obligaba a crear una columna <code>mes</code>, a rellenarla al escribir y a filtrar por ella al leer: si alguien filtraba por la fecha y no por <code>mes</code>, se leía la tabla entera. En <em>Iceberg</em>, la partición es una transformación de una columna existente, y la consulta filtra por la columna original:</p>
+<table>
+<thead>
+<tr>
+<th>Transformación</th>
+<th>Ejemplo</th>
+<th>Agrupa por</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>identity</code></td>
+<td><code>identity(order_status)</code></td>
+<td>El valor tal cual</td>
+</tr>
+<tr>
+<td><code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code></td>
+<td><code>month(order_date)</code></td>
+<td>El periodo de una fecha</td>
+</tr>
+<tr>
+<td><code>bucket</code></td>
+<td><code>bucket(16, order_customer_id)</code></td>
+<td>Un <em>hash</em> repartido en N grupos</td>
+</tr>
+<tr>
+<td><code>truncate</code></td>
+<td><code>truncate(2, customer_zipcode)</code></td>
+<td>Los primeros caracteres o un rango de valores</td>
+</tr>
+</tbody>
+</table>
+<p>Como la partición vive en los metadatos, se puede cambiar cuando la tabla ya tiene datos. Los ficheros antiguos conservan su especificación y los nuevos usan la nueva: no hay que reescribir nada.</p>
+<h3 id="actualizar-y-borrar-copy-on-write-y-merge-on-read">Actualizar y borrar: <em>copy-on-write</em> y <em>merge-on-read</em><a class="headerlink" href="#actualizar-y-borrar-copy-on-write-y-merge-on-read" title="Permanent link">&para;</a></h3>
+<p>Si los ficheros nunca se modifican, ¿cómo se actualiza una fila? Hay dos estrategias:</p>
+<ul>
+<li><em>Copy-on-write</em>: se reescriben los ficheros que contienen filas afectadas, ya con el cambio aplicado. Escribir cuesta más; leer, nada extra.</li>
+<li><em>Merge-on-read</em>: se escribe un fichero de borrado que marca las filas antiguas, y las filas nuevas van a otro fichero. Escribir es barato; al leer hay que aplicar los borrados.</li>
+</ul>
+<p>Los ficheros de borrado pueden ser posicionales (fichero y número de fila) o por igualdad (por valor de columna, típicos del <em>streaming</em> y de la captura de cambios). La versión 3 del formato añade los vectores de borrado: uno por fichero de datos, en lugar de una pila de ficheros de borrado.</p>
+<p>Como orientación, Merced sitúa el punto de inflexión en torno a un 10 % de filas modificadas por fichero: por encima suele compensar <em>copy-on-write</em>, por debajo, <em>merge-on-read</em>. Además, <code>MERGE</code>, <code>UPDATE</code> y <code>DELETE</code> los implementa cada motor, no la especificación. En los casos veremos que <em>PyIceberg</em> hace <em>copy-on-write</em> y <em>DuckDB</em>, <em>merge-on-read</em> con borrados posicionales.</p>
+<div class="admonition warning">
+<p class="admonition-title">El precio de las garantías</p>
+<p>Cada <em>commit</em> añade ficheros y metadatos. Con escrituras frecuentes se acumulan ficheros pequeños, ficheros de borrado y <em>snapshots</em>, y <code>metadata.json</code> crece hasta frenar cada consulta y cada <em>commit</em>. La solución es el mantenimiento: compactar ficheros, reescribir <em>manifests</em> y hacer caducar <em>snapshots</em>. Lo haremos con <em>Spark</em> más adelante en el bloque.</p>
+<p>Un caso que lo ilustra: si un cliente ejerce su derecho al olvido y borramos sus filas, sus datos siguen en <em>MinIO</em> mientras haya <em>snapshots</em> que los referencien. Para eliminarlos de verdad hay que hacer caducar esos <em>snapshots</em>, compactar y limpiar los ficheros huérfanos.</p>
+</div>
+<h2 id="iceberg-frente-a-delta-lake-y-hudi">Iceberg frente a Delta Lake y Hudi<a class="headerlink" href="#iceberg-frente-a-delta-lake-y-hudi" title="Permanent link">&para;</a></h2>
+<p><em>Iceberg</em> no es el único formato de tabla abierto. Los tres principales resuelven el mismo problema:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><em>Iceberg</em></th>
+<th><em>Delta Lake</em></th>
+<th><em>Hudi</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Origen</td>
+<td>Netflix; <em>Apache Software Foundation</em></td>
+<td>Databricks; <em>Linux Foundation</em></td>
+<td>Uber; <em>Apache Software Foundation</em></td>
+</tr>
+<tr>
+<td>Metadatos</td>
+<td>Árbol: <code>metadata.json</code>, <em>manifest list</em> y <em>manifests</em></td>
+<td>Registro de transacciones <code>_delta_log</code> (JSON con <em>checkpoints</em> en <em>Parquet</em>)</td>
+<td>Línea temporal (<em>timeline</em>) de acciones sobre la tabla</td>
+</tr>
+<tr>
+<td>Catálogo</td>
+<td>Especificación <abbr title="Representational State Transfer">REST</abbr> abierta, con varias implementaciones</td>
+<td>El propio registro; en Databricks, <em>Unity Catalog</em></td>
+<td><em>Hive Metastore</em> u otros</td>
+</tr>
+<tr>
+<td>Punto fuerte</td>
+<td>Muchos motores leen y escriben las mismas tablas</td>
+<td>Integración con <em>Spark</em> y Databricks</td>
+<td><em>Upserts</em> frecuentes e ingesta incremental</td>
+</tr>
+</tbody>
+</table>
+<p>Los tres ofrecen transacciones <abbr title="Atomicity, Consistency, Isolation, Durability (atomicidad, consistencia, aislamiento y durabilidad)">ACID</abbr>, <em>time travel</em> y evolución de esquema, así que la diferencia no está en las funciones básicas sino en el ecosistema y en la flexibilidad a largo plazo. Además, convergen: <em>Delta UniForm</em> genera metadatos <em>Iceberg</em> para tablas <em>Delta</em>, y <em>Apache XTable</em> traduce entre formatos. <em>Apache Paimon</em> es otra alternativa, orientada al <em>streaming</em>.</p>
+<p>Elegimos <em>Iceberg</em> porque es el que permite que <em>PyIceberg</em>, <em>DuckDB</em>, <em>Spark</em> y <em>Trino</em> compartan un mismo catálogo, que es justo lo que haremos en este bloque. Si quieres comparar, en la sesión de <a href="../spark/deltalake.html">Delta Lake</a> tienes el mismo tipo de operaciones con <em>Delta</em>.</p>
+<h2 id="el-catalogo">El catálogo<a class="headerlink" href="#el-catalogo" title="Permanent link">&para;</a></h2>
+<h3 id="que-hace-un-catalogo">Qué hace un catálogo<a class="headerlink" href="#que-hace-un-catalogo" title="Permanent link">&para;</a></h3>
+<p>Sin catálogo, una tabla <em>Iceberg</em> sería una carpeta de metadatos sin un punto de entrada claro. El catálogo tiene cuatro responsabilidades:</p>
+<ul>
+<li>Registrar las tablas y permitir descubrirlas por su nombre (<code>bronze.orders</code>).</li>
+<li>Saber cuál es el <code>metadata.json</code> actual de cada tabla.</li>
+<li>Organizar las tablas en <em>namespaces</em>, el equivalente a los esquemas de una base de datos.</li>
+<li>Coordinar los <em>commits</em>: es quien acepta o rechaza el cambio de puntero del apartado anterior.</li>
+</ul>
+<h3 id="la-especificacion-rest">La especificación <abbr title="Representational State Transfer">REST</abbr><a class="headerlink" href="#la-especificacion-rest" title="Permanent link">&para;</a></h3>
+<p>Durante años, cada catálogo tenía su propia librería de cliente para cada lenguaje, y cada motor implementaba a su manera la lógica de los <em>commits</em>. Las diferencias entre versiones y lenguajes provocaban errores sutiles, a veces silenciosos.</p>
+<p>La especificación <abbr title="Representational State Transfer">REST</abbr> de <em>Iceberg</em> define una API HTTP común para hablar con cualquier catálogo: listar <em>namespaces</em>, crear y cargar tablas, confirmar cambios. Cualquier cliente que hable <abbr title="Representational State Transfer">REST</abbr> funciona con cualquier catálogo que la implemente, y la lógica de los <em>commits</em> pasa al servidor. Hoy la implementan, entre otros, <em>AWS Glue</em>, <em>Apache Polaris</em>, <em>Apache Gravitino</em>, <em>Lakekeeper</em> y <em>Project Nessie</em>.</p>
+<h3 id="apache-polaris">Apache Polaris<a class="headerlink" href="#apache-polaris" title="Permanent link">&para;</a></h3>
+<p><a href="https://polaris.apache.org">Apache Polaris</a> es un catálogo <abbr title="Representational State Transfer">REST</abbr> de código abierto pensado para entornos con varios motores. Organiza los objetos así:</p>
+<ul>
+<li>Un <em>realm</em> es un espacio aislado, con sus propios usuarios.</li>
+<li>Dentro hay uno o varios catálogos, cada uno asociado a una ubicación de almacenamiento.</li>
+<li>Cada catálogo contiene <em>namespaces</em>, y cada <em>namespace</em>, tablas y vistas.</li>
+</ul>
+<p>Los permisos siguen un modelo de roles en cascada. Un <em>principal</em> (un usuario o un servicio) recibe <em>principal roles</em>; a cada <em>principal role</em> se le asignan <em>catalog roles</em>, y cada <em>catalog role</em> tiene privilegios sobre el catálogo, un <em>namespace</em> o una tabla. En la nube, <em>Polaris</em> además reparte credenciales temporales del almacenamiento (<em>credential vending</em>), de modo que ningún motor necesita acceso directo a los ficheros.</p>
+<h3 id="polaris-en-nuestro-stack">Polaris en nuestro stack<a class="headerlink" href="#polaris-en-nuestro-stack" title="Permanent link">&para;</a></h3>
+<p>El catálogo forma parte del stack del curso, en el fichero <code>compose/lakehouse.yml</code>:</p>
+<figure style="align: center;">
+    <img src="images/19iceberg-stack.svg" alt="Polaris en el stack del curso" width="700px">
+    <figcaption>Polaris en el stack del curso</figcaption>
+</figure>
+
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>postgres-polaris</code></td>
+<td>Guarda el estado del catálogo, para que sobreviva a los reinicios</td>
+</tr>
+<tr>
+<td><code>polaris-bootstrap</code></td>
+<td><em>One-shot</em>: crea el esquema en <em>Postgres</em>, el <em>realm</em> <code>POLARIS</code> y el usuario <code>root</code></td>
+</tr>
+<tr>
+<td><code>polaris</code></td>
+<td>El servidor <abbr title="Representational State Transfer">REST</abbr> (API en el puerto 8181, salud en el 8182)</td>
+</tr>
+<tr>
+<td><code>polaris-init</code></td>
+<td><em>One-shot</em>: crea el catálogo <code>iabd</code> en <code>s3://warehouse/iceberg</code> y da a <code>catalog_admin</code> el privilegio <code>CATALOG_MANAGE_CONTENT</code> para crear <em>namespaces</em> y tablas</td>
+</tr>
+</tbody>
+</table>
+<p>Hay dos decisiones del montaje que conviene entender:</p>
+<ul>
+<li><em>MinIO</em> no ofrece credenciales temporales, así que el catálogo se crea con <code>stsUnavailable: true</code> y cada motor usa las credenciales de <em>MinIO</em>. La consecuencia es importante: en nuestro stack, los permisos de <em>Polaris</em> no protegen los ficheros, porque todos los motores tienen la clave de <em>MinIO</em>. En producción, el control de acceso llegaría con el <em>credential vending</em>.</li>
+<li>El catálogo anuncia <code>http://minio:9000</code> como dirección del almacenamiento, así que las tablas solo se pueden leer desde los contenedores de la red <code>bigdata</code>. Todo el trabajo lo haremos desde el contenedor <code>lab</code>.</li>
+</ul>
+<h3 id="arrancando-el-entorno">Arrancando el entorno<a class="headerlink" href="#arrancando-el-entorno" title="Permanent link">&para;</a></h3>
+<p>Para esta sesión basta con el nodo <code>lab</code>, <code>mysql-retail</code>, <em>MinIO</em> y <em>Polaris</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nv">COMPOSE_PROFILES</span><span class="o">=</span>lab,polaris<span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p><em>Polaris</em> tarda alrededor de un minuto en estar disponible. Podemos comprobar su salud en <a href="http://localhost:8182/q/health">http://localhost:8182/q/health</a> y, cuando responda, lanzar la prueba de humo del lakehouse desde el contenedor <code>lab</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>lab<span class="w"> </span>python<span class="w"> </span>/workspace/smoke/lakehouse.py
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [humo]
+</code></pre></div>
+<p>La prueba crea la tabla <code>smoke.clientes</code> con <em>PyIceberg</em>, la lee y le añade una fila con <em>DuckDB</em>, y comprueba que <em>PyIceberg</em> ve el cambio. Si abrimos la consola de <em>MinIO</em> (<a href="http://localhost:9001">http://localhost:9001</a>), en <code>warehouse/iceberg/smoke/clientes/</code> veremos dos carpetas: <code>metadata/</code>, con los <code>*.metadata.json</code> y los <code>*.avro</code>, y <code>data/</code>, con los <em>Parquet</em>.</p>
+<h3 id="conectando-con-el-catalogo">Conectando con el catálogo<a class="headerlink" href="#conectando-con-el-catalogo" title="Permanent link">&para;</a></h3>
+<p>Para no repetir la configuración en cada cuaderno, la hemos reunido en el módulo <code>lago.py</code>, que vive junto a los cuadernos en <code>workspace/iceberg/</code>:</p>
+<div class="highlight"><span class="filename">workspace/iceberg/lago.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="sd">&quot;&quot;&quot;Conexiones al lakehouse del curso desde el contenedor lab.</span>
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span><span class="sd">    from lago import catalogo, duckdb_lago, duckdb_retail</span>
+<span class="linenos" data-linenos=" 4 "></span>
+<span class="linenos" data-linenos=" 5 "></span><span class="sd">Las variables de entorno las inyecta el compose en el contenedor lab.</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>
+<span class="linenos" data-linenos="10 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyiceberg.catalog</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_catalog</span>
+<span class="linenos" data-linenos="11 "></span>
+<span class="linenos" data-linenos="12 "></span><span class="c1"># Catálogo Iceberg (Polaris)</span>
+<span class="linenos" data-linenos="13 "></span><span class="n">URI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POLARIS_URI&quot;</span><span class="p">]</span>                 <span class="c1"># http://polaris:8181/api/catalog</span>
+<span class="linenos" data-linenos="14 "></span><span class="n">WAREHOUSE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POLARIS_WAREHOUSE&quot;</span><span class="p">]</span>     <span class="c1"># iabd</span>
+<span class="linenos" data-linenos="15 "></span><span class="n">CLIENT_ID</span><span class="p">,</span> <span class="n">CLIENT_SECRET</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POLARIS_CREDENTIAL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos" data-linenos="16 "></span>
+<span class="linenos" data-linenos="17 "></span><span class="c1"># Almacenamiento (MinIO)</span>
+<span class="linenos" data-linenos="18 "></span><span class="n">S3_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_ACCESS_KEY_ID&quot;</span><span class="p">]</span>
+<span class="linenos" data-linenos="19 "></span><span class="n">S3_SECRET</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_SECRET_ACCESS_KEY&quot;</span><span class="p">]</span>
+<span class="linenos" data-linenos="20 "></span>
+<span class="linenos" data-linenos="21 "></span><span class="c1"># Origen relacional (MySQL)</span>
+<span class="linenos" data-linenos="22 "></span><span class="n">MYSQL</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;host=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MYSQL_HOST&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> user=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MYSQL_USER&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
+<span class="linenos" data-linenos="23 "></span>         <span class="sa">f</span><span class="s2">&quot;password=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MYSQL_PASSWORD&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
+<span class="linenos" data-linenos="24 "></span>         <span class="sa">f</span><span class="s2">&quot;database=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MYSQL_DATABASE_SOURCE&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;retail_db&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="25 "></span>
+<span class="linenos" data-linenos="26 "></span>
+<span class="linenos" data-linenos="27 "></span><span class="k">def</span><span class="w"> </span><span class="nf">catalogo</span><span class="p">():</span>
+<span class="linenos" data-linenos="28 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Catálogo de Polaris para PyIceberg.&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="29 "></span>    <span class="k">return</span> <span class="n">load_catalog</span><span class="p">(</span><span class="s2">&quot;polaris&quot;</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span>
+<span class="linenos" data-linenos="30 "></span>        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rest&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="31 "></span>        <span class="s2">&quot;uri&quot;</span><span class="p">:</span> <span class="n">URI</span><span class="p">,</span>
+<span class="linenos" data-linenos="32 "></span>        <span class="s2">&quot;warehouse&quot;</span><span class="p">:</span> <span class="n">WAREHOUSE</span><span class="p">,</span>
+<span class="linenos" data-linenos="33 "></span>        <span class="s2">&quot;credential&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CLIENT_ID</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="34 "></span>        <span class="s2">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;PRINCIPAL_ROLE:ALL&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="35 "></span>        <span class="c1"># MinIO no reparte credenciales temporales: cada cliente usa las suyas</span>
+<span class="linenos" data-linenos="36 "></span>        <span class="s2">&quot;s3.endpoint&quot;</span><span class="p">:</span> <span class="s2">&quot;http://minio:9000&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="37 "></span>        <span class="s2">&quot;s3.access-key-id&quot;</span><span class="p">:</span> <span class="n">S3_KEY</span><span class="p">,</span>
+<span class="linenos" data-linenos="38 "></span>        <span class="s2">&quot;s3.secret-access-key&quot;</span><span class="p">:</span> <span class="n">S3_SECRET</span><span class="p">,</span>
+<span class="linenos" data-linenos="39 "></span>        <span class="s2">&quot;s3.path-style-access&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="40 "></span>        <span class="s2">&quot;s3.region&quot;</span><span class="p">:</span> <span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="41 "></span>    <span class="p">})</span>
+<span class="linenos" data-linenos="42 "></span>
+<span class="linenos" data-linenos="43 "></span>
+<span class="linenos" data-linenos="44 "></span><span class="k">def</span><span class="w"> </span><span class="nf">duckdb_lago</span><span class="p">(</span><span class="n">con</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="linenos" data-linenos="45 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Conexión DuckDB con el catálogo de Polaris adjunto como `lago`.&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="46 "></span>    <span class="n">con</span> <span class="o">=</span> <span class="n">con</span> <span class="ow">or</span> <span class="n">duckdb</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="linenos" data-linenos="47 "></span>    <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;LOAD httpfs; LOAD iceberg;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="48 "></span>    <span class="c1"># Credenciales de MinIO, para leer y escribir los ficheros</span>
+<span class="linenos" data-linenos="49 "></span>    <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="50 "></span><span class="s2">        CREATE OR REPLACE SECRET minio (</span>
+<span class="linenos" data-linenos="51 "></span><span class="s2">            TYPE s3, KEY_ID &#39;</span><span class="si">{</span><span class="n">S3_KEY</span><span class="si">}</span><span class="s2">&#39;, SECRET &#39;</span><span class="si">{</span><span class="n">S3_SECRET</span><span class="si">}</span><span class="s2">&#39;, REGION &#39;us-east-1&#39;,</span>
+<span class="linenos" data-linenos="52 "></span><span class="s2">            ENDPOINT &#39;minio:9000&#39;, URL_STYLE &#39;path&#39;, USE_SSL false)&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="53 "></span>    <span class="c1"># Credenciales de Polaris, para hablar con el catálogo (OAuth2)</span>
+<span class="linenos" data-linenos="54 "></span>    <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="55 "></span><span class="s2">        CREATE OR REPLACE SECRET polaris (</span>
+<span class="linenos" data-linenos="56 "></span><span class="s2">            TYPE iceberg, CLIENT_ID &#39;</span><span class="si">{</span><span class="n">CLIENT_ID</span><span class="si">}</span><span class="s2">&#39;, CLIENT_SECRET &#39;</span><span class="si">{</span><span class="n">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&#39;,</span>
+<span class="linenos" data-linenos="57 "></span><span class="s2">            OAUTH2_SCOPE &#39;PRINCIPAL_ROLE:ALL&#39;, OAUTH2_SERVER_URI &#39;</span><span class="si">{</span><span class="n">URI</span><span class="si">}</span><span class="s2">/v1/oauth/tokens&#39;)&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="58 "></span>    <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="59 "></span><span class="s2">        ATTACH IF NOT EXISTS &#39;</span><span class="si">{</span><span class="n">WAREHOUSE</span><span class="si">}</span><span class="s2">&#39; AS lago (</span>
+<span class="linenos" data-linenos="60 "></span><span class="s2">            TYPE iceberg, SECRET polaris, ENDPOINT &#39;</span><span class="si">{</span><span class="n">URI</span><span class="si">}</span><span class="s2">&#39;, ACCESS_DELEGATION_MODE &#39;none&#39;)&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="61 "></span>    <span class="k">return</span> <span class="n">con</span>
+<span class="linenos" data-linenos="62 "></span>
+<span class="linenos" data-linenos="63 "></span>
+<span class="linenos" data-linenos="64 "></span><span class="k">def</span><span class="w"> </span><span class="nf">duckdb_retail</span><span class="p">(</span><span class="n">con</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="linenos" data-linenos="65 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Conexión DuckDB con retail_db (MySQL) adjunta como `retail`.&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="66 "></span>    <span class="n">con</span> <span class="o">=</span> <span class="n">con</span> <span class="ow">or</span> <span class="n">duckdb</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="linenos" data-linenos="67 "></span>    <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;LOAD mysql;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="68 "></span>    <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ATTACH IF NOT EXISTS &#39;</span><span class="si">{</span><span class="n">MYSQL</span><span class="si">}</span><span class="s2">&#39; AS retail (TYPE mysql)&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="69 "></span>    <span class="k">return</span> <span class="n">con</span>
+</code></pre></div>
+<p>Cada cliente necesita dos credenciales distintas: la de <em>Polaris</em> (<code>credential</code> y <code>scope</code>), para hablar con el catálogo, y la de <em>MinIO</em> (<code>s3.*</code>), para leer y escribir los ficheros. Con <em>credential vending</em>, la segunda la daría el propio catálogo.</p>
+<p>En <em>DuckDB</em> esas dos credenciales son dos secretos, y el catálogo se adjunta como una base de datos más con <code>ATTACH</code>. A partir de ahí, <code>lago.bronze.orders</code> es una tabla que podemos consultar y modificar con SQL. <code>ACCESS_DELEGATION_MODE 'none'</code> le indica que no espere credenciales del catálogo y use el secreto de <em>MinIO</em>.</p>
+<h2 id="caso-1-la-capa-bronze-con-pyiceberg">Caso 1. La capa bronze con PyIceberg<a class="headerlink" href="#caso-1-la-capa-bronze-con-pyiceberg" title="Permanent link">&para;</a></h2>
+<p>Vamos a organizar el <em>lakehouse</em> en las tres capas de la arquitectura <em>medallion</em>:</p>
+<ul>
+<li>Bronze guarda los datos tal como llegan del origen, sin limpiar, con la fecha de cada extracción. Solo crece.</li>
+<li>Silver guarda los datos limpios y sin duplicados: una fila por entidad, con su estado actual.</li>
+<li>Gold guarda los datos agregados para negocio, listos para los informes.</li>
+</ul>
+<figure style="align: center;">
+    <img src="images/19iceberg-medallion.svg" alt="Capas del lakehouse de retail_db" width="700px">
+    <figcaption>Capas del lakehouse de retail_db</figcaption>
+</figure>
+
+<p>En este caso crearemos <code>bronze.orders</code> a partir de la tabla <code>orders</code> de <code>retail_db</code>, veremos sus metadatos en <em>MinIO</em> y viajaremos en el tiempo. Crearemos el cuaderno <code>caso1_bronze.ipynb</code> en <code>workspace/iceberg/</code>.</p>
+<h3 id="creando-la-primera-tabla">Creando la primera tabla<a class="headerlink" href="#creando-la-primera-tabla" title="Permanent link">&para;</a></h3>
+<p>Primero conectamos con el catálogo y creamos el <em>namespace</em> <code>bronze</code>. Para poder repetir el caso desde cero, borramos la tabla si ya existía; <code>purge_table</code> elimina también sus ficheros:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">lago</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalogo</span><span class="p">,</span> <span class="n">duckdb_retail</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">cat</span> <span class="o">=</span> <span class="n">catalogo</span><span class="p">()</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">cat</span><span class="o">.</span><span class="n">create_namespace_if_not_exists</span><span class="p">(</span><span class="s2">&quot;bronze&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="k">if</span> <span class="n">cat</span><span class="o">.</span><span class="n">table_exists</span><span class="p">(</span><span class="s2">&quot;bronze.orders&quot;</span><span class="p">):</span>
+<span class="linenos" data-linenos="6 "></span>    <span class="n">cat</span><span class="o">.</span><span class="n">purge_table</span><span class="p">(</span><span class="s2">&quot;bronze.orders&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="7 "></span><span class="n">cat</span><span class="o">.</span><span class="n">list_namespaces</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C1.1]
+</code></pre></div>
+<p>Para leer <code>orders</code> de <em>MySQL</em> usamos <em>DuckDB</em>, que adjunta <code>retail_db</code> como en las sesiones de <em>DuckDB</em> y <em>dlt</em>. Añadimos la columna <code>_ingested_at</code> con el momento de la extracción y obtenemos una tabla de <em>Arrow</em>, el formato en memoria que entiende <em>PyIceberg</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">con</span> <span class="o">=</span> <span class="n">duckdb_retail</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">EXTRAER</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="4 "></span><span class="s2">    SELECT order_id, order_date, order_customer_id, order_status, order_total,</span>
+<span class="linenos" data-linenos="5 "></span><span class="s2">           now()::TIMESTAMP AS _ingested_at</span>
+<span class="linenos" data-linenos="6 "></span><span class="s2">    FROM retail.orders</span>
+<span class="linenos" data-linenos="7 "></span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="8 "></span><span class="n">pedidos</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="n">EXTRAER</span><span class="p">)</span><span class="o">.</span><span class="n">to_arrow_table</span><span class="p">()</span>
+<span class="linenos" data-linenos="9 "></span><span class="n">pedidos</span><span class="o">.</span><span class="n">schema</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C1.2]
+</code></pre></div>
+<p>Con el esquema de <em>Arrow</em>, <em>PyIceberg</em> crea la tabla, y <code>append</code> escribe los datos en un único <em>commit</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">bronze</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span><span class="s2">&quot;bronze.orders&quot;</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">pedidos</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">bronze</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pedidos</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">bronze</span><span class="o">.</span><span class="n">metadata_location</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C1.3]
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">El esquema de Iceberg</p>
+<p><code>create_table</code> traduce el esquema de <em>Arrow</em> al de <em>Iceberg</em> y asigna a cada columna su id interno. Puedes verlo con <code>bronze.schema()</code>: cada campo aparece con su número, su nombre y su tipo.</p>
+</div>
+<h3 id="explorando-los-metadatos">Explorando los metadatos<a class="headerlink" href="#explorando-los-metadatos" title="Permanent link">&para;</a></h3>
+<p>Si abrimos en la consola de <em>MinIO</em> la carpeta <code>warehouse/iceberg/bronze/orders/</code>, encontraremos lo que vimos en la anatomía: en <code>metadata/</code>, los <code>*.metadata.json</code>, la <em>manifest list</em> (<code>snap-*.avro</code>) y el <em>manifest</em>; en <code>data/</code>, el fichero <em>Parquet</em> con los pedidos.</p>
+<p><em>PyIceberg</em> nos deja consultar esos metadatos como tablas, con <code>inspect</code>. Los <em>snapshots</em>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">bronze</span><span class="o">.</span><span class="n">inspect</span><span class="o">.</span><span class="n">snapshots</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;committed_at&quot;</span><span class="p">,</span> <span class="s2">&quot;snapshot_id&quot;</span><span class="p">,</span> <span class="s2">&quot;operation&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C1.4]
+</code></pre></div>
+<p>Y los ficheros de datos del <em>snapshot</em> actual, con su número de filas y su tamaño:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">bronze</span><span class="o">.</span><span class="n">inspect</span><span class="o">.</span><span class="n">files</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;file_path&quot;</span><span class="p">,</span> <span class="s2">&quot;record_count&quot;</span><span class="p">,</span> <span class="s2">&quot;file_size_in_bytes&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C1.5]
+</code></pre></div>
+<h3 id="una-segunda-extraccion">Una segunda extracción<a class="headerlink" href="#una-segunda-extraccion" title="Permanent link">&para;</a></h3>
+<p>Simulemos la vida del sistema operacional. Con el usuario <code>iabd</code>, que puede modificar <code>retail_db</code>, cambiamos a <code>COMPLETE</code> tres pedidos pendientes y damos de alta dos pedidos nuevos:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">pendientes</span> <span class="o">=</span> <span class="p">[</span><span class="n">fila</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">fila</span> <span class="ow">in</span> <span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="s2">    SELECT order_id FROM retail.orders</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="s2">    WHERE order_status = &#39;PENDING&#39; ORDER BY order_id LIMIT 3</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()]</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="s2">    UPDATE retail.orders SET order_status = &#39;COMPLETE&#39;</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="s2">    WHERE order_id IN (</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">pendientes</span><span class="p">))</span><span class="si">}</span><span class="s2">)</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">ultimo</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT max(order_id) FROM retail.orders&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos" data-linenos="10 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="11 "></span><span class="s2">    INSERT INTO retail.orders (order_id, order_date, order_customer_id, order_status, order_total)</span>
+<span class="linenos" data-linenos="12 "></span><span class="s2">    VALUES (</span><span class="si">{</span><span class="n">ultimo</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">, now()::TIMESTAMP, 1, &#39;PENDING&#39;, 49.99),</span>
+<span class="linenos" data-linenos="13 "></span><span class="s2">           (</span><span class="si">{</span><span class="n">ultimo</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="si">}</span><span class="s2">, now()::TIMESTAMP, 2, &#39;PENDING&#39;, 129.90)</span>
+<span class="linenos" data-linenos="14 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="15 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pasan a COMPLETE:&quot;</span><span class="p">,</span> <span class="n">pendientes</span><span class="p">,</span> <span class="s2">&quot;| Nuevos:&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">ultimo</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ultimo</span> <span class="o">+</span> <span class="mi">2</span><span class="p">])</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C1.6]
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Estos cambios no son permanentes</p>
+<p>El servicio <code>retail-init</code> vuelve a cargar <code>retail_db</code> cada vez que arranca el stack, así que los cambios en <em>MySQL</em> desaparecen al hacer un nuevo <code>docker compose up</code>. Para repetir el caso, es justo lo que queremos.</p>
+</div>
+<p>Volvemos a extraer la tabla completa y la añadimos a bronze. Es una extracción completa, como las que hace un <em>pipeline</em> sin carga incremental: bronze guarda las dos, cada una con su <code>_ingested_at</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">bronze</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="n">EXTRAER</span><span class="p">)</span><span class="o">.</span><span class="n">to_arrow_table</span><span class="p">())</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">bronze</span><span class="o">.</span><span class="n">inspect</span><span class="o">.</span><span class="n">snapshots</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;committed_at&quot;</span><span class="p">,</span> <span class="s2">&quot;snapshot_id&quot;</span><span class="p">,</span> <span class="s2">&quot;operation&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C1.7]
+</code></pre></div>
+<h3 id="viajando-en-el-tiempo">Viajando en el tiempo<a class="headerlink" href="#viajando-en-el-tiempo" title="Permanent link">&para;</a></h3>
+<p>La tabla tiene ahora dos <em>snapshots</em>. <code>history()</code> los devuelve en orden; leemos el primero y comparamos el número de filas con el actual:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">primero</span> <span class="o">=</span> <span class="n">bronze</span><span class="o">.</span><span class="n">history</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">snapshot_id</span>
+<span class="linenos" data-linenos="2 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Primera extracción:&quot;</span><span class="p">,</span> <span class="n">bronze</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">snapshot_id</span><span class="o">=</span><span class="n">primero</span><span class="p">)</span><span class="o">.</span><span class="n">to_arrow</span><span class="p">()</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="s2">&quot;filas&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estado actual:     &quot;</span><span class="p">,</span> <span class="n">bronze</span><span class="o">.</span><span class="n">scan</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrow</span><span class="p">()</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="s2">&quot;filas&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C1.8]
+</code></pre></div>
+<p>Para no depender del identificador, le ponemos nombre a ese <em>snapshot</em> con un <em>tag</em>. Lo usaremos en el caso siguiente:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">bronze</span><span class="o">.</span><span class="n">manage_snapshots</span><span class="p">()</span><span class="o">.</span><span class="n">create_tag</span><span class="p">(</span><span class="n">primero</span><span class="p">,</span> <span class="s2">&quot;carga_inicial&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">bronze</span><span class="o">.</span><span class="n">inspect</span><span class="o">.</span><span class="n">refs</span><span class="p">()</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C1.9]
+</code></pre></div>
+<p>La tabla <code>refs</code> muestra las dos referencias: <code>main</code>, la rama principal, que avanza con cada <em>commit</em>, y nuestro <em>tag</em>, que siempre apuntará al mismo <em>snapshot</em>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Volver atrás</p>
+<p>Si una carga sale mal, <code>bronze.manage_snapshots().rollback_to_snapshot(primero).commit()</code> devuelve la tabla al estado de ese <em>snapshot</em>. El <em>snapshot</em> erróneo no se borra: sigue en la historia hasta que caduque.</p>
+</div>
+<h2 id="caso-2-la-capa-silver-con-duckdb">Caso 2. La capa silver con DuckDB<a class="headerlink" href="#caso-2-la-capa-silver-con-duckdb" title="Permanent link">&para;</a></h2>
+<p>Ahora cambiamos de motor. Con <em>DuckDB</em> vamos a crear <code>silver.orders</code> a partir de bronze y a aplicarle los cambios de la segunda extracción con un <code>MERGE</code>. Crearemos el cuaderno <code>caso2_silver.ipynb</code>.</p>
+<h3 id="el-mismo-catalogo-desde-otro-motor">El mismo catálogo desde otro motor<a class="headerlink" href="#el-mismo-catalogo-desde-otro-motor" title="Permanent link">&para;</a></h3>
+<p><code>duckdb_lago()</code> adjunta el catálogo de <em>Polaris</em> como <code>lago</code>. La tabla que creó <em>PyIceberg</em> aparece como una tabla más:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">lago</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalogo</span><span class="p">,</span> <span class="n">duckdb_lago</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">con</span> <span class="o">=</span> <span class="n">duckdb_lago</span><span class="p">()</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SHOW ALL TABLES&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C2.1]
+</code></pre></div>
+<h3 id="creando-silver-con-time-travel">Creando silver con <em>time travel</em><a class="headerlink" href="#creando-silver-con-time-travel" title="Permanent link">&para;</a></h3>
+<p>Silver arranca con el estado de la primera extracción. En lugar de copiar ficheros, usamos el <em>tag</em> del caso anterior: <em>PyIceberg</em> nos da su <em>snapshot</em> y <em>DuckDB</em> lee la tabla en ese punto con <code>AT (VERSION =&gt; ...)</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">cat</span> <span class="o">=</span> <span class="n">catalogo</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="n">carga_inicial</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="s2">&quot;bronze.orders&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">snapshot_by_name</span><span class="p">(</span><span class="s2">&quot;carga_inicial&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">snapshot_id</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE SCHEMA IF NOT EXISTS lago.silver&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;DROP TABLE IF EXISTS lago.silver.orders&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="s2">    CREATE TABLE lago.silver.orders AS</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="s2">    SELECT order_id, order_date, order_customer_id, order_status, order_total</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="s2">    FROM lago.bronze.orders AT (VERSION =&gt; </span><span class="si">{</span><span class="n">carga_inicial</span><span class="si">}</span><span class="s2">)</span>
+<span class="linenos" data-linenos="10 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="11 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT count(*) AS pedidos FROM lago.silver.orders&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C2.2]
+</code></pre></div>
+<p>Fíjate en que silver no lleva <code>_ingested_at</code>: es una columna técnica de bronze.</p>
+<h3 id="aplicando-cambios-con-merge">Aplicando cambios con <code>MERGE</code><a class="headerlink" href="#aplicando-cambios-con-merge" title="Permanent link">&para;</a></h3>
+<p>Bronze tiene ya dos versiones de cada pedido. Para silver necesitamos la última de cada uno, que obtenemos con la función de ventana <code>row_number()</code> y <code>QUALIFY</code>, como en la sesión de <a href="sql-analitico.html">SQL analítico</a>. Con esa fuente, <code>MERGE</code> decide fila a fila:</p>
+<ul>
+<li>Si el pedido existe en silver y su estado ha cambiado, lo actualiza.</li>
+<li>Si no existe, lo inserta.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="s2">    MERGE INTO lago.silver.orders AS s</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="s2">    USING (</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="s2">        SELECT order_id, order_date, order_customer_id, order_status, order_total</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="s2">        FROM lago.bronze.orders</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="s2">        QUALIFY row_number() OVER (PARTITION BY order_id ORDER BY _ingested_at DESC) = 1</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="s2">    ) AS b</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="s2">    ON s.order_id = b.order_id</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="s2">    WHEN MATCHED AND s.order_status &lt;&gt; b.order_status THEN</span>
+<span class="linenos" data-linenos="10 "></span><span class="s2">        UPDATE SET order_status = b.order_status</span>
+<span class="linenos" data-linenos="11 "></span><span class="s2">    WHEN NOT MATCHED THEN</span>
+<span class="linenos" data-linenos="12 "></span><span class="s2">        INSERT (order_id, order_date, order_customer_id, order_status, order_total)</span>
+<span class="linenos" data-linenos="13 "></span><span class="s2">        VALUES (b.order_id, b.order_date, b.order_customer_id, b.order_status, b.order_total)</span>
+<span class="linenos" data-linenos="14 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C2.3]
+</code></pre></div>
+<p>El resultado debería indicar cinco filas afectadas: tres actualizadas y dos insertadas. Las tablas <em>Iceberg</em> no tienen clave primaria, y por eso <code>MERGE</code> es la forma recomendada de expresar estas actualizaciones: somos nosotros quienes decimos con <code>ON</code> qué identifica a una fila.</p>
+<div class="admonition info">
+<p class="admonition-title"><code>MERGE</code> idempotente</p>
+<p>Si vuelves a ejecutar el <code>MERGE</code>, no cambia nada: los pedidos ya tienen el estado de bronze y la condición <code>s.order_status &lt;&gt; b.order_status</code> los descarta. Que repetir una carga no altere el resultado es lo que en <em>Airflow</em> llamábamos idempotencia.</p>
+</div>
+<h3 id="que-ha-escrito-el-merge">Qué ha escrito el <code>MERGE</code><a class="headerlink" href="#que-ha-escrito-el-merge" title="Permanent link">&para;</a></h3>
+<p>Veamos los <em>snapshots</em> de silver y los ficheros del actual:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT sequence_number, snapshot_id, operation FROM iceberg_snapshots(lago.silver.orders) ORDER BY 1&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C2.4]
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT content, record_count, file_path FROM iceberg_metadata(lago.silver.orders)&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C2.5]
+</code></pre></div>
+<p>El fichero original sigue intacto. El <code>MERGE</code> ha añadido un fichero de datos con las cinco filas nuevas o modificadas y un fichero de borrado posicional que marca las tres versiones antiguas. <em>DuckDB</em> solo escribe en modo <em>merge-on-read</em>: la próxima lectura aplicará el borrado.</p>
+<h3 id="lo-mismo-con-copy-on-write">Lo mismo, con <em>copy-on-write</em><a class="headerlink" href="#lo-mismo-con-copy-on-write" title="Permanent link">&para;</a></h3>
+<p>Para comparar, repetimos el cambio con <em>PyIceberg</em>, que trabaja en modo <em>copy-on-write</em>. Creamos una copia de silver con el estado inicial y le aplicamos los mismos cambios con <code>upsert</code>, que compara por <code>order_id</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">inicial</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="s2">    SELECT order_id, order_date, order_customer_id, order_status, order_total</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="s2">    FROM lago.bronze.orders AT (VERSION =&gt; </span><span class="si">{</span><span class="n">carga_inicial</span><span class="si">}</span><span class="s2">)</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_arrow_table</span><span class="p">()</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="n">cambios</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="s2">    SELECT order_id, order_date, order_customer_id, order_status, order_total</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="s2">    FROM lago.bronze.orders</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="s2">    QUALIFY row_number() OVER (PARTITION BY order_id ORDER BY _ingested_at DESC) = 1</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_arrow_table</span><span class="p">()</span>
+<span class="linenos" data-linenos="10 "></span>
+<span class="linenos" data-linenos="11 "></span><span class="k">if</span> <span class="n">cat</span><span class="o">.</span><span class="n">table_exists</span><span class="p">(</span><span class="s2">&quot;silver.orders_cow&quot;</span><span class="p">):</span>
+<span class="linenos" data-linenos="12 "></span>    <span class="n">cat</span><span class="o">.</span><span class="n">purge_table</span><span class="p">(</span><span class="s2">&quot;silver.orders_cow&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="13 "></span><span class="n">cow</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span><span class="s2">&quot;silver.orders_cow&quot;</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">inicial</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
+<span class="linenos" data-linenos="14 "></span><span class="n">cow</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inicial</span><span class="p">)</span>
+<span class="linenos" data-linenos="15 "></span><span class="n">resultado</span> <span class="o">=</span> <span class="n">cow</span><span class="o">.</span><span class="n">upsert</span><span class="p">(</span><span class="n">cambios</span><span class="p">,</span> <span class="n">join_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;order_id&quot;</span><span class="p">])</span>
+<span class="linenos" data-linenos="16 "></span><span class="nb">print</span><span class="p">(</span><span class="n">resultado</span><span class="o">.</span><span class="n">rows_updated</span><span class="p">,</span> <span class="s2">&quot;actualizadas,&quot;</span><span class="p">,</span> <span class="n">resultado</span><span class="o">.</span><span class="n">rows_inserted</span><span class="p">,</span> <span class="s2">&quot;insertadas&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C2.6]
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">cow</span><span class="o">.</span><span class="n">inspect</span><span class="o">.</span><span class="n">files</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="s2">&quot;record_count&quot;</span><span class="p">,</span> <span class="s2">&quot;file_path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C2.7]
+</code></pre></div>
+<p>Ahora no hay ficheros de borrado: <em>PyIceberg</em> ha reescrito el fichero original sin las filas antiguas y ha añadido las nuevas. Leer <code>orders_cow</code> no cuesta nada extra, pero escribir ha supuesto reescribir decenas de miles de filas para cambiar cinco. Con cinco filas de un fichero, <em>merge-on-read</em> es claramente la opción más barata.</p>
+<h3 id="un-catalogo-dos-motores">Un catálogo, dos motores<a class="headerlink" href="#un-catalogo-dos-motores" title="Permanent link">&para;</a></h3>
+<p>Por último, comprobemos que <em>PyIceberg</em> lee lo que escribió <em>DuckDB</em>, aplicando el fichero de borrado. Los dos motores deben contar los mismos pedidos completados:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">silver</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="s2">&quot;silver.orders&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PyIceberg:&quot;</span><span class="p">,</span> <span class="n">silver</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">row_filter</span><span class="o">=</span><span class="s2">&quot;order_status = &#39;COMPLETE&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_arrow</span><span class="p">()</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="s2">&quot;pedidos COMPLETE&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DuckDB:   &quot;</span><span class="p">,</span> <span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT count(*) FROM lago.silver.orders WHERE order_status = &#39;COMPLETE&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;pedidos COMPLETE&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C2.8]
+</code></pre></div>
+<p>El catálogo es la fuente de verdad, no el motor. Cualquier motor que hable <abbr title="Representational State Transfer">REST</abbr> ve el mismo estado de la tabla.</p>
+<h2 id="caso-3-evolucion-sin-reescribir">Caso 3. Evolución sin reescribir<a class="headerlink" href="#caso-3-evolucion-sin-reescribir" title="Permanent link">&para;</a></h2>
+<p>Negocio nos pide dos cambios en <code>silver.orders</code>: guardar el canal de venta de cada pedido y consultar los pedidos por mes. Veremos que ninguno de los dos obliga a reescribir los datos existentes. Crearemos el cuaderno <code>caso3_evolucion.ipynb</code>.</p>
+<h3 id="anadiendo-una-columna">Añadiendo una columna<a class="headerlink" href="#anadiendo-una-columna" title="Permanent link">&para;</a></h3>
+<p>Con <em>DuckDB</em>, añadir una columna es un <code>ALTER TABLE</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">lago</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalogo</span><span class="p">,</span> <span class="n">duckdb_lago</span><span class="p">,</span> <span class="n">duckdb_retail</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">con</span> <span class="o">=</span> <span class="n">duckdb_lago</span><span class="p">()</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;ALTER TABLE lago.silver.orders ADD COLUMN channel VARCHAR&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT channel, count(*) AS pedidos FROM lago.silver.orders GROUP BY ALL&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C3.1]
+</code></pre></div>
+<p>Todas las filas devuelven <code>NULL</code>, porque los ficheros no tienen esa columna. Los ficheros siguen siendo los mismos: solo ha cambiado <code>metadata.json</code>.</p>
+<h3 id="esquemas-en-el-tiempo">Esquemas en el tiempo<a class="headerlink" href="#esquemas-en-el-tiempo" title="Permanent link">&para;</a></h3>
+<p>Cada <em>snapshot</em> recuerda el esquema con el que se escribió. Con <em>PyIceberg</em> lo vemos comparando las columnas del primer <em>snapshot</em> con las de la tabla actual:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">cat</span> <span class="o">=</span> <span class="n">catalogo</span><span class="p">()</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">silver</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="s2">&quot;silver.orders&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">primero</span> <span class="o">=</span> <span class="n">silver</span><span class="o">.</span><span class="n">history</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">snapshot_id</span>
+<span class="linenos" data-linenos="4 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Primer snapshot:&quot;</span><span class="p">,</span> <span class="n">silver</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">snapshot_id</span><span class="o">=</span><span class="n">primero</span><span class="p">)</span><span class="o">.</span><span class="n">to_arrow</span><span class="p">()</span><span class="o">.</span><span class="n">column_names</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Actual:         &quot;</span><span class="p">,</span> <span class="n">silver</span><span class="o">.</span><span class="n">scan</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrow</span><span class="p">()</span><span class="o">.</span><span class="n">column_names</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C3.2]
+</code></pre></div>
+<h3 id="cambiando-el-particionado">Cambiando el particionado<a class="headerlink" href="#cambiando-el-particionado" title="Permanent link">&para;</a></h3>
+<p>Ahora particionamos por mes. Con <em>PyIceberg</em>, la transformación <code>MonthTransform</code> se aplica sobre <code>order_date</code>, y llamamos <code>order_month</code> al campo de partición:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyiceberg.transforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">MonthTransform</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="k">with</span> <span class="n">silver</span><span class="o">.</span><span class="n">update_spec</span><span class="p">()</span> <span class="k">as</span> <span class="n">spec</span><span class="p">:</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="n">spec</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="s2">&quot;order_date&quot;</span><span class="p">,</span> <span class="n">MonthTransform</span><span class="p">(),</span> <span class="s2">&quot;order_month&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="n">silver</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="s2">&quot;silver.orders&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="6 "></span><span class="n">silver</span><span class="o">.</span><span class="n">specs</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C3.3]
+</code></pre></div>
+<p>La tabla tiene ahora dos especificaciones: la 0, sin partición, y la 1, por mes. Los ficheros existentes siguen con la 0. Para ver qué ocurre con los nuevos, repetimos el ciclo completo: un pedido nuevo en <em>MySQL</em>, una extracción a bronze y el mismo <code>MERGE</code> del caso 2.</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">con</span> <span class="o">=</span> <span class="n">duckdb_retail</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="n">ultimo</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT max(order_id) FROM retail.orders&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="s2">    INSERT INTO retail.orders (order_id, order_date, order_customer_id, order_status, order_total)</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="s2">    VALUES (</span><span class="si">{</span><span class="n">ultimo</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">, now()::TIMESTAMP, 3, &#39;PENDING&#39;, 75.50)</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="s2">    INSERT INTO lago.bronze.orders</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="s2">    SELECT order_id, order_date, order_customer_id, order_status, order_total,</span>
+<span class="linenos" data-linenos="10 "></span><span class="s2">           now()::TIMESTAMP AS _ingested_at</span>
+<span class="linenos" data-linenos="11 "></span><span class="s2">    FROM retail.orders</span>
+<span class="linenos" data-linenos="12 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="13 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="14 "></span><span class="s2">    MERGE INTO lago.silver.orders AS s</span>
+<span class="linenos" data-linenos="15 "></span><span class="s2">    USING (</span>
+<span class="linenos" data-linenos="16 "></span><span class="s2">        SELECT order_id, order_date, order_customer_id, order_status, order_total</span>
+<span class="linenos" data-linenos="17 "></span><span class="s2">        FROM lago.bronze.orders</span>
+<span class="linenos" data-linenos="18 "></span><span class="s2">        QUALIFY row_number() OVER (PARTITION BY order_id ORDER BY _ingested_at DESC) = 1</span>
+<span class="linenos" data-linenos="19 "></span><span class="s2">    ) AS b</span>
+<span class="linenos" data-linenos="20 "></span><span class="s2">    ON s.order_id = b.order_id</span>
+<span class="linenos" data-linenos="21 "></span><span class="s2">    WHEN MATCHED AND s.order_status &lt;&gt; b.order_status THEN</span>
+<span class="linenos" data-linenos="22 "></span><span class="s2">        UPDATE SET order_status = b.order_status</span>
+<span class="linenos" data-linenos="23 "></span><span class="s2">    WHEN NOT MATCHED THEN</span>
+<span class="linenos" data-linenos="24 "></span><span class="s2">        INSERT (order_id, order_date, order_customer_id, order_status, order_total)</span>
+<span class="linenos" data-linenos="25 "></span><span class="s2">        VALUES (b.order_id, b.order_date, b.order_customer_id, b.order_status, b.order_total)</span>
+<span class="linenos" data-linenos="26 "></span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C3.4]
+</code></pre></div>
+<p>Esta vez la extracción a bronze la ha hecho <em>DuckDB</em> con un <code>INSERT INTO ... SELECT</code>: los dos motores escriben en la misma tabla. Y el <code>MERGE</code> es exactamente el mismo que antes: el cambio de particionado no afecta a quien escribe.</p>
+<h3 id="el-particionado-oculto-en-accion">El particionado oculto en acción<a class="headerlink" href="#el-particionado-oculto-en-accion" title="Permanent link">&para;</a></h3>
+<p>Veamos con qué especificación se ha escrito cada fichero:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">silver</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="s2">&quot;silver.orders&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">silver</span><span class="o">.</span><span class="n">inspect</span><span class="o">.</span><span class="n">files</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="s2">&quot;spec_id&quot;</span><span class="p">,</span> <span class="s2">&quot;partition&quot;</span><span class="p">,</span> <span class="s2">&quot;record_count&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C3.5]
+</code></pre></div>
+<p>Los ficheros antiguos tienen <code>spec_id</code> 0 y la partición vacía; el nuevo tiene <code>spec_id</code> 1 y un valor en <code>order_month</code>. Ese valor es el número de meses transcurridos desde enero de 1970: así guarda <em>Iceberg</em> la transformación <code>month</code>.</p>
+<p>Y lo más importante: la consulta no cambia. Seguimos filtrando por <code>order_date</code>, no por <code>order_month</code>. Con <code>plan_files</code> vemos cuántos ficheros leería <em>PyIceberg</em> sin filtro y con un filtro sobre el mes actual:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span>
+<span class="linenos" data-linenos="2 "></span>
+<span class="linenos" data-linenos="3 "></span><span class="n">inicio_mes</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;T00:00:00&quot;</span>
+<span class="linenos" data-linenos="4 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sin filtro:        &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">silver</span><span class="o">.</span><span class="n">scan</span><span class="p">()</span><span class="o">.</span><span class="n">plan_files</span><span class="p">())),</span> <span class="s2">&quot;ficheros&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="5 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pedidos de este mes:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">silver</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">row_filter</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;order_date &gt;= &#39;</span><span class="si">{</span><span class="n">inicio_mes</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plan_files</span><span class="p">())),</span> <span class="s2">&quot;ficheros&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [C3.6]
+</code></pre></div>
+<p>Con el filtro, <em>Iceberg</em> descarta los ficheros que no pueden contener pedidos de este mes: los nuevos, por su partición, y los antiguos cuyo rango de <code>order_date</code> queda fuera del filtro, por el mínimo y el máximo que guardan los <em>manifests</em>. Las dos podas se hacen al planificar, sin abrir ningún fichero.</p>
+<div class="admonition tip">
+<p class="admonition-title">Particionar también desde DuckDB</p>
+<p><em>DuckDB</em> también puede cambiar el particionado con <code>ALTER TABLE lago.silver.orders SET PARTITIONED BY (month(order_date))</code>. A diferencia de <code>add_field</code> de <em>PyIceberg</em>, sustituye la especificación entera.</p>
+</div>
+<h2 id="la-capa-gold-y-lo-que-viene">La capa gold y lo que viene<a class="headerlink" href="#la-capa-gold-y-lo-que-viene" title="Permanent link">&para;</a></h2>
+<p>Nos falta la tercera capa. En el bloque anterior, <em>dbt</em> construyó el modelo dimensional y los <em>marts</em> en <code>retail_el.duckdb</code>, y <code>publicar</code> los dejaba como ficheros <em>Parquet</em>. Gold es el lugar natural para esos <em>marts</em>, ahora como tablas <em>Iceberg</em>: los informes leerían siempre una versión completa, podríamos volver a la publicación de ayer y sabríamos qué cambió entre dos publicaciones. <em>dbt</em> sigue trabajando sobre <em>DuckDB</em>: el <em>lakehouse</em> es dónde se publica. Lo harás en la <a href="#actividades">actividad 2</a>.</p>
+<p>Lo que hemos hecho en esta sesión cabe en un solo nodo. Si pensamos en tablas de terabytes, aparecen límites que la sesión siguiente resolverá:</p>
+<table>
+<thead>
+<tr>
+<th>Lo que hoy no hemos podido hacer</th>
+<th>Por qué</th>
+<th>Quién lo resuelve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Procesar datos que no caben en una máquina</td>
+<td><em>DuckDB</em> y <em>PyIceberg</em> escalan en vertical, en un solo nodo</td>
+<td><em>Spark</em> reparte el trabajo entre <em>executors</em></td>
+</tr>
+<tr>
+<td>Leer <em>MySQL</em> en paralelo</td>
+<td>Nuestra extracción usa una sola conexión</td>
+<td>La lectura <abbr title="Java Database Connectivity">JDBC</abbr> por particiones de <em>Spark</em></td>
+</tr>
+<tr>
+<td>Compactar ficheros pequeños y de borrado</td>
+<td><em>PyIceberg</em> 0.12 solo trae <code>expire_snapshots</code> en <code>maintenance</code></td>
+<td>Los procedimientos de <em>Iceberg</em> en <em>Spark</em>, como <code>rewrite_data_files</code></td>
+</tr>
+<tr>
+<td>Escribir un flujo continuo en el lago</td>
+<td>Solo hemos hecho cargas por lotes</td>
+<td><em>Structured Streaming</em> hacia <em>Iceberg</em></td>
+</tr>
+</tbody>
+</table>
+<p>La clave es que nada de lo construido hoy se tira. <em>Spark</em> se conectará al mismo catálogo de <em>Polaris</em> y leerá <code>lago.silver.orders</code> sin mover un solo byte: lo único que cambia es el motor.</p>
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<details class="question">
+<summary>¿Una tabla Iceberg es un formato de fichero?</summary>
+<p>No. Los datos de una tabla <em>Iceberg</em> siguen en ficheros <em>Parquet</em>. <em>Iceberg</em> añade los metadatos (<code>metadata.json</code>, <em>manifest list</em> y <em>manifests</em>) que dicen qué ficheros forman cada versión de la tabla, con qué esquema y con qué particionado.</p>
+</details>
+<details class="question">
+<summary>¿Un <em>snapshot</em> es una copia de la tabla?</summary>
+<p>No. Un <em>snapshot</em> es una lista de ficheros. Los <em>snapshots</em> comparten los ficheros que no han cambiado, así que crear uno solo cuesta los ficheros nuevos y sus metadatos. Eso sí, mientras un <em>snapshot</em> exista, sus ficheros no se pueden borrar.</p>
+</details>
+<details class="question">
+<summary>¿Qué pasa si dos procesos escriben a la vez en la misma tabla?</summary>
+<p>Los dos preparan sus ficheros sin bloquearse. Al confirmar, el catálogo solo acepta el cambio de puntero del primero; el segundo detecta que la tabla ha cambiado y reintenta sobre el estado nuevo. Si sus cambios no se solapan, por ejemplo dos <em>append</em> en particiones distintas, el reintento funciona; si se solapan, la escritura falla.</p>
+</details>
+<details class="question">
+<summary>¿Por qué el <code>MERGE</code> de DuckDB escribe ficheros de borrado y el <code>upsert</code> de PyIceberg no?</summary>
+<p>Porque cada motor implementa las actualizaciones a su manera. <em>DuckDB</em> solo trabaja en modo <em>merge-on-read</em>: escribe las filas nuevas y un fichero de borrado posicional. <em>PyIceberg</em> trabaja en modo <em>copy-on-write</em>: reescribe los ficheros afectados sin las filas antiguas. El resultado lógico es el mismo; cambia lo que cuesta escribir y lo que cuesta leer.</p>
+</details>
+<details class="question">
+<summary>¿Para qué necesitamos Polaris si los metadatos ya están en MinIO?</summary>
+<p>Porque alguien tiene que saber cuál es el <code>metadata.json</code> actual de cada tabla y garantizar que el cambio de puntero es atómico. Esa es la tarea del catálogo. Además, <em>Polaris</em> permite descubrir las tablas por su nombre y controlar quién accede a qué.</p>
+</details>
+<details class="question">
+<summary>¿Los permisos de Polaris protegen nuestros datos?</summary>
+<p>En nuestro stack, no del todo. <em>MinIO</em> no ofrece credenciales temporales, así que todos los motores usan las credenciales de <em>MinIO</em> y podrían leer los ficheros sin pasar por el catálogo. En la nube, <em>Polaris</em> repartiría credenciales temporales y limitadas a cada tabla, y ese acceso directo no sería necesario.</p>
+</details>
+<details class="question">
+<summary>¿Por qué la partición <code>order_month</code> vale un número y no un mes?</summary>
+<p>Porque <em>Iceberg</em> guarda el resultado de la transformación <code>month</code>: el número de meses transcurridos desde enero de 1970. Como las consultas filtran por <code>order_date</code> y no por <code>order_month</code>, ese valor no lo ve nadie.</p>
+</details>
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li><em>Architecting an Apache Iceberg Lakehouse</em> de <em>Alex Merced</em> (Manning).</li>
+<li><a href="https://iceberg.apache.org/spec/">Especificación de Apache Iceberg</a></li>
+<li><a href="https://py.iceberg.apache.org/">Documentación de PyIceberg</a></li>
+<li><a href="https://duckdb.org/docs/1.5/core_extensions/iceberg/overview">Extensión de Iceberg de DuckDB</a></li>
+<li><a href="https://polaris.apache.org/">Documentación de Apache Polaris</a></li>
+</ul>
+<h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>(<abbr title="Genera mecanismos de integridad de los datos, comprobando su mantenimiento en los sistemas de ficheros distribuidos y valorando la sobrecarga que conlleva en el tratamiento de los datos. (5 horas)">RABDA.3</abbr> / <abbr title="Se ha valorado la importancia de la calidad de los datos en los sistemas de ficheros distribuidos.">CEBDA.3a</abbr>, <abbr title="Se ha valorado que a mayor volumen de tratamiento de datos corresponde un mayor peligro relacionado con la integridad de los datos.">CEBDA.3b</abbr> / 1p) Realiza los casos <a href="#caso-1-la-capa-bronze-con-pyiceberg">1</a> y <a href="#caso-2-la-capa-silver-con-duckdb">2</a>. Después, audita <code>silver.orders</code>: lista sus <em>snapshots</em> con su operación, cuenta sus ficheros de datos y de borrado, recupera con <em>time travel</em> el estado anterior al <code>MERGE</code> de uno de los pedidos modificados y compáralo con el actual. Por último, crea el <em>tag</em> <code>antes_merge</code> sobre el <em>snapshot</em> anterior al <code>MERGE</code>.</p>
+<p>Debes entregar el cuaderno y responder en cuatro o cinco líneas: ¿por qué el <code>MERGE</code> de <em>DuckDB</em> ha generado ficheros de borrado y el <code>upsert</code> de <em>PyIceberg</em> ha reescrito ficheros?, ¿qué sobrecarga supone cada opción al leer y al escribir?, ¿qué pasaría con la tabla si hiciéramos un <code>MERGE</code> cada hora durante un año?</p>
+<div class="admonition tip">
+<p class="admonition-title">Pistas</p>
+<p><code>iceberg_snapshots</code> e <code>iceberg_metadata</code> en <em>DuckDB</em>, o <code>inspect.snapshots()</code> e <code>inspect.files()</code> en <em>PyIceberg</em>: la columna <code>content</code> distingue los ficheros de datos de los de borrado. Recuerda que, mientras exista el <em>tag</em>, su <em>snapshot</em> no se puede hacer caducar.</p>
+</div>
+</li>
+<li>
+<p>(<abbr title="Gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos.">RABDA.1</abbr> / <abbr title="Se ha determinado el formato de datos adecuado para el almacenamiento.">CEBDA.1c</abbr>, <abbr title="Se han procesado los datos almacenados.">CEBDA.1d</abbr> / 1.5p) Crea el script <code>workspace/iceberg/publicar_gold.py</code>, que lee los <em>marts</em> <code>ingresos_por_departamento</code> y <code>tasa_devolucion_departamento</code> de <code>retail_el.duckdb</code> y los publica como tablas del <em>namespace</em> <code>gold</code>, sustituyendo su contenido en un único <em>commit</em> por tabla. Ejecútalo, cambia algún dato en <code>retail_db</code>, vuelve a lanzar el DAG <code>retail_elt</code> y ejecuta de nuevo el script.</p>
+<p>Debes entregar el script, la lista de <em>snapshots</em> de las dos tablas de gold, una consulta que compare las dos publicaciones con <em>time travel</em> y responder en tres o cuatro líneas: ¿qué ganaría el informe del caso extra de <em>Airflow</em> si leyera de <code>gold</code> en lugar de <code>s3://processed/marts/</code>?</p>
+<div class="admonition tip">
+<p class="admonition-title">Pistas</p>
+<p>Abre <code>/workspace/dbt/iabd/retail_el.duckdb</code> con <code>duckdb.connect(ruta, read_only=True)</code> y nunca mientras <em>Airflow</em> esté escribiendo en él (para eso creamos el <em>pool</em> <code>duckdb</code>). Para sustituir el contenido de una tabla en un único <em>commit</em>, usa <code>overwrite</code> de <em>PyIceberg</em>. Para lanzar el DAG necesitas la receta <code>orquestacion</code>.</p>
+</div>
+</li>
+<li>
+<p>(<abbr title="Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos facilitando el procesamiento de grandes cantidades de datos sin fallos y de forma rápida.">RABDA.2</abbr> / <abbr title="Se ha determinado que se pueden almacenar tantos datos como se desee y decidir cómo utilizarlos más tarde.">CEBDA.2d</abbr> / 1.5p) Negocio pasa a analizar los pedidos por cliente. Partiendo del final del <a href="#caso-3-evolucion-sin-reescribir">caso 3</a>, cambia el particionado de <code>silver.orders</code> a <code>bucket(8, order_customer_id)</code>, añade la columna <code>es_cliente_nuevo</code> y aplica con <code>MERGE</code> una nueva extracción de pedidos. Demuestra que: (a) en la tabla conviven ficheros con tres especificaciones de partición; (b) una misma consulta por cliente devuelve lo mismo antes y después del cambio; (c) esa consulta planifica menos ficheros sobre los datos nuevos; y (d) un <em>snapshot</em> anterior conserva el esquema antiguo.</p>
+<p>Debes entregar el cuaderno y responder en tres o cuatro líneas: ¿por qué no se han reescrito los ficheros antiguos?, ¿qué haría falta para reorganizarlos con el particionado nuevo?</p>
+<div class="admonition tip">
+<p class="admonition-title">Pistas</p>
+<p><code>scan(row_filter=...).plan_files()</code> de <em>PyIceberg</em> devuelve los ficheros que leería una consulta. Con <em>PyIceberg</em> puedes quitar el campo <code>order_month</code> y añadir el de <em>bucket</em> en el mismo <code>update_spec()</code>; en <em>DuckDB</em>, <code>ALTER TABLE ... SET PARTITIONED BY</code> sustituye la especificación entera.</p>
+</div>
+</li>
+</ol>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        <a href='https://ko-fi.com/T6T8GWT9N' title='Invítame a un café en ko-fi.com' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Invítame a un café en ko-fi.com' /></a>
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="Me encantan estos apuntes" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="Los apuntes son mejorables" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Gracias por tu tiempo. Si quieres me puedes <a href='https://ko-fi.com/T6T8GWT9N'>invitar a un café en ko-fi</a>.
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              ¡Gracias por tu colaboración! Ayúdame a mejorar los apuntes enviándome un mail a <a href="mailto:a.medrano@edu.gva.es">a.medrano@edu.gva.es</a> con tus comentarios.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2023-2026 Aitor Medrano - <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">Licencia CC BY-NC-SA</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://aitor-medrano.github.io/" target="_blank" rel="noopener" title="aitor-medrano.github.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2m-5.15 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56M14.34 14H9.66c-.1-.66-.16-1.32-.16-2s.06-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2M12 19.96c-.83-1.2-1.5-2.53-1.91-3.96h3.82c-.41 1.43-1.08 2.76-1.91 3.96M8 8H5.08A7.92 7.92 0 0 1 9.4 4.44C8.8 5.55 8.35 6.75 8 8m-2.92 8H8c.35 1.25.8 2.45 1.4 3.56A8 8 0 0 1 5.08 16m-.82-2C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2M12 4.03c.83 1.2 1.5 2.54 1.91 3.97h-3.82c.41-1.43 1.08-2.77 1.91-3.97M18.92 8h-2.95a15.7 15.7 0 0 0-1.38-3.56c1.84.63 3.37 1.9 4.33 3.56M12 2C6.47 2 2 6.5 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://aitor-medrano.github.io/blog" target="_blank" rel="noopener" title="aitor-medrano.github.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M224 24c0-13.3 10.7-24 24-24 145.8 0 264 118.2 264 264 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-119.3-96.7-216-216-216-13.3 0-24-10.7-24-24M80 96c26.5 0 48 21.5 48 48v224c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48c-8.8 0-16-7.2-16-16v-64c0-8.8 7.2-16 16-16 79.5 0 144 64.5 144 144s-64.5 144-144 144S32 447.5 32 368V144c0-26.5 21.5-48 48-48m168 0c92.8 0 168 75.2 168 168 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-66.3-53.7-120-120-120-13.3 0-24-10.7-24-24s10.7-24 24-24"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://bsky.app/profile/aitormedrano.bsky.social" target="_blank" rel="noopener" title="bsky.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M407.8 294.7c-3.3-.4-6.7-.8-10-1.3 3.4.4 6.7.9 10 1.3M288 227.1c-26.1-50.7-97.1-145.2-163.1-191.8C61.6-9.4 37.5-1.7 21.6 5.5 3.3 13.8 0 41.9 0 58.4S9.1 194 15 213.9c19.5 65.7 89.1 87.9 153.2 80.7 3.3-.5 6.6-.9 10-1.4-3.3.5-6.6 1-10 1.4-93.9 14-177.3 48.2-67.9 169.9C220.6 589.1 265.1 437.8 288 361.1c22.9 76.7 49.2 222.5 185.6 103.4 102.4-103.4 28.1-156-65.8-169.9-3.3-.4-6.7-.8-10-1.3 3.4.4 6.7.9 10 1.3 64.1 7.1 133.6-15.1 153.2-80.7C566.9 194 576 75 576 58.4s-3.3-44.7-21.6-52.9c-15.8-7.1-40-14.9-103.2 29.8C385.1 81.9 314.1 176.4 288 227.1"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://x.com/aitormedrano" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:<a.medrano@edu.gva.es>" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l208 156a48 48 0 0 0 57.6 0l208-156c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48zM0 196v188c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V196L313.6 344.8c-34.1 25.6-81.1 25.6-115.2 0z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Consentimiento de cookie</h4>
+<p>Esta página de apuntes utiliza cookies para reconocer las visitas, medir la efectividad de la documentación y averiguar si encuentras aquello que buscas o cómo has llegado a estos apuntes. Con tu consentimiento, me ayudas a mejorar estos materiales.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" checked>
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+    
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Aceptar</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Gestionar cookies</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "navigation.top", "navigation.tracking", "navigation.footer", "navigation.indexes", "navigation.path", "content.code.annotate", "announce.dismiss", "toc.follow", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

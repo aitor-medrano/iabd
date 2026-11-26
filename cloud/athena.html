@@ -4567,23 +4567,23 @@ At re:Invent 2022, AWS announced Amazon Athena for Apache Spark, a new functiona
 <ul>
 <li>
 <p><code>LazySimpleSerDe</code> es el SerDe por defecto para ficheros de texto plano. Interpreta los campos separados por un delimitador simple (coma, tabulador, pipe...) y es adecuado cuando los valores <em>no contienen</em> el carácter delimitador ni están entrecomillados. Es el caso más habitual con CSVs sencillos.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="k">WITH</span><span class="w"> </span><span class="n">SERDEPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">'field.delim'</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">','</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">&#39;org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe&#39;</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="k">WITH</span><span class="w"> </span><span class="n">SERDEPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;field.delim&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 </code></pre></div>
 </li>
 <li>
 <p><code>OpenCSVSerde</code> está diseñado para CSVs más complejos, donde los valores pueden estar entre comillas dobles y el propio texto puede contener comas o saltos de línea. Si los datos provienen de una exportación de base de datos o de una hoja de cálculo, es muy probable que necesites este SerDe.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">'org.opensearch.hadoop.hive.OpenCSVSerde'</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">&#39;org.opensearch.hadoop.hive.OpenCSVSerde&#39;</span>
 <span class="linenos" data-linenos="2 "></span><span class="k">WITH</span><span class="w"> </span><span class="n">SERDEPROPERTIES</span><span class="w"> </span><span class="p">(</span>
-<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="s1">'separatorChar'</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">','</span><span class="p">,</span>
-<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="s1">'quoteChar'</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s1">'"'</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="s1">&#39;separatorChar&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="s1">&#39;quoteChar&#39;</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span>
 <span class="linenos" data-linenos="5 "></span><span class="p">)</span>
 </code></pre></div>
 <p>Como regla general, si al hacer un <code>SELECT</code>, los valores aparecen con comillas en los resultados o que los campos se desplazan cuando un texto contiene comas, debemos cambiar de <code>LazySimpleSerDe</code> a <code>OpenCSVSerde</code>.</p>
 </li>
 <li>
 <p><code>JsonSerDe</code> es el SerDe adecuado cuando los ficheros almacenados en S3 contienen datos en formato JSON, con un objeto JSON por línea (JSONL). Es muy común cuando los datos provienen de logs de aplicaciones, eventos de IoT o exportaciones de APIs REST.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">'org.apache.hive.hcatalog.data.JsonSerDe'</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">&#39;org.apache.hive.hcatalog.data.JsonSerDe&#39;</span>
 </code></pre></div>
 <p>De este manera, podemos manejar de forma nativa tipos complejos como arrays, mapas y estructuras anidadas, mapeándolos directamente a los tipos equivalentes de Athena:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">eventos</span><span class="w"> </span><span class="p">(</span>
@@ -4592,8 +4592,8 @@ At re:Invent 2022, AWS announced Amazon Athena for Apache Spark, a new functiona
 <span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="n">etiquetas</span><span class="w">  </span><span class="nb">ARRAY</span><span class="o">&lt;</span><span class="n">STRING</span><span class="o">&gt;</span><span class="p">,</span>
 <span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="n">metadata</span><span class="w">   </span><span class="k">MAP</span><span class="o">&lt;</span><span class="n">STRING</span><span class="p">,</span><span class="w"> </span><span class="n">STRING</span><span class="o">&gt;</span>
 <span class="linenos" data-linenos="6 "></span><span class="p">)</span>
-<span class="linenos" data-linenos="7 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">'org.apache.hive.hcatalog.data.JsonSerDe'</span>
-<span class="linenos" data-linenos="8 "></span><span class="w">    </span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">'s3://mi-bucket/eventos/'</span><span class="p">;</span>
+<span class="linenos" data-linenos="7 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">&#39;org.apache.hive.hcatalog.data.JsonSerDe&#39;</span>
+<span class="linenos" data-linenos="8 "></span><span class="w">    </span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;s3://mi-bucket/eventos/&#39;</span><span class="p">;</span>
 </code></pre></div>
 <p>Debemos tener en cuenta que si el JSON está mal formado o tiene campos que no coinciden exactamente con el esquema declarado, <code>JsonSerDe</code> devuelve <code>NULL</code> para esos campos en lugar de fallar, lo que puede dificultar la detección de errores en los datos.</p>
 </li>
@@ -4705,13 +4705,13 @@ At re:Invent 2022, AWS announced Amazon Athena for Apache Spark, a new functiona
 <span class="linenos" data-linenos=" 4 "></span><span class="w">  </span><span class="o">`</span><span class="n">lname</span><span class="o">`</span><span class="w">  </span><span class="n">string</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="w">  </span><span class="o">`</span><span class="n">city</span><span class="o">`</span><span class="w">   </span><span class="n">string</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="p">)</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'</span><span class="w"> </span><span class="c1">-- (3)!</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="k">WITH</span><span class="w"> </span><span class="n">SERDEPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">'field.delim'</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">','</span><span class="p">)</span><span class="w"> </span><span class="c1">-- (4)!</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">SERDE</span><span class="w"> </span><span class="s1">&#39;org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe&#39;</span><span class="w"> </span><span class="c1">-- (3)!</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="k">WITH</span><span class="w"> </span><span class="n">SERDEPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;field.delim&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">-- (4)!</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="n">STORED</span><span class="w"> </span><span class="k">AS</span>
-<span class="linenos" data-linenos="10 "></span><span class="w">  </span><span class="n">INPUTFORMAT</span><span class="w">  </span><span class="s1">'org.apache.hadoop.mapred.TextInputFormat'</span><span class="w">  </span><span class="c1">-- (5)!</span>
-<span class="linenos" data-linenos="11 "></span><span class="w">  </span><span class="n">OUTPUTFORMAT</span><span class="w"> </span><span class="s1">'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'</span><span class="w"> </span><span class="c1">-- (6)!</span>
-<span class="linenos" data-linenos="12 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">'s3://s3severo8a-cli/customers/'</span><span class="w"> </span><span class="c1">-- (7)!</span>
-<span class="linenos" data-linenos="13 "></span><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">'classification'</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'csv'</span><span class="p">);</span><span class="w"> </span><span class="c1">-- (8)!</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">  </span><span class="n">INPUTFORMAT</span><span class="w">  </span><span class="s1">&#39;org.apache.hadoop.mapred.TextInputFormat&#39;</span><span class="w">  </span><span class="c1">-- (5)!</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">  </span><span class="n">OUTPUTFORMAT</span><span class="w"> </span><span class="s1">&#39;org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat&#39;</span><span class="w"> </span><span class="c1">-- (6)!</span>
+<span class="linenos" data-linenos="12 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;s3://s3severo8a-cli/customers/&#39;</span><span class="w"> </span><span class="c1">-- (7)!</span>
+<span class="linenos" data-linenos="13 "></span><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;classification&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;csv&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">-- (8)!</span>
 </code></pre></div>
 <ol>
 <li><code>EXTERNAL TABLE</code>: <em>Athena</em> no gestiona los datos. Si borramos la tabla, los ficheros de S3 permanecen intactos.</li>
@@ -4726,8 +4726,8 @@ At re:Invent 2022, AWS announced Amazon Athena for Apache Spark, a new functiona
 <p>¿Y si queremos crear la tabla con otro formato más óptimo para que las consultas sean más eficientes? Si no tenemos los datos almacenados en formato <em>Parquet</em>, podemos hacer uso de la sentencia <code>CREATE TABLE ...  AS SELECT</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">s8a_retail</span><span class="p">.</span><span class="n">customers_parquet</span>
 <span class="linenos" data-linenos="2 "></span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span>
-<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'PARQUET'</span><span class="p">,</span>
-<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="n">parquet_compression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'SNAPPY'</span><span class="p">)</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;PARQUET&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="n">parquet_compression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;SNAPPY&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos="5 "></span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
 </code></pre></div>
 <!--
@@ -4735,7 +4735,7 @@ At re:Invent 2022, AWS announced Amazon Athena for Apache Spark, a new functiona
 
 Si hubiéramos querido utilizar el AWS CLI, también podríamos haberlo hecho mediante el comando [`glue create-database`](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/glue/create-database.html):
 
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>glue<span class="w"> </span>create-database<span class="w"> </span>--database-input<span class="w"> </span><span class="s2">"{\"Name\":\"s8a_retail\"}"</span><span class="w"> </span>--region<span class="w"> </span>us-east-1
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>glue<span class="w"> </span>create-database<span class="w"> </span>--database-input<span class="w"> </span><span class="s2">&quot;{\&quot;Name\&quot;:\&quot;s8a_retail\&quot;}&quot;</span><span class="w"> </span>--region<span class="w"> </span>us-east-1
 </code></pre></div>
 
 -->
@@ -4750,12 +4750,12 @@ Si hubiéramos querido utilizar el AWS CLI, también podríamos haberlo hecho me
 <h2 id="consultas-desde-aws-cli">Consultas desde AWS CLI<a class="headerlink" href="#consultas-desde-aws-cli" title="Permanent link">&para;</a></h2>
 <p>Si queremos ejecutar una consulta mediante AWS CLI utilizaremos el parámetro <a href="https://docs.aws.amazon.com/cli/latest/reference/athena/start-query-execution.html"><code>athena start-query-execution</code></a> indicando la consulta y donde almacenar el resultado:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>athena<span class="w"> </span>start-query-execution<span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">   </span>--query-string<span class="w"> </span><span class="s2">"SELECT * FROM s8a_retail.customers_parquet WHERE city='Caguas' limit 10"</span><span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="3 "></span><span class="w">   </span>--result-configuration<span class="w"> </span><span class="s2">"OutputLocation=s3://s3severo8a-cli/athena-results"</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">   </span>--query-string<span class="w"> </span><span class="s2">&quot;SELECT * FROM s8a_retail.customers_parquet WHERE city=&#39;Caguas&#39; limit 10&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">   </span>--result-configuration<span class="w"> </span><span class="s2">&quot;OutputLocation=s3://s3severo8a-cli/athena-results&quot;</span>
 </code></pre></div>
 <p>Que nos devolverá un identificador:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">"QueryExecutionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f025b6cb-d262-4cce-a8fe-7e9d6ca73216"</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">&quot;QueryExecutionId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;f025b6cb-d262-4cce-a8fe-7e9d6ca73216&quot;</span>
 <span class="linenos" data-linenos="3 "></span><span class="p">}</span>
 </code></pre></div>
 <p>A partir de dicho identificador, podemos averiguar el estado de la consulta mediante el parámetro <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/athena/client/get_query_results.html"><code>get-query-results</code></a>:</p>
@@ -4767,22 +4767,22 @@ Si hubiéramos querido utilizar el AWS CLI, también podríamos haberlo hecho me
 </code></pre></div>
 <p>Si la consulta funciona correctamente, veríamos el resultado:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">"ResultSet"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="w">        </span><span class="nt">"Rows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">&quot;ResultSet&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">        </span><span class="nt">&quot;Rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="w">            </span><span class="p">{</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">                </span><span class="nt">"Data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"VarCharValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"custid"</span><span class="w"> </span><span class="p">},</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"VarCharValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fname"</span><span class="w"> </span><span class="p">},</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"VarCharValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lname"</span><span class="w"> </span><span class="p">},</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"VarCharValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"city"</span><span class="w"> </span><span class="p">}</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">                </span><span class="nt">&quot;Data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;VarCharValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;custid&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;VarCharValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fname&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;VarCharValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lname&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;VarCharValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;city&quot;</span><span class="w"> </span><span class="p">}</span>
 <span class="linenos" data-linenos="10 "></span><span class="w">                </span><span class="p">]</span>
 <span class="linenos" data-linenos="11 "></span><span class="w">            </span><span class="p">},</span>
 <span class="linenos" data-linenos="12 "></span><span class="w">            </span><span class="p">{</span>
-<span class="linenos" data-linenos="13 "></span><span class="w">                </span><span class="nt">"Data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="linenos" data-linenos="14 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"VarCharValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3"</span><span class="w"> </span><span class="p">},</span>
-<span class="linenos" data-linenos="15 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"VarCharValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ann"</span><span class="w"> </span><span class="p">},</span>
-<span class="linenos" data-linenos="16 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"VarCharValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Smith"</span><span class="w"> </span><span class="p">},</span>
-<span class="linenos" data-linenos="17 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"VarCharValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Caguas"</span><span class="w"> </span><span class="p">}</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">                </span><span class="nt">&quot;Data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;VarCharValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;VarCharValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ann&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;VarCharValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Smith&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;VarCharValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Caguas&quot;</span><span class="w"> </span><span class="p">}</span>
 <span class="linenos" data-linenos="18 "></span><span class="w">                </span><span class="p">]</span>
 <span class="linenos" data-linenos="19 "></span><span class="w">            </span><span class="p">},</span>
 <span class="linenos" data-linenos="20 "></span><span class="w">            </span><span class="err">...</span>
@@ -4814,54 +4814,54 @@ La virtualización de datos puede considerarse una herramienta que amplía el la
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="linenos" data-linenos=" 3 "></span>
-<span class="linenos" data-linenos=" 4 "></span><span class="n">cliente_athena</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">'athena'</span><span class="p">)</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="n">cliente_athena</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;athena&#39;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 5 "></span>
 <span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="k">def</span><span class="w"> </span><span class="nf">ejecutar_consulta_athena</span><span class="p">(</span><span class="n">consulta</span><span class="p">,</span> <span class="n">basededatos</span><span class="p">,</span> <span class="n">destino_salida</span><span class="p">):</span>
 </span><span class="linenos" data-linenos=" 7 "></span>    <span class="n">response</span> <span class="o">=</span> <span class="n">cliente_athena</span><span class="o">.</span><span class="n">start_query_execution</span><span class="p">(</span>
 <span class="linenos" data-linenos=" 8 "></span>        <span class="n">QueryString</span><span class="o">=</span><span class="n">consulta</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 9 "></span>        <span class="n">QueryExecutionContext</span><span class="o">=</span><span class="p">{</span> <span class="s1">'Database'</span><span class="p">:</span> <span class="n">basededatos</span> <span class="p">},</span>
-<span class="linenos" data-linenos="10 "></span>        <span class="n">ResultConfiguration</span><span class="o">=</span><span class="p">{</span> <span class="s1">'OutputLocation'</span><span class="p">:</span> <span class="n">destino_salida</span> <span class="p">}</span>
+<span class="linenos" data-linenos=" 9 "></span>        <span class="n">QueryExecutionContext</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;Database&#39;</span><span class="p">:</span> <span class="n">basededatos</span> <span class="p">},</span>
+<span class="linenos" data-linenos="10 "></span>        <span class="n">ResultConfiguration</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;OutputLocation&#39;</span><span class="p">:</span> <span class="n">destino_salida</span> <span class="p">}</span>
 <span class="linenos" data-linenos="11 "></span>    <span class="p">)</span>
-<span class="linenos" data-linenos="12 "></span>    <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">'QueryExecutionId'</span><span class="p">]</span>
+<span class="linenos" data-linenos="12 "></span>    <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;QueryExecutionId&#39;</span><span class="p">]</span>
 <span class="linenos" data-linenos="13 "></span>
 <span class="hll"><span class="linenos" data-linenos="14 "></span><span class="k">def</span><span class="w"> </span><span class="nf">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">):</span>
 </span><span class="linenos" data-linenos="15 "></span>    <span class="n">response</span> <span class="o">=</span> <span class="n">cliente_athena</span><span class="o">.</span><span class="n">get_query_execution</span><span class="p">(</span>
 <span class="linenos" data-linenos="16 "></span>        <span class="n">QueryExecutionId</span><span class="o">=</span><span class="n">query_execution_id</span>
 <span class="linenos" data-linenos="17 "></span>    <span class="p">)</span>
-<span class="linenos" data-linenos="18 "></span>    <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">'QueryExecution'</span><span class="p">][</span><span class="s1">'Status'</span><span class="p">][</span><span class="s1">'State'</span><span class="p">]</span>
+<span class="linenos" data-linenos="18 "></span>    <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;QueryExecution&#39;</span><span class="p">][</span><span class="s1">&#39;Status&#39;</span><span class="p">][</span><span class="s1">&#39;State&#39;</span><span class="p">]</span>
 <span class="linenos" data-linenos="19 "></span>
 <span class="hll"><span class="linenos" data-linenos="20 "></span><span class="k">def</span><span class="w"> </span><span class="nf">obtener_resultado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">):</span>
 </span><span class="linenos" data-linenos="21 "></span>    <span class="n">response</span> <span class="o">=</span> <span class="n">cliente_athena</span><span class="o">.</span><span class="n">get_query_results</span><span class="p">(</span>
 <span class="linenos" data-linenos="22 "></span>        <span class="n">QueryExecutionId</span><span class="o">=</span><span class="n">query_execution_id</span>
 <span class="linenos" data-linenos="23 "></span>    <span class="p">)</span>
 <span class="linenos" data-linenos="24 "></span>    <span class="c1"># Process and print/query the results</span>
-<span class="linenos" data-linenos="25 "></span>    <span class="k">for</span> <span class="n">fila</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s1">'ResultSet'</span><span class="p">][</span><span class="s1">'Rows'</span><span class="p">]:</span>
-<span class="linenos" data-linenos="26 "></span>        <span class="nb">print</span><span class="p">([</span><span class="n">campo</span><span class="p">[</span><span class="s1">'VarCharValue'</span><span class="p">]</span> <span class="k">for</span> <span class="n">campo</span> <span class="ow">in</span> <span class="n">fila</span><span class="p">[</span><span class="s1">'Data'</span><span class="p">]])</span>
+<span class="linenos" data-linenos="25 "></span>    <span class="k">for</span> <span class="n">fila</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;ResultSet&#39;</span><span class="p">][</span><span class="s1">&#39;Rows&#39;</span><span class="p">]:</span>
+<span class="linenos" data-linenos="26 "></span>        <span class="nb">print</span><span class="p">([</span><span class="n">campo</span><span class="p">[</span><span class="s1">&#39;VarCharValue&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">campo</span> <span class="ow">in</span> <span class="n">fila</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">]])</span>
 </code></pre></div>
 <p>Y con las funciones definidas, ejecutamos la consulta:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">sql</span> <span class="o">=</span> <span class="s2">"SELECT custId, fName, lName FROM customers_parquet WHERE city='Caguas' LIMIT 10;"</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="n">bd</span> <span class="o">=</span> <span class="s2">"s8a_retail"</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="n">destino</span> <span class="o">=</span> <span class="s2">"s3://s3severo8a-cli/athena-results/"</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT custId, fName, lName FROM customers_parquet WHERE city=&#39;Caguas&#39; LIMIT 10;&quot;</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="n">bd</span> <span class="o">=</span> <span class="s2">&quot;s8a_retail&quot;</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="n">destino</span> <span class="o">=</span> <span class="s2">&quot;s3://s3severo8a-cli/athena-results/&quot;</span>
 <span class="linenos" data-linenos=" 4 "></span>
 <span class="hll"><span class="linenos" data-linenos=" 5 "></span><span class="n">query_execution_id</span> <span class="o">=</span> <span class="n">ejecutar_consulta_athena</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">bd</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>
-</span><span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="k">while</span> <span class="n">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'RUNNING'</span> <span class="ow">or</span> <span class="n">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'QUEUED'</span><span class="p">:</span>
-</span><span class="linenos" data-linenos=" 7 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">"La consulta se está ejecutando..."</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos" data-linenos=" 6 "></span><span class="k">while</span> <span class="n">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;RUNNING&#39;</span> <span class="ow">or</span> <span class="n">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;QUEUED&#39;</span><span class="p">:</span>
+</span><span class="linenos" data-linenos=" 7 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La consulta se está ejecutando...&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos=" 8 "></span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Esperamos unos segundos</span>
 <span class="linenos" data-linenos=" 9 "></span>
-<span class="hll"><span class="linenos" data-linenos="10 "></span><span class="k">if</span> <span class="n">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'SUCCEEDED'</span><span class="p">:</span>
-</span><span class="linenos" data-linenos="11 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">"!Consulta exitosa!"</span><span class="p">)</span>
+<span class="hll"><span class="linenos" data-linenos="10 "></span><span class="k">if</span> <span class="n">obtener_estado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;SUCCEEDED&#39;</span><span class="p">:</span>
+</span><span class="linenos" data-linenos="11 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;!Consulta exitosa!&quot;</span><span class="p">)</span>
 <span class="hll"><span class="linenos" data-linenos="12 "></span>    <span class="n">obtener_resultado</span><span class="p">(</span><span class="n">query_execution_id</span><span class="p">)</span>
 </span><span class="linenos" data-linenos="13 "></span><span class="k">else</span><span class="p">:</span>
-<span class="linenos" data-linenos="14 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">"La consulta falló o ha sido cancelada"</span><span class="p">)</span>
+<span class="linenos" data-linenos="14 "></span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La consulta falló o ha sido cancelada&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Al ejecutar el <a href="resources/athena.py">script anterior</a> obtendremos la siguiente salida:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>La consulta se está ejecutando...
 <span class="linenos" data-linenos="2 "></span>!Consulta exitosa!
-<span class="linenos" data-linenos="3 "></span>['custid', 'fname', 'lname']
-<span class="linenos" data-linenos="4 "></span>['3', 'Ann', 'Smith']
-<span class="linenos" data-linenos="5 "></span>['5', 'Robert', 'Hudson']
-<span class="linenos" data-linenos="6 "></span>['7', 'Melissa', 'Wilcox']
-<span class="linenos" data-linenos="7 "></span>['9', 'Mary', 'Perez']
+<span class="linenos" data-linenos="3 "></span>[&#39;custid&#39;, &#39;fname&#39;, &#39;lname&#39;]
+<span class="linenos" data-linenos="4 "></span>[&#39;3&#39;, &#39;Ann&#39;, &#39;Smith&#39;]
+<span class="linenos" data-linenos="5 "></span>[&#39;5&#39;, &#39;Robert&#39;, &#39;Hudson&#39;]
+<span class="linenos" data-linenos="6 "></span>[&#39;7&#39;, &#39;Melissa&#39;, &#39;Wilcox&#39;]
+<span class="linenos" data-linenos="7 "></span>[&#39;9&#39;, &#39;Mary&#39;, &#39;Perez&#39;]
 <span class="linenos" data-linenos="8 "></span>...
 </code></pre></div>
 <div class="admonition tip">
@@ -4874,7 +4874,7 @@ La virtualización de datos puede considerarse una herramienta que amplía el la
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">awswrangler</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">wr</span>
 <span class="linenos" data-linenos="2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="linenos" data-linenos="3 "></span>
-<span class="linenos" data-linenos="4 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">wr</span><span class="o">.</span><span class="n">athena</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">"SELECT * FROM customers"</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s2">"s8a_retail"</span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">wr</span><span class="o">.</span><span class="n">athena</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM customers&quot;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s2">&quot;s8a_retail&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Más información en la <a href="https://aws-sdk-pandas.readthedocs.io/en/stable/index.html">documentación oficial</a>.</p>
 </div>
@@ -4941,7 +4941,7 @@ Y creamos la tabla. Fíjate en el paralelismo con los dos DDL que ya has escrito
 <span class="linenos" data-linenos="5 "></span><span class="p">)</span>
 <span class="linenos" data-linenos="6 "></span><span class="n">PARTITIONED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">order_status</span><span class="o">`</span><span class="w"> </span><span class="n">string</span><span class="p">)</span><span class="w">      </span><span class="c1">-- (1)!</span>
 <span class="linenos" data-linenos="7 "></span><span class="n">STORED</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">PARQUET</span><span class="w">                           </span><span class="c1">-- (2)!</span>
-<span class="linenos" data-linenos="8 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">'s3://s3severo8a-cli/retail/orders/'</span><span class="p">;</span>
+<span class="linenos" data-linenos="8 "></span><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;s3://s3severo8a-cli/retail/orders/&#39;</span><span class="p">;</span>
 </code></pre></div>
 
 1. Las columnas de partición se declaran **fuera** de la lista de columnas, porque no están en los ficheros. Es la sintaxis de *Hive*, literalmente.
@@ -4967,10 +4967,10 @@ Y ahora, exactamente el mismo tropiezo que en *Trino*:
 La respuesta de *Athena* es elegante: **si las particiones son predecibles, no las guardes, calcúlalas**.
 
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">s8a_retail</span><span class="p">.</span><span class="n">orders_parquet</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="s1">'projection.enabled'</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'true'</span><span class="p">,</span>
-<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="s1">'projection.order_status.type'</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'enum'</span><span class="p">,</span>
-<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="s1">'projection.order_status.values'</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'COMPLETE,PENDING,CLOSED,PROCESSING,ON_HOLD,CANCELED,PAYMENT_REVIEW,PENDING_PAYMENT,SUSPECTED_FRAUD'</span><span class="p">,</span>
-<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="s1">'storage.location.template'</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'s3://s3severo8a-cli/retail/orders/order_status=${order_status}/'</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="s1">&#39;projection.enabled&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="s1">&#39;projection.order_status.type&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;enum&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="s1">&#39;projection.order_status.values&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;COMPLETE,PENDING,CLOSED,PROCESSING,ON_HOLD,CANCELED,PAYMENT_REVIEW,PENDING_PAYMENT,SUSPECTED_FRAUD&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="s1">&#39;storage.location.template&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;s3://s3severo8a-cli/retail/orders/order_status=${order_status}/&#39;</span>
 <span class="linenos" data-linenos="6 "></span><span class="p">);</span>
 </code></pre></div>
 
@@ -5016,8 +5016,8 @@ Doce veces más barato, misma consulta, mismo resultado. Y eso **sin particionar
     La ejecución en *Athena* es **asíncrona**: al enviar una consulta obtienes un `QueryExecutionId` que después has de consultar.
 
     <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>athena<span class="w"> </span>start-query-execution<span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">   </span>--query-string<span class="w"> </span><span class="s2">"SELECT count(*) FROM s8a_retail.orders_parquet WHERE order_status='COMPLETE'"</span><span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="3 "></span><span class="w">   </span>--result-configuration<span class="w"> </span><span class="s2">"OutputLocation=s3://s3severo8a-cli/athena-results"</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">   </span>--query-string<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM s8a_retail.orders_parquet WHERE order_status=&#39;COMPLETE&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">   </span>--result-configuration<span class="w"> </span><span class="s2">&quot;OutputLocation=s3://s3severo8a-cli/athena-results&quot;</span>
 <span class="linenos" data-linenos="4 "></span>
 <span class="linenos" data-linenos="5 "></span>aws<span class="w"> </span>athena<span class="w"> </span>get-query-results<span class="w"> </span>--query-execution-id<span class="w"> </span>&lt;id&gt;
 </code></pre></div>
@@ -5027,8 +5027,8 @@ Doce veces más barato, misma consulta, mismo resultado. Y eso **sin particionar
     <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">awswrangler</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">wr</span>
 <span class="linenos" data-linenos="2 "></span>
 <span class="linenos" data-linenos="3 "></span><span class="n">df</span> <span class="o">=</span> <span class="n">wr</span><span class="o">.</span><span class="n">athena</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span>
-<span class="linenos" data-linenos="4 "></span>    <span class="s2">"SELECT order_status, count(*) AS n FROM orders_parquet GROUP BY order_status"</span><span class="p">,</span>
-<span class="linenos" data-linenos="5 "></span>    <span class="n">database</span><span class="o">=</span><span class="s2">"s8a_retail"</span><span class="p">)</span>
+<span class="linenos" data-linenos="4 "></span>    <span class="s2">&quot;SELECT order_status, count(*) AS n FROM orders_parquet GROUP BY order_status&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="5 "></span>    <span class="n">database</span><span class="o">=</span><span class="s2">&quot;s8a_retail&quot;</span><span class="p">)</span>
 </code></pre></div>
 -->
 

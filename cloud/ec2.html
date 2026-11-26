@@ -4988,7 +4988,7 @@ Si elegimos una instancia de tipo <strong>g</strong>, como pueda ser una <em>t4g
 <span class="linenos" data-linenos="3 "></span>yum<span class="w"> </span>-y<span class="w"> </span>install<span class="w"> </span>httpd
 <span class="linenos" data-linenos="4 "></span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>httpd
 <span class="linenos" data-linenos="5 "></span>systemctl<span class="w"> </span>start<span class="w"> </span>httpd
-<span class="linenos" data-linenos="6 "></span><span class="nb">echo</span><span class="w"> </span><span class="s1">'&lt;html&gt;&lt;h1&gt;Hola Mundo desde el Severo!&lt;/h1&gt;&lt;/html&gt;'</span><span class="w"> </span>&gt;<span class="w"> </span>/var/www/html/index.html
+<span class="linenos" data-linenos="6 "></span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;&lt;html&gt;&lt;h1&gt;Hola Mundo desde el Severo!&lt;/h1&gt;&lt;/html&gt;&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/var/www/html/index.html
 </code></pre></div>
 <p><img alt="Paso 3 - Datos de usuario" src="images/043datosUsuario.png" /></p>
 <div class="admonition info">
@@ -5051,7 +5051,7 @@ Si elegimos una instancia de tipo <strong>g</strong>, como pueda ser una <em>t4g
 <p>A continuación vamos a crear un grupo de seguridad que permita el acceso via HTTP al puerto 80 y HTTPS al puerto 443 y conexión mediante SSH al puerto 22.</p>
 <p>Para ello, primero creamos el grupo de seguridad utilizando el comando <a href="https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/create-security-group.html">create-security-group</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>ec2<span class="w"> </span>create-security-group<span class="w"> </span>--group-name<span class="w"> </span>iabd-front<span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--description<span class="w"> </span><span class="s2">"Grupo de seguridad para frontend"</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Grupo de seguridad para frontend&quot;</span>
 </code></pre></div>
 <p>A continuación añadimos el acceso a <em>ssh</em> utilizando el comando <a href="https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/authorize-security-group-ingress.html">authorize-security-group-ingress</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span>--group-name<span class="w"> </span>iabd-front<span class="w"> </span><span class="se">\</span>
@@ -5072,14 +5072,14 @@ Si elegimos una instancia de tipo <strong>g</strong>, como pueda ser una <em>t4g
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>ec2<span class="w"> </span>run-instances<span class="w"> </span>--image-id<span class="w"> </span>ami-03ae0589c3c7b8599<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="2 "></span><span class="w">    </span>--count<span class="w"> </span><span class="m">1</span><span class="w"> </span>--instance-type<span class="w"> </span>t3.large<span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="3 "></span><span class="w">    </span>--key-name<span class="w"> </span>vockey<span class="w"> </span>--security-groups<span class="w"> </span>iabd-front<span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="4 "></span><span class="w">    </span>--tag-specifications<span class="w"> </span><span class="s2">"ResourceType=instance,Tags=[{Key=Name,Value=iabd}]"</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span>--tag-specifications<span class="w"> </span><span class="s2">&quot;ResourceType=instance,Tags=[{Key=Name,Value=iabd}]&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="5 "></span><span class="w">    </span>--ebs-optimized<span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="6 "></span><span class="w">    </span>--block-device-mapping<span class="w"> </span><span class="s2">"[ { \"DeviceName\": \"/dev/sda1\", \"Ebs\": { \"VolumeSize\": 30 } } ]"</span>
+<span class="linenos" data-linenos="6 "></span><span class="w">    </span>--block-device-mapping<span class="w"> </span><span class="s2">&quot;[ { \&quot;DeviceName\&quot;: \&quot;/dev/sda1\&quot;, \&quot;Ebs\&quot;: { \&quot;VolumeSize\&quot;: 30 } } ]&quot;</span>
 </code></pre></div>
 <p>El comando <em>describe-instances</em> también nos permite obtener información de nuestras instancias utilizando filtros. Asi pues, por ejemplo, si queremos obtener la ip pública de la instancia que acabamos de crear podemos hacer:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instances<span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--filters<span class="w"> </span><span class="s2">"Name=tag:Name,Values=iabd"</span><span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--query<span class="w"> </span><span class="s2">"Reservations[*].Instances[*].PublicIpAddress"</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span>--filters<span class="w"> </span><span class="s2">&quot;Name=tag:Name,Values=iabd&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span>--query<span class="w"> </span><span class="s2">&quot;Reservations[*].Instances[*].PublicIpAddress&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="4 "></span><span class="w">    </span>--output<span class="w"> </span>text
 </code></pre></div>
 <p>El siguiente paso es conectarnos a nuestra instancia. Como hemos creado la instancia utilizando las credenciales <em>vockey</em>, vamos a descargar las claves desde la consola de <em>Learner Labs</em> donde antes habíamos consultado nuestras credenciales.</p>

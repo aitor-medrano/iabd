@@ -5207,7 +5207,7 @@ El procesador <em>SplitText</em> nos permite dividir cualquier flujo de texto en
 <span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">nifi</span><span class="p">:</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">        </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd-nifi</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8443:8443"</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8443:8443&quot;</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="w">        </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./mysql-connector-j-8.0.31.jar:/opt/mysql-connector-j-8.0.31.jar</span>
 <span class="linenos" data-linenos=" 8 "></span><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/nifi:latest</span>
@@ -5223,7 +5223,7 @@ El procesador <em>SplitText</em> nos permite dividir cualquier flujo de texto en
 <span class="linenos" data-linenos="18 "></span><span class="w">        </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd-mysql-nifi</span>
 <span class="linenos" data-linenos="19 "></span><span class="w">        </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
 <span class="linenos" data-linenos="20 "></span><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="linenos" data-linenos="21 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"3306:3306"</span>
+<span class="linenos" data-linenos="21 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;3306:3306&quot;</span>
 <span class="linenos" data-linenos="22 "></span><span class="w">        </span><span class="nt">environment</span><span class="p">:</span>
 <span class="linenos" data-linenos="23 "></span><span class="w">            </span><span class="nt">TZ</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Europe/Madrid</span>
 <span class="linenos" data-linenos="24 "></span><span class="w">            </span><span class="nt">MYSQL_ROOT_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd</span>
@@ -5233,7 +5233,7 @@ El procesador <em>SplitText</em> nos permite dividir cualquier flujo de texto en
 <span class="linenos" data-linenos="28 "></span><span class="w">    </span><span class="nt">mongodb</span><span class="p">:</span>
 <span class="linenos" data-linenos="29 "></span><span class="w">        </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iabd-mongodb-nifi</span>
 <span class="linenos" data-linenos="30 "></span><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="linenos" data-linenos="31 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"27017:27017"</span>
+<span class="linenos" data-linenos="31 "></span><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;27017:27017&quot;</span>
 <span class="linenos" data-linenos="32 "></span><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mongo:latest</span>
 </code></pre></div>
 <p>Una vez colocado el <a href="resources/nifi-mysql-mongodb/mysql-connector-j-8.0.31.jar">driver de MySQL</a> en la misma carpeta, lanzamos <em>docker-compose</em>:</p>
@@ -5243,7 +5243,7 @@ El procesador <em>SplitText</em> nos permite dividir cualquier flujo de texto en
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>iabd-mysql-nifi<span class="w"> </span>mysql<span class="w"> </span>-h<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>-P<span class="w"> </span><span class="m">3306</span><span class="w"> </span>-uiabd<span class="w"> </span>-piabd<span class="w"> </span>retail_db<span class="w"> </span>&lt;<span class="w"> </span>create_db.sql
 </code></pre></div>
 <p>A partir de aquí, es importante destacar que la <em>url</em> de conexión a la base de datos, en vez de acceder a <code>localhost</code>, lo hace al nombre del contenedor <code>iabd-mysql-nifi</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">url</span> <span class="o">=</span> <span class="s2">"jdbc:mysql://iabd-mysql-nifi/retail_db"</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;jdbc:mysql://iabd-mysql-nifi/retail_db&quot;</span>
 </code></pre></div>
 </div>
 <p>Para este caso de uso, vamos a conectar la ejecución de SQL del procesador <em>ExecuteSQLRecord</em>, con un procesador <em>SplitText</em> encargado de separar el resultado de la consulta en múltiples <em>flowfiles</em>, para posteriormente insertar estos mediante el procesador <em>PutMongo</em>:</p>
@@ -5329,39 +5329,39 @@ El procesador <em>SplitText</em> nos permite dividir cualquier flujo de texto en
 <p>Aunque <a href="https://www.aemet.es/">AEMET</a> ofrece su <a href="https://opendata.aemet.es/centrodedescargas/inicio">propia API</a> para obtener datos, vamos a utilizar el <a href="https://www.el-tiempo.net/api">API pública</a> de <a href="https://www.el-tiempo.net">https://www.el-tiempo.net</a>, la cual simplifica su uso.</p>
 <p>En concreto, nos vamos a centrar en realizar llamadas a la  URL <a href="https://api.el-tiempo.net/json/v3/provincias/03/municipios/03065">https://api.el-tiempo.net/json/v3/provincias/03/municipios/03065</a>, en la cual vamos a recuperar los datos del municipio de Elche (<code>03065</code>) que pertenece a la provincia de Alicante (<code>03</code>), obteniendo datos similares a:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">"origin"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">"productor"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Agencia Estatal de Meteorología - AEMET. Gobierno de España"</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="nt">"web"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.aemet.es"</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">&quot;origin&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">&quot;productor&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Agencia Estatal de Meteorología - AEMET. Gobierno de España&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="nt">&quot;web&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://www.aemet.es&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="err">...</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="w">  </span><span class="p">},</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"elTiempo.net | El tiempo en Elche/Elx (Alacant/Alicante)"</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;elTiempo.net | El tiempo en Elche/Elx (Alacant/Alicante)&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos=" 8 "></span><span class="w">  </span><span class="err">...</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="w">  </span><span class="nt">"municipio"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="nt">"CODIGOINE"</span><span class="p">:</span><span class="w"> </span><span class="s2">"03065000000"</span><span class="p">,</span>
-<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="nt">"ID_REL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1030651"</span><span class="p">,</span>
-<span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="nt">"COD_GEO"</span><span class="p">:</span><span class="w"> </span><span class="s2">"03320"</span><span class="p">,</span>
-<span class="linenos" data-linenos="13 "></span><span class="w">    </span><span class="nt">"CODPROV"</span><span class="p">:</span><span class="w"> </span><span class="s2">"03"</span><span class="p">,</span>
-<span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="nt">"NOMBRE_PROVINCIA"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Alacant/Alicante"</span><span class="p">,</span>
-<span class="hll"><span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="nt">"NOMBRE"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Elche/Elx"</span><span class="p">,</span>
-</span><span class="linenos" data-linenos="16 "></span><span class="w">    </span><span class="nt">"POBLACION_MUNI"</span><span class="p">:</span><span class="w"> </span><span class="mi">228647</span><span class="p">,</span>
-<span class="linenos" data-linenos="17 "></span><span class="w">    </span><span class="nt">"SUPERFICIE"</span><span class="p">:</span><span class="w"> </span><span class="mf">32606.7487</span><span class="p">,</span>
-<span class="linenos" data-linenos="18 "></span><span class="w">    </span><span class="nt">"PERIMETRO"</span><span class="p">:</span><span class="w"> </span><span class="mi">91751</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">  </span><span class="nt">&quot;municipio&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="nt">&quot;CODIGOINE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;03065000000&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="nt">&quot;ID_REL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1030651&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="nt">&quot;COD_GEO&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;03320&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">    </span><span class="nt">&quot;CODPROV&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;03&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="nt">&quot;NOMBRE_PROVINCIA&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Alacant/Alicante&quot;</span><span class="p">,</span>
+<span class="hll"><span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="nt">&quot;NOMBRE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Elche/Elx&quot;</span><span class="p">,</span>
+</span><span class="linenos" data-linenos="16 "></span><span class="w">    </span><span class="nt">&quot;POBLACION_MUNI&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">228647</span><span class="p">,</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">    </span><span class="nt">&quot;SUPERFICIE&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">32606.7487</span><span class="p">,</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">    </span><span class="nt">&quot;PERIMETRO&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">91751</span><span class="p">,</span>
 <span class="linenos" data-linenos="19 "></span><span class="w">    </span><span class="err">...</span>
 <span class="linenos" data-linenos="20 "></span><span class="w">  </span><span class="p">},</span>
-<span class="linenos" data-linenos="21 "></span><span class="w">  </span><span class="nt">"fecha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-03-10"</span><span class="p">,</span>
-<span class="linenos" data-linenos="22 "></span><span class="w">  </span><span class="nt">"stateSky"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="linenos" data-linenos="23 "></span><span class="w">    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nubes altas"</span><span class="p">,</span>
-<span class="linenos" data-linenos="24 "></span><span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"17"</span>
+<span class="linenos" data-linenos="21 "></span><span class="w">  </span><span class="nt">&quot;fecha&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-03-10&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="22 "></span><span class="w">  </span><span class="nt">&quot;stateSky&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="23 "></span><span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Nubes altas&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="24 "></span><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;17&quot;</span>
 <span class="linenos" data-linenos="25 "></span><span class="w">  </span><span class="p">},</span>
-<span class="hll"><span class="linenos" data-linenos="26 "></span><span class="w">  </span><span class="nt">"temperatura_actual"</span><span class="p">:</span><span class="w"> </span><span class="s2">"24"</span><span class="p">,</span>
-</span><span class="linenos" data-linenos="27 "></span><span class="w">  </span><span class="nt">"temperaturas"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="linenos" data-linenos="28 "></span><span class="w">    </span><span class="nt">"max"</span><span class="p">:</span><span class="w"> </span><span class="s2">"27"</span><span class="p">,</span>
-<span class="linenos" data-linenos="29 "></span><span class="w">    </span><span class="nt">"min"</span><span class="p">:</span><span class="w"> </span><span class="s2">"15"</span>
+<span class="hll"><span class="linenos" data-linenos="26 "></span><span class="w">  </span><span class="nt">&quot;temperatura_actual&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;24&quot;</span><span class="p">,</span>
+</span><span class="linenos" data-linenos="27 "></span><span class="w">  </span><span class="nt">&quot;temperaturas&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos="28 "></span><span class="w">    </span><span class="nt">&quot;max&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;27&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="29 "></span><span class="w">    </span><span class="nt">&quot;min&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;15&quot;</span>
 <span class="linenos" data-linenos="30 "></span><span class="w">  </span><span class="p">},</span>
-<span class="hll"><span class="linenos" data-linenos="31 "></span><span class="w">  </span><span class="nt">"humedad"</span><span class="p">:</span><span class="w"> </span><span class="s2">"24"</span><span class="p">,</span>
-</span><span class="linenos" data-linenos="32 "></span><span class="w">  </span><span class="nt">"viento"</span><span class="p">:</span><span class="w"> </span><span class="s2">"18"</span><span class="p">,</span>
-<span class="linenos" data-linenos="33 "></span><span class="w">  </span><span class="nt">"precipitacion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span>
-<span class="linenos" data-linenos="34 "></span><span class="w">  </span><span class="nt">"lluvia"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
+<span class="hll"><span class="linenos" data-linenos="31 "></span><span class="w">  </span><span class="nt">&quot;humedad&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;24&quot;</span><span class="p">,</span>
+</span><span class="linenos" data-linenos="32 "></span><span class="w">  </span><span class="nt">&quot;viento&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;18&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="33 "></span><span class="w">  </span><span class="nt">&quot;precipitacion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="34 "></span><span class="w">  </span><span class="nt">&quot;lluvia&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
 <span class="linenos" data-linenos="35 "></span><span class="w">  </span><span class="err">...</span>
 <span class="linenos" data-linenos="36 "></span><span class="p">}</span>
 </code></pre></div>
@@ -5378,20 +5378,20 @@ El procesador <em>SplitText</em> nos permite dividir cualquier flujo de texto en
 <li>
 <p><code>iabd-nifi/silver</code>: donde guardaremos cada minuto documentos JSON con la siguiente estructura:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">"fecha"</span><span class="p">:</span><span class="s2">"2023-03-13 10:17:20"</span><span class="p">,</span>
-<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">"ciudad"</span><span class="p">:</span><span class="s2">"Elche/Elx"</span><span class="p">,</span>
-<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="nt">"temp"</span><span class="p">:</span><span class="s2">"20"</span><span class="p">,</span>
-<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="nt">"humedad"</span><span class="p">:</span><span class="s2">"47"</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">&quot;fecha&quot;</span><span class="p">:</span><span class="s2">&quot;2023-03-13 10:17:20&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">&quot;ciudad&quot;</span><span class="p">:</span><span class="s2">&quot;Elche/Elx&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="nt">&quot;temp&quot;</span><span class="p">:</span><span class="s2">&quot;20&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="nt">&quot;humedad&quot;</span><span class="p">:</span><span class="s2">&quot;47&quot;</span>
 <span class="linenos" data-linenos="6 "></span><span class="p">}</span>
 </code></pre></div>
 </li>
 <li>
 <p><code>iabd-nifi/gold</code>: donde guardaremos cada diez minutos documentos <em>Parquet</em> con la misma estructura que antes, pero con las medias de las temperaturas y las humedades:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="p">{</span>
-<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">"fecha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-03-13T08:17:20.000Z"</span><span class="p">,</span>
-<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">"ciudad"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Elche/Elx"</span><span class="p">,</span>
-<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="nt">"temp"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
-<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="nt">"humedad"</span><span class="p">:</span><span class="w"> </span><span class="mi">47</span>
+<span class="linenos" data-linenos="2 "></span><span class="w">    </span><span class="nt">&quot;fecha&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-03-13T08:17:20.000Z&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="3 "></span><span class="w">    </span><span class="nt">&quot;ciudad&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Elche/Elx&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="4 "></span><span class="w">    </span><span class="nt">&quot;temp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="linenos" data-linenos="5 "></span><span class="w">    </span><span class="nt">&quot;humedad&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">47</span>
 <span class="linenos" data-linenos="6 "></span><span class="p">}</span>
 </code></pre></div>
 </li>
@@ -5400,25 +5400,25 @@ El procesador <em>SplitText</em> nos permite dividir cualquier flujo de texto en
 <h4 id="creando-el-bucket">Creando el bucket<a class="headerlink" href="#creando-el-bucket" title="Permanent link">&para;</a></h4>
 <p>Tras entrar a la consola de AWS creamos el <em>bucket</em> y le damos acceso público y, en la pestaña <em>Permisos</em>, configuramos la política del <em>bucket</em> para permitir tanto el almacenamiento como la recuperación de datos:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">    </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="linenos" data-linenos=" 4 "></span><span class="w">        </span><span class="p">{</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">            </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UploadNifi"</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="w">            </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="w">            </span><span class="nt">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="w">            </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="w">                </span><span class="s2">"s3:ListMultipartUploadParts"</span><span class="p">,</span>
-<span class="linenos" data-linenos="10 "></span><span class="w">                </span><span class="s2">"s3:PutObject"</span><span class="p">,</span>
-<span class="linenos" data-linenos="11 "></span><span class="w">                </span><span class="s2">"s3:GetObject"</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">            </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UploadNifi&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">            </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">                </span><span class="s2">&quot;s3:ListMultipartUploadParts&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">                </span><span class="s2">&quot;s3:PutObject&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">                </span><span class="s2">&quot;s3:GetObject&quot;</span>
 <span class="linenos" data-linenos="12 "></span><span class="w">            </span><span class="p">],</span>
-<span class="hll"><span class="linenos" data-linenos="13 "></span><span class="w">            </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:s3:::iabd-nifi/*"</span>
+<span class="hll"><span class="linenos" data-linenos="13 "></span><span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:s3:::iabd-nifi/*&quot;</span>
 </span><span class="linenos" data-linenos="14 "></span><span class="w">        </span><span class="p">},</span>
 <span class="linenos" data-linenos="15 "></span><span class="w">        </span><span class="p">{</span>
-<span class="linenos" data-linenos="16 "></span><span class="w">            </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UploadNifiListBucket"</span><span class="p">,</span>
-<span class="linenos" data-linenos="17 "></span><span class="w">            </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span>
-<span class="linenos" data-linenos="18 "></span><span class="w">            </span><span class="nt">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span>
-<span class="linenos" data-linenos="19 "></span><span class="w">            </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3:ListBucketMultipartUploads"</span><span class="p">,</span>
-<span class="hll"><span class="linenos" data-linenos="20 "></span><span class="w">            </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:s3:::iabd-nifi"</span>
+<span class="linenos" data-linenos="16 "></span><span class="w">            </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UploadNifiListBucket&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="17 "></span><span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="18 "></span><span class="w">            </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="19 "></span><span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3:ListBucketMultipartUploads&quot;</span><span class="p">,</span>
+<span class="hll"><span class="linenos" data-linenos="20 "></span><span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:s3:::iabd-nifi&quot;</span>
 </span><span class="linenos" data-linenos="21 "></span><span class="w">        </span><span class="p">}</span>
 <span class="linenos" data-linenos="22 "></span><span class="w">    </span><span class="p">]</span>
 <span class="linenos" data-linenos="23 "></span><span class="p">}</span>
@@ -5503,18 +5503,18 @@ El procesador <em>SplitText</em> nos permite dividir cualquier flujo de texto en
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="err">iabd&gt;</span><span class="w"> </span><span class="err">db.caso</span><span class="mi">7</span><span class="err">silver.</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">d()</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="p">[</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="p">{</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">"640ef8b112ca74269a8cf805"</span><span class="err">)</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="kc">fe</span><span class="err">cha</span><span class="p">:</span><span class="w"> </span><span class="err">'</span><span class="mi">2023-03-13</span><span class="w"> </span><span class="mi">11</span><span class="p">:</span><span class="mi">18</span><span class="p">:</span><span class="mi">14</span><span class="err">'</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="kc">te</span><span class="err">mp</span><span class="p">:</span><span class="w"> </span><span class="err">'</span><span class="mi">22</span><span class="err">'</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="err">ciudad</span><span class="p">:</span><span class="w"> </span><span class="err">'Elche/Elx'</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="err">humedad</span><span class="p">:</span><span class="w"> </span><span class="err">'</span><span class="mi">42</span><span class="err">'</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">&quot;640ef8b112ca74269a8cf805&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="kc">fe</span><span class="err">cha</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">2023-03-13</span><span class="w"> </span><span class="mi">11</span><span class="p">:</span><span class="mi">18</span><span class="p">:</span><span class="mi">14</span><span class="err">&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="kc">te</span><span class="err">mp</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">22</span><span class="err">&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="err">ciudad</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Elche/Elx&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="err">humedad</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">42</span><span class="err">&#39;</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="w">  </span><span class="p">},</span>
 <span class="linenos" data-linenos="10 "></span><span class="w">  </span><span class="p">{</span>
-<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">"640ef8b112ca74269a8cf806"</span><span class="err">)</span><span class="p">,</span>
-<span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="kc">fe</span><span class="err">cha</span><span class="p">:</span><span class="w"> </span><span class="err">'</span><span class="mi">2023-03-13</span><span class="w"> </span><span class="mi">11</span><span class="p">:</span><span class="mi">19</span><span class="p">:</span><span class="mi">15</span><span class="err">'</span><span class="p">,</span>
-<span class="linenos" data-linenos="13 "></span><span class="w">    </span><span class="kc">te</span><span class="err">mp</span><span class="p">:</span><span class="w"> </span><span class="err">'</span><span class="mi">22</span><span class="err">'</span><span class="p">,</span>
-<span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="err">ciudad</span><span class="p">:</span><span class="w"> </span><span class="err">'Elche/Elx'</span><span class="p">,</span>
-<span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="err">humedad</span><span class="p">:</span><span class="w"> </span><span class="err">'</span><span class="mi">42</span><span class="err">'</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">&quot;640ef8b112ca74269a8cf806&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="kc">fe</span><span class="err">cha</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">2023-03-13</span><span class="w"> </span><span class="mi">11</span><span class="p">:</span><span class="mi">19</span><span class="p">:</span><span class="mi">15</span><span class="err">&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">    </span><span class="kc">te</span><span class="err">mp</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">22</span><span class="err">&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="err">ciudad</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Elche/Elx&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="err">humedad</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">42</span><span class="err">&#39;</span>
 <span class="linenos" data-linenos="16 "></span><span class="w">  </span><span class="p">},</span>
 <span class="linenos" data-linenos="17 "></span><span class="w">  </span><span class="err">...</span>
 <span class="linenos" data-linenos="18 "></span><span class="p">]</span>
@@ -5589,18 +5589,18 @@ Como el procesador <em>PutMongo</em> espera el contenido en formato JSON, no pod
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="err">iabd&gt;</span><span class="w"> </span><span class="err">db.caso</span><span class="mi">7</span><span class="err">gold.</span><span class="kc">f</span><span class="err">i</span><span class="kc">n</span><span class="err">d()</span>
 <span class="linenos" data-linenos=" 2 "></span><span class="p">[</span>
 <span class="linenos" data-linenos=" 3 "></span><span class="w">  </span><span class="p">{</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">"640ef91d12ca74269a8cf80a"</span><span class="err">)</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="err">ciudad</span><span class="p">:</span><span class="w"> </span><span class="err">'Elche/Elx'</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="kc">fe</span><span class="err">cha</span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">"2023-03-13T09:21:17.000Z"</span><span class="err">)</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="kc">te</span><span class="err">mp</span><span class="p">:</span><span class="w"> </span><span class="err">Decimal</span><span class="mi">128</span><span class="err">(</span><span class="s2">"22.000000000"</span><span class="err">)</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="err">humedad</span><span class="p">:</span><span class="w"> </span><span class="err">Decimal</span><span class="mi">128</span><span class="err">(</span><span class="s2">"42.000000000"</span><span class="err">)</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">&quot;640ef91d12ca74269a8cf80a&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="err">ciudad</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Elche/Elx&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="kc">fe</span><span class="err">cha</span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">&quot;2023-03-13T09:21:17.000Z&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="kc">te</span><span class="err">mp</span><span class="p">:</span><span class="w"> </span><span class="err">Decimal</span><span class="mi">128</span><span class="err">(</span><span class="s2">&quot;22.000000000&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="err">humedad</span><span class="p">:</span><span class="w"> </span><span class="err">Decimal</span><span class="mi">128</span><span class="err">(</span><span class="s2">&quot;42.000000000&quot;</span><span class="err">)</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="w">  </span><span class="p">},</span>
 <span class="linenos" data-linenos="10 "></span><span class="w">  </span><span class="p">{</span>
-<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">"640f050312ca74269a8cf83c"</span><span class="err">)</span><span class="p">,</span>
-<span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="err">ciudad</span><span class="p">:</span><span class="w"> </span><span class="err">'Elche/Elx'</span><span class="p">,</span>
-<span class="linenos" data-linenos="13 "></span><span class="w">    </span><span class="kc">fe</span><span class="err">cha</span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">"2023-03-13T09:52:45.000Z"</span><span class="err">)</span><span class="p">,</span>
-<span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="kc">te</span><span class="err">mp</span><span class="p">:</span><span class="w"> </span><span class="err">Decimal</span><span class="mi">128</span><span class="err">(</span><span class="s2">"22.000000000"</span><span class="err">)</span><span class="p">,</span>
-<span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="err">humedad</span><span class="p">:</span><span class="w"> </span><span class="err">Decimal</span><span class="mi">128</span><span class="err">(</span><span class="s2">"42.000000000"</span><span class="err">)</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="err">_id</span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">&quot;640f050312ca74269a8cf83c&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="linenos" data-linenos="12 "></span><span class="w">    </span><span class="err">ciudad</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Elche/Elx&#39;</span><span class="p">,</span>
+<span class="linenos" data-linenos="13 "></span><span class="w">    </span><span class="kc">fe</span><span class="err">cha</span><span class="p">:</span><span class="w"> </span><span class="err">ISODa</span><span class="kc">te</span><span class="err">(</span><span class="s2">&quot;2023-03-13T09:52:45.000Z&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="linenos" data-linenos="14 "></span><span class="w">    </span><span class="kc">te</span><span class="err">mp</span><span class="p">:</span><span class="w"> </span><span class="err">Decimal</span><span class="mi">128</span><span class="err">(</span><span class="s2">&quot;22.000000000&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="linenos" data-linenos="15 "></span><span class="w">    </span><span class="err">humedad</span><span class="p">:</span><span class="w"> </span><span class="err">Decimal</span><span class="mi">128</span><span class="err">(</span><span class="s2">&quot;42.000000000&quot;</span><span class="err">)</span>
 <span class="linenos" data-linenos="16 "></span><span class="w">  </span><span class="p">},</span>
 <span class="linenos" data-linenos="17 "></span><span class="w">  </span><span class="err">...</span>
 <span class="linenos" data-linenos="18 "></span><span class="p">]</span>
@@ -5615,16 +5615,16 @@ Como el procesador <em>PutMongo</em> espera el contenido en formato JSON, no pod
 <p><em>Nifi</em> ofrece un API REST con el cual podemos interactuar de forma similar al interfaz gráfico.</p>
 <p>A partir del host donde tenemos <em>Nifi</em> instalado, las peticiones siguen al nomenclatura <code>/nifi-api/&lt;servicio&gt;</code>, de manera que con nuestra máquina virtual podríamos acceder a información sobre la instalación mediante <a href="https://localhost:8443/nifi-api/flow/about">https://localhost:8443/nifi-api/flow/about</a>.</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="p">{</span>
-<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">"about"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NiFi"</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.19.1"</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="nt">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://localhost:8443/nifi-api/"</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="nt">"contentViewerUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"../nifi-content-viewer/"</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CET"</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="nt">"buildTag"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nifi-1.19.1-RC2"</span><span class="p">,</span>
-<span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="nt">"buildRevision"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a7236ec"</span><span class="p">,</span>
-<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="nt">"buildBranch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UNKNOWN"</span><span class="p">,</span>
-<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="nt">"buildTimestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12/05/2022 09:57:12 CET"</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="w">  </span><span class="nt">&quot;about&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NiFi&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.19.1&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="w">    </span><span class="nt">&quot;uri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://localhost:8443/nifi-api/&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="w">    </span><span class="nt">&quot;contentViewerUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;../nifi-content-viewer/&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="w">    </span><span class="nt">&quot;timezone&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CET&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="w">    </span><span class="nt">&quot;buildTag&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nifi-1.19.1-RC2&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="w">    </span><span class="nt">&quot;buildRevision&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a7236ec&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="10 "></span><span class="w">    </span><span class="nt">&quot;buildBranch&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UNKNOWN&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="11 "></span><span class="w">    </span><span class="nt">&quot;buildTimestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;12/05/2022 09:57:12 CET&quot;</span>
 <span class="linenos" data-linenos="12 "></span><span class="w">  </span><span class="p">}</span>
 <span class="linenos" data-linenos="13 "></span><span class="p">}</span>
 </code></pre></div>
@@ -5650,7 +5650,7 @@ Como el procesador <em>PutMongo</em> espera el contenido en formato JSON, no pod
 <ol>
 <li>
 <p>Autenticarnos para obtener un token de sesión mediante <code>/access/token</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl<span class="w"> </span>--tlsv1.2<span class="w"> </span>https://localhost:8443/nifi-api/access/token<span class="w"> </span>--data<span class="w"> </span><span class="s1">'username=nifi&amp;password=nifinifinifi'</span><span class="w"> </span>-k
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl<span class="w"> </span>--tlsv1.2<span class="w"> </span>https://localhost:8443/nifi-api/access/token<span class="w"> </span>--data<span class="w"> </span><span class="s1">&#39;username=nifi&amp;password=nifinifinifi&#39;</span><span class="w"> </span>-k
 </code></pre></div>
 <p>El cual nos devuelve el token:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>eyJraWQiOiI3...
@@ -5666,8 +5666,8 @@ Como el procesador <em>PutMongo</em> espera el contenido en formato JSON, no pod
 </li>
 <li>
 <p>Mediante <code>flow/process-groups/{id}</code> con una petición PUT modificamos el grupo de procesadores y ponemos su estado en ejecución (<code>RUNNING</code>):</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl<span class="w"> </span>--tlsv1.2<span class="w"> </span>-ik<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span>-H<span class="w"> </span><span class="s1">'Authorization:Bearer eyJraWQiOiI3...'</span><span class="w"> </span><span class="se">\</span>
-<span class="linenos" data-linenos="2 "></span>-XPUT<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"id":"b1a0a805-0186-1000-8b83-2033ab7036c9","state":"RUNNING"}'</span><span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl<span class="w"> </span>--tlsv1.2<span class="w"> </span>-ik<span class="w"> </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span>-H<span class="w"> </span><span class="s1">&#39;Authorization:Bearer eyJraWQiOiI3...&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos" data-linenos="2 "></span>-XPUT<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;id&quot;:&quot;b1a0a805-0186-1000-8b83-2033ab7036c9&quot;,&quot;state&quot;:&quot;RUNNING&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
 <span class="linenos" data-linenos="3 "></span>https://localhost:8443/nifi-api/flow/process-groups/b1a0a805-0186-1000-8b83-2033ab7036c9
 </code></pre></div>
 <p>Obteniendo como resultado el nuevo estado del grupo de procesadores:</p>
@@ -5678,7 +5678,7 @@ Como el procesador <em>PutMongo</em> espera el contenido en formato JSON, no pod
 <span class="linenos" data-linenos=" 5 "></span><span class="na">Cache-Control</span><span class="o">:</span> <span class="l">private, no-cache, no-store, no-transform</span>
 <span class="linenos" data-linenos=" 6 "></span><span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 <span class="linenos" data-linenos=" 7 "></span><span class="na">Vary</span><span class="o">:</span> <span class="l">Accept-Encoding</span>
-<span class="linenos" data-linenos=" 8 "></span><span class="na">Content-Security-Policy</span><span class="o">:</span> <span class="l">frame-ancestors 'self'</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="na">Content-Security-Policy</span><span class="o">:</span> <span class="l">frame-ancestors &#39;self&#39;</span>
 <span class="linenos" data-linenos=" 9 "></span><span class="na">Strict-Transport-Security</span><span class="o">:</span> <span class="l">max-age=31536000 ; includeSubDomains</span>
 <span class="linenos" data-linenos="10 "></span><span class="na">X-Content-Type-Options</span><span class="o">:</span> <span class="l">nosniff</span>
 <span class="linenos" data-linenos="11 "></span><span class="na">X-Frame-Options</span><span class="o">:</span> <span class="l">SAMEORIGIN</span>
@@ -5686,7 +5686,7 @@ Como el procesador <em>PutMongo</em> espera el contenido en formato JSON, no pod
 <span class="linenos" data-linenos="13 "></span><span class="na">Vary</span><span class="o">:</span> <span class="l">User-Agent</span>
 <span class="linenos" data-linenos="14 "></span><span class="na">Content-Length</span><span class="o">:</span> <span class="l">63</span>
 <span class="linenos" data-linenos="15 "></span>
-<span class="hll"><span class="linenos" data-linenos="16 "></span><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"b1a0a805-0186-1000-8b83-2033ab7036c9"</span><span class="p">,</span><span class="nt">"state"</span><span class="p">:</span><span class="s2">"RUNNING"</span><span class="p">}</span>
+<span class="hll"><span class="linenos" data-linenos="16 "></span><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;b1a0a805-0186-1000-8b83-2033ab7036c9&quot;</span><span class="p">,</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="s2">&quot;RUNNING&quot;</span><span class="p">}</span>
 </span></code></pre></div>
 </li>
 </ol>

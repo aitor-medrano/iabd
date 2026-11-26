@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 460" width="900" height="460" font-family="Helvetica, Arial, sans-serif">
+<!--
+  Paleta IABD:
+    #2b3a42 oscuro   origen / control / metadatos
+    #3fa39b teal     catálogo
+    #7d5ba6 morado   motores
+    #c0603f terracota datos / almacenamiento
+    #2f6fed azul     nodo lab y flechas de datos
+    #4f8a6d verde    Airflow / orquestación (aquí: commit aceptado)
+    #8a8f98 gris     contenedores de un solo uso (init)
+-->
+<defs><marker id="f2f6fed" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f6fed"/></marker><marker id="f7d5ba6" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d5ba6"/></marker></defs>
+<rect x="0" y="0" width="900" height="460" fill="#ffffff"/>
+<text x="40" y="38" font-size="20" fill="#2b3a42" font-weight="bold">Capas del lakehouse de retail_db</text>
+<text x="40" y="60" font-size="13" fill="#5c626e">Las capas se construyen sin Spark; en la sesión siguiente Spark leerá las mismas tablas.</text>
+<rect x="60" y="90" width="210" height="56" rx="7" fill="#2b3a42" stroke="#2b3a42" stroke-width="1.4"/>
+<text x="165.0" y="115.0" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="bold">MySQL · retail_db</text>
+<text x="165.0" y="131.0" font-size="11" fill="#ffffff" text-anchor="middle">origen operacional</text>
+<rect x="620" y="90" width="220" height="56" rx="7" fill="#2b3a42" stroke="#2b3a42" stroke-width="1.4"/>
+<text x="730.0" y="115.0" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="bold">retail_el.duckdb</text>
+<text x="730.0" y="131.0" font-size="11" fill="#ffffff" text-anchor="middle">marts de dbt (Bloque 1)</text>
+<rect x="30" y="186" width="840" height="150" rx="9" fill="#e8f4f2" stroke="#3fa39b" stroke-width="1.2"/>
+<rect x="30" y="186" width="6" height="150" fill="#3fa39b"/>
+<text x="48" y="208" font-size="13" fill="#3fa39b" font-weight="bold">Polaris · catálogo iabd</text>
+<text x="48" y="224" font-size="11" fill="#5c626e">s3://warehouse/iceberg</text>
+<rect x="60" y="240" width="220" height="76" rx="7" fill="#ffffff" stroke="#c0603f" stroke-width="1.4"/>
+<text x="170.0" y="275.0" font-size="13" fill="#c0603f" text-anchor="middle" font-weight="bold">bronze.orders</text>
+<text x="170.0" y="291.0" font-size="11" fill="#5c626e" text-anchor="middle">con _ingested_at · PyIceberg</text>
+<rect x="340" y="240" width="220" height="76" rx="7" fill="#ffffff" stroke="#c0603f" stroke-width="1.4"/>
+<text x="450.0" y="275.0" font-size="13" fill="#c0603f" text-anchor="middle" font-weight="bold">silver.orders</text>
+<text x="450.0" y="291.0" font-size="11" fill="#5c626e" text-anchor="middle">sin duplicados · DuckDB MERGE</text>
+<rect x="620" y="240" width="220" height="76" rx="7" fill="#ffffff" stroke="#c0603f" stroke-width="1.4"/>
+<text x="730.0" y="275.0" font-size="13" fill="#c0603f" text-anchor="middle" font-weight="bold">gold</text>
+<text x="730.0" y="291.0" font-size="11" fill="#5c626e" text-anchor="middle">marts para los informes</text>
+<path d="M250,146 L250,238" fill="none" stroke="#2f6fed" stroke-width="1.6" marker-end="url(#f2f6fed)"/>
+<text x="262" y="170" font-size="11" fill="#2f6fed" text-anchor="start">caso 1</text>
+<path d="M280,278 L338,278" fill="none" stroke="#2f6fed" stroke-width="1.6" marker-end="url(#f2f6fed)"/>
+<text x="309" y="270" font-size="11" fill="#2f6fed" text-anchor="middle">caso 2</text>
+<path d="M730,146 L730,238" fill="none" stroke="#2f6fed" stroke-width="1.6" marker-end="url(#f2f6fed)"/>
+<text x="742" y="170" font-size="11" fill="#2f6fed" text-anchor="start">actividad 2</text>
+<rect x="340" y="380" width="220" height="56" rx="7" fill="#ffffff" stroke="#7d5ba6" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="450.0" y="405.0" font-size="13" fill="#7d5ba6" text-anchor="middle" font-weight="bold">Spark</text>
+<text x="450.0" y="421.0" font-size="11" fill="#5c626e" text-anchor="middle">sesión siguiente · mismo catálogo</text>
+<path d="M450,336 L450,378" fill="none" stroke="#7d5ba6" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#f7d5ba6)"/>
+</svg>
