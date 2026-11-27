@@ -2177,6 +2177,19 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          FAQ
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5128,6 +5141,19 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <span class="md-typeset">
+          FAQ
+        </span>
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6525,6 +6551,66 @@ En la sesión de transformación lo dejamos anunciado: el <code>dbt test</code> 
 <p class="admonition-title">De <em>Datasets</em> a <em>Assets</em></p>
 <p>En <em>Airflow 2</em> esta funcionalidad se llamaba <em>Datasets</em> (<code>from airflow.datasets import Dataset</code>). <em>Airflow 3</em> la renombró a <em>Assets</em> y la amplió. Si encuentras <code>Dataset</code> en un tutorial, la idea es la misma.</p>
 </div>
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<p>A continuación se recogen preguntas habituales sobre los conceptos de esta sesión que suelen realizarse en entrevistas de trabajo para puestos de ingeniería o ciencia de datos.</p>
+<p>Despliega cada pregunta para ver una respuesta orientativa; no hay una única respuesta correcta, pero sí aspectos clave que conviene mencionar.</p>
+<details class="question">
+<summary>¿Airflow procesa los datos?</summary>
+<p>No. Airflow <ins>orquesta</ins>: decide qué se ejecuta, en qué orden y cuándo, y vigila el resultado, pero el trabajo lo hacen otras herramientas. En nuestro <em>pipeline</em>, <abbr title="data loading tool, herramienta de carga de datos">dlt</abbr> extrae y carga, <abbr title="data build tool, herramienta de construcción de datos">dbt</abbr> transforma y prueba, y DuckDB es el motor. Si una tarea mete el procesamiento pesado dentro del propio <em>worker</em> de Airflow, por ejemplo cargando millones de filas en <em>pandas</em>, se está usando mal la herramienta.</p>
+</details>
+<details class="question">
+<summary>¿Por qué un flujo de trabajo es un grafo acíclico?</summary>
+<p>Porque las aristas indican dependencias: una tarea no empieza hasta que terminan las anteriores. Si hubiera un ciclo, una tarea acabaría dependiendo de sí misma y ninguna podría arrancar. El grafo <ins>dirigido</ins> fija el orden, y que sea <ins>acíclico</ins> garantiza que el flujo siempre tiene un principio y un final.</p>
+</details>
+<details class="question">
+<summary>¿Qué es la fecha lógica y por qué no coincide con el momento de la ejecución?</summary>
+<p>Es el instante del calendario al que <ins>corresponde</ins> un run, no el momento en que se ejecuta. Un <em>backfill</em> lanzado hoy para el 3 de noviembre tiene como fecha lógica el 3 de noviembre, y las tareas deben trabajar con esa fecha (<code>{{ ds }}</code>) y no con la fecha actual. Así, repetir un día pasado produce exactamente lo que habría producido en su momento.</p>
+<p>Conviene mencionar que Airflow 2 y Airflow 3 la interpretan de forma distinta: en Airflow 2 era el inicio del intervalo de datos y el run se ejecutaba al final; en Airflow 3, con <code>CronTriggerTimetable</code>, coincide con el instante programado.</p>
+</details>
+<details class="question">
+<summary>¿Qué significa que una tarea sea idempotente y por qué importa tanto?</summary>
+<p>Que ejecutarla una vez o varias deja el mismo resultado. En un orquestador las tareas <ins>se repiten</ins>: por reintentos, por un <em>Clear</em> desde la interfaz o por un <em>backfill</em>. Si una tarea añade filas sin comprobar si ya estaban, cada repetición duplica datos. Las formas habituales de conseguirlo son sobrescribir en lugar de añadir (el <code>replace</code> de <abbr title="data loading tool, herramienta de carga de datos">dlt</abbr>, el <code>COPY</code> de la publicación) o borrar la partición de esa fecha antes de escribirla.</p>
+</details>
+<details class="question">
+<summary>¿Qué diferencia hay entre <em>catchup</em> y <em>backfill</em>?</summary>
+<p>Los dos crean runs para fechas pasadas, pero por motivos distintos. <code>catchup=True</code> hace que el <em>scheduler</em> cree <ins>automáticamente</ins> todos los runs que faltan desde la <code>start_date</code> en cuanto se activa el <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>. El <em>backfill</em> es una acción <ins>explícita</ins>: alguien pide reprocesar un rango de fechas concreto, por ejemplo porque se ha corregido un error. Lo habitual es desactivar el <em>catchup</em>, como en nuestros <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>, y recurrir al <em>backfill</em> cuando hace falta.</p>
+</details>
+<details class="question">
+<summary>¿Qué componentes tiene Airflow y qué hace cada uno?</summary>
+<p>El <em>dag-processor</em> lee los ficheros de los <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> y guarda su estructura en la base de datos de metadatos. El <em>scheduler</em> decide qué tareas toca ejecutar y se las pasa al <em>executor</em>, que las reparte entre los <em>workers</em>, donde se ejecutan de verdad. El <em>api-server</em> sirve la interfaz web y la <abbr title="Application Programming Interface">API</abbr>, y es también por donde las tareas informan de su estado. La base de datos de metadatos es la memoria de todo el sistema: runs, estados, <em>pools</em> y configuración. Si se cae, Airflow se detiene, pero no se pierde lo que ya se ha ejecutado.</p>
+</details>
+<details class="question">
+<summary>¿Cómo se pasan datos las tareas entre sí?</summary>
+<p>Para valores pequeños, como un identificador, un recuento o una ruta, con XCom, que los guarda en la base de datos de metadatos. Para datos de verdad, <ins>nunca por XCom</ins>: cada tarea escribe en un almacenamiento compartido y la siguiente lee de allí. En nuestro <em>pipeline</em>, <abbr title="data loading tool, herramienta de carga de datos">dlt</abbr> escribe en <code>retail_el.duckdb</code> y <abbr title="data build tool, herramienta de construcción de datos">dbt</abbr> lee de ese fichero; las tareas no se pasan ni una fila. Además, cada tarea puede ejecutarse en un <em>worker</em> distinto, así que tampoco pueden compartir variables ni ficheros locales.</p>
+</details>
+<details class="question">
+<summary>¿Para qué sirve un <em>pool</em>?</summary>
+<p>Para limitar cuántas tareas pueden usar a la vez un recurso. Cada <em>pool</em> tiene un número de <em>slots</em> y cada tarea que lo usa ocupa uno; si no quedan libres, la tarea espera en <code>scheduled</code>. Nosotros lo usamos con un solo <em>slot</em> porque DuckDB admite un único escritor, pero el caso típico es proteger una base de datos o una <abbr title="Application Programming Interface">API</abbr> externa de recibir más peticiones de las que aguanta.</p>
+</details>
+<details class="question">
+<summary>¿Qué ocurre cuando una tarea falla?</summary>
+<p>Si tiene reintentos, Airflow la vuelve a lanzar tras la espera configurada, y mientras tanto queda en <code>up_for_retry</code>. Cuando agota los intentos, pasa a <code>failed</code>, y las tareas que dependen de ella quedan en <code>upstream_failed</code> sin ejecutarse, por la regla de disparo por defecto, <code>all_success</code>. Los reintentos sirven para fallos <ins>transitorios</ins>, como un bloqueo o una red caída; para una prueba de calidad no tienen sentido, porque con los mismos datos volverá a fallar. Para enterarse del fallo sin mirar la interfaz se usan los <em>callbacks</em>, como <code>on_failure_callback</code>.</p>
+</details>
+<details class="question">
+<summary>¿Qué es un <em>quality gate</em>?</summary>
+<p>Un punto de control dentro del <em>pipeline</em>: comprobaciones automáticas que los datos tienen que superar para seguir avanzando. Tiene tres piezas: las <ins>comprobaciones</ins>, un <ins>criterio</ins> que decide qué fallo es grave y un <ins>efecto</ins>, que lo que no pasa no se publica. Para que el efecto sea real, hay que separar dónde se construyen los datos de dónde se publican: es el patrón <em>write-audit-publish</em>. Si las pruebas se ejecutan sobre los datos que ya está leyendo el cuadro de mandos, el <em>gate</em> llega tarde.</p>
+</details>
+<details class="question">
+<summary>¿Cuándo una prueba debe detener el <em>pipeline</em> y cuándo solo avisar?</summary>
+<p>Es una decisión de negocio, no técnica. La pregunta es: <ins>si la prueba falla, ¿alguna cifra publicada sería falsa?</ins> Si es así, <code>error</code>, porque es mejor que el cuadro de mandos muestre los datos de ayer, que son correctos, que los de hoy equivocados. Si no, <code>warn</code>: alguien debe revisarlo, pero no merece dejar a todos sin datos. Y la severidad se revisa cuando cambia lo que se publica, porque una prueba que hoy no protege ninguna cifra puede protegerla mañana.</p>
+</details>
+<details class="question">
+<summary>¿Programar por horario o por datos?</summary>
+<p>Un horario sirve cuando el trabajo depende del reloj: una carga diaria a las seis. Pero si un <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> depende de que otro haya publicado datos, programarlo «una hora después» es una apuesta: si el primero se retrasa o falla, el segundo trabaja con datos viejos. Con <em>Assets</em>, el consumidor se ejecuta <ins>cuando el productor publica</ins>, y solo entonces. Si el <em>quality gate</em> detiene al productor, no hay publicación y el consumidor no se ejecuta.</p>
+</details>
+<details class="question">
+<summary>¿Qué cambió en Airflow 3 respecto a Airflow 2?</summary>
+<p>Lo más visible es la arquitectura: el <em>webserver</em> se convierte en <em>api-server</em>, el procesamiento de los <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> pasa a un componente propio, el <em>dag-processor</em>, y las tareas ya no acceden directamente a la base de datos de metadatos, sino a través de la <em>Execution <abbr title="Application Programming Interface">API</abbr></em>. Para quien escribe <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr>, cambian las importaciones (todo sale de <code>airflow.sdk</code>), los <em>Datasets</em> pasan a llamarse <em>Assets</em>, los <abbr title="Directed Acyclic Graph, grafo dirigido acíclico">DAG</abbr> tienen versiones y la fecha lógica deja de ser el inicio del intervalo. En una entrevista basta con mencionar dos o tres de estos cambios y saber que los tutoriales anteriores a 2025 suelen ser de Airflow 2.</p>
+</details>
+<details class="question">
+<summary>¿Cuándo no usarías Airflow?</summary>
+<p>Cuando el problema no es de flujos por lotes. Para procesar datos en tiempo real, evento a evento, hacen falta herramientas de <em>streaming</em> como <em>Kafka</em> o <em>Spark Structured Streaming</em>. Tampoco compensa para un único <em>script</em> que se ejecuta una vez al día sin dependencias: un <code>cron</code> es más simple. Airflow empieza a merecer la pena cuando hay <ins>varias tareas con dependencias</ins>, reintentos, reprocesos de fechas pasadas y alguien que tiene que saber qué ha fallado y cuándo.</p>
+</details>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.manning.com/books/data-pipelines-with-apache-airflow-second-edition"><em>Data Pipelines with Apache Airflow, Second Edition</em></a> de <em>Julian de Ruiter</em>, <em>Ismael Cabral</em>, <em>Kris Geusebroek</em>, <em>Daniel van der Ende</em> y <em>Bas Harenslak</em>.</li>
