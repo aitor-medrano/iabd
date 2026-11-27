@@ -4061,24 +4061,11 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#el-problema-de-una-carpeta-de-ficheros" class="md-nav__link">
+  <a href="#formato-de-tabla" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          El problema de una carpeta de ficheros
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#que-es-un-formato-de-tabla" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Qué es un formato de tabla
+          Formato de tabla
         </span>
       
     </span>
@@ -4099,12 +4086,7 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
+          <li class="md-nav__item">
   <a href="#anatomia-de-una-tabla-iceberg" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4116,53 +4098,13 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#las-garantias-y-de-donde-salen" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Las garantías y de dónde salen
-        </span>
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Las garantías y de dónde salen">
-      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#atomicidad-y-concurrencia" class="md-nav__link">
+  <a href="#caracteristicas-de-iceberg" class="md-nav__link">
     <span class="md-ellipsis">
       
         <span class="md-typeset">
-          Atomicidad y concurrencia
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#snapshots-y-time-travel" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          <em>Snapshots</em> y <em>time travel</em>
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#evolucion-de-esquema" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Evolución de esquema
+          Características de Iceberg
         </span>
       
     </span>
@@ -4196,12 +4138,7 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
+          <li class="md-nav__item">
   <a href="#iceberg-frente-a-delta-lake-y-hudi" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4211,6 +4148,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4227,19 +4169,6 @@
   
     <nav class="md-nav" aria-label="El catálogo">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#que-hace-un-catalogo" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <span class="md-typeset">
-          Qué hace un catálogo
-        </span>
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#la-especificacion-rest" class="md-nav__link">
@@ -4694,16 +4623,10 @@
 </ul>
 </div>
 <h1 id="lakehouse-con-iceberg">Lakehouse con Iceberg<a class="headerlink" href="#lakehouse-con-iceberg" title="Permanent link">&para;</a></h1>
-<figure style="float: right;">
-    <img src="images/19iceberg-logo.png" width="250" alt="Logo de Apache Iceberg">
-    <figcaption>Logo de Apache Iceberg</figcaption>
-</figure>
-
 <p>En el bloque anterior cerramos el ciclo ELT de <code>retail_db</code>: <em>dlt</em> copiaba las tablas de <em>MySQL</em> a <em>DuckDB</em>, <em>dbt</em> construía la estrella y <em>Airflow</em> lo orquestaba todo. La última tarea del DAG <code>retail_elt</code>, <code>publicar</code>, dejaba los <em>marts</em> como ficheros <em>Parquet</em> en <code>s3://processed/marts/</code>, listos para que el informe los leyera.</p>
 <p>Ese último paso funciona, pero tiene trampa. Un lago de ficheros <em>Parquet</em> sueltos no sabe qué ficheros forman una tabla, no guarda historia y no protege a quien lee de quien escribe. En esta sesión, la primera del bloque, vamos a convertir ese lago en un <em>lakehouse</em>: tablas con transacciones, historia y evolución, sobre el mismo almacenamiento de objetos y sin cambiar de formato de fichero. Lo haremos con <a href="https://iceberg.apache.org">Apache Iceberg</a>, el formato de tabla abierto de referencia, y con <a href="https://polaris.apache.org">Apache Polaris</a> como catálogo.</p>
 <p>Y lo haremos sin <em>Spark</em>. Usaremos herramientas que ya conocemos, <em>DuckDB</em> y <em>Python</em>, para dejar claro que el formato no depende del motor. En la sesión siguiente, <em>Spark</em> llegará como un motor más que lee y escribe exactamente las mismas tablas.</p>
 <h2 id="del-data-swamp-a-los-formatos-de-tabla">Del <em>data swamp</em> a los formatos de tabla<a class="headerlink" href="#del-data-swamp-a-los-formatos-de-tabla" title="Permanent link">&para;</a></h2>
-<h3 id="el-problema-de-una-carpeta-de-ficheros">El problema de una carpeta de ficheros<a class="headerlink" href="#el-problema-de-una-carpeta-de-ficheros" title="Permanent link">&para;</a></h3>
 <p>Durante la era <em>Hadoop</em>, una tabla era una carpeta. <em>Hive</em> guardaba en su <em>metastore</em> el esquema y la lista de particiones, y cada partición era una subcarpeta (<code>year=2026/month=11/</code>). Para saber qué ficheros formaban la tabla, el motor listaba el almacenamiento.</p>
 <p>Con unos pocos ficheros, esto funciona. Cuando el lago crece y varios procesos escriben a la vez, aparecen los problemas que convirtieron muchos <em>data lakes</em> en <em>data swamps</em>: había muchos datos, pero era difícil consultarlos, gobernarlos y fiarse de ellos. Volvamos a nuestra tarea <code>publicar</code> y hagámonos cinco preguntas:</p>
 <table>
@@ -4743,14 +4666,20 @@
 </tbody>
 </table>
 <p>A esto se suma el rendimiento. En un almacenamiento de objetos como <em>MinIO</em> o <em>S3</em>, listar carpetas es lento y cuesta dinero, y <em>Hive</em> solo podía descartar ficheros tarde, durante la ejecución de la consulta.</p>
-<h3 id="que-es-un-formato-de-tabla">Qué es un formato de tabla<a class="headerlink" href="#que-es-un-formato-de-tabla" title="Permanent link">&para;</a></h3>
+<h3 id="formato-de-tabla">Formato de tabla<a class="headerlink" href="#formato-de-tabla" title="Permanent link">&para;</a></h3>
+<figure style="float: right;">
+    <img src="images/19iceberg-logo.png" width="250" alt="Logo de Apache Iceberg">
+    <figcaption>Logo de Apache Iceberg</figcaption>
+</figure>
+
 <p>Un formato de tabla abierto añade una capa de metadatos sobre los ficheros de datos. Esos metadatos enumeran exactamente qué ficheros forman cada versión de la tabla, con su esquema, su particionado y estadísticas de cada fichero. Los datos siguen en <em>Parquet</em>: lo que cambia es cómo se describe la tabla.</p>
-<p>Alex Merced lo explica con una cocina llena de cajones. Para encontrar una cuchara podemos abrirlos todos, o mirar el tablón de la pared que dice dónde está cada cosa. Los metadatos son ese tablón. Gracias a ellos, el motor decide qué ficheros leer al planificar la consulta, con las estadísticas de los metadatos, y no al ejecutarla, listando carpetas y abriendo ficheros.</p>
+<p><em>Alex Merced</em> lo explica con una cocina llena de cajones. Para encontrar una cuchara podemos abrirlos todos, o mirar el tablón de la pared que dice dónde está cada cosa. Los metadatos son ese tablón. Gracias a ellos, el motor decide qué ficheros leer al planificar la consulta, con las estadísticas de los metadatos, y no al ejecutarla, listando carpetas y abriendo ficheros.</p>
+<p>En el mercado existen varias soluciones de formato de tabla abierto, como son <a href="https://iceberg.apache.org">Apache Iceberg</a>, <a href="https://delta.io/">Delta Lake</a> o <a href="https://hudi.apache.org/">Apahe Hudi</a>. Los tres resuelven los mismos problemas, pero con filosofías distintas. En este bloque elegimos <em>Iceberg</em> porque es el que permite que varios motores compartan un mismo catálogo, y eso es justo lo que vamos a hacer. Más adelante compararemos estas tres soluciones y veremos por qué <em>Iceberg</em> es la que mejor encaja con nuestro stack.</p>
 <div class="admonition info">
 <p class="admonition-title">Iceberg no sustituye a Parquet</p>
 <p><em>Parquet</em> es un formato de fichero: define cómo se guardan las filas dentro de un fichero. <em>Iceberg</em> es un formato de tabla: define qué ficheros forman una tabla y cómo evoluciona. Una tabla <em>Iceberg</em> son ficheros <em>Parquet</em> más sus metadatos.</p>
 </div>
-<p><em>Iceberg</em> nació en Netflix para resolver los límites de <em>Hive</em> con tablas enormes y es proyecto principal de la <em>Apache Software Foundation</em>. No pertenece a ningún fabricante, y por eso lo leen y escriben <em>Spark</em>, <em>Flink</em>, <em>Trino</em>, <em>DuckDB</em>, <em>Snowflake</em>, <em>BigQuery</em> o <em>Python</em>.</p>
+<p><em>Iceberg</em> nació en Netflix para resolver los límites de <em>Hive</em> con tablas enormes y es un proyecto principal de la <em>Apache Software Foundation</em>. No pertenece a ningún fabricante, y por eso lo leen y escriben <em>Spark</em>, <em>Flink</em>, <em>Trino</em>, <em>DuckDB</em>, <em>Snowflake</em>, <em>BigQuery</em> o <em>Python</em>.</p>
 <h3 id="las-cinco-capas-del-lakehouse">Las cinco capas del lakehouse<a class="headerlink" href="#las-cinco-capas-del-lakehouse" title="Permanent link">&para;</a></h3>
 <p>Un <em>lakehouse</em> sobre <em>Iceberg</em> es modular: cada capa se puede cambiar sin tocar las demás. Nos servirá de mapa para todo el bloque.</p>
 <table>
@@ -4790,7 +4719,7 @@
 </tbody>
 </table>
 <p>En esta sesión trabajaremos sobre todo en las tres primeras.</p>
-<h2 id="anatomia-de-una-tabla-iceberg">Anatomía de una tabla Iceberg<a class="headerlink" href="#anatomia-de-una-tabla-iceberg" title="Permanent link">&para;</a></h2>
+<h3 id="anatomia-de-una-tabla-iceberg">Anatomía de una tabla Iceberg<a class="headerlink" href="#anatomia-de-una-tabla-iceberg" title="Permanent link">&para;</a></h3>
 <p>Una tabla <em>Iceberg</em> se organiza como un árbol de metadatos que termina en los ficheros de datos:</p>
 <figure style="align: center;">
     <img src="images/19iceberg-anatomia.svg" alt="Anatomía de una tabla Iceberg" width="700px">
@@ -4809,31 +4738,18 @@
 <p class="admonition-title">Nada se modifica, todo se añade</p>
 <p>Ningún fichero de una tabla <em>Iceberg</em> se modifica nunca. Escribir es añadir ficheros nuevos (datos y metadatos) y mover un puntero. Esta idea explica casi todas las garantías que vamos a ver.</p>
 </div>
-<h2 id="las-garantias-y-de-donde-salen">Las garantías y de dónde salen<a class="headerlink" href="#las-garantias-y-de-donde-salen" title="Permanent link">&para;</a></h2>
-<h3 id="atomicidad-y-concurrencia">Atomicidad y concurrencia<a class="headerlink" href="#atomicidad-y-concurrencia" title="Permanent link">&para;</a></h3>
-<p>Cada escritura en <em>Iceberg</em> sigue los mismos pasos:</p>
-<ol>
-<li>El escritor lee el <code>metadata.json</code> actual a través del catálogo.</li>
-<li>Escribe sus ficheros de datos y sus metadatos nuevos. Nadie los ve todavía.</li>
-<li>Pide al catálogo que cambie el puntero al nuevo <code>metadata.json</code>, pero solo si sigue apuntando al que leyó en el paso 1.</li>
-<li>Si otro escritor se adelantó, el catálogo rechaza el cambio y el escritor vuelve a empezar desde el estado nuevo.</li>
-</ol>
+<h3 id="caracteristicas-de-iceberg">Características de Iceberg<a class="headerlink" href="#caracteristicas-de-iceberg" title="Permanent link">&para;</a></h3>
+<p>Las garantías de <em>Iceberg</em> se derivan de su diseño basado en la idea de que nada se modifica, todo se añade. Esto permite garantizar la integridad de los datos y la consistencia en un entorno distribuido.</p>
+<p>La primera característica es la <strong>atomicidad</strong>: cada escritura es un <em>commit</em> que cambia el puntero del catálogo a un nuevo <code>metadata.json</code>. Si hay conflicto, el <em>commit</em> falla y se vuelve a intentar. Esto asegura que los lectores ven siempre un estado consistente de la tabla.</p>
 <figure style="align: center;">
     <img src="images/19iceberg-commit.svg" alt="Commit optimista en Iceberg" width="700px">
     <figcaption>Commit optimista en Iceberg</figcaption>
 </figure>
 
-<p>Es un control de concurrencia optimista: no hay bloqueos, se confía en que no habrá conflicto y se comprueba al final. El cambio de puntero es atómico, así que quien lee ve el estado anterior o el nuevo, nunca una mezcla. Por eso hablamos de transacciones <abbr title="Atomicity, Consistency, Isolation, Durability (atomicidad, consistencia, aislamiento y durabilidad)">ACID</abbr>. Dos procesos que añaden datos a particiones distintas no entran en conflicto; dos que sobrescriben los mismos datos, sí.</p>
-<h3 id="snapshots-y-time-travel"><em>Snapshots</em> y <em>time travel</em><a class="headerlink" href="#snapshots-y-time-travel" title="Permanent link">&para;</a></h3>
-<p>Cada <em>commit</em> crea un <em>snapshot</em>: una versión completa de la tabla. Los <em>snapshots</em> anteriores siguen en <code>metadata.json</code> y sus ficheros siguen en el almacenamiento, así que podemos:</p>
-<ul>
-<li>Leer la tabla tal como estaba en un <em>snapshot</em> o en un instante (<em>time travel</em>).</li>
-<li>Volver a un <em>snapshot</em> anterior (<em>rollback</em>).</li>
-<li>Ponerle nombre a un <em>snapshot</em> con un <em>tag</em> (<code>carga_inicial</code>, <code>cierre_noviembre</code>) o crear una rama (<em>branch</em>) que evoluciona por separado.</li>
-</ul>
-<p>Un <em>snapshot</em> no es una copia de la tabla: los <em>snapshots</em> comparten los ficheros que no han cambiado. Pero tampoco es gratis. Mientras exista un <em>snapshot</em>, sus ficheros no se pueden borrar, y un <em>tag</em> impide que su <em>snapshot</em> caduque.</p>
-<h3 id="evolucion-de-esquema">Evolución de esquema<a class="headerlink" href="#evolucion-de-esquema" title="Permanent link">&para;</a></h3>
-<p><em>Iceberg</em> identifica cada columna por un id interno, no por su nombre ni por su posición. Añadir, renombrar, reordenar o borrar columnas solo cambia los metadatos: no se reescribe ningún fichero. Las filas antiguas devuelven <code>NULL</code> en una columna nueva, y un <em>snapshot</em> anterior conserva el esquema que tenía.</p>
+<p>Respecto a la <strong>concurrencia</strong>, se realiza un control optimista sin bloqueos. Se confía en que no habrá conflicto y se comprueba al final. El cambio de puntero es atómico, así que quien lee ve el estado anterior o el nuevo, nunca una mezcla. Por eso hablamos de transacciones <abbr title="Atomicity, Consistency, Isolation, Durability (atomicidad, consistencia, aislamiento y durabilidad)">ACID</abbr>. Dos procesos que añaden datos a particiones distintas no entran en conflicto; dos que sobrescriben los mismos datos, sí.</p>
+<p>Una de las características más novedosas es la posibilidad de viajar en el tiempo (<strong><em>time travel</em></strong>). Cada <em>commit</em> crea un <em>snapshot</em> (una versión completa de la tabla), y los <em>snapshots</em> anteriores siguen en el almacenamiento, en concreto, en <code>metadata.json</code>. Esto permite leer la tabla tal como estaba en un instante anterior, o volver a un <em>snapshot</em> anterior (<em>rollback</em>). Además, <em>Iceberg</em> permite ponerle nombre a un <em>snapshot</em> con un <em>tag</em> (<code>carga_inicial</code>, <code>cierre_noviembre</code>) o crear una rama (<em>branch</em>) que evoluciona por separado.</p>
+<p>Conviene aclarar que un <em>snapshot</em> no es una copia de la tabla: los <em>snapshots</em> comparten los ficheros que no han cambiado, sabiendo que el uso de <em>snapshots</em> puede provocar un aumento en el uso de almacenamiento, ya que mientras exista un <em>snapshot</em>, sus ficheros no se pueden borrar, y un <em>tag</em> impide que su <em>snapshot</em> caduque.</p>
+<p>Respecto a la <strong>evolución del esquema</strong>, <em>Iceberg</em> identifica cada columna por un identificador interno, no por su nombre ni por su posición. De esta manera, añadir, renombrar, reordenar o borrar columnas solo cambia los metadatos, sin necesidad de  reescribir ningún fichero. Las filas antiguas devuelven <code>NULL</code> en una columna nueva, y un <em>snapshot</em> anterior conserva el esquema que tenía.</p>
 <h3 id="particionado-oculto-y-evolucion-del-particionado">Particionado oculto y evolución del particionado<a class="headerlink" href="#particionado-oculto-y-evolucion-del-particionado" title="Permanent link">&para;</a></h3>
 <p>En <em>Hive</em>, particionar por mes obligaba a crear una columna <code>mes</code>, a rellenarla al escribir y a filtrar por ella al leer: si alguien filtraba por la fecha y no por <code>mes</code>, se leía la tabla entera. En <em>Iceberg</em>, la partición es una transformación de una columna existente, y la consulta filtra por la columna original:</p>
 <table>
@@ -4881,8 +4797,8 @@
 <p>Cada <em>commit</em> añade ficheros y metadatos. Con escrituras frecuentes se acumulan ficheros pequeños, ficheros de borrado y <em>snapshots</em>, y <code>metadata.json</code> crece hasta frenar cada consulta y cada <em>commit</em>. La solución es el mantenimiento: compactar ficheros, reescribir <em>manifests</em> y hacer caducar <em>snapshots</em>. Lo haremos con <em>Spark</em> más adelante en el bloque.</p>
 <p>Un caso que lo ilustra: si un cliente ejerce su derecho al olvido y borramos sus filas, sus datos siguen en <em>MinIO</em> mientras haya <em>snapshots</em> que los referencien. Para eliminarlos de verdad hay que hacer caducar esos <em>snapshots</em>, compactar y limpiar los ficheros huérfanos.</p>
 </div>
-<h2 id="iceberg-frente-a-delta-lake-y-hudi">Iceberg frente a Delta Lake y Hudi<a class="headerlink" href="#iceberg-frente-a-delta-lake-y-hudi" title="Permanent link">&para;</a></h2>
-<p><em>Iceberg</em> no es el único formato de tabla abierto. Los tres principales resuelven el mismo problema:</p>
+<h3 id="iceberg-frente-a-delta-lake-y-hudi">Iceberg frente a Delta Lake y Hudi<a class="headerlink" href="#iceberg-frente-a-delta-lake-y-hudi" title="Permanent link">&para;</a></h3>
+<p>Como hemos dicho antes, <em>Iceberg</em> no es el único formato de tabla abierto. Los tres principales resuelven el mismo problema:</p>
 <table>
 <thead>
 <tr>
@@ -4920,9 +4836,8 @@
 </tbody>
 </table>
 <p>Los tres ofrecen transacciones <abbr title="Atomicity, Consistency, Isolation, Durability (atomicidad, consistencia, aislamiento y durabilidad)">ACID</abbr>, <em>time travel</em> y evolución de esquema, así que la diferencia no está en las funciones básicas sino en el ecosistema y en la flexibilidad a largo plazo. Además, convergen: <em>Delta UniForm</em> genera metadatos <em>Iceberg</em> para tablas <em>Delta</em>, y <em>Apache XTable</em> traduce entre formatos. <em>Apache Paimon</em> es otra alternativa, orientada al <em>streaming</em>.</p>
-<p>Elegimos <em>Iceberg</em> porque es el que permite que <em>PyIceberg</em>, <em>DuckDB</em>, <em>Spark</em> y <em>Trino</em> compartan un mismo catálogo, que es justo lo que haremos en este bloque. Si quieres comparar, en la sesión de <a href="../spark/deltalake.html">Delta Lake</a> tienes el mismo tipo de operaciones con <em>Delta</em>.</p>
+<p>En nuestro caso, hemos elegido <em>Iceberg</em> porque es el que permite que <em>PyIceberg</em>, <em>DuckDB</em>, <em>Spark</em> y <em>Trino</em> compartan un mismo catálogo, que es justo lo que haremos en este bloque. Más adelante, en este mismo bloque,   compararemos su uso con <a href="../spark/deltalake.html">Delta Lake</a>, comprobando que existen el mismo tipo de operaciones con <em>Delta</em>.</p>
 <h2 id="el-catalogo">El catálogo<a class="headerlink" href="#el-catalogo" title="Permanent link">&para;</a></h2>
-<h3 id="que-hace-un-catalogo">Qué hace un catálogo<a class="headerlink" href="#que-hace-un-catalogo" title="Permanent link">&para;</a></h3>
 <p>Sin catálogo, una tabla <em>Iceberg</em> sería una carpeta de metadatos sin un punto de entrada claro. El catálogo tiene cuatro responsabilidades:</p>
 <ul>
 <li>Registrar las tablas y permitir descubrirlas por su nombre (<code>bronze.orders</code>).</li>
@@ -4981,58 +4896,173 @@
 </ul>
 <h3 id="arrancando-el-entorno">Arrancando el entorno<a class="headerlink" href="#arrancando-el-entorno" title="Permanent link">&para;</a></h3>
 <p>Para esta sesión basta con el nodo <code>lab</code>, <code>mysql-retail</code>, <em>MinIO</em> y <em>Polaris</em>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="nv">COMPOSE_PROFILES</span><span class="o">=</span>lab,polaris<span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>lab<span class="w"> </span>--profile<span class="w"> </span>polaris<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
-<p><em>Polaris</em> tarda alrededor de un minuto en estar disponible. Podemos comprobar su salud en <a href="http://localhost:8182/q/health">http://localhost:8182/q/health</a> y, cuando responda, lanzar la prueba de humo del lakehouse desde el contenedor <code>lab</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>lab<span class="w"> </span>python<span class="w"> </span>/workspace/smoke/lakehouse.py
+<p><em>Polaris</em> tarda alrededor de un minuto en estar disponible. Podemos comprobar su salud en <a href="http://localhost:8182/q/health">http://localhost:8182/q/health</a>. Para comprobar su funcionamiento, en el <em>stack</em> tenemos una prueba de humo que crea una tabla, la lee, le añade una fila y comprueba que el cambio es visible desde <em>PyIceberg</em> y desde <em>DuckDB</em>. La prueba no es exhaustiva, pero nos asegura que el catálogo funciona correctamente.</p>
+<div class="highlight"><span class="filename">workspace/smoke/lakehouse.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyiceberg.catalog.rest</span><span class="w"> </span><span class="kn">import</span> <span class="n">RestCatalog</span>
+<span class="linenos" data-linenos=" 7 "></span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">URI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POLARIS_URI&quot;</span><span class="p">]</span>                  <span class="c1"># http://polaris:8181/api/catalog</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">WAREHOUSE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POLARIS_WAREHOUSE&quot;</span><span class="p">]</span>      <span class="c1"># iabd</span>
+<span class="linenos" data-linenos="10 "></span><span class="n">CLIENT_ID</span><span class="p">,</span> <span class="n">CLIENT_SECRET</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POLARIS_CREDENTIAL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos" data-linenos="11 "></span><span class="n">S3_ENDPOINT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_ENDPOINT_URL&quot;</span><span class="p">]</span>     <span class="c1"># http://minio:9000</span>
+<span class="linenos" data-linenos="12 "></span><span class="n">S3_REGION</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AWS_DEFAULT_REGION&quot;</span><span class="p">,</span> <span class="s2">&quot;us-east-1&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="13 "></span><span class="n">S3_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_ACCESS_KEY_ID&quot;</span><span class="p">]</span>
+<span class="linenos" data-linenos="14 "></span><span class="n">S3_SECRET</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_SECRET_ACCESS_KEY&quot;</span><span class="p">]</span>
+<span class="linenos" data-linenos="15 "></span><span class="n">S3</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">S3_ENDPOINT</span><span class="p">)</span>                       <span class="c1"># DuckDB quiere host:puerto, sin esquema</span>
+<span class="linenos" data-linenos="16 "></span><span class="n">TABLA</span> <span class="o">=</span> <span class="s2">&quot;smoke.clientes&quot;</span>
+<span class="linenos" data-linenos="17 "></span>
+<span class="linenos" data-linenos="18 "></span><span class="c1"># --- 1. PyIceberg ----------------------------------------------------------- </span>
+<span class="linenos" data-linenos="19 "></span><span class="n">cat</span> <span class="o">=</span> <span class="n">RestCatalog</span><span class="p">(</span><span class="s2">&quot;polaris&quot;</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span>
+<span class="linenos" data-linenos="20 "></span>    <span class="s2">&quot;uri&quot;</span><span class="p">:</span> <span class="n">URI</span><span class="p">,</span>
+<span class="linenos" data-linenos="21 "></span>    <span class="s2">&quot;warehouse&quot;</span><span class="p">:</span> <span class="n">WAREHOUSE</span><span class="p">,</span>
+<span class="linenos" data-linenos="22 "></span>    <span class="s2">&quot;credential&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CLIENT_ID</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="23 "></span>    <span class="s2">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;PRINCIPAL_ROLE:ALL&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="24 "></span>    <span class="c1"># MinIO no da credenciales temporales (stsUnavailable): cada cliente usa las suyas</span>
+<span class="linenos" data-linenos="25 "></span>    <span class="s2">&quot;s3.endpoint&quot;</span><span class="p">:</span> <span class="n">S3_ENDPOINT</span><span class="p">,</span>
+<span class="linenos" data-linenos="26 "></span>    <span class="s2">&quot;s3.access-key-id&quot;</span><span class="p">:</span> <span class="n">S3_KEY</span><span class="p">,</span>
+<span class="linenos" data-linenos="27 "></span>    <span class="s2">&quot;s3.secret-access-key&quot;</span><span class="p">:</span> <span class="n">S3_SECRET</span><span class="p">,</span>
+<span class="linenos" data-linenos="28 "></span>    <span class="s2">&quot;s3.path-style-access&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="29 "></span>    <span class="s2">&quot;s3.region&quot;</span><span class="p">:</span> <span class="n">S3_REGION</span><span class="p">,</span>
+<span class="linenos" data-linenos="30 "></span>    <span class="c1"># PyIceberg pide &quot;vended-credentials&quot; por defecto y Polaris lo rechaza si el</span>
+<span class="linenos" data-linenos="31 "></span>    <span class="c1"># catálogo no puede emitirlas (MinIO sin STS). Con &quot;none&quot; el cliente usa</span>
+<span class="linenos" data-linenos="32 "></span>    <span class="c1"># las claves s3.* de arriba.</span>
+<span class="linenos" data-linenos="33 "></span>    <span class="s2">&quot;header.X-Iceberg-Access-Delegation&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="34 "></span><span class="p">})</span>
+<span class="linenos" data-linenos="35 "></span><span class="n">cat</span><span class="o">.</span><span class="n">create_namespace_if_not_exists</span><span class="p">(</span><span class="s2">&quot;smoke&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="36 "></span><span class="k">if</span> <span class="n">cat</span><span class="o">.</span><span class="n">table_exists</span><span class="p">(</span><span class="n">TABLA</span><span class="p">):</span>
+<span class="linenos" data-linenos="37 "></span>    <span class="n">cat</span><span class="o">.</span><span class="n">purge_table</span><span class="p">(</span><span class="n">TABLA</span><span class="p">)</span>
+<span class="linenos" data-linenos="38 "></span><span class="n">datos</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">({</span>
+<span class="linenos" data-linenos="39 "></span>    <span class="s2">&quot;id_cliente&quot;</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
+<span class="linenos" data-linenos="40 "></span>    <span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;Ana&quot;</span><span class="p">,</span> <span class="s2">&quot;Luis&quot;</span><span class="p">,</span> <span class="s2">&quot;Marta&quot;</span><span class="p">],</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+<span class="linenos" data-linenos="41 "></span>    <span class="s2">&quot;ciudad&quot;</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;Elche&quot;</span><span class="p">,</span> <span class="s2">&quot;Alicante&quot;</span><span class="p">,</span> <span class="s2">&quot;Valencia&quot;</span><span class="p">],</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+<span class="linenos" data-linenos="42 "></span><span class="p">})</span>
+<span class="linenos" data-linenos="43 "></span><span class="n">tabla</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span><span class="n">TABLA</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">datos</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
+<span class="linenos" data-linenos="44 "></span><span class="n">tabla</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datos</span><span class="p">)</span>
+<span class="linenos" data-linenos="45 "></span><span class="n">n1</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">scan</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrow</span><span class="p">()</span><span class="o">.</span><span class="n">num_rows</span>
+<span class="linenos" data-linenos="46 "></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;1) PyIceberg: </span><span class="si">{</span><span class="n">n1</span><span class="si">}</span><span class="s2"> filas en </span><span class="si">{</span><span class="n">TABLA</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">tabla</span><span class="o">.</span><span class="n">metadata_location</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="47 "></span><span class="k">assert</span> <span class="n">n1</span> <span class="o">==</span> <span class="mi">3</span>
+<span class="linenos" data-linenos="48 "></span>
+<span class="linenos" data-linenos="49 "></span><span class="c1"># --- 2. DuckDB -------------------------------------------------------------- </span>
+<span class="linenos" data-linenos="50 "></span><span class="n">con</span> <span class="o">=</span> <span class="n">duckdb</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="linenos" data-linenos="51 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;LOAD httpfs; LOAD iceberg;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="52 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;CREATE SECRET minio (TYPE s3, KEY_ID &#39;</span><span class="si">{</span><span class="n">S3_KEY</span><span class="si">}</span><span class="s2">&#39;, SECRET &#39;</span><span class="si">{</span><span class="n">S3_SECRET</span><span class="si">}</span><span class="s2">&#39;,</span>
+<span class="linenos" data-linenos="53 "></span><span class="s2">                REGION &#39;</span><span class="si">{</span><span class="n">S3_REGION</span><span class="si">}</span><span class="s2">&#39;, ENDPOINT &#39;</span><span class="si">{</span><span class="n">S3</span><span class="o">.</span><span class="n">netloc</span><span class="si">}</span><span class="s2">&#39;, URL_STYLE &#39;path&#39;,</span>
+<span class="linenos" data-linenos="54 "></span><span class="s2">                USE_SSL </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">S3</span><span class="o">.</span><span class="n">scheme</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;https&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">)&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="55 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;CREATE SECRET polaris (TYPE iceberg, CLIENT_ID &#39;</span><span class="si">{</span><span class="n">CLIENT_ID</span><span class="si">}</span><span class="s2">&#39;,</span>
+<span class="linenos" data-linenos="56 "></span><span class="s2">                CLIENT_SECRET &#39;</span><span class="si">{</span><span class="n">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&#39;, OAUTH2_SCOPE &#39;PRINCIPAL_ROLE:ALL&#39;,</span>
+<span class="linenos" data-linenos="57 "></span><span class="s2">                OAUTH2_SERVER_URI &#39;</span><span class="si">{</span><span class="n">URI</span><span class="si">}</span><span class="s2">/v1/oauth/tokens&#39;)&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="58 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;ATTACH &#39;</span><span class="si">{</span><span class="n">WAREHOUSE</span><span class="si">}</span><span class="s2">&#39; AS lago (TYPE iceberg, SECRET polaris,</span>
+<span class="linenos" data-linenos="59 "></span><span class="s2">                ENDPOINT &#39;</span><span class="si">{</span><span class="n">URI</span><span class="si">}</span><span class="s2">&#39;, ACCESS_DELEGATION_MODE &#39;none&#39;)&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="60 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2) DuckDB lee la tabla:&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="61 "></span><span class="nb">print</span><span class="p">(</span><span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT * FROM lago.</span><span class="si">{</span><span class="n">TABLA</span><span class="si">}</span><span class="s2"> ORDER BY id_cliente&quot;</span><span class="p">))</span>
+<span class="linenos" data-linenos="62 "></span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;INSERT INTO lago.</span><span class="si">{</span><span class="n">TABLA</span><span class="si">}</span><span class="s2"> VALUES (4, &#39;Pablo&#39;, &#39;Murcia&#39;)&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="63 "></span>
+<span class="linenos" data-linenos="64 "></span><span class="c1"># --- 3. PyIceberg ve el cambio ---------------------------------------------- </span>
+<span class="linenos" data-linenos="65 "></span><span class="n">final</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="n">TABLA</span><span class="p">)</span><span class="o">.</span><span class="n">scan</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrow</span><span class="p">()</span><span class="o">.</span><span class="n">sort_by</span><span class="p">(</span><span class="s2">&quot;id_cliente&quot;</span><span class="p">)</span>       <span class="c1"># (3)!</span>
+<span class="linenos" data-linenos="66 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3) PyIceberg tras el INSERT de DuckDB:&quot;</span><span class="p">,</span> <span class="n">final</span><span class="o">.</span><span class="n">to_pylist</span><span class="p">())</span>
+<span class="linenos" data-linenos="67 "></span><span class="k">assert</span> <span class="n">final</span><span class="o">.</span><span class="n">num_rows</span> <span class="o">==</span> <span class="mi">4</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Se esperaban 4 filas y hay </span><span class="si">{</span><span class="n">final</span><span class="o">.</span><span class="n">num_rows</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="linenos" data-linenos="68 "></span>
+<span class="linenos" data-linenos="69 "></span><span class="c1"># --- 4. MERGE desde DuckDB (informativo) ------------------------------------ </span>
+<span class="linenos" data-linenos="70 "></span><span class="k">try</span><span class="p">:</span>                                                                        <span class="c1"># (4)!</span>
+<span class="linenos" data-linenos="71 "></span>    <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="72 "></span><span class="s2">        MERGE INTO lago.</span><span class="si">{</span><span class="n">TABLA</span><span class="si">}</span><span class="s2"> AS t</span>
+<span class="linenos" data-linenos="73 "></span><span class="s2">        USING (SELECT 2::BIGINT AS id_cliente, &#39;Luis&#39; AS nombre, &#39;Elche&#39; AS ciudad) AS s</span>
+<span class="linenos" data-linenos="74 "></span><span class="s2">        ON t.id_cliente = s.id_cliente</span>
+<span class="linenos" data-linenos="75 "></span><span class="s2">        WHEN MATCHED THEN UPDATE SET ciudad = s.ciudad</span>
+<span class="linenos" data-linenos="76 "></span><span class="s2">        WHEN NOT MATCHED THEN INSERT VALUES (s.id_cliente, s.nombre, s.ciudad)</span>
+<span class="linenos" data-linenos="77 "></span><span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="78 "></span>    <span class="n">ciudad</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT ciudad FROM lago.</span><span class="si">{</span><span class="n">TABLA</span><span class="si">}</span><span class="s2"> WHERE id_cliente = 2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos" data-linenos="79 "></span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;4) MERGE desde DuckDB: correcto (ciudad de Luis = </span><span class="si">{</span><span class="n">ciudad</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="80 "></span><span class="k">except</span> <span class="n">duckdb</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="linenos" data-linenos="81 "></span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;4) AVISO: DuckDB no ha podido hacer MERGE sobre Iceberg: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="82 "></span>
+<span class="linenos" data-linenos="83 "></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">OK: PyIceberg y DuckDB comparten el catálogo de Polaris.&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="84 "></span><span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>⚠️ Salida pendiente [humo]
+<ol>
+<li><em>PyIceberg</em> crea <code>smoke.clientes</code> (borrándola antes si existía) y añade 3 filas.</li>
+<li><em>DuckDB</em> se conecta al mismo catálogo, lee la tabla e inserta una fila.</li>
+<li><em>PyIceberg</em> vuelve a cargar la tabla y ve la fila de <em>DuckDB</em> (4 filas).</li>
+<li><em>DuckDB</em> intenta un <code>MERGE INTO</code> sobre la tabla.</li>
+</ol>
+<p>A lo largo de la sesión volveremos a esta prueba para entender qué hace el código, así que ahora no hace falta que lo entiendas todo. Si lo lanzamos, vemos como crea la tabla <code>smoke.clientes</code> con <em>PyIceberg</em>, la lee y le añade una fila con <em>DuckDB</em>, y comprueba que <em>PyIceberg</em> ve el cambio. </p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>lab<span class="w"> </span>python<span class="w"> </span>/workspace/smoke/lakehouse.py
+<span class="linenos" data-linenos=" 2 "></span><span class="c1"># 1) PyIceberg: 3 filas en smoke.clientes (s3://warehouse/iceberg/smoke/clientes/metadata/00001-fa414584-7298-4686-bb03-4727ff310545.metadata.json)</span>
+<span class="linenos" data-linenos=" 3 "></span><span class="c1"># 2) DuckDB lee la tabla:</span>
+<span class="linenos" data-linenos=" 4 "></span><span class="c1"># ┌────────────┬─────────┬──────────┐</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="c1"># │ id_cliente │ nombre  │  ciudad  │</span>
+<span class="linenos" data-linenos=" 6 "></span><span class="c1"># │   int64    │ varchar │ varchar  │</span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># ├────────────┼─────────┼──────────┤</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="c1"># │          1 │ Ana     │ Elche    │</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="c1"># │          2 │ Luis    │ Alicante │</span>
+<span class="linenos" data-linenos="10 "></span><span class="c1"># │          3 │ Marta   │ Valencia │</span>
+<span class="linenos" data-linenos="11 "></span><span class="c1"># └────────────┴─────────┴──────────┘</span>
+<span class="linenos" data-linenos="12 "></span><span class="c1"># 3) PyIceberg tras el INSERT de DuckDB: [{&#39;id_cliente&#39;: 1, &#39;nombre&#39;: &#39;Ana&#39;, &#39;ciudad&#39;: &#39;Elche&#39;}, {&#39;id_cliente&#39;: 2, &#39;nombre&#39;: &#39;Luis&#39;, &#39;ciudad&#39;: &#39;Alicante&#39;}, {&#39;id_cliente&#39;: 3, &#39;nombre&#39;: &#39;Marta&#39;, &#39;ciudad&#39;: &#39;Valencia&#39;}, {&#39;id_cliente&#39;: 4, &#39;nombre&#39;: &#39;Pablo&#39;, &#39;ciudad&#39;: &#39;Murcia&#39;}]</span>
+<span class="linenos" data-linenos="13 "></span><span class="c1"># 4) MERGE desde DuckDB: correcto (ciudad de Luis = Elche)</span>
+<span class="linenos" data-linenos="14 "></span><span class="c1"># OK: PyIceberg y DuckDB comparten el catálogo de Polaris.</span>
 </code></pre></div>
-<p>La prueba crea la tabla <code>smoke.clientes</code> con <em>PyIceberg</em>, la lee y le añade una fila con <em>DuckDB</em>, y comprueba que <em>PyIceberg</em> ve el cambio. Si abrimos la consola de <em>MinIO</em> (<a href="http://localhost:9001">http://localhost:9001</a>), en <code>warehouse/iceberg/smoke/clientes/</code> veremos dos carpetas: <code>metadata/</code>, con los <code>*.metadata.json</code> y los <code>*.avro</code>, y <code>data/</code>, con los <em>Parquet</em>.</p>
+<p>Si abrimos la consola de <em>MinIO</em> (<a href="http://localhost:9001">http://localhost:9001</a>), en <code>warehouse/iceberg/smoke/clientes/</code> veremos dos carpetas: <code>metadata/</code>, con los <code>*.metadata.json</code> y los <code>*.avro</code>, y <code>data/</code>, con los <em>Parquet</em>.</p>
+<figure style="align: center;">
+    <img src="images/19iceberg-minio.png" alt="Metadatos de Iceberg en Minio">
+    <figcaption>Metadatos de Iceberg en Minio</figcaption>
+</figure>
+
+<p>Como <em>Polaris</em> es un catálogo <abbr title="Representational State Transfer">REST</abbr>, podemos usar cualquier cliente que hable HTTP. Por ejemplo, con <code>curl</code>, primero obtenemos el token de acceso con <em>client credentials</em> y luego hacemos peticiones a la API:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>root:iabdpolaris<span class="w"> </span>-d<span class="w"> </span><span class="nv">grant_type</span><span class="o">=</span>client_credentials<span class="w"> </span>-d<span class="w"> </span><span class="nv">scope</span><span class="o">=</span>PRINCIPAL_ROLE:ALL<span class="w"> </span>http://localhost:8181/api/catalog/v1/oauth/tokens
+<span class="linenos" data-linenos="2 "></span><span class="c1"># {&quot;access_token&quot;:&quot;eyJ...Z9Q&quot;,&quot;token_type&quot;:&quot;bearer&quot;,&quot;issued_token_type&quot;:&quot;urn:ietf:params:oauth:token-type:access_token&quot;,&quot;expires_in&quot;:3600}</span>
+<span class="linenos" data-linenos="3 "></span>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer eyJ...Z9Q&quot;</span><span class="w"> </span>http://localhost:8181/api/management/v1/catalogs
+<span class="linenos" data-linenos="4 "></span><span class="c1"># {&quot;catalogs&quot;:[{&quot;type&quot;:&quot;INTERNAL&quot;,&quot;name&quot;:&quot;iabd&quot;,&quot;properties&quot;:{&quot;default-base-location&quot;:&quot;s3://warehouse/iceberg&quot;},&quot;createTimestamp&quot;:1795696902118,&quot;lastUpdateTimestamp&quot;:1795696902118,&quot;entityVersion&quot;:1,&quot;storageConfigInfo&quot;:{&quot;allowedKmsKeys&quot;:[],&quot;encryptionKeys&quot;:[],&quot;decryptionKeys&quot;:[],&quot;region&quot;:&quot;us-east-1&quot;,&quot;endpoint&quot;:&quot;http://minio:9000&quot;,&quot;stsUnavailable&quot;:true,&quot;endpointInternal&quot;:&quot;http://minio:9000&quot;,&quot;pathStyleAccess&quot;:true,&quot;storageType&quot;:&quot;S3&quot;,&quot;allowedLocations&quot;:[&quot;s3://warehouse/iceberg&quot;]}}]}</span>
+</code></pre></div>
+<p>Puedes consultar todas las llamadas <abbr title="Representational State Transfer">REST</abbr> para gestionar el catálogo de <em>Polaris</em> en <a href="https://polaris.apache.org/releases/latest/polaris-api-specs/polaris-catalog-api/">https://polaris.apache.org/releases/latest/polaris-api-specs/polaris-catalog-api/</a>.</p>
 <h3 id="conectando-con-el-catalogo">Conectando con el catálogo<a class="headerlink" href="#conectando-con-el-catalogo" title="Permanent link">&para;</a></h3>
-<p>Para no repetir la configuración en cada cuaderno, la hemos reunido en el módulo <code>lago.py</code>, que vive junto a los cuadernos en <code>workspace/iceberg/</code>:</p>
-<div class="highlight"><span class="filename">workspace/iceberg/lago.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="sd">&quot;&quot;&quot;Conexiones al lakehouse del curso desde el contenedor lab.</span>
-<span class="linenos" data-linenos=" 2 "></span>
-<span class="linenos" data-linenos=" 3 "></span><span class="sd">    from lago import catalogo, duckdb_lago, duckdb_retail</span>
-<span class="linenos" data-linenos=" 4 "></span>
-<span class="linenos" data-linenos=" 5 "></span><span class="sd">Las variables de entorno las inyecta el compose en el contenedor lab.</span>
-<span class="linenos" data-linenos=" 6 "></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="linenos" data-linenos=" 7 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="linenos" data-linenos=" 8 "></span>
-<span class="linenos" data-linenos=" 9 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>
-<span class="linenos" data-linenos="10 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyiceberg.catalog</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_catalog</span>
+<p>Si volvemos al código <em>Python</em> cada vez que necesitemos conectarnos al catálogo desde <em>PyIceberg</em> y desde <em>DuckDB</em>, nos toca indicar la configuración. Para no repetirla en cada cuaderno, la hemos reunido en el módulo <code>lago.py</code>, que reside junto a los cuadernos en <code>workspace/iceberg/</code>:</p>
+<div class="highlight"><span class="filename">workspace/iceberg/lago.py</span><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="linenos" data-linenos=" 2 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlparse</span>
+<span class="linenos" data-linenos=" 3 "></span>
+<span class="linenos" data-linenos=" 4 "></span><span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>
+<span class="linenos" data-linenos=" 5 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyiceberg.catalog</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_catalog</span>
+<span class="linenos" data-linenos=" 6 "></span>
+<span class="linenos" data-linenos=" 7 "></span><span class="c1"># Catálogo Iceberg (Polaris)</span>
+<span class="linenos" data-linenos=" 8 "></span><span class="n">URI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POLARIS_URI&quot;</span><span class="p">]</span>                 <span class="c1"># http://polaris:8181/api/catalog</span>
+<span class="linenos" data-linenos=" 9 "></span><span class="n">WAREHOUSE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POLARIS_WAREHOUSE&quot;</span><span class="p">]</span>     <span class="c1"># iabd</span>
+<span class="linenos" data-linenos="10 "></span><span class="n">CLIENT_ID</span><span class="p">,</span> <span class="n">CLIENT_SECRET</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POLARIS_CREDENTIAL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="linenos" data-linenos="11 "></span>
-<span class="linenos" data-linenos="12 "></span><span class="c1"># Catálogo Iceberg (Polaris)</span>
-<span class="linenos" data-linenos="13 "></span><span class="n">URI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POLARIS_URI&quot;</span><span class="p">]</span>                 <span class="c1"># http://polaris:8181/api/catalog</span>
-<span class="linenos" data-linenos="14 "></span><span class="n">WAREHOUSE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POLARIS_WAREHOUSE&quot;</span><span class="p">]</span>     <span class="c1"># iabd</span>
-<span class="linenos" data-linenos="15 "></span><span class="n">CLIENT_ID</span><span class="p">,</span> <span class="n">CLIENT_SECRET</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POLARIS_CREDENTIAL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="linenos" data-linenos="16 "></span>
-<span class="linenos" data-linenos="17 "></span><span class="c1"># Almacenamiento (MinIO)</span>
-<span class="linenos" data-linenos="18 "></span><span class="n">S3_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_ACCESS_KEY_ID&quot;</span><span class="p">]</span>
-<span class="linenos" data-linenos="19 "></span><span class="n">S3_SECRET</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_SECRET_ACCESS_KEY&quot;</span><span class="p">]</span>
-<span class="linenos" data-linenos="20 "></span>
-<span class="linenos" data-linenos="21 "></span><span class="c1"># Origen relacional (MySQL)</span>
-<span class="linenos" data-linenos="22 "></span><span class="n">MYSQL</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;host=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MYSQL_HOST&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> user=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MYSQL_USER&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
-<span class="linenos" data-linenos="23 "></span>         <span class="sa">f</span><span class="s2">&quot;password=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MYSQL_PASSWORD&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
-<span class="linenos" data-linenos="24 "></span>         <span class="sa">f</span><span class="s2">&quot;database=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MYSQL_DATABASE_SOURCE&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;retail_db&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="25 "></span>
-<span class="linenos" data-linenos="26 "></span>
-<span class="linenos" data-linenos="27 "></span><span class="k">def</span><span class="w"> </span><span class="nf">catalogo</span><span class="p">():</span>
-<span class="linenos" data-linenos="28 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Catálogo de Polaris para PyIceberg.&quot;&quot;&quot;</span>
-<span class="linenos" data-linenos="29 "></span>    <span class="k">return</span> <span class="n">load_catalog</span><span class="p">(</span><span class="s2">&quot;polaris&quot;</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span>
-<span class="linenos" data-linenos="30 "></span>        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rest&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="31 "></span>        <span class="s2">&quot;uri&quot;</span><span class="p">:</span> <span class="n">URI</span><span class="p">,</span>
-<span class="linenos" data-linenos="32 "></span>        <span class="s2">&quot;warehouse&quot;</span><span class="p">:</span> <span class="n">WAREHOUSE</span><span class="p">,</span>
-<span class="linenos" data-linenos="33 "></span>        <span class="s2">&quot;credential&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CLIENT_ID</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="34 "></span>        <span class="s2">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;PRINCIPAL_ROLE:ALL&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="35 "></span>        <span class="c1"># MinIO no reparte credenciales temporales: cada cliente usa las suyas</span>
-<span class="linenos" data-linenos="36 "></span>        <span class="s2">&quot;s3.endpoint&quot;</span><span class="p">:</span> <span class="s2">&quot;http://minio:9000&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="37 "></span>        <span class="s2">&quot;s3.access-key-id&quot;</span><span class="p">:</span> <span class="n">S3_KEY</span><span class="p">,</span>
-<span class="linenos" data-linenos="38 "></span>        <span class="s2">&quot;s3.secret-access-key&quot;</span><span class="p">:</span> <span class="n">S3_SECRET</span><span class="p">,</span>
-<span class="linenos" data-linenos="39 "></span>        <span class="s2">&quot;s3.path-style-access&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="40 "></span>        <span class="s2">&quot;s3.region&quot;</span><span class="p">:</span> <span class="s2">&quot;us-east-1&quot;</span><span class="p">,</span>
-<span class="linenos" data-linenos="41 "></span>    <span class="p">})</span>
-<span class="linenos" data-linenos="42 "></span>
+<span class="linenos" data-linenos="12 "></span><span class="c1"># Almacenamiento (MinIO): las mismas variables AWS_* que usan boto3 y la CLI de AWS</span>
+<span class="linenos" data-linenos="13 "></span><span class="n">S3_ENDPOINT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_ENDPOINT_URL&quot;</span><span class="p">]</span>    <span class="c1"># http://minio:9000</span>
+<span class="linenos" data-linenos="14 "></span><span class="n">S3_REGION</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AWS_DEFAULT_REGION&quot;</span><span class="p">,</span> <span class="s2">&quot;us-east-1&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="15 "></span><span class="n">S3_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_ACCESS_KEY_ID&quot;</span><span class="p">]</span>
+<span class="linenos" data-linenos="16 "></span><span class="n">S3_SECRET</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_SECRET_ACCESS_KEY&quot;</span><span class="p">]</span>
+<span class="linenos" data-linenos="17 "></span><span class="n">_S3</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">S3_ENDPOINT</span><span class="p">)</span>                     <span class="c1"># DuckDB quiere host:puerto, sin esquema</span>
+<span class="linenos" data-linenos="18 "></span>
+<span class="linenos" data-linenos="19 "></span><span class="c1"># Origen relacional (MySQL)</span>
+<span class="linenos" data-linenos="20 "></span><span class="n">MYSQL</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;host=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MYSQL_HOST&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> user=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MYSQL_USER&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
+<span class="linenos" data-linenos="21 "></span>         <span class="sa">f</span><span class="s2">&quot;password=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MYSQL_PASSWORD&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
+<span class="linenos" data-linenos="22 "></span>         <span class="sa">f</span><span class="s2">&quot;database=</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MYSQL_DATABASE_SOURCE&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;retail_db&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="23 "></span>
+<span class="linenos" data-linenos="24 "></span><span class="k">def</span><span class="w"> </span><span class="nf">catalogo</span><span class="p">():</span>
+<span class="linenos" data-linenos="25 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Catálogo de Polaris para PyIceberg.&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="26 "></span>    <span class="k">return</span> <span class="n">load_catalog</span><span class="p">(</span><span class="s2">&quot;polaris&quot;</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span>
+<span class="linenos" data-linenos="27 "></span>        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rest&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="28 "></span>        <span class="s2">&quot;uri&quot;</span><span class="p">:</span> <span class="n">URI</span><span class="p">,</span>
+<span class="linenos" data-linenos="29 "></span>        <span class="s2">&quot;warehouse&quot;</span><span class="p">:</span> <span class="n">WAREHOUSE</span><span class="p">,</span>
+<span class="linenos" data-linenos="30 "></span>        <span class="s2">&quot;credential&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CLIENT_ID</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="31 "></span>        <span class="s2">&quot;scope&quot;</span><span class="p">:</span> <span class="s2">&quot;PRINCIPAL_ROLE:ALL&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="32 "></span>        <span class="c1"># MinIO no reparte credenciales temporales: cada cliente usa las suyas</span>
+<span class="linenos" data-linenos="33 "></span>        <span class="s2">&quot;s3.endpoint&quot;</span><span class="p">:</span> <span class="n">S3_ENDPOINT</span><span class="p">,</span>
+<span class="linenos" data-linenos="34 "></span>        <span class="s2">&quot;s3.access-key-id&quot;</span><span class="p">:</span> <span class="n">S3_KEY</span><span class="p">,</span>
+<span class="linenos" data-linenos="35 "></span>        <span class="s2">&quot;s3.secret-access-key&quot;</span><span class="p">:</span> <span class="n">S3_SECRET</span><span class="p">,</span>
+<span class="linenos" data-linenos="36 "></span>        <span class="s2">&quot;s3.path-style-access&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="37 "></span>        <span class="s2">&quot;s3.region&quot;</span><span class="p">:</span> <span class="n">S3_REGION</span><span class="p">,</span>
+<span class="linenos" data-linenos="38 "></span>        <span class="c1"># PyIceberg pide &quot;vended-credentials&quot; por defecto y Polaris lo rechaza si el</span>
+<span class="linenos" data-linenos="39 "></span>        <span class="c1"># catálogo no puede emitirlas (MinIO sin STS). Con &quot;none&quot; el cliente usa</span>
+<span class="linenos" data-linenos="40 "></span>        <span class="c1"># las claves s3.* de arriba.</span>
+<span class="linenos" data-linenos="41 "></span>        <span class="s2">&quot;header.X-Iceberg-Access-Delegation&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+<span class="linenos" data-linenos="42 "></span>    <span class="p">})</span>
 <span class="linenos" data-linenos="43 "></span>
 <span class="linenos" data-linenos="44 "></span><span class="k">def</span><span class="w"> </span><span class="nf">duckdb_lago</span><span class="p">(</span><span class="n">con</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="linenos" data-linenos="45 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Conexión DuckDB con el catálogo de Polaris adjunto como `lago`.&quot;&quot;&quot;</span>
@@ -5041,18 +5071,18 @@
 <span class="linenos" data-linenos="48 "></span>    <span class="c1"># Credenciales de MinIO, para leer y escribir los ficheros</span>
 <span class="linenos" data-linenos="49 "></span>    <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="linenos" data-linenos="50 "></span><span class="s2">        CREATE OR REPLACE SECRET minio (</span>
-<span class="linenos" data-linenos="51 "></span><span class="s2">            TYPE s3, KEY_ID &#39;</span><span class="si">{</span><span class="n">S3_KEY</span><span class="si">}</span><span class="s2">&#39;, SECRET &#39;</span><span class="si">{</span><span class="n">S3_SECRET</span><span class="si">}</span><span class="s2">&#39;, REGION &#39;us-east-1&#39;,</span>
-<span class="linenos" data-linenos="52 "></span><span class="s2">            ENDPOINT &#39;minio:9000&#39;, URL_STYLE &#39;path&#39;, USE_SSL false)&quot;&quot;&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="53 "></span>    <span class="c1"># Credenciales de Polaris, para hablar con el catálogo (OAuth2)</span>
-<span class="linenos" data-linenos="54 "></span>    <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="linenos" data-linenos="55 "></span><span class="s2">        CREATE OR REPLACE SECRET polaris (</span>
-<span class="linenos" data-linenos="56 "></span><span class="s2">            TYPE iceberg, CLIENT_ID &#39;</span><span class="si">{</span><span class="n">CLIENT_ID</span><span class="si">}</span><span class="s2">&#39;, CLIENT_SECRET &#39;</span><span class="si">{</span><span class="n">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&#39;,</span>
-<span class="linenos" data-linenos="57 "></span><span class="s2">            OAUTH2_SCOPE &#39;PRINCIPAL_ROLE:ALL&#39;, OAUTH2_SERVER_URI &#39;</span><span class="si">{</span><span class="n">URI</span><span class="si">}</span><span class="s2">/v1/oauth/tokens&#39;)&quot;&quot;&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="58 "></span>    <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="linenos" data-linenos="59 "></span><span class="s2">        ATTACH IF NOT EXISTS &#39;</span><span class="si">{</span><span class="n">WAREHOUSE</span><span class="si">}</span><span class="s2">&#39; AS lago (</span>
-<span class="linenos" data-linenos="60 "></span><span class="s2">            TYPE iceberg, SECRET polaris, ENDPOINT &#39;</span><span class="si">{</span><span class="n">URI</span><span class="si">}</span><span class="s2">&#39;, ACCESS_DELEGATION_MODE &#39;none&#39;)&quot;&quot;&quot;</span><span class="p">)</span>
-<span class="linenos" data-linenos="61 "></span>    <span class="k">return</span> <span class="n">con</span>
-<span class="linenos" data-linenos="62 "></span>
+<span class="linenos" data-linenos="51 "></span><span class="s2">            TYPE s3, KEY_ID &#39;</span><span class="si">{</span><span class="n">S3_KEY</span><span class="si">}</span><span class="s2">&#39;, SECRET &#39;</span><span class="si">{</span><span class="n">S3_SECRET</span><span class="si">}</span><span class="s2">&#39;, REGION &#39;</span><span class="si">{</span><span class="n">S3_REGION</span><span class="si">}</span><span class="s2">&#39;,</span>
+<span class="linenos" data-linenos="52 "></span><span class="s2">            ENDPOINT &#39;</span><span class="si">{</span><span class="n">_S3</span><span class="o">.</span><span class="n">netloc</span><span class="si">}</span><span class="s2">&#39;, URL_STYLE &#39;path&#39;,</span>
+<span class="linenos" data-linenos="53 "></span><span class="s2">            USE_SSL </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">_S3</span><span class="o">.</span><span class="n">scheme</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;https&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">)&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="54 "></span>    <span class="c1"># Credenciales de Polaris, para hablar con el catálogo (OAuth2)</span>
+<span class="linenos" data-linenos="55 "></span>    <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="56 "></span><span class="s2">        CREATE OR REPLACE SECRET polaris (</span>
+<span class="linenos" data-linenos="57 "></span><span class="s2">            TYPE iceberg, CLIENT_ID &#39;</span><span class="si">{</span><span class="n">CLIENT_ID</span><span class="si">}</span><span class="s2">&#39;, CLIENT_SECRET &#39;</span><span class="si">{</span><span class="n">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&#39;,</span>
+<span class="linenos" data-linenos="58 "></span><span class="s2">            OAUTH2_SCOPE &#39;PRINCIPAL_ROLE:ALL&#39;, OAUTH2_SERVER_URI &#39;</span><span class="si">{</span><span class="n">URI</span><span class="si">}</span><span class="s2">/v1/oauth/tokens&#39;)&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="59 "></span>    <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos" data-linenos="60 "></span><span class="s2">        ATTACH IF NOT EXISTS &#39;</span><span class="si">{</span><span class="n">WAREHOUSE</span><span class="si">}</span><span class="s2">&#39; AS lago (</span>
+<span class="linenos" data-linenos="61 "></span><span class="s2">            TYPE iceberg, SECRET polaris, ENDPOINT &#39;</span><span class="si">{</span><span class="n">URI</span><span class="si">}</span><span class="s2">&#39;, ACCESS_DELEGATION_MODE &#39;none&#39;)&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="linenos" data-linenos="62 "></span>    <span class="k">return</span> <span class="n">con</span>
 <span class="linenos" data-linenos="63 "></span>
 <span class="linenos" data-linenos="64 "></span><span class="k">def</span><span class="w"> </span><span class="nf">duckdb_retail</span><span class="p">(</span><span class="n">con</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="linenos" data-linenos="65 "></span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Conexión DuckDB con retail_db (MySQL) adjunta como `retail`.&quot;&quot;&quot;</span>
@@ -5061,8 +5091,20 @@
 <span class="linenos" data-linenos="68 "></span>    <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ATTACH IF NOT EXISTS &#39;</span><span class="si">{</span><span class="n">MYSQL</span><span class="si">}</span><span class="s2">&#39; AS retail (TYPE mysql)&quot;</span><span class="p">)</span>
 <span class="linenos" data-linenos="69 "></span>    <span class="k">return</span> <span class="n">con</span>
 </code></pre></div>
-<p>Cada cliente necesita dos credenciales distintas: la de <em>Polaris</em> (<code>credential</code> y <code>scope</code>), para hablar con el catálogo, y la de <em>MinIO</em> (<code>s3.*</code>), para leer y escribir los ficheros. Con <em>credential vending</em>, la segunda la daría el propio catálogo.</p>
-<p>En <em>DuckDB</em> esas dos credenciales son dos secretos, y el catálogo se adjunta como una base de datos más con <code>ATTACH</code>. A partir de ahí, <code>lago.bronze.orders</code> es una tabla que podemos consultar y modificar con SQL. <code>ACCESS_DELEGATION_MODE 'none'</code> le indica que no espere credenciales del catálogo y use el secreto de <em>MinIO</em>.</p>
+<p>Cada cliente necesita dos credenciales distintas: la de <em>Polaris</em> (<code>credential</code> y <code>scope</code>) para hablar con el catálogo, y la de <em>MinIO</em> (<code>s3.*</code>) para leer y escribir los ficheros. En la nube, la segunda no haría falta gracias al <em>credential vending</em>: al cargar una tabla, el catálogo comprueba nuestros permisos y nos devuelve credenciales temporales del almacenamiento, válidas solo para esa tabla y durante un tiempo limitado. En nuestro stack lo hemos desactivado para simplificar (<code>stsUnavailable</code> en el catálogo y <code>X-Iceberg-Access-Delegation: none</code> en el cliente), así que cada motor usa las claves de <em>MinIO</em>.</p>
+<p>En <em>DuckDB</em>, esas dos credenciales son dos secretos:</p>
+<ul>
+<li>El secreto <code>minio</code> (<code>TYPE s3</code>) guarda las claves y la dirección de <em>MinIO</em>, para leer y escribir los ficheros.</li>
+<li>El secreto <code>polaris</code> (<code>TYPE iceberg</code>) guarda el usuario y la clave del catálogo, con los que <em>DuckDB</em> pide el token OAuth2 a <code>OAUTH2_SERVER_URI</code>.</li>
+</ul>
+<p>Con ellos, <code>ATTACH</code> adjunta el catálogo <code>iabd</code> como una base de datos más, llamada <code>lago</code>, y a partir de ahí <code>lago.bronze.orders</code> es una tabla que podemos consultar y modificar con SQL. Por defecto, <em>DuckDB</em> espera que el catálogo le reparta credenciales del almacenamiento (<em>credential vending</em>). Como en nuestro stack lo hemos desactivado, con <code>ACCESS_DELEGATION_MODE 'none'</code> le decimos que no las pida y use el secreto <code>minio</code>. Es la misma decisión que en <em>PyIceberg</em> tomamos con la cabecera <code>X-Iceberg-Access-Delegation: none</code>.</p>
+<p>En resumen, suponiendo que estamos en la carpeta <code>workspace/iceberg</code>, para conectarnos al catálogo desde <em>PyIceberg</em> y desde <em>DuckDB</em>, haremos:</p>
+<div class="highlight"><span class="filename">workspace/iceberg/hola_iceberg.py</span><pre><span></span><code><span class="linenos" data-linenos="1 "></span><span class="kn">from</span><span class="w"> </span><span class="nn">lago</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalogo</span><span class="p">,</span> <span class="n">duckdb_lago</span><span class="p">,</span> <span class="n">duckdb_retail</span>
+<span class="linenos" data-linenos="2 "></span><span class="n">cat</span> <span class="o">=</span> <span class="n">catalogo</span><span class="p">()</span>          <span class="c1"># PyIceberg</span>
+<span class="linenos" data-linenos="3 "></span><span class="n">con</span> <span class="o">=</span> <span class="n">duckdb_lago</span><span class="p">()</span>       <span class="c1"># DuckDB con el catálogo adjunto como lago</span>
+<span class="linenos" data-linenos="4 "></span><span class="n">con_retail</span> <span class="o">=</span> <span class="n">duckdb_retail</span><span class="p">()</span>  <span class="c1"># DuckDB con retail_db adjunta como</span>
+<span class="linenos" data-linenos="5 "></span><span class="o">...</span>
+</code></pre></div>
 <h2 id="caso-1-la-capa-bronze-con-pyiceberg">Caso 1. La capa bronze con PyIceberg<a class="headerlink" href="#caso-1-la-capa-bronze-con-pyiceberg" title="Permanent link">&para;</a></h2>
 <p>Vamos a organizar el <em>lakehouse</em> en las tres capas de la arquitectura <em>medallion</em>:</p>
 <ul>
